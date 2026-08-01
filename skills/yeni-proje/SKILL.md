@@ -21,9 +21,14 @@ de söyle. Emin olmadığın yerde "emin değilim" de — uydurma.
 Bu skill'in yanındaki `dosyalar/` klasöründe. Yerini şöyle bul:
 
 ```bash
-ls "$CLAUDE_PLUGIN_ROOT/skills/yeni-proje/dosyalar" 2>/dev/null \
-  || find ~/.claude/plugins -type d -path '*yeni-proje/dosyalar' 2>/dev/null | head -1
+# Önce plugin kökü, sonra kurulu sürüm önbelleği, en son marketplace kopyası
+KIT="$CLAUDE_PLUGIN_ROOT/skills/yeni-proje/dosyalar"
+[ -d "$KIT" ] || KIT=$(find ~/.claude/plugins/cache -type d -path '*yeni-proje/dosyalar' 2>/dev/null | sort -V | tail -1)
+[ -d "$KIT" ] || KIT=$(find ~/.claude/plugins -type d -path '*yeni-proje/dosyalar' 2>/dev/null | head -1)
+ls "$KIT"
 ```
+
+Bulunamazsa **dur ve kullanıcıya söyle** — dosyaları ezberden yeniden yazma.
 
 İçinde: `CLAUDE.md` · `REPO-YAPISI.md` · `docs/standards/00–17` + `sablonlar/`.
 
