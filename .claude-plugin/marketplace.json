@@ -1,0 +1,26 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-marketplace.json",
+  "name": "bariskose-skills",
+  "description": "Barış Köse'nin Claude Code kiti — mühendislik standartlarıyla birlikte yeni proje kuran plugin'ler.",
+  "owner": {
+    "name": "Barış Köse",
+    "url": "https://github.com/bariskose9"
+  },
+  "plugins": [
+    {
+      "name": "proje-kiti",
+      "source": "./",
+      "description": "Yeni projeyi tek komutla kurar: mühendislik standartları, PRD çıkarma görüşmesi, yol haritası, iskelet ve canlıya çıkış. Türkçe.",
+      "homepage": "https://github.com/bariskose9/bariskose-skills",
+      "license": "MIT",
+      "keywords": [
+        "scaffold",
+        "new-project",
+        "standards",
+        "turkish",
+        "prd",
+        "roadmap"
+      ]
+    }
+  ]
+}
