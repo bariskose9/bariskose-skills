@@ -122,6 +122,15 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
 
 1. Framework'ü kur, TypeScript strict, lint + format yapılandır
 2. `git init`, `.gitignore`, `.env.example` (⛔ `.env` **asla** commit edilmez)
+2b. `dosyalar/.claude/settings.json`'ı projeye kopyala — **salt okunur** komutlar
+   için hazır izin listesi. Amacı: kullanıcının aynı güvenli komuta defalarca
+   "izin ver" tıklamaması. **Script adlarını `package.json`'daki gerçek
+   adlarla eşitle**; olmayan script'i listede bırakma.
+   ⛔ Bu listeye **durum değiştiren** hiçbir şey eklenmez: `build`, `e2e`,
+   veritabanına yazan test, `git push`, `docker compose`, ve **hiçbir koşulda**
+   `npx`/`node`/`python` gibi keyfi kod çalıştıran joker kalıp.
+   Kullanıcıya modu da söyle: **`Auto`** (Shift+Tab) güvenli işleri geçer,
+   riskli olanda durur — `Bypass permissions` önerilmez.
 3. `00-stack.md` sürüm tablosunu **fiilen kurulanla eşitle**. En yenisi
    kullanılmıyorsa **nedenini yaz**
 4. `REPO-YAPISI.md`'yi gerçek klasör yapısına göre doldur
