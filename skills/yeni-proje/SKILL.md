@@ -73,14 +73,27 @@ Detaylı gerekçe ve doğrulama komutları: kit kökündeki `KURULUM.md`.
    ```
    Çıktı varsa **hiçbir şey yapma**, sadece "sesli bildirim zaten kurulu" de.
 
-2. Kurulu değilse ve platform macOS ise, Türkçe sesin varlığını doğrula:
+2. **Platformu tespit et** — komutlar tamamen farklı:
+
+   **macOS** — Türkçe sesin varlığını doğrula:
    ```bash
    say -v '?' | grep tr_TR      # "Yelda" görünmeli
    ```
    Yoksa `say -v Yelda` yerine varsayılan sesi kullan, kullanıcıya söyle.
 
+   **Windows** — kurulu sesleri listele (`41f` = Türkçe):
+   ```powershell
+   $v = New-Object -ComObject SAPI.SpVoice
+   $v.GetVoices() | ForEach-Object { "$($_.GetDescription()) -> $($_.GetAttribute('Language'))" }
+   ```
+   Türkçe yoksa varsayılan sesle okunur (İngilizce aksanlı ama anlaşılır);
+   kullanıcıya *Ayarlar → Saat ve Dil → Konuşma → Ses ekle → Türkçe* de.
+
 3. **İzin iste**, sonra `~/.claude/settings.json` içine ekle (mevcut ayarları
-   **koruyarak** birleştir, üzerine yazma):
+   **koruyarak** birleştir, üzerine yazma). Yalnızca kendi platformunun
+   bloğunu yaz — ikisini birden ekleme:
+
+   **macOS:**
    ```json
    {
      "hooks": {
@@ -96,20 +109,51 @@ Detaylı gerekçe ve doğrulama komutları: kit kökündeki `KURULUM.md`.
    }
    ```
 
-4. **Yazdıktan sonra doğrula** — yazdım demek yetmez:
+   **Windows** (`"shell": "powershell"` ŞART — yoksa komut bash'te çalışır ve patlar):
+   ```json
+   {
+     "hooks": {
+       "Notification": [
+         { "hooks": [{ "type": "command", "shell": "powershell", "async": true,
+           "command": "[console]::beep(880,250); $v=New-Object -ComObject SAPI.SpVoice; $t=@($v.GetVoices() | Where-Object { $_.GetAttribute('Language') -eq '41f' })[0]; if ($t) { $v.Voice = $t }; $v.Speak('Sorum var') | Out-Null" }] }
+       ],
+       "Stop": [
+         { "hooks": [{ "type": "command", "shell": "powershell", "async": true,
+           "command": "[console]::beep(1320,200); $v=New-Object -ComObject SAPI.SpVoice; $t=@($v.GetVoices() | Where-Object { $_.GetAttribute('Language') -eq '41f' })[0]; if ($t) { $v.Voice = $t }; $v.Speak('Senin sıran') | Out-Null" }] }
+       ]
+     }
+   }
+   ```
+
+   Windows'ta `SAPI.SpVoice` (COM) ve `[console]::beep` seçildi çünkü
+   `System.Speech` ve `System.Media.SystemSounds` PowerShell 7'de ayrı paket
+   istiyor; COM ve `beep` her sürümde hazır.
+
+4. **Yazdıktan sonra doğrula** — yazdım demek yetmez. JSON'un geçerli
+   olduğunu kontrol et **ve sesi fiilen çal**:
    ```bash
+   # macOS
    jq -e '.hooks | to_entries[] | "\(.key): \(.value[0].hooks[0].command)"' ~/.claude/settings.json
    afplay /System/Library/Sounds/Glass.aiff; say -v Yelda 'Senin sıran'
    ```
+   ```powershell
+   # Windows
+   Get-Content "$env:USERPROFILE\.claude\settings.json" | ConvertFrom-Json | Select-Object -ExpandProperty hooks
+   [console]::beep(1320,200); (New-Object -ComObject SAPI.SpVoice).Speak('Senin sıran') | Out-Null
+   ```
    Kullanıcıya "sesi duydun mu" diye **sor**; duymadıysa çıkış aygıtına
-   baktır (sanal ses aygıtı seçiliyken `afplay` sessiz kalabiliyor).
+   baktır (sanal ses aygıtı seçiliyken ses sessiz kalabiliyor).
 
 ⚠️ **PROJE ayarına (`.claude/settings.json`) KOYMA.** Hook'lar birden fazla
 ayar dosyasında tanımlıysa **hepsi birden çalışır** ve ses iki kez duyulur.
 Global ayar zaten tüm projeleri kapsıyor.
 
-⚠️ Platform macOS değilse bu adımı **atla** ve sebebini söyle; `afplay` ve
-`say` yalnızca macOS'te var.
+⚠️ **Windows bloğu henüz gerçek bir Windows makinesinde doğrulanmadı** (kit
+macOS'te geliştirildi, orada PowerShell yok). Microsoft'un güncel API
+dokümanına bakılarak yazıldı. İlk Windows kullanımında çalışmazsa hata
+mesajını `KURULUM.md`'ye işle.
+
+⚠️ Platform bu ikisinden biri değilse (Linux) adımı **atla** ve sebebini söyle.
 
 ## Adım 1 — Proje tipi ve stack
 
