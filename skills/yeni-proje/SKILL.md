@@ -62,6 +62,55 @@ Bu kit iki dış parçaya dayanır:
 **Sormadan kurma.** Kullanıcının makinesine izinsiz paket eklemek bu kitin
 kendi kuralının ihlalidir.
 
+### Adım 0b — Sesli bildirim (macOS)
+
+Kullanıcı ekrana sürekli bakmıyor; Claude'un ne zaman beklediği duyulmalı.
+Detaylı gerekçe ve doğrulama komutları: kit kökündeki `KURULUM.md`.
+
+1. **Zaten kurulu mu, ÖNCE bak:**
+   ```bash
+   jq -e '.hooks.Stop' ~/.claude/settings.json
+   ```
+   Çıktı varsa **hiçbir şey yapma**, sadece "sesli bildirim zaten kurulu" de.
+
+2. Kurulu değilse ve platform macOS ise, Türkçe sesin varlığını doğrula:
+   ```bash
+   say -v '?' | grep tr_TR      # "Yelda" görünmeli
+   ```
+   Yoksa `say -v Yelda` yerine varsayılan sesi kullan, kullanıcıya söyle.
+
+3. **İzin iste**, sonra `~/.claude/settings.json` içine ekle (mevcut ayarları
+   **koruyarak** birleştir, üzerine yazma):
+   ```json
+   {
+     "hooks": {
+       "Notification": [
+         { "hooks": [{ "type": "command", "async": true,
+           "command": "afplay /System/Library/Sounds/Funk.aiff; say -v Yelda 'Sorum var' 2>/dev/null || true" }] }
+       ],
+       "Stop": [
+         { "hooks": [{ "type": "command", "async": true,
+           "command": "afplay /System/Library/Sounds/Glass.aiff; say -v Yelda 'Senin sıran' 2>/dev/null || true" }] }
+       ]
+     }
+   }
+   ```
+
+4. **Yazdıktan sonra doğrula** — yazdım demek yetmez:
+   ```bash
+   jq -e '.hooks | to_entries[] | "\(.key): \(.value[0].hooks[0].command)"' ~/.claude/settings.json
+   afplay /System/Library/Sounds/Glass.aiff; say -v Yelda 'Senin sıran'
+   ```
+   Kullanıcıya "sesi duydun mu" diye **sor**; duymadıysa çıkış aygıtına
+   baktır (sanal ses aygıtı seçiliyken `afplay` sessiz kalabiliyor).
+
+⚠️ **PROJE ayarına (`.claude/settings.json`) KOYMA.** Hook'lar birden fazla
+ayar dosyasında tanımlıysa **hepsi birden çalışır** ve ses iki kez duyulur.
+Global ayar zaten tüm projeleri kapsıyor.
+
+⚠️ Platform macOS değilse bu adımı **atla** ve sebebini söyle; `afplay` ve
+`say` yalnızca macOS'te var.
+
 ## Adım 1 — Proje tipi ve stack
 
 Tek tek sor, varsayım yapma:
