@@ -31,10 +31,18 @@ Sıra kasıtlıdır: her adım bir öncekinin üzerine kurulur. Bir adım
 | 2 | Local veritabanı (Docker), ORM kurulumu, ilk migration | Local DB çalışıyor |
 | 3 | Veri modeli + tablolar + idempotent tohumlama | Veri var |
 | 4 | <ilk gerçek özellik> | Test + PR + deploy |
+| n-1 | **Yasal sayfalar + çerez rızası** (`14-privacy-and-compliance.md`) | Aydınlatma metni yayında |
+| n | **Hesap yönetimi: verimi indir + hesabımı sil** — PRD §5.x | Veri hakları çalışıyor |
 
 <!-- Biten adım şöyle işaretlenir:
 | 3 | ~~Veri modeli + tablolar~~ **BİTTİ** | 37 tablo + idempotent seed |
 -->
+
+> ⛔ **SON İKİ ADIM KULLANICI HESABI OLAN HER PROJEDE ZORUNLUDUR ve üretime
+> çıkmadan önce biter.** "Sonra ekleriz" denen bir silme akışı, ilk gerçek
+> kullanıcı geldiğinde ödenmesi imkânsız bir borca dönüşür: veri modeli
+> silinebilir biçimde kurulmamışsa sonradan silinemez hâle gelir. Gerekçe ve
+> kurallar `14-privacy-and-compliance.md` → "Hesap silme" bölümünde.
 
 ## Teknik borç
 

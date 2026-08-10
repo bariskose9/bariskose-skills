@@ -197,6 +197,11 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
 - Cevapları `docs/project/PRD.md` şablonuna yaz.
 - **"§9 Açık sorular" bölümü boşalmadan kod yazma.** Cevabını bilmediğin şeyi
   kendin doldurma — yanlış varsayım en pahalı hatadır.
+- ⛔ **KULLANICI HESABI VARSA `§5.x Hesap yönetimi ve veri hakları` DOLDURULUR
+  ve kapsam dışı bırakılamaz** (KVKK m.11). Sor: verimi indir dosyasına ne
+  girecek · hesap silinince ne SİLİNİYOR, ne hangi KANUN gereği ne kadar
+  SAKLANIYOR. Kurallar `14-privacy-and-compliance.md` → "Hesap silme"
+  bölümünde; **oradaki "anonimleştirme demeyin" uyarısını atlamayın.**
 
 ## Adım 4 — Yol haritası ve ilk kararlar
 
