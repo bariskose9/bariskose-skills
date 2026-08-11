@@ -57,12 +57,46 @@ Proje bir kit projesi değilse (`docs/standards/` yoksa) dur ve söyle.
 
 ## Adım 2 — Karşılaştır
 
-`00-stack.md` **hariç** tüm dosyaları karşılaştır.
+Tüm dosyaları karşılaştır. `00-stack.md` dahil — ama **bölüm bazında.**
 
-`00-stack.md` senkronlanmaz: sürüm tablosu her projede fiilen kurulana göre
-farklıdır, kite taşınırsa yanlış sürüm bilgisi yayılır. **Ama** o dosyadaki
-"bilinen tuzak" ve "kullanılmayacaklar" bölümleri projeden bağımsız olabilir —
-bunları ayrıca sor.
+### `00-stack.md` — istisna DOSYA değil BÖLÜM seviyesindedir
+
+⚠️ **Eski kural "bu dosya hiç senkronlanmaz" idi ve ders kaybettiriyordu.**
+2026-08-11'de ölçüldü: dosyanın yedi bölümünden yalnızca **biri** gerçekten
+projeye özeldi; buna rağmen tamamı senkron dışıydı, yani genel bölümlere
+yazılan bir ders karşı tarafa hiç geçmiyordu.
+
+| Kural | Bölüm |
+|---|---|
+| ⛔ **Asla senkronlanmaz** | `## Zorunlu stack` — fiilen kurulu sürümler ve "henüz kurulu değil" gibi projeye ait durum. Kite taşınırsa sonraki proje yanlış bilgiyle başlar |
+| ⛔ **Kite özel, projeye inmez** | `## Sürüm sütunu nasıl doldurulur` — ajana tabloyu nasıl dolduracağını anlatan kurulum talimatı |
+| ✅ **Senkronlanır** | Diğer tüm bölümler |
+
+### Karışık bölümler — SENKRON SINIRI
+
+Bazı bölümler kendi içinde karışıktır: genel kurallar + projeye özel maddeler
+(örn. `## Kullanılmayacaklar`). Bunlarda sınır bir işaretleyici yorumdur:
+
+```
+<!-- ⛔ SENKRON SINIRI -->
+```
+
+**Senkron bu satırda durur:** üstü ortaktır ve eşitlenir, altı projeye aittir
+ve dokunulmaz.
+
+⛔ **Sınır satırı silinmişse ONAR, yok sayma.** Silindiğinde o bölümün tamamı
+senkron dışı kalır — kite yazılan yeni bir genel kural o projeye hiç ulaşmaz.
+2026-08-11'de tam olarak bu olmuştu: proje sınırı silip yerine kendi maddesini
+yazmıştı.
+
+### Projeye özel anlatı bölümleri
+
+Bir bölüm kitteki **genel** kuralın "bu projede ne yapıldı" hâline dönüşmüşse
+(örn. kitte `## Kimlik doğrulama — bilinen tuzak`, projede
+`## Auth.js v5 uyarısı — adım 4b-2'de şu karar verildi`) bu **doğru bir
+ayrışmadır**, hata değil. Genel kural kitte kalır, uygulanmış hâli projede.
+Kullanıcıya sor: uygulanmış anlatının içinde **genelleştirilebilir** yeni bir
+bulgu var mı? Varsa yalnızca o bulgu kite taşınır.
 
 ## Adım 3 — Farkları sınıflandır ve sor
 
