@@ -17,12 +17,41 @@ söylediğini** anlat.
 
 ## Adım 1 — İki tarafı bul
 
+⛔ **KURULU PLUGIN ÖNBELLEĞİNE KARŞI KARŞILAŞTIRMA YAPMA.**
+`~/.claude/plugins/cache/...` altındaki kopya, kullanıcı `/plugin update`
+çalıştırana kadar **eski kalır**. 2026-08-11'de kullanıcının kurulu sürümü
+1.2.0 iken kit 1.5.0'daydı: o önbelleğe karşı karşılaştırma yapılsaydı, kitte
+ZATEN VAR OLAN kurallar "projede fazla" görünür ve kötü ihtimalle proje geriye
+çekilirdi.
+
+**Doğru kaynak — bu sırayla:**
+
 ```bash
-# Kitteki kopya
-find ~/.claude/plugins -type d -path '*yeni-proje/dosyalar/docs/standards' 2>/dev/null | head -1
-# Projedeki kopya
+# 1) Kitin KAYNAK deposu (varsa) — tek doğru referans
+ls ~/baris_projects/bariskose-skills/skills/yeni-proje/dosyalar/docs/standards 2>/dev/null
+
+# 2) Yoksa GitHub'dan taze klonla
+git clone --depth 1 https://github.com/bariskose9/bariskose-skills /tmp/kit-ref
+
+# 3) Projedeki kopya
 ls docs/standards
 ```
+
+**Kaynak depoyu kullanıyorsan önce güncelle:** `git -C <kaynak> pull --ff-only`
+— başka bir makinede/oturumda yazılmış kurallar kaçırılmasın.
+
+### Sürüm tutarlılığı kontrolü (atlanmaz)
+
+Kurulu önbellek ile kaynak deponun sürümünü karşılaştır:
+
+```bash
+grep '"version"' ~/baris_projects/bariskose-skills/.claude-plugin/plugin.json
+find ~/.claude/plugins/cache -name plugin.json -path '*proje-kiti*' -exec grep '"version"' {} \;
+```
+
+Kurulu sürüm **geride ise dur ve kullanıcıya söyle:** karşılaştırma kaynak
+depoya karşı yapılacak, ama kullanıcı `/yeni-proje` çalıştırmadan önce
+plugin'i güncellemeli. Sessizce devam etme.
 
 Proje bir kit projesi değilse (`docs/standards/` yoksa) dur ve söyle.
 
