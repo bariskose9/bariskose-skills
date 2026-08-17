@@ -13,7 +13,7 @@ Sürüm sütunu **fiilen kurulu** olanı gösterir; `package.json` ile birebir a
 | Dil | TypeScript (strict) | 6 | JavaScript dosyası eklenmez · TS 7 henüz kullanılamıyor, aşağıya bak |
 | Stil | Tailwind CSS | 4 | v4 CSS-first: `tailwind.config.ts` yok, token'lar `src/app/globals.css` içinde |
 | UI bileşen | shadcn/ui (Radix tabanlı) | CLI 4 | Bileşen repoya kopyalanır, paket olarak bağlanmaz |
-| Backend | Next.js Route Handlers (`src/app/api/**`) | — | Ayrı Express sunucusu kurulmaz |
+| Backend | Next.js Route Handlers — **veya** ayrı NestJS API | — | Karar kuralı aşağıda ("Backend kurgusu"). Çıplak Express kurulmaz |
 | ORM | Prisma | 7 | Ham SQL sadece performans gerekçesiyle, ADR ile |
 | Veritabanı | PostgreSQL | 18 | Local Docker imajı Neon'daki yama sürümüyle eşitlenir |
 | Auth | Auth.js (NextAuth v5) | 5 (beta) | Web: httpOnly cookie · Mobil: Bearer JWT · aşağıya bak |
@@ -61,12 +61,48 @@ oturumları gerçekten düşürsün — `05-auth-security.md`) şifre girişi **
 yazılır; Auth.js yalnızca OAuth sağlayıcıları için kullanılır. Bu karar her
 projede ADR ile kayda geçer.
 
+## Backend kurgusu — Next tek başına mı, Next + NestJS mi
+
+**Varsayılan: Next.js tek başına** (arayüz + Route Handler API, tek deploy
+hedefi). Ayrı backend, ikinci bir deploy · CORS · kimlik doğrulamanın iki
+tarafta kurgulanması · tiplerin elle paylaşılması · yerel geliştirmede dört
+süreç demektir. Bu bedel **karşılığı varsa** ödenir.
+
+Dört soru — **hepsi "hayır" ise Next tek başına, en az biri "evet" ise
+Next (arayüz) + NestJS (API + worker):**
+
+1. API'yi kendi web arayüzünden **başkası** tüketecek mi? (mobil, başka sistem)
+2. Kullanıcı istek atmasa da **kendiliğinden** çalışması gereken iş var mı?
+   (zamanlanmış görev, kuyruk, webhook karşılama)
+3. Katmanlı mimari + **DI yaşam döngüsü** (singleton/scoped) + çok modüllü yapı
+   gerekiyor mu?
+4. Kod kurumun **kendi sunucusunda** mı çalışacak (sunucusuz platform yok)?
+
+**Gerekçe:** Next Route Handler ile API yazılabilir ama üç şeyi veremez —
+sürekli çalışan arka plan süreci, DI konteyneri ve yaşam döngüleri, zorlanan
+katman sınırları. Bunlara ihtiyaç yoksa ikinci sunucu saf maliyettir.
+
+⛔ **"Ayrı backend" kararı ADR'siz alınmaz.** Hangi koşulun sağlandığı yazılır.
+
+Ayrı backend seçildiyse:
+
+| Konu | Seçim | Gerekçe |
+|---|---|---|
+| Çatı | **NestJS** (çıplak Express değil) | Nest zaten Express'in üstünde çalışır; ayrıca modül, DI, Guard, Interceptor, Pipe, Filter getirir. Çıplak Express yalnızca 5–10 uçlu tek amaçlı serviste |
+| HTTP adaptörü | **Express** (Nest varsayılanı) | Darboğaz veritabanıdır; Fastify'ın kazancı bu senaryoda ölçülemez. Adaptör tek satırla değişir |
+| API biçimi | **REST** | HTTP önbelleği çalışır, uç bazında izlenir, DevOps tanır. GraphQL yalnızca *kontrol etmediğin* çok sayıda istemci varsa |
+| Sürümleme | `/api/v1/...` baştan | Kural `03-api-guidelines.md` → "Sözleşme ömrü"nde. Mobil varsa zorunlu |
+| Tip paylaşımı | Monorepo + `packages/contracts` | Zod şeması tek yerde; API alanı değişince frontend **derlenmez**, hata çalışma anına kalmaz |
+| İş kuyruğu | BullMQ + Redis | Node'un fiili standardı; gecikmeli + tekrarlayan iş, retry, yatay ölçekleme |
+
 ## Kullanılmayacaklar
 - Redux / MobX — TanStack Query + Zustand yeterli
-- Ayrı Express/Nest backend — tek deploy hedefi
+- **Çıplak Express backend** — Nest zaten Express'i içeriyor ve yapı getiriyor
 - MongoDB — ilişkisel veri modeli kullanıyoruz
 - jQuery, Bootstrap, Material UI — Tailwind + shadcn ile çakışır
 - `moment.js` — yerine `date-fns`
+- TypeORM — Prisma tercih edilir (4 kat yaygın, şema tek dosyada okunur,
+  `synchronize` gibi veri kaybettiren bir kestirme yolu yok)
 
 <!-- ⛔ SENKRON SINIRI — bu satırın ÜSTÜ kitle ortaktır ve kit-senkron tarafından
      eşitlenir. Projeye özel "kullanmıyoruz" maddeleri AŞAĞIYA yazılır.

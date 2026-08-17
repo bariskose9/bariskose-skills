@@ -159,14 +159,64 @@ mesajını `KURULUM.md`'ye işle.
 
 Tek tek sor, varsayım yapma:
 
-1. **Proje tipi:** web · mobil (Expo) · ikisi (ortak API)
-2. **Stack:** varsayılan aşağıdaki; kullanıcı farklı bir şey söylerse (başka
-   sunucu, başka veritabanı, başka hosting) **onu kullan**, tartışma
-3. **Proje adı** ve **hedef kullanıcı kitlesi** (bir cümle)
+1. **Bu proje kimin için?** → `kendi projem` · `kurum projesi`
+   Bu ilk soru, çünkü sonraki her şeyi belirliyor (Adım 6 tamamen buna bakar).
+2. **Proje tipi:** web · mobil (Expo) · ikisi (ortak API)
+3. **Backend kurgusu:** aşağıdaki dört soruyu **sen sor, sen karara bağla**
+4. **Proje adı** ve **hedef kullanıcı kitlesi** (bir cümle)
 
 **Varsayılan stack:** Next.js App Router + TypeScript (strict) + Tailwind +
-shadcn/ui + Prisma + PostgreSQL + Zod · Vercel + Neon + GitHub Actions ·
-mobil varsa Expo, aynı REST API.
+shadcn/ui + Prisma + PostgreSQL + Zod · mobil varsa Expo, aynı REST API.
+Kullanıcı farklı bir şey söylerse (başka sunucu, başka veritabanı, başka
+hosting) **onu kullan**, tartışma.
+
+### 1a — Kim için: kendi projem mi, kurum projesi mi
+
+| | **Kendi projem** | **Kurum projesi** |
+|---|---|---|
+| Kod nerede | GitHub | Kurumun GitLab'ı |
+| CI dosyası | `.github/workflows/ci.yml` | `.gitlab-ci.yml` |
+| İnceleme | Pull Request | Merge Request |
+| Alan adı · sunucu · SSL | **Kullanıcı** alır, sen yönlendirirsin | Kurumun zaten var |
+| Deploy | **Sen** yaparsın | **DevOps** yapar — sen hiç deploy etmezsin |
+| Teslim | Çalışan canlı site + link | **Çalıştırılabilir paket** (Adım 6b) |
+| Docker | Local + kendi sunucu senaryosunda | **Her zaman zorunlu** — DevOps'la sözleşme |
+| Ortam değişkenleri | Kullanıcı girer | `.env.example` ile **belgelenir**, DevOps girer |
+| İzleme | Kurulur | Kurumun sistemi — sen **JSON log** üretirsin |
+
+⛔ Cevap `kurum projesi` ise **alan adı, sunucu kiralama, DNS, SSL adımlarını
+hiç açma.** O işler DevOps'a ait; kullanıcıya gereksiz iş yüklemek olur.
+
+### 1b — Backend kurgusu: Next tek başına mı, Next + Nest mi
+
+Dört soru. **Hepsi "hayır" ise Next tek başına. En az biri "evet" ise
+Next (arayüz) + NestJS (API + worker).**
+
+1. API'yi kendi web arayüzünden **başkası** tüketecek mi? (mobil, başka sistem)
+2. Kullanıcı istek atmasa da **kendiliğinden** çalışması gereken iş var mı?
+   (zamanlanmış görev, kuyruk, webhook karşılama)
+3. Katmanlı mimari + **DI yaşam döngüsü** (singleton/scoped) + çok modüllü yapı
+   gerekiyor mu?
+4. Kod kurumun **kendi sunucusunda** mı çalışacak (sunucusuz platform yok)?
+
+**Neden bu kural:** Next.js Route Handler ile API yazılabilir ama üç şeyi
+veremez — sürekli çalışan arka plan süreci, DI konteyneri ve yaşam döngüleri,
+zorlanan katman sınırları. Bunlara ihtiyaç yoksa ikinci bir sunucu **saf
+maliyettir**: iki deploy, CORS, kimlik doğrulamanın iki tarafta kurgulanması,
+tiplerin paylaşılması, yerel geliştirmede dört süreç.
+
+⛔ **Express'i çıplak seçme.** NestJS zaten Express'in üstünde çalışır; Nest'i
+seçince Express'i almış olursun. Çıplak Express yalnızca tek amaçlı, 5–10 uçlu
+mikro servislerde (webhook alıcı, proxy) tercih edilir.
+
+**Ayrı backend seçildiyse kararlar:**
+
+| Konu | Seçim | Gerekçe |
+|---|---|---|
+| HTTP adaptörü | **Express** (Nest varsayılanı) | Darboğaz veritabanıdır, HTTP katmanı değil. Fastify'ın kazancı bu senaryoda ölçülemez; adaptör tek satırla değiştirilebilir |
+| API biçimi | **REST** | HTTP önbelleği çalışır, uç bazında izlenir, DevOps tanır. GraphQL yalnızca *kontrol etmediğin* çok sayıda istemci varsa |
+| Sürümleme | `/api/v1/...` **baştan** | Kural ve gerekçesi `03-api-guidelines.md` → "Sözleşme ömrü"nde, burada tekrarlanmaz. Mobil varsa **zorunlu**: uygulama kullanıcının telefonunda eski sürümde kalır |
+| Tip paylaşımı | Monorepo + `packages/contracts` | Zod şeması tek yerde; API alan adı değişince frontend **derlenmez** — hata çalışma anına kalmaz |
 
 Mobil seçilirse `05-auth-security.md` ve `17-mobile.md` birlikte okunur:
 oturum kararı **baştan** hem çerezi hem jetonu kapsayacak şekilde alınır.
@@ -234,7 +284,13 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
 4. `REPO-YAPISI.md`'yi gerçek klasör yapısına göre doldur
 5. İlk commit — `08-git-workflow.md` biçimiyle
 
-## Adım 6 — Canlıya çıkar
+## Adım 6 — Yayın: Adım 1a'daki cevaba göre İKİYE ayrılır
+
+⛔ **Önce Adım 1a'ya bak.** Yanlış kolu çalıştırmak, kurum projesinde
+kullanıcıya gereksiz hesap/domain işi yükler; kendi projesinde ise projeyi
+yayınsız bırakır.
+
+### Adım 6a — Kendi projem: canlıya çıkar
 
 1. GitHub deposu aç (`gh`), dalı push et
 2. Hosting + veritabanı bağla. **Hesap gerektiren her adımda kullanıcıya ne
@@ -244,6 +300,36 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
 5. **Yapılan her dış işlemi anında `altyapi-durumu.md`'ye yaz** — hangi hesap,
    panelde ne seçildi, hangi değişken hangi ortamda. ⛔ Anahtar **değeri** yazılmaz
 6. Duman testi: anasayfa açılıyor mu, `/api/health` yeşil mi
+7. Kendi sunucusuna çıkılıyorsa (Vercel değil): sunucu kirala → Docker Engine
+   kur → `docker compose up -d` → domain'i DNS'te IP'ye yönlendir → reverse
+   proxy (Caddy) ile HTTPS. Her adımda kullanıcıyı yönlendir, bekle.
+
+### Adım 6b — Kurum projesi: teslim paketini hazırla ve DOĞRULA
+
+Burada **deploy etmiyorsun.** Ürettiğin şey, DevOps'un çalıştıracağı pakettir.
+⛔ Domain, sunucu, DNS, SSL adımlarını **hiç açma**.
+
+1. Kurumun GitLab'ına push et; `.gitlab-ci.yml` kur (adımlar `package.json`
+   script'inde, CI dosyası ince sarmalayıcı olsun — platform değişirse taşınsın)
+2. **Teslim paketini üret:**
+   - `Dockerfile` — çok aşamalı (multi-stage), üretim imajı küçük
+   - `docker-compose.yml` — tüm servisler, portlar, başlangıç sırası, health check
+   - `.env.example` — **eksiksiz**; DevOps hiçbir değişkeni tahmin etmemeli
+   - `README.md` — kurulum, çalıştırma, migration, test, bilinen eksikler
+   - Migration stratejisi — şema değişikliği ne zaman hangi komutla uygulanır
+   - `GET /health/live` + `GET /health/ready` (ready veritabanını da yoklar)
+3. **Paketi kendi makinende DOĞRULA** — "yazdım" yetmez:
+   ```bash
+   docker compose up --build        # sıfırdan, tek komutta ayağa kalkmalı
+   curl localhost:<API_PORT>/health/ready
+   ```
+   `chrome-devtools` MCP ile ekranları fiilen tıkla; konsol hatası kalmasın.
+4. Log biçimi **JSON** olmalı — kurumun toplama sistemi düz metni toplayamaz
+5. Kullanıcıya DevOps'a söyleyeceği cümleyi **hazır ver**, örnek:
+   > "Uygulama GitLab'da `main` dalında. `docker compose up --build` ile ayağa
+   > kalkıyor. Gereken değişkenler `.env.example` içinde listeli, değerleri
+   > sizde. Migration'lar açılışta `prisma migrate deploy` ile çalışıyor.
+   > Sağlık uçları `/health/live` ve `/health/ready`."
 
 ## Adım 7 — Son kontrol
 
@@ -254,7 +340,9 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 - [ ] Her şablon dolduruldu mu (boş şablon bırakmak hiç açmamaktan kötüdür)
 - [ ] `altyapi-durumu.md` bu oturumda yapılan **her** dış işlemi içeriyor mu
 - [ ] `00-stack.md` sürümleri `package.json` ile birebir aynı mı
-- [ ] Canlı adres ve `/api/health` çalışıyor mu
+- [ ] **6a ise:** canlı adres ve `/api/health` çalışıyor mu
+- [ ] **6b ise:** `docker compose up --build` temiz makinede ayağa kalkıyor mu,
+      `.env.example` eksiksiz mi, sağlık uçları yeşil mi
 - [ ] `.env` commit edilmemiş, `.env.example` commit edilmiş mi
 - [ ] `sonraki-adim-prompt.md` bir sonraki adımı tarif ediyor mu
 
@@ -273,3 +361,36 @@ adres, sıradaki roadmap adımı, senden beklenen (varsa hesap/ayar).
   `docs/standards/` geçerlidir.
 - Bir kural ile kullanıcının isteği çakışırsa **dur ve sor**. Kendi başına karar verme.
 - Bir şeyi bozduğunu fark edersen saklama, hemen söyle.
+
+## İş bölümü — yapabildiğini kullanıcıya yaptırma
+
+Bu kural `11-agent-workflow.md` → *"Mühendislik seçimi kullanıcıya devredilmez"*
+kuralının **ikizidir**, aynısı değil:
+
+| | Konu | Kural |
+|---|---|---|
+| `11-agent-workflow.md` | **Kararı kim verir** | Mühendislik tercihini ajan verir, kullanıcıya menü sunmaz |
+| Buradaki kural | **İşi kim yapar** | Ajanın elinden gelen işi kullanıcıya yaptırmaz |
+
+⛔ **Kendi yapabileceğin hiçbir işi kullanıcıdan isteme.** Kullanıcının zamanı
+yalnızca senin *yapamadığın* işler için harcanır. Bu kit `Auto` (edit
+automatically) modunda kullanılacak şekilde yazılmıştır: güvenli işleri sorma,
+yap ve **ne yaptığını tek cümleyle söyle**.
+
+**Sen yaparsın** (sormadan): dosya yazma/düzenleme, bağımlılık kurma, migration
+üretme, test yazma ve koşturma, lint/format, commit, `docker compose` ile local
+ayağa kaldırma, **`chrome-devtools` MCP ile ekranları açıp tıklayarak
+doğrulama**, konsol ve ağ hatalarını okuma, ekran görüntüsü alma.
+
+**Onay iste** (yap ama önce tek cümlelik izin): `git push`, uzak depo açma,
+üretim veritabanına dokunan işlem, para/hesap gerektiren adım, geri alınması
+zor silme.
+
+**Sadece bunları kullanıcıdan iste** (fiilen yapamadıkların): hesap açma ve
+giriş (GitHub/GitLab/hosting/domain sağlayıcı), ödeme, kurumun panelinden
+yetki/erişim alma, iki faktörlü doğrulama kodu, fiziksel/kurumsal onay,
+`/plugin` gibi interaktif Claude Code ekranları.
+
+Bir adımı kullanıcıya devrediyorsan **neden devrettiğini söyle** ("hesap
+açmak için kimlik doğrulaman gerekiyor, ben giremiyorum"). Gerekçesiz
+devretme, kullanıcıya "bunu neden ben yapıyorum" dedirtir.
