@@ -89,11 +89,14 @@ Ayrı backend seçildiyse:
 | Konu | Seçim | Gerekçe |
 |---|---|---|
 | Çatı | **NestJS** (çıplak Express değil) | Nest zaten Express'in üstünde çalışır; ayrıca modül, DI, Guard, Interceptor, Pipe, Filter getirir. Çıplak Express yalnızca 5–10 uçlu tek amaçlı serviste |
-| HTTP adaptörü | **Express** (Nest varsayılanı) | Darboğaz veritabanıdır; Fastify'ın kazancı bu senaryoda ölçülemez. Adaptör tek satırla değişir |
-| API biçimi | **REST** | HTTP önbelleği çalışır, uç bazında izlenir, DevOps tanır. GraphQL yalnızca *kontrol etmediğin* çok sayıda istemci varsa |
+| HTTP adaptörü | **Express** (Nest varsayılanı) | İstek süresinin ~%95'i veritabanında geçer; HTTP katmanını hızlandırmak toplamda ölçülemez. Emek index'lere harcanır. *(Fastify adaptörü tek satırla değişir — ama ölçmeden geçilmez)* |
+| API biçimi | **REST** | HTTP önbelleği kendiliğinden çalışır, uç bazında izlenir, DevOps tanır. *(GraphQL yalnızca **kontrol etmediğin** çok sayıda istemci farklı alan kombinasyonu istiyorsa; bu ihtimal ADR ile değerlendirilir)* |
 | Sürümleme | `/api/v1/...` baştan | Kural `03-api-guidelines.md` → "Sözleşme ömrü"nde. Mobil varsa zorunlu |
-| Tip paylaşımı | Monorepo + `packages/contracts` | Zod şeması tek yerde; API alanı değişince frontend **derlenmez**, hata çalışma anına kalmaz |
+| Monorepo aracı | pnpm workspaces + **Turborepo** | Yapı `01-architecture.md`'de. Nx daha güçlü ama kendi eklenti dünyasını getirir — bu boyutta gereksiz |
+| Tip paylaşımı | `packages/contracts` | Zod şeması tek yerde; API alanı değişince frontend **derlenmez**, hata çalışma anına kalmaz |
 | İş kuyruğu | BullMQ + Redis | Node'un fiili standardı; gecikmeli + tekrarlayan iş, retry, yatay ölçekleme |
+| Log | `nestjs-pino` | JSON üretir; kurumsal toplama sistemleri düz metin toplayamaz (`12-operations-and-scaling.md`) |
+| İstek bağlamı | `nestjs-cls` | Aktif kullanıcı ve correlation ID'yi katmanlara parametre geçmeden taşır; statik erişim yasağının karşılığı |
 
 ## Kullanılmayacaklar
 - Redux / MobX — TanStack Query + Zustand yeterli

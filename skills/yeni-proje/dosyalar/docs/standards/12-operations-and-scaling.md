@@ -8,6 +8,27 @@
 - Dış servis çökerse uygulama çökmez: widget hata durumunu gösterir, sayfa ayakta kalır.
 
 ## Loglama
+
+**Kütüphane:** ayrı backend varsa `nestjs-pino`, Next tek başınaysa `pino`.
+Seçim gerekçesi: JSON'u varsayılan olarak üretir ve kurumsal log toplama
+sistemleri (Loki, ELK) **düz metin toplayamaz, JSON toplar.** Kurum projesinde
+log biçimi senin tercihin değil, DevOps'un altyapısıyla **sözleşmendir**.
+
+### ⛔ İki tür kayıt karıştırılmaz
+
+| | **Uygulama logu** | **Denetim kaydı (audit log)** |
+|---|---|---|
+| Ne yazar | "İstek geldi, 45 ms sürdü, 200 döndü" | "Ali, 14:32'de 1042 no'lu kaydı kapattı" |
+| Kime lazım | Geliştirici / DevOps | **İş birimi, denetim, hukuk** |
+| Nerede durur | stdout → toplama sistemi | **Veritabanında tablo** |
+| Ömrü | Günler–haftalar | Yıllar (mevzuat) |
+| Nasıl görülür | Log arama ekranı | **Uygulama içinde ekran** |
+
+⛔ **Denetim kaydını uygulama loguna yazmak bir tasarım hatasıdır:** log'lar
+döner ve silinir; "bu kaydı kim değiştirdi" sorusu 2 yıl sonra sorulur.
+Denetim kaydı **veriyi değiştiren işlemle aynı transaction içinde** tabloya
+yazılır — yarısı yazılıp yarısı yazılmasın diye.
+
 - Yapılandırılmış (JSON) log. `console.log` ile hata ayıklama çıktısı bırakılmaz.
 - Her log satırında: zaman, seviye, istek kimliği, kullanıcı kimliği (mümkünse anonim), olay.
 - **Log'a asla:** şifre, token, kart numarası, TCKN, e-posta gövdesi.
@@ -82,11 +103,38 @@ Büyütme kararı **ölçümle** verilir, tahminle değil. Sıra:
 2. **Önbellek**: dış API yanıtları, nadiren değişen listeler (ISR / route cache)
 3. **CDN**: statik içerik ve görseller (Next.js Image ile otomatik boyutlandırma)
 4. **Bağlantı havuzu**: sunucusuz ortamda Prisma için pooler kullan
-5. **Yatay ölçekleme**: Vercel otomatik; uygulama durumsuz olduğu için sorun çıkmaz
+5. **Yatay ölçekleme**: Vercel otomatik; kendi sunucunda kopya sayısı artırılır.
+   Uygulama **durumsuz** olduğu sürece sorun çıkmaz — aşağıdaki kurala bak
 6. **Kuyruk**: e-posta, bildirim, rapor gibi işler istek döngüsünden çıkarılır
 7. **Okuma replikası / veri bölme**: ancak gerçekten gerekirse, ADR ile
 
 Erken optimizasyon yapılmaz. Önce ölç, sonra düzelt, sonra tekrar ölç.
+
+### Ayrı backend varsa: bağımsız ölçeklenebilirlik BAŞTAN kurulur
+
+Web, API ve worker **ayrı ayrı kopyalanabilmelidir.** Bu sonradan eklenen bir
+özellik değil, baştan korunan bir kısıttır — bozulursa fark edilmez, yük
+geldiğinde anlaşılır.
+
+Neden önemli: yük her katmana eşit binmez. Sabah mesai başında yük **API'ye**
+biner (kimlik doğrulama, sorgu), web tarafı yalnızca hazır sayfa gönderir.
+Ayrıysa API 6 kopyaya çıkar, web 1 kalır. Tek parçaysa gereksiz olan da 6 kez
+çalışır ve 6 kat kaynak ödenir.
+
+**Bunu mümkün kılan üç kural — ihlali ölçeklemeyi sessizce kırar:**
+
+1. **Süreçler durumsuzdur.** Oturum, sayaç, kilit, geçici dosya süreç belleğinde
+   tutulmaz — ikinci kopya açıldığında o veriyi göremez. Paylaşılan durum
+   Postgres veya Redis'te yaşar.
+2. **Worker ayrı süreçtir**, API'nin içinde `setInterval` ile çalışmaz. Aksi
+   halde API'yi 6 kopyaya çıkardığında zamanlanmış iş **6 kez** çalışır.
+3. **Zamanlanmış işler tekil çalışacak şekilde korunur** (kuyruk motorunun
+   kilidi veya benzersiz iş anahtarı). Kopya sayısı arttığında mükerrer işlem
+   ve mükerrer bildirim üretilmemelidir.
+
+⚠️ **Test:** her servisten **iki kopya** çalıştırıp uygulamayı bir kez baştan
+sona kullan. Oturum düşüyorsa, sayaç sıfırlanıyorsa veya bildirim iki kez
+geliyorsa durumsuzluk kuralı çiğnenmiş demektir.
 
 ## Bakım
 - Haftalık: hata panosu gözden geçirilir, `npm audit` çalıştırılır.
