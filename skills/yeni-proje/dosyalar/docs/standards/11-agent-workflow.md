@@ -171,6 +171,53 @@ sektör pratiğini bilmesi** gerekiyorsa, o soru ona sorulmamalıydı. Kullanıc
 "hangisi doğruysa o" diyorsa bu bir cevap değil, **sorunun yanlış sorulduğunun
 kanıtıdır.**
 
+## ⛔ AYNI BİLGİ İKİ YERDE YAZILMAZ — biri diğerine İŞARET EDER
+
+Bir olgu (kural, gerekçe, sürüm, komut, port) **tek bir dosyada yaşar.** Başka
+yerler onu tekrar anlatmaz; **oraya işaret eder.**
+
+### Bu neden bir kural, üslup tercihi değil
+
+Aynı bilgi iki yerde yazıldığında ikisi bir süre aynı kalır. Sonra biri
+güncellenir, diğeri güncellenmez — ve **eskiyen kopya, tazesinden ayırt
+edilemez.** Okuyan hangisinin doğru olduğunu bilemez; genellikle **önce
+rastladığına** inanır.
+
+Yani sorun "fazla yazı" değil, **sessizce yalan söyleyen bir belge üretmektir.**
+Hiç yazılmamış olması, yanlış yazılmış olmasından iyidir — çünkü eksik bilgi
+sorulur, yanlış bilgi sorulmaz.
+
+Bir projede yaşandı: API sürümleme kuralı hem standartlara, hem plan dosyasına,
+hem de anlatım dokümanına ayrı ayrı yazıldı. Standart güncellendiğinde diğer
+ikisi geride kaldı ve sonraki oturum eski gerekçeyi savunmaya başladı.
+
+### Uygulama
+
+1. **Yazmadan önce ara.** Bir kavramı açıklamak üzereyken önce `grep` ile
+   projede/kitte geçip geçmediğine bak. Geçiyorsa açıklamayı **oraya** yaz veya
+   oradaki açıklamaya işaret et.
+2. **Ev sahibi dosyayı seç:** konuyu **en dar kapsamda sahiplenen** dosya.
+   Sürümler `00-stack.md`, API sözleşmesi `03-api-guidelines.md`, ortam
+   değişkenleri `13-environments.md` gibi.
+3. **İşaret biçimi belirli olsun:** `03-api-guidelines.md` → "Sözleşme ömrü".
+   Sadece dosya adı vermek yetmez; **hangi başlık** olduğu yazılır, yoksa
+   okuyan aramak zorunda kalır ve aramaz.
+4. **Kopyalanmasına izin verilen tek şey: bir satırlık özet + işaret.**
+   Tablo satırı olabilir; ama **gerekçe** tek yerde durur. Gerekçe kopyalanırsa
+   ikisi ayrışır.
+
+### Sınır — bu kural neyi YASAKLAMAZ
+
+- **Aynı olgunun farklı okuyucuya farklı derinlikte anlatılması** yasak değildir.
+  Standart dosyası kuralı koyar; anlatım/sunum dokümanı aynı kuralı kavram
+  bilmeyen birine açar. Yasak olan **aynı derinlikte ikinci bir kopya**dır.
+- Bu durumda bile **kaynak tektir:** anlatım dokümanı standarda işaret eder,
+  standart anlatıma değil. Ok her zaman **kurala** doğru bakar.
+
+⚠️ **Kendi ürettiğin dokümanlar da bu kurala tabidir.** Plan, rehber ve sunum
+dosyaları çoğaldıkça aynı gerekçeyi üç kez yazmak en kolay yoldur; altı ay sonra
+hangisinin güncel olduğunu kimse bilemez.
+
 ## Kapsam kontrolü
 İstenmeyen iyileştirme yapma. "Bu arada şunu da düzelttim" yasak —
 gördüğün sorunu **bildir**, ayrı iş olarak planla.
