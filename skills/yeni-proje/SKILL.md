@@ -214,63 +214,63 @@ hosting) **onu kullan**, tartışma.
 
 ### 1a — Bu proje kimin için: sınıflandırmayı SEN yap
 
+İki mod vardır, üçüncüsü yoktur: **işyeri projesi** ve **kendi projem**.
+
 Kullanıcı bu soruyu **kendi kelimeleriyle** cevaplar. "Kurum projesi" demeyebilir;
 *"belediye projesi"*, *"İzmir Büyükşehir için"*, *"işyeri projesi"*, *"bireysel
-proje"*, *"kendimi geliştirmek için"*, *"denemek istediğim özellikleri
-ekleyeceğim"* diyebilir.
+proje"*, *"kendimi geliştirmek için"*, *"yeni özellikler denemek için"* diyebilir.
 
-⛔ **Kelimeyi arama, sinyali oku.** Cevabı listedeki bir seçeneğe zorlamak için
-soruyu tekrarlama; sınıflandırmayı yap ve **tek cümleyle doğrulat**:
-*"Bunu kurum projesi olarak alıyorum — deploy sizde değil DevOps'ta olacak,
+⛔ **Kelimeyi arama, sinyali oku.** Cevabı bir seçeneğe zorlamak için soruyu
+tekrarlama; sınıflandırmayı yap ve **tek cümleyle doğrulat**:
+*"Bunu işyeri projesi olarak alıyorum — deploy sizde değil DevOps'ta olacak,
 GitLab varsayılan. Yanlışsa söyle."*
 
-#### Üç mod ve ayırt edici sinyaller
+#### Ayırt edici sinyaller
 
-| Sinyal | **Kurum** | **Kendi ürünüm** | **Deneme / öğrenme** |
-|---|---|---|---|
-| Deploy'u kim yapar | Başkası (DevOps) | Kullanıcı | Kimse — canlıya çıkmayabilir |
-| Altyapı kimin | Kurumun | Kullanıcının (kiralık/bulut) | Yok veya yalnızca local |
-| Kod nerede durur | Kurumun GitLab'ı | Kişisel GitHub | Kişisel GitHub, çoğu zaman özel |
-| Gerçek kullanıcısı olacak mı | Evet | Evet | Hayır |
-| Devredilecek mi | Evet — başkası sürdürecek | Belki | Hayır |
+| Sinyal | **İşyeri projesi** | **Kendi projem** |
+|---|---|---|
+| Deploy'u kim yapar | Başkası (DevOps) | Kullanıcı |
+| Altyapı kimin | Kurumun — zaten var | Kullanıcının; kiralanır veya bulut |
+| Kod nerede durur | Kurumun GitLab'ı | Kişisel GitHub |
+| Alan adı | Kurumun | Kullanıcı satın alır |
+| Teslim var mı | Evet — başkası çalıştıracak | Hayır — kendisi yayınlar |
 
 **Bu ifadeler hangi moda düşer:**
 
 - *"belediye"*, *"İzmir Büyükşehir"*, *"işyeri"*, *"kurum"*, *"müşteri"*,
-  *"bize verildi"*, *"teslim edeceğim"* → **kurum**
-- *"kendi projem"*, *"kendim için"*, *"yayınlayacağım"*, *"kullanıcılarım
-  olacak"*, *"satacağım"* → **kendi ürünüm**
-- *"denemek için"*, *"öğrenmek için"*, *"şu özelliği deneyeceğim"*,
-  *"kendimi geliştirmek için"*, *"portföy"* → **deneme**
+  *"bize verildi"*, *"teslim edeceğim"* → **işyeri projesi**
+- *"kendi projem"*, *"kendim için"*, *"kendimi geliştirmek için"*, *"yeni
+  özellikler denemek için"*, *"öğrenmek için"*, *"portföy"*, *"yayınlayacağım"*
+  → **kendi projem**
 
-⚠️ **Karışan durum:** *"Kendimi geliştirmek için ama gerçekten kullanacağım"*
-→ bu **kendi ürünüm**dür, deneme değil. Ayırt edici soru **gerçek kullanıcısı
-olacak mı**, öğrenme amacı taşıyıp taşımadığı değil.
+⛔ **"Öğrenmek için" veya "denemek için" ifadesi kaliteyi DÜŞÜRMEZ.** Bu ifadeler
+projenin *kime ait olduğunu* söyler, *ne kadar özenli yapılacağını* değil.
+Öğrenme amaçlı bir proje de gerçek kullanıcısı varmış gibi kurulur: katmanlar,
+testler, tip güvenliği, Docker, CI, dokümantasyon — hepsi aynı.
 
-#### Mod neyi değiştiriyor
+Gerekçe kitin kendi kuralıdır (`11-agent-workflow.md` → "Gerçek proje
+varsayılanı"): *öğrenilen şey gerçek üretim pratiğidir.* Deneme projesinde
+edinilen kısayol alışkanlığı bir sonraki gerçek projeye bedava taşınır. Sahte
+olması gereken tek şey **veridir**; mühendislik sahte olmaz.
 
-| | **Kurum** | **Kendi ürünüm** | **Deneme** |
-|---|---|---|---|
-| Kod barındırma | Kurumun GitLab'ı | GitHub | GitHub (özel) |
-| CI dosyası | `.gitlab-ci.yml` | `.github/workflows/` | Kurulur ama sade |
-| İnceleme | Merge Request | Pull Request | Doğrudan `main` kabul edilebilir |
-| Alan adı · sunucu · SSL | **Hiç açılmaz** — DevOps'un işi | Kullanıcı alır, sen yönlendirirsin | Yok |
-| Yayın adımı | **6b** — teslim paketi hazırla ve doğrula | **6a** — canlıya çıkar | 6 **atlanır**, local yeterli |
-| Docker | **Zorunlu** — DevOps'la sözleşme | Kendi sunucusuna çıkacaksa | Yalnızca veritabanı için |
-| Doküman seti | Tam | Tam | `README` yeterli |
+#### Mod neyi değiştiriyor — yalnızca YAYIN ve TESLİM tarafını
 
-⛔ **Cevap "kurum" ise alan adı, sunucu kiralama, DNS ve SSL adımlarını hiç
-açma.** O işler DevOps'a ait; kullanıcıya gereksiz iş yüklemek olur.
+| | **İşyeri projesi** | **Kendi projem** |
+|---|---|---|
+| Kod barındırma | Kurumun GitLab'ı | GitHub |
+| CI dosyası | `.gitlab-ci.yml` | `.github/workflows/ci.yml` |
+| İnceleme | Merge Request | Pull Request |
+| Alan adı · sunucu · DNS · SSL | **Hiç açılmaz** — DevOps'un işi | Kullanıcı yapar, sen adım adım yönlendirirsin |
+| Yayın adımı | **6b** — teslim paketini hazırla ve doğrula | **6a** — canlıya çıkar |
+| Ortam değişkenleri | `.env.example` ile **belgelenir**, değerleri DevOps girer | Kullanıcı girer |
+| İzleme | Kurumun sistemi — sen JSON log üretirsin | Kurulur |
 
-⚠️ **"Deneme" modu mühendislik kalitesini düşürmez.** Değişen tek şey **yayın
-ve teslim** tarafıdır: canlıya çıkma, tam doküman seti ve teslim paketi
-atlanabilir. Katman ayrımı, testler, tip güvenliği ve gizli bilgi kuralları
-aynen geçerlidir — çünkü öğrenilen şey gerçek üretim pratiğidir
-(`11-agent-workflow.md` → "Gerçek proje varsayılanı").
+**İki modda da aynı kalanlar:** mimari ve katman kuralları · testler (unit,
+entegrasyon, mimari) · Docker ve Compose · tip güvenliği · gizli bilgi kuralları ·
+doküman seti · commit disiplini.
 
-⚠️ **Mod sonradan değişebilir.** Deneme olarak başlayan bir proje gerçek
-kullanıcı kazanırsa mod yükseltilir; bu bir ADR ile kayda geçer ve atlanmış
-adımlar (CI, Docker, doküman) tamamlanır.
+⛔ Cevap **işyeri projesi** ise alan adı, sunucu kiralama, DNS ve SSL adımlarını
+hiç açma. O işler DevOps'a ait; kullanıcıya gereksiz iş yüklemek olur.
 
 ### 1b — Backend kurgusu: Next tek başına mı, Next + Nest mi
 
