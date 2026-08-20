@@ -212,22 +212,65 @@ shadcn/ui + Prisma + PostgreSQL + Zod · mobil varsa Expo, aynı REST API.
 Kullanıcı farklı bir şey söylerse (başka sunucu, başka veritabanı, başka
 hosting) **onu kullan**, tartışma.
 
-### 1a — Kim için: kendi projem mi, kurum projesi mi
+### 1a — Bu proje kimin için: sınıflandırmayı SEN yap
 
-| | **Kendi projem** | **Kurum projesi** |
-|---|---|---|
-| Kod nerede | GitHub | Kurumun GitLab'ı |
-| CI dosyası | `.github/workflows/ci.yml` | `.gitlab-ci.yml` |
-| İnceleme | Pull Request | Merge Request |
-| Alan adı · sunucu · SSL | **Kullanıcı** alır, sen yönlendirirsin | Kurumun zaten var |
-| Deploy | **Sen** yaparsın | **DevOps** yapar — sen hiç deploy etmezsin |
-| Teslim | Çalışan canlı site + link | **Çalıştırılabilir paket** (Adım 6b) |
-| Docker | Local + kendi sunucu senaryosunda | **Her zaman zorunlu** — DevOps'la sözleşme |
-| Ortam değişkenleri | Kullanıcı girer | `.env.example` ile **belgelenir**, DevOps girer |
-| İzleme | Kurulur | Kurumun sistemi — sen **JSON log** üretirsin |
+Kullanıcı bu soruyu **kendi kelimeleriyle** cevaplar. "Kurum projesi" demeyebilir;
+*"belediye projesi"*, *"İzmir Büyükşehir için"*, *"işyeri projesi"*, *"bireysel
+proje"*, *"kendimi geliştirmek için"*, *"denemek istediğim özellikleri
+ekleyeceğim"* diyebilir.
 
-⛔ Cevap `kurum projesi` ise **alan adı, sunucu kiralama, DNS, SSL adımlarını
-hiç açma.** O işler DevOps'a ait; kullanıcıya gereksiz iş yüklemek olur.
+⛔ **Kelimeyi arama, sinyali oku.** Cevabı listedeki bir seçeneğe zorlamak için
+soruyu tekrarlama; sınıflandırmayı yap ve **tek cümleyle doğrulat**:
+*"Bunu kurum projesi olarak alıyorum — deploy sizde değil DevOps'ta olacak,
+GitLab varsayılan. Yanlışsa söyle."*
+
+#### Üç mod ve ayırt edici sinyaller
+
+| Sinyal | **Kurum** | **Kendi ürünüm** | **Deneme / öğrenme** |
+|---|---|---|---|
+| Deploy'u kim yapar | Başkası (DevOps) | Kullanıcı | Kimse — canlıya çıkmayabilir |
+| Altyapı kimin | Kurumun | Kullanıcının (kiralık/bulut) | Yok veya yalnızca local |
+| Kod nerede durur | Kurumun GitLab'ı | Kişisel GitHub | Kişisel GitHub, çoğu zaman özel |
+| Gerçek kullanıcısı olacak mı | Evet | Evet | Hayır |
+| Devredilecek mi | Evet — başkası sürdürecek | Belki | Hayır |
+
+**Bu ifadeler hangi moda düşer:**
+
+- *"belediye"*, *"İzmir Büyükşehir"*, *"işyeri"*, *"kurum"*, *"müşteri"*,
+  *"bize verildi"*, *"teslim edeceğim"* → **kurum**
+- *"kendi projem"*, *"kendim için"*, *"yayınlayacağım"*, *"kullanıcılarım
+  olacak"*, *"satacağım"* → **kendi ürünüm**
+- *"denemek için"*, *"öğrenmek için"*, *"şu özelliği deneyeceğim"*,
+  *"kendimi geliştirmek için"*, *"portföy"* → **deneme**
+
+⚠️ **Karışan durum:** *"Kendimi geliştirmek için ama gerçekten kullanacağım"*
+→ bu **kendi ürünüm**dür, deneme değil. Ayırt edici soru **gerçek kullanıcısı
+olacak mı**, öğrenme amacı taşıyıp taşımadığı değil.
+
+#### Mod neyi değiştiriyor
+
+| | **Kurum** | **Kendi ürünüm** | **Deneme** |
+|---|---|---|---|
+| Kod barındırma | Kurumun GitLab'ı | GitHub | GitHub (özel) |
+| CI dosyası | `.gitlab-ci.yml` | `.github/workflows/` | Kurulur ama sade |
+| İnceleme | Merge Request | Pull Request | Doğrudan `main` kabul edilebilir |
+| Alan adı · sunucu · SSL | **Hiç açılmaz** — DevOps'un işi | Kullanıcı alır, sen yönlendirirsin | Yok |
+| Yayın adımı | **6b** — teslim paketi hazırla ve doğrula | **6a** — canlıya çıkar | 6 **atlanır**, local yeterli |
+| Docker | **Zorunlu** — DevOps'la sözleşme | Kendi sunucusuna çıkacaksa | Yalnızca veritabanı için |
+| Doküman seti | Tam | Tam | `README` yeterli |
+
+⛔ **Cevap "kurum" ise alan adı, sunucu kiralama, DNS ve SSL adımlarını hiç
+açma.** O işler DevOps'a ait; kullanıcıya gereksiz iş yüklemek olur.
+
+⚠️ **"Deneme" modu mühendislik kalitesini düşürmez.** Değişen tek şey **yayın
+ve teslim** tarafıdır: canlıya çıkma, tam doküman seti ve teslim paketi
+atlanabilir. Katman ayrımı, testler, tip güvenliği ve gizli bilgi kuralları
+aynen geçerlidir — çünkü öğrenilen şey gerçek üretim pratiğidir
+(`11-agent-workflow.md` → "Gerçek proje varsayılanı").
+
+⚠️ **Mod sonradan değişebilir.** Deneme olarak başlayan bir proje gerçek
+kullanıcı kazanırsa mod yükseltilir; bu bir ADR ile kayda geçer ve atlanmış
+adımlar (CI, Docker, doküman) tamamlanır.
 
 ### 1b — Backend kurgusu: Next tek başına mı, Next + Nest mi
 
