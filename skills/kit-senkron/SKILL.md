@@ -140,6 +140,41 @@ projenin kendi commit protokolüne uy (`CLAUDE.md` §6.3 — onaysız commit yok
 - Proje tarafında: kural değişikliği bir mimari kararsa `docs/project/decisions/`
   altına ADR yaz
 
+## ⛔ KİT DEPOSU HERKESE AÇIKTIR — gizli hiçbir şey yazılmaz
+
+`bariskose9/bariskose-skills` deposu **public**'tir ve öyle kalması bilinçli bir
+karardır: kit hiçbir makinede kimlik doğrulaması gerektirmeden kurulabilsin diye.
+Bunun bedeli şudur — **depoya yazılan her satırı herkes okuyabilir.**
+
+⛔ Kite asla yazılmaz:
+
+- API anahtarı, jeton, şifre, bağlantı dizesi (bir örnek veya "sahte" değer olsa bile)
+- Kurum içi bilgi: sunucu adresi, iç ağ adı, kurum yapısı, personel bilgisi
+- Müşteri veya proje adı üzerinden çıkarılabilecek ticari bilgi
+- Gerçek veri örneği — kişisel veri içerebilir
+
+**Bunlar nereye yazılır:** projenin kendi deposuna. Değerler `.env` dosyasına
+(commit edilmez), yapılandırma bilgisi `docs/project/altyapi-durumu.md` içine,
+gizli olmayan tanımlar `.env.example` içine.
+
+### Ayırt edici test
+
+Bir bilgiyi kite yazmadan önce sor: **"Bu satırı hiç tanımadığım biri okusa,
+kullanıcının kurumu veya sistemi hakkında bir şey öğrenir mi?"**
+
+Öğreniyorsa o bilgi **kural** değil **veri**dir; kite değil projeye gider.
+
+⚠️ Kit yalnızca **mühendislik kuralı** taşır: "şu durumda şu yapılır, çünkü."
+Kural evrenseldir ve okunması zarar vermez. Veri özeldir.
+
+### Depoyu gizli yapmak neden çözüm değil
+
+Depo private yapılırsa kit **her makinede kimlik doğrulaması** ister; kurulum
+adımı artar ve kurumsal bir makinede kişisel hesap bağlama zorunluluğu doğar.
+Asıl mesele erişim değil, **kite en baştan gizli bilgi yazılmaması**dır — private
+bir depo da yanlışlıkla paylaşılabilir, çatallanabilir veya sonradan
+açılabilir.
+
 ## Sınırlar
 
 - **Sessizce senkronlama yok.** Her fark kullanıcıya sorulur; "küçük değişiklik"

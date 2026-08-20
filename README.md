@@ -101,6 +101,12 @@ Sonra Claude'u yeniden başlat.
 Kit ve tüm dokümanlar **Türkçe**. Kod, commit mesajı, değişken ve tablo adları
 **İngilizce**.
 
+## Katkı kuralı
+
+⛔ Bu depo **herkese açıktır.** Kite hiçbir gizli bilgi yazılmaz — anahtar,
+şifre, kurum içi adres, gerçek veri. Kural ve gerekçesi:
+`skills/kit-senkron/SKILL.md` → *"Kit deposu herkese açıktır"*.
+
 ## Lisans
 
 MIT
