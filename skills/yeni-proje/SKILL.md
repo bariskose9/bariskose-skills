@@ -62,6 +62,48 @@ Bu kit iki dış parçaya dayanır:
 **Sormadan kurma.** Kullanıcının makinesine izinsiz paket eklemek bu kitin
 kendi kuralının ihlalidir.
 
+### Adım 0a — Platformu TESPİT ET (sorma)
+
+⛔ **Kullanıcıya "Windows mu Mac mi?" diye sorma.** Tek komutla öğrenebileceğin
+bir şeyi sormak, "yapabildiğini kullanıcıya yaptırma" kuralının ihlalidir.
+
+```bash
+uname -s        # Darwin = macOS · Linux = Linux · MINGW*/MSYS* = Windows (Git Bash)
+```
+
+Windows'ta bu komut yoksa PowerShell'desin demektir. Tespit ettiğini **tek
+cümleyle bildir**, sonra devam et: *"Windows tespit ettim, komutları ona göre
+vereceğim."*
+
+#### Platform farkları — hepsi kuruluma etki eder
+
+| Konu | macOS | Windows |
+|---|---|---|
+| Kabuk | `zsh` / `bash` | **PowerShell** (hook'larda `"shell": "powershell"` şart) |
+| Ana klasör | `~/.claude/...` | `C:\Users\<kullanıcı>\.claude\...` |
+| Docker arka ucu | Yerel | **WSL2** — Docker Desktop ayarından açık olmalı |
+| Satır sonu | `LF` | `CRLF` — bkz. aşağıdaki uyarı |
+| Sesli bildirim | `afplay` + `say` | `SAPI.SpVoice` + `[console]::beep` |
+
+⚠️ **Satır sonu tuzağı (Windows).** Git varsayılan olarak dosyaları `CRLF` ile
+indirir. Kabuk betikleri ve Docker içindeki dosyalar bundan bozulur; hata mesajı
+genellikle anlaşılmaz olur (`\r: command not found` gibi). Kurulumda `.gitattributes`
+yazılır:
+
+```
+* text=auto eol=lf
+```
+
+⚠️ **Port kaydırma platformdan bağımsızdır.** Aynı makinede başka proje çalışıp
+çalışmadığına bakılır (`docker ps` ve dinlenen portlar), platforma değil.
+Konteyner içi portlar her zaman standart kalır; yalnızca host eşlemesi `.env`
+üzerinden kaydırılır (`13-environments.md`).
+
+⚠️ **Aynı proje iki platformda yürütülüyorsa** (örn. kurumda Windows, evde Mac)
+platforma özgü hiçbir şey repoya yazılmaz: mutlak yol, `.DS_Store`, kabuk
+betiği uzantısı. Komutlar `package.json` script'lerinde toplanır; ikisinde de
+`pnpm <script>` çalışır.
+
 ### Adım 0b — Sesli bildirim (macOS)
 
 Kullanıcı ekrana sürekli bakmıyor; Claude'un ne zaman beklediği duyulmalı.
