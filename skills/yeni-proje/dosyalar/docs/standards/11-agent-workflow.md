@@ -222,6 +222,64 @@ hangisinin güncel olduğunu kimse bilemez.
 İstenmeyen iyileştirme yapma. "Bu arada şunu da düzelttim" yasak —
 gördüğün sorunu **bildir**, ayrı iş olarak planla.
 
+## Dışarıya giden doküman — anlatım standardı
+
+Bir doküman kullanıcıdan **başkasına** gidiyorsa (sunum, teslim dosyası,
+devir notu, README), aşağıdaki kurallar geçerlidir. Oturum içi anlatım için
+"Öğretme yükümlülüğü" bölümü geçerlidir; ikisi karıştırılmaz.
+
+### ⛔ Doküman, okuyucusunun veya yazarının bilgi seviyesini ELE VERMEZ
+
+*"Kod bilgisi gerektirmeden yazıldı"*, *"basitçe anlatalım"*, *"yeni
+başlayanlar için"* gibi ifadeler **yazılmaz.** Bu cümleler dokümanı okuyan üçüncü
+kişiye, yazarın veya sahibinin ne bildiği hakkında bilgi verir — ve bu bilgi
+onun aleyhine kullanılabilir.
+
+Doküman, konuyu bilen biri tarafından yazılmış gibi durur; sadeliği bir
+**tercih** olarak görünür, bir **ihtiyaç** olarak değil.
+
+⚠️ Aynı sebeple *"senin için"*, *"anlaman için"* gibi kullanıcıya hitap eden
+ifadeler de dışarı giden dokümanda bulunmaz. Doküman kimseye hitap etmez;
+konuyu anlatır.
+
+### Her kavram ÜÇ adımda açılır
+
+Bir kavramın yalnızca teknik tanımını yazmak ezber üretir, anlayış üretmez.
+Okuyucunun kavramı **kendi zihninde bir yere oturtabilmesi** için üç adım
+zorunludur:
+
+1. **Gerçek hayattan karşılığı** — çarpıcı ve akılda kalıcı bir benzetme
+2. **Yazılımdaki tanımı** — sektörde kullanılan terimle
+3. **BU projede tam olarak nerede** — hangi somut sorunu, hangi ekranda,
+   hangi tabloda çözüyor
+
+⛔ Üçüncü adım atlanamaz. *"Katmanlar birbirinden ayrılır"* cümlesi tek başına
+hiçbir şey öğretmez; *"Prisma değişse yalnızca infrastructure katmanı etkilenir,
+domain ve application dokunulmaz kalır"* öğretir.
+
+### Kod görülmeden anlaşılmayacak her başlıkta kod bulunur
+
+Bir tasarım deseni, bir kural veya bir mekanizma **kod olmadan havada
+kalıyorsa**, kısa bir örnek konur (5–15 satır). Amaç kodu öğretmek değil,
+iddiayı **gösterilebilir** kılmaktır.
+
+Özellikle etkili olan kalıp: **yanlış hâli → neden yanlış → doğru hâli.**
+Yalnızca doğru hâli göstermek, okuyucunun kendi kodundaki hatayı tanımasını
+sağlamaz.
+
+⚠️ Kod örneği **yorum satırıyla açıklanmaz**; çevresindeki metin açıklar. Kodun
+içine "burada şunu yapıyoruz" yazmak, kodu okuyamayan için de okuyabilen için de
+gürültüdür.
+
+### Tekrar, anlaşılırlığı artırıyorsa serbesttir
+
+Bu, "aynı bilgi iki yerde yazılmaz" kuralının istisnası **değildir**; sınırıdır.
+Aynı **gerekçe** iki yerde yazılmaz. Ancak aynı kavram farklı bölümlerde farklı
+açıdan ele alınabilir — biri tanımlar, diğeri o projedeki uygulamasını gösterir.
+
+Ölçüt şudur: ikinci geçiş okuyucuya **yeni bir şey** katıyor mu? Katmıyorsa
+tekrardır ve silinir; katıyorsa kalır ve ilkine işaret eder.
+
 ## Öğretme yükümlülüğü
 Kullanıcı bu projeyle öğreniyor. Her adımdan sonra kod göstermeden,
 Türkçe, en fazla 5 madde: ne yaptın, neden böyle yaptın, alternatifi neydi.
