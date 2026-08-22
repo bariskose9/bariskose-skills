@@ -62,6 +62,25 @@ async create(dto: CreateWorkOrderDto) {
 **Kapsam:** frontend, backend, testler, altyapı dosyaları (Dockerfile, CI,
 compose) — hepsi. İstisna yok.
 
+### Yorumlar ÖNEM SIRASINA göre işaretlenir
+
+Her satır yorumluysa, hayati bir uyarı ile sıradan bir açıklama aynı görsel
+ağırlıkta durur ve uyarı gözden kaçar. Bu yüzden yorumlar dört seviyeye ayrılır:
+
+| İşaret | Ne zaman | Örnek |
+|---|---|---|
+| `⛔` | **Yapılırsa sistem bozulur.** Yasak, ihlali kabul edilemez | `⛔ Bu alan response şemasına eklenmez — şifre özeti dışarı sızar` |
+| `⚠️` | **Kolayca gözden kaçar, sonucu ağır.** Tuzak, yan etki, sıra bağımlılığı | `⚠️ Bu kontrol kaldırılırsa iki kullanıcının verisi karışır` |
+| `⭐` | **Tasarımın kalbi.** Kararın "neden"i burada; sorulduğunda anlatılacak yer | `⭐ Kontrol ve yazma tek ifadede — ayrılırsa yarış koşulu doğar` |
+| *(işaretsiz)* | Sıradan açıklama: bu veri nereden geliyor, ne oluyor, nereye gidiyor | `// Kullanıcının formda doldurduğu bilgiler buraya geliyor` |
+
+⛔ **İşaretler enflasyona uğratılmaz.** Her yoruma `⚠️` konursa hiçbiri uyarı
+olmaz. Bir blokta genellikle **en fazla bir** işaretli yorum bulunur.
+
+⚠️ **`⚠️` ve `⛔` bir davranış iddiasıdır** — aşağıdaki "iddiayı ölç" kuralı
+bunlara **zorunlu** olarak uygulanır. İddian ölçülemiyorsa işaret koyma, düz
+yorum yaz.
+
 ### Yorumun anlatacağı şey
 
 | Yaz | Yazma |
