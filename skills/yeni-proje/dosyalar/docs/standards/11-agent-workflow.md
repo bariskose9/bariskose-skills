@@ -267,9 +267,11 @@ iddiayı **gösterilebilir** kılmaktır.
 Yalnızca doğru hâli göstermek, okuyucunun kendi kodundaki hatayı tanımasını
 sağlamaz.
 
-⚠️ Kod örneği **yorum satırıyla açıklanmaz**; çevresindeki metin açıklar. Kodun
-içine "burada şunu yapıyoruz" yazmak, kodu okuyamayan için de okuyabilen için de
-gürültüdür.
+⚠️ Kod örneğinin içine **satır satır Türkçe açıklama yazılır** — kural
+`02-coding-standards.md` → *"Kod, okuyamayan biri için de anlaşılır olur"*.
+Çevresindeki metin **neden** o kodun yazıldığını anlatır; kodun içindeki
+yorumlar **ne yaptığını** satır düzeyinde anlatır. İkisi birbirinin yerine
+geçmez.
 
 ### Tekrar, anlaşılırlığı artırıyorsa serbesttir
 

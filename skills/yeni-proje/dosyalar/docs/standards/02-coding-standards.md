@@ -27,7 +27,57 @@
   "Bir hata oluştu" değil → "Seçtiğiniz saat dolmuş. Lütfen başka bir saat seçin."
 
 ## Yorumlar
-- "Ne" değil **"neden"** yazılır. Kodun kendisi "ne"yi anlatmalı.
+
+### ⛔ KOD, OKUYAMAYAN BİRİ İÇİN DE ANLAŞILIR OLUR
+
+Bu projelerin kodunu yalnızca yazılımcılar okumuyor. Kararı savunan kişi,
+kurumdaki iş birimi ve teknik incelemeyi yapan değerlendirmeci de okuyor.
+Bu yüzden **her kod bloğu, kod okumayı hiç bilmeyen birinin de takip
+edebileceği kadar Türkçe yorumla açıklanır.**
+
+Yorumlar **veri akışını** anlatır: bu veri nereden geliyor, burada ne oluyor,
+nereye gidiyor.
+
+```ts
+// Kullanıcının formda doldurduğu bilgiler buraya geliyor
+async create(dto: CreateWorkOrderDto) {
+
+  // Önce kural kontrolü: kapalı bir lokasyona iş emri açılamaz
+  const location = await this.locations.findActive(dto.locationId);
+  if (!location) throw new LocationInactiveError(dto.locationId);
+
+  // SLA süresini hesaplayan sınıfı seç (önceliğe ve varlığa göre değişir)
+  const policy = this.slaFactory.resolve(dto);
+  const plan = policy.calculate(dto);
+
+  // Kaydı ve ilk geçmiş satırını BİRLİKTE yaz — biri olup diğeri olmasın diye
+  return this.prisma.$transaction(async (tx) => {
+    const created = await tx.workOrder.create({ data: { ...dto, slaDueAt: plan.dueAt } });
+    await tx.workOrderHistory.create({ data: { workOrderId: created.id, to: 'OPEN' } });
+    return created;
+  });
+}
+```
+
+**Kapsam:** frontend, backend, testler, altyapı dosyaları (Dockerfile, CI,
+compose) — hepsi. İstisna yok.
+
+### Yorumun anlatacağı şey
+
+| Yaz | Yazma |
+|---|---|
+| Veri nereden geliyor, nereye gidiyor | Değişken adının tekrarı (`// id'yi al` → `const id`) |
+| Neden bu kontrol var, olmazsa ne olur | Dilin kendi sözdizimi (`// döngü başlıyor`) |
+| Hangi kütüphane/API devreye giriyor | Kodda zaten açıkça yazan şey |
+| İş kuralının Türkçe karşılığı | — |
+
+⚠️ **Yorum kodla birlikte güncellenir.** Kod değişip yorum kalırsa okuyan
+yanlış bilgilenir; kitin kendi kuralına göre *yanlış bir gerekçe, yorumsuz
+bırakmaktan kötüdür.* Bu yüzden kod değişikliğinin tamamlanma şartına
+"ilgili yorumlar güncellendi" dahildir (`10-definition-of-done.md`).
+
+### Ayrıca geçerli olanlar
+- **"Neden"** her zaman yazılır; "ne" açıklaması onu ortadan kaldırmaz.
 - Ölü kod yorum satırına alınmaz, silinir (git'te duruyor zaten).
 - `TODO` bırakılacaksa: `// TODO(#issue-no): <ne yapılacak>` — issue'suz TODO yasak.
 - ⛔ **BİR "NEDEN" YAZMADAN ÖNCE İDDİAYI ÖLÇ.** Yorum bir davranış iddiası
