@@ -317,7 +317,7 @@ Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
 2. `CLAUDE.md` §0 bloğunu Adım 1'deki cevaplarla **doldur**
 3. `docs/standards/sablonlar/` içindeki şablonları `docs/project/` altına aç:
    `PRD.md` · `roadmap.md` · `altyapi-durumu.md` · `CHANGELOG.md` ·
-   `sonraki-adim-prompt.md` · `teknoloji-ve-plan.md` ·
+   `sonraki-adim-prompt.md` · `teknoloji-ve-plan.md` · `ogrendiklerim.md` ·
    `decisions/ADR-000-sablon.md` ·
    (veritabanı varsa) `data-model.md` · (dış servis varsa) `integrations.md` ·
    (sahte veri gerekiyorsa) `fake-data-guide.md`

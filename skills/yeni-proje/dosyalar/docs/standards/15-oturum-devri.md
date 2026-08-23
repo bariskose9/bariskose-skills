@@ -21,6 +21,31 @@ bitmiş sayar ve üstüne kurar.
 ⛔ Oturum kapatılmadan önce kullanıcıya **tik atıldığı söylenir**:
 *"Adım 6 tamamlandı, roadmap'te işaretledim. Sırada Adım 7 var."*
 
+### ⛔ ÖĞRENİLEN ŞEYİ KULLANICIYA HATIRLATMA — SOR
+
+Oturumda kullanıcı bir şeyi ilk kez anladıysa, bir soruyu sormayı unuttuysa veya
+aynı hatayı ikinci kez yaptıysa, oturum kapanırken **ajan sorar**:
+
+> *"Bu oturumda şunu fark ettim: <gözlem>. `ogrendiklerim.md` defterine
+> yazayım mı?"*
+
+⛔ Kullanıcının *"bunu deftere yaz"* demesi beklenmez. Kullanıcı zaten o anda
+öğrenmekle meşguldür; not almayı hatırlaması beklenemez — **fark eden taraf
+yazmayı teklif eder.**
+
+**Hangi gözlem deftere girer:**
+
+| Gözlem | Nereye |
+|---|---|
+| *"Bu terimi ilk kez anladım"* | `ogrendiklerim.md` → zor gelen kararlar |
+| *"Şunu sormayı unutmuşuz"* | `ogrendiklerim.md` → sormayı unuttuğum sorular |
+| Aynı hata **ikinci** kez | `ogrendiklerim.md` → tekrar eden hatalar |
+| Aynı hata **üçüncü** kez | Artık kişisel değil → `/kit-senkron` ile **kite** |
+| *"Her projede böyle yapılmalı"* | Doğrudan **kite** (`/kit-senkron`) |
+
+⚠️ **Ayrım:** Kite **kural** gider ("şu durumda şu yapılır"). Deftere **deneyim**
+girer ("ben şunu atlamıştım"). Deneyim üç kez tekrarlanırsa kurala dönüşür.
+
 ⛔ **Aynı anda `teknoloji-ve-plan.md` da güncellenir.** O adımda alınan kararlar
 — hangi teknoloji neden seçildi, hangi alternatif neden elendi — oraya yazılır.
 Sona bırakılırsa gerekçe unutulur; karar kalır, sebebi kaybolur.
