@@ -309,8 +309,11 @@ Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
 
 ## Adım 2 — Kit dosyalarını yerleştir
 
-1. `dosyalar/` içeriğini projeye kopyala: `CLAUDE.md`, `REPO-YAPISI.md`,
-   `docs/standards/**`
+1. `dosyalar/` içeriğini projeye kopyala: `CLAUDE.md`, `CALISMA-KILAVUZU.md`,
+   `REPO-YAPISI.md`, `docs/standards/**`
+
+   ⚠️ `CALISMA-KILAVUZU.md` **kullanıcı için**; `CLAUDE.md` ajan için. Kurulum
+   bitince kullanıcıya *"nasıl devam edeceğin bu dosyada"* diye söylenir.
 2. `CLAUDE.md` §0 bloğunu Adım 1'deki cevaplarla **doldur**
 3. `docs/standards/sablonlar/` içindeki şablonları `docs/project/` altına aç:
    `PRD.md` · `roadmap.md` · `altyapi-durumu.md` · `CHANGELOG.md` ·
@@ -445,6 +448,7 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 - [ ] `.env` commit edilmemiş, `.env.example` commit edilmiş mi
 - [ ] `sonraki-adim-prompt.md` bir sonraki adımı tarif ediyor mu
 - [ ] `teknoloji-ve-plan.md` açıldı mı ve kurulumda alınan kararlar işlendi mi
+- [ ] `CALISMA-KILAVUZU.md` kopyalandı mı ve kullanıcıya yeri söylendi mi
 
 Sonra kullanıcıya **Türkçe, en fazla 5 maddede** özet ver: ne kuruldu, canlı
 adres, sıradaki roadmap adımı, senden beklenen (varsa hesap/ayar).

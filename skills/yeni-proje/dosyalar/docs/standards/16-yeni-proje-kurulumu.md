@@ -85,6 +85,7 @@ gerekçe, kararı verirken en net hatırlanır.
 | Ne | Nereye | Nasıl |
 |---|---|---|
 | `CLAUDE.md` | repo kökü | **Olduğu gibi kopyala**, sonra yalnızca §0 "Proje Değişkenleri" bloğunu doldur |
+| `CALISMA-KILAVUZU.md` | Kullanıcının kılavuzu: nasıl başlanır, ne sorulur, hangi dosya ne işe yarar | Olduğu gibi kopyalanır |
 | `docs/standards/**` (00–17) | `docs/standards/` | **Olduğu gibi kopyala, İÇİNİ DEĞİŞTİRME.** Stack farklıysa yalnızca `00-stack.md` tablosu güncellenir |
 | `docs/standards/sablonlar/**` | `docs/project/` | Kopyala ve **içini doldur** — her şablonun başında ne yazılacağı anlatılıyor |
 | `REPO-YAPISI.md` | repo kökü | Kopyala, projeye özel klasör adlarını değiştir |
