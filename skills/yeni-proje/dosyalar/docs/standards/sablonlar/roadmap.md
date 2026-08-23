@@ -1,60 +1,42 @@
-# Yol Haritası
+# Yol Haritası — yapım planı
 
-<!--
-ŞABLON — `docs/project/roadmap.md` olarak kopyalanır ve doldurulur.
-Bu yorum bloğu doldurduktan sonra silinir.
+Bu dosya *"ne yapılacak"* sorusunun tek cevabıdır. Her adım; **ne ürettiğini,
+hangi teknolojiyle, hangi klasöre yazıldığını ve neye bağlandığını** söyler.
 
-BU DOSYA NEDEN VAR
-İki soruyu cevaplar: "nerede kaldık" ve "kabul ettiğimiz eksikler neler".
-Yeni bir oturum bu dosyaya bakarak sıradaki işi bulur.
+**Kutucuklar:** `⬜` yapılmadı · `✅` bitti.
 
-NASIL SIRALANIR
-Bağımlılık sırasına göre — her adım bir öncekinin üzerine kurulur, tahmini
-süreye göre DEĞİL. İlk üç adım neredeyse her projede aynıdır:
-  1. Repo + framework + lint/format + docs/
-  2. Hosting + veritabanı bağlantısı + /api/health + CI
-  3. Veri modeli + migration + tohumlama
+⛔ **Bir adım bitmeden kutucuğu işaretlenmez; kutucuk işaretlenmeden oturum
+kapatılmaz.** Projeye ara verilip dönüldüğünde nerede kalındığını hatırlamanın
+tek güvenilir yolu bu liste.
 
-NE ZAMAN GÜNCELLENİR
-· Bir adım bitince → üstü çizilir + **BİTTİ** yazılır (satır SİLİNMEZ)
-· Yeni bir eksik kabul edilince → teknik borç tablosuna satır eklenir
-· Bir borç ödenince → üstü çizilir + **ÖDENDİ (tarih)** + ne yapıldığı yazılır
--->
+---
 
-Sıra kasıtlıdır: her adım bir öncekinin üzerine kurulur. Bir adım
-`docs/standards/10-definition-of-done.md` kapılarını geçmeden sonrakine geçilmez.
+## ⬜ Adım N — <başlık>
 
-| # | Adım | Çıktı |
-|---|---|---|
-| 0 | Repo, framework, TypeScript, lint/format, `docs/`, `CLAUDE.md` | Boş proje ayakta |
-| 1 | Hosting + veritabanı bağlantısı, `/api/health`, CI pipeline | **Canlı boş sayfa** |
-| 2 | Local veritabanı (Docker), ORM kurulumu, ilk migration | Local DB çalışıyor |
-| 3 | Veri modeli + tablolar + idempotent tohumlama | Veri var |
-| 4 | <ilk gerçek özellik> | Test + PR + deploy |
-| n-1 | **Yasal sayfalar + çerez rızası** (`14-privacy-and-compliance.md`) | Aydınlatma metni yayında |
-| n | **Hesap yönetimi: verimi indir + hesabımı sil** — PRD §5.x | Veri hakları çalışıyor |
+**Amaç:** <bu adım bitince ne elde edilmiş olacak — tek cümle>
 
-<!-- Biten adım şöyle işaretlenir:
-| 3 | ~~Veri modeli + tablolar~~ **BİTTİ** | 37 tablo + idempotent seed |
--->
+| | |
+|---|---|
+| **Teknoloji** | <hangi araçlar, bu adımda neden gerekli> |
+| **Nereye** | <klasör/dosya yolu> |
+| **Neye bağlanıyor** | <veri nereden gelip nereye gidiyor; hangi adımı besliyor> |
+| **Bitti sayılır** | <gözle görülebilir somut kontrol — "çalışıyor" yetmez> |
+| **Ayrıntısı** | <hangi dokümanın hangi bölümünde> |
 
-> ⛔ **SON İKİ ADIM KULLANICI HESABI OLAN HER PROJEDE ZORUNLUDUR ve üretime
-> çıkmadan önce biter.** "Sonra ekleriz" denen bir silme akışı, ilk gerçek
-> kullanıcı geldiğinde ödenmesi imkânsız bir borca dönüşür: veri modeli
-> silinebilir biçimde kurulmamışsa sonradan silinemez hâle gelir. Gerekçe ve
-> kurallar `14-privacy-and-compliance.md` → "Hesap silme" bölümünde.
+> Gerekiyorsa buraya **ℹ️ bilgi kutusu**: bu adımın neden bu sırada olduğu,
+> atlanırsa ne bozulacağı.
 
-## Teknik borç
+---
 
-<!--
-BOŞ BIRAKILMAZ, GİZLENMEZ. Buraya sadece BİLİNEN ve KABUL EDİLMİŞ eksikler
-yazılır. "Neden kabul edildi" sütunu gerçek gerekçe ister — "vakit yoktu"
-gerekçe değildir; neyin karşılığında feda edildiği yazılır.
+*(Adımlar bağımlılık sırasına göre yazılır. İlk üç adım hemen her projede
+aynıdır: ortam kurulumu → PRD → boş ama çalışan iskelet.)*
 
-Bir borç ödendiğinde satır SİLİNMEZ, üstü çizilir. Sebebi: sonraki oturum
-"bu neden böyle yapılmış" diye aynı tartışmayı baştan açmasın.
--->
+---
 
-| # | Borç | Neden kabul edildi | Ne zaman ödenir |
-|---|---|---|---|
-| 1 | | | |
+## Her adımın sonunda
+
+1. Testler yeşil mi
+2. Bu adımın kararları ilgili dokümana yazıldı mı
+3. Commit atıldı, değişiklik önerisi açıldı mı
+4. **Kutucuk `⬜` → `✅` yapıldı mı**
+5. Sonraki adımı tarif eden not güncellendi mi

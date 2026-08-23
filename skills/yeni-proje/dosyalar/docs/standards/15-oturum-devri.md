@@ -3,6 +3,23 @@
 > Bu dosya **her projede aynıdır** ve `docs/standards/` ile birlikte kopyalanır.
 > Projeye özel hiçbir bilgi buraya yazılmaz.
 
+## ⛔ OTURUM, KUTUCUK İŞARETLENMEDEN KAPATILMAZ
+
+Bir adım tamamlandığında `docs/project/roadmap.md` içindeki kutucuk
+`⬜` → `✅` yapılır. Bu, devir notunun **yerine geçmez**; ikisi farklı işe yarar:
+
+| | Ne söyler |
+|---|---|
+| `roadmap.md` kutucukları | **Nerede kalındı** — bir bakışta, hafta sonra dönüldüğünde |
+| `sonraki-adim-prompt.md` | **Sırada ne var** — ayrıntısıyla, yeni oturuma verilmek üzere |
+
+⚠️ Kutucuk **adım gerçekten bittiğinde** işaretlenir: testler yeşil, kararlar
+yazılı, commit atılmış. "Neredeyse bitti" işaretlenmez — sonraki oturum onu
+bitmiş sayar ve üstüne kurar.
+
+⛔ Oturum kapatılmadan önce kullanıcıya **tik atıldığı söylenir**:
+*"Adım 6 tamamlandı, roadmap'te işaretledim. Sırada Adım 7 var."*
+
 ## Problem
 
 Bir yapay zekâ oturumu er ya da geç dolar ve yeni bir oturum açılır. Yeni oturum
