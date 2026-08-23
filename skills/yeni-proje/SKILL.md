@@ -314,7 +314,8 @@ Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
 2. `CLAUDE.md` §0 bloğunu Adım 1'deki cevaplarla **doldur**
 3. `docs/standards/sablonlar/` içindeki şablonları `docs/project/` altına aç:
    `PRD.md` · `roadmap.md` · `altyapi-durumu.md` · `CHANGELOG.md` ·
-   `sonraki-adim-prompt.md` · `decisions/ADR-000-sablon.md` ·
+   `sonraki-adim-prompt.md` · `teknoloji-ve-plan.md` ·
+   `decisions/ADR-000-sablon.md` ·
    (veritabanı varsa) `data-model.md` · (dış servis varsa) `integrations.md` ·
    (sahte veri gerekiyorsa) `fake-data-guide.md`
 4. **`docs/standards/` içini değiştirme.** Tek istisna `00-stack.md` sürüm
@@ -347,7 +348,20 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
    `ADR-000-sablon.md` biçimini kullan.
 3. `altyapi-durumu.md`: **boş bile olsa şimdi aç.** İlk hesap açıldığı anda
    yazılmaya başlar; sonradan hatırlamak işe yaramaz.
-4. `sonraki-adim-prompt.md`: şu notla oluştur —
+4. `teknoloji-ve-plan.md`: **projenin öğretici belgesi.** Şablon
+   `sablonlar/teknoloji-ve-plan.md`. Kullanılan her teknolojinin ne olduğu,
+   neden seçildiği ve yapım planının hangi mantıkla sıralandığı burada toplanır.
+
+   ⚠️ **Tek seferde yazılmaz, her adımda büyür.** İskelet şimdi açılır; her
+   roadmap adımı bitince o adımın kararları buraya işlenir. Sona bırakılırsa
+   gerekçeler unutulur.
+
+   ⛔ Bu belge `roadmap.md` ile **çakışmaz**: roadmap *ne yapılacak* der,
+   bu belge *neden öyle yapıldığını ve teknolojilerin ne olduğunu* anlatır.
+   Roadmap adımları bu belgenin "Yapım planı" bölümünden okunur, iki yere
+   kopyalanmaz.
+
+5. `sonraki-adim-prompt.md`: şu notla oluştur —
    *"Henüz doldurulmadı. İlk roadmap adımı bitince `15-oturum-devri.md`
    protokolüne göre baştan yazılacak."*
 
@@ -430,6 +444,7 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
       `.env.example` eksiksiz mi, sağlık uçları yeşil mi
 - [ ] `.env` commit edilmemiş, `.env.example` commit edilmiş mi
 - [ ] `sonraki-adim-prompt.md` bir sonraki adımı tarif ediyor mu
+- [ ] `teknoloji-ve-plan.md` açıldı mı ve kurulumda alınan kararlar işlendi mi
 
 Sonra kullanıcıya **Türkçe, en fazla 5 maddede** özet ver: ne kuruldu, canlı
 adres, sıradaki roadmap adımı, senden beklenen (varsa hesap/ayar).

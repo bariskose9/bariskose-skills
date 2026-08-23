@@ -12,6 +12,74 @@ Yeni bir projede iskeleti kurmak **kullanıcının işi olmamalı**. Kullanıcı
 
 Gerisini ajan bu listeye bakarak kurar.
 
+## ⭐ Bu kit neyi optimize ediyor
+
+Kurallara uymak amaç değil, araç. Kitin tamamı **üç sonucu** hedefliyor:
+
+1. **Kullanıcı ne yaptığını anlıyor.** Kod üretmek kolay; üretilen kodu
+   savunabilmek, sorulduğunda açıklayabilmek ve bir yıl sonra hatırlamak zor.
+   Kitin öğretme yükümlülüğü, kod yorumları ve üç adımlı kavram anlatımı
+   bunun içindir.
+2. **Proje devredilebilir.** Başka biri (veya altı ay sonraki aynı kişi)
+   nereye bakacağını bilmeli — ve yanlış yaptığında **sistem ona söylemeli.**
+   Mimari testler, DBML kapısı, tip paylaşımı bunun içindir.
+3. **Süreç tekrarlanabilir.** Her proje sıfırdan icat edilmez; öğrenilen kural
+   kite döner ve bir sonraki projede zaten oradadır. `/kit-senkron` bunun içindir.
+
+⚠️ Bir kural bu üç sonuca hizmet etmiyorsa **sorgulanır.** Kural ezberlenmez,
+gerekçesiyle uygulanır.
+
+## Yapım planı nasıl sıralanır — dört kural
+
+`docs/project/roadmap.md` adımları rastgele değil, aşağıdaki dört kurala göre
+dizilir. Sıra gerekçesi **plana yazılır**, okuyan keyfi sanmasın.
+
+### 1. Bağımlılık — bir şey, dayandığı şeyden sonra gelir
+
+Veri modeli olmadan API yazılamaz (hangi tabloya yazacağını bilmez). API
+olmadan ekran veri çekemez (çağıracak bir şey yoktur).
+
+⚠️ Yazılımda bu bağımlılık **görünmez** olduğu için atlanabiliyor: kod yazılır,
+derlenir, hatta çalışır gibi görünür — dayandığı şeyin olmadığı sonradan
+ortaya çıkar.
+
+### 2. Yatay kesen işler erken yapılır
+
+Bazı işler tek modüle ait değildir, hepsini keser: kimlik doğrulama, merkezî
+hata yönetimi, sayfalama kalıbı, audit alanları.
+
+Sonraya bırakılırsa yazılmış **her modüle geri dönmek** gerekir.
+
+*Binada elektrik tesisatı sıva atılmadan önce döşenir.*
+
+### 3. En riskli parça öne alınır
+
+Belirsizliği en yüksek, yanlış tasarlanırsa en çok şeyi etkileyecek parça
+başa konur. Geç kalırsa sürpriz çıktığında geri dönüş pahalıdır.
+
+Düşük riskli işler (ekranlar, biçimlendirme) sona bırakılır — ne yapacakları
+bellidir, sürpriz çıkmaz.
+
+### 4. Kalıp basit yerde oturtulur
+
+Aynı işi çok kez yapacaksan, **ilk yaptığın yer en basit olanı** olur. Orada
+oturan kalıbı sonrakiler tekrarlar.
+
+⚠️ Karmaşık modülle başlanırsa hem oturmamış kalıpla hem karmaşık kuralla aynı
+anda uğraşılır ve **çıkan hatanın hangisinden geldiği ayırt edilemez.**
+
+### Planın kabul etmediği üç yaklaşım
+
+⛔ **"Önce ekranı yapalım."** Ekran, henüz var olmayan bir veri şekline göre
+tasarlanır; arka uç yazılınca baştan elden geçirilir.
+
+⛔ **"Testleri sona bırakalım."** Test her adımda yazılır, son adımda yalnızca
+tamamlanır. Sona bırakılan test, çalışan kodu onaylamaktan ibaret kalır — hata
+bulmaz.
+
+⛔ **"Dokümanı en sonda yazarız."** Her adımın kararı o adım biterken yazılır;
+gerekçe, kararı verirken en net hatırlanır.
+
 ## Neyi kopyalayacaksın — tek tablo
 
 | Ne | Nereye | Nasıl |

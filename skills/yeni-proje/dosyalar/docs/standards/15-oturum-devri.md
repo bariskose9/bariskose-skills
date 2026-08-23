@@ -12,6 +12,7 @@ Bir adım tamamlandığında `docs/project/roadmap.md` içindeki kutucuk
 |---|---|
 | `roadmap.md` kutucukları | **Nerede kalındı** — bir bakışta, hafta sonra dönüldüğünde |
 | `sonraki-adim-prompt.md` | **Sırada ne var** — ayrıntısıyla, yeni oturuma verilmek üzere |
+| `teknoloji-ve-plan.md` | **Neden öyle yapıldı** — kararın gerekçesi ve teknolojinin ne olduğu |
 
 ⚠️ Kutucuk **adım gerçekten bittiğinde** işaretlenir: testler yeşil, kararlar
 yazılı, commit atılmış. "Neredeyse bitti" işaretlenmez — sonraki oturum onu
@@ -19,6 +20,10 @@ bitmiş sayar ve üstüne kurar.
 
 ⛔ Oturum kapatılmadan önce kullanıcıya **tik atıldığı söylenir**:
 *"Adım 6 tamamlandı, roadmap'te işaretledim. Sırada Adım 7 var."*
+
+⛔ **Aynı anda `teknoloji-ve-plan.md` da güncellenir.** O adımda alınan kararlar
+— hangi teknoloji neden seçildi, hangi alternatif neden elendi — oraya yazılır.
+Sona bırakılırsa gerekçe unutulur; karar kalır, sebebi kaybolur.
 
 ## Problem
 
