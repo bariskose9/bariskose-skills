@@ -90,13 +90,62 @@ Ayrı backend seçildiyse:
 |---|---|---|
 | Çatı | **NestJS** (çıplak Express değil) | Nest zaten Express'in üstünde çalışır; ayrıca modül, DI, Guard, Interceptor, Pipe, Filter getirir. Çıplak Express yalnızca 5–10 uçlu tek amaçlı serviste |
 | HTTP adaptörü | **Express** (Nest varsayılanı) | İstek süresinin ~%95'i veritabanında geçer; HTTP katmanını hızlandırmak toplamda ölçülemez. Emek index'lere harcanır. *(Fastify adaptörü tek satırla değişir — ama ölçmeden geçilmez)* |
-| API biçimi | **REST** | HTTP önbelleği kendiliğinden çalışır, uç bazında izlenir, DevOps tanır. *(GraphQL yalnızca **kontrol etmediğin** çok sayıda istemci farklı alan kombinasyonu istiyorsa; bu ihtimal ADR ile değerlendirilir)* |
+| API biçimi | **REST** (varsayılan) | Karar kuralı aşağıda — "API biçimi" |
 | Sürümleme | `/api/v1/...` baştan | Kural `03-api-guidelines.md` → "Sözleşme ömrü"nde. Mobil varsa zorunlu |
 | Monorepo aracı | pnpm workspaces + **Turborepo** | Yapı `01-architecture.md`'de. Nx daha güçlü ama kendi eklenti dünyasını getirir — bu boyutta gereksiz |
 | Tip paylaşımı | `packages/contracts` | Zod şeması tek yerde; API alanı değişince frontend **derlenmez**, hata çalışma anına kalmaz |
 | İş kuyruğu | BullMQ + Redis | Node'un fiili standardı; gecikmeli + tekrarlayan iş, retry, yatay ölçekleme |
 | Log | `nestjs-pino` | JSON üretir; kurumsal toplama sistemleri düz metin toplayamaz (`12-operations-and-scaling.md`) |
 | İstek bağlamı | `nestjs-cls` | Aktif kullanıcı ve correlation ID'yi katmanlara parametre geçmeden taşır; statik erişim yasağının karşılığı |
+
+## API biçimi — REST tek başına mı, yanına GraphQL de mi
+
+⚠️ **Bu bir "birini seç" sorusu değil.** REST ile GraphQL aynı sistemde yan yana
+çalışabilir; ikisi de yalnızca **giriş kapısıdır**, arkalarındaki iş kuralları
+ortaktır. Bugün REST yazmak, yarın GraphQL eklemeyi engellemez — yeter ki iş
+kuralları HTTP'den bağımsız tutulsun (`01-architecture.md`).
+
+**Varsayılan REST'tir.** GraphQL, aşağıdaki sorular cevaplanmadan eklenmez.
+
+### Kullanıcıya sorulacak dört soru
+
+Kurulumda (`/yeni-proje` Adım 1) bu dört soru sorulur. **Hepsine "hayır" ise
+REST tek başına yeterlidir** ve GraphQL gündeme getirilmez.
+
+1. **API'yi senin yazmadığın istemciler tüketecek mi?**
+   (başka müdürlük, yüklenici firma, merkezî sistem, açık veri portalı)
+2. **Tüketicilerin veri ihtiyaçları birbirinden belirgin farklı mı?**
+   (biri 3 alan istiyor, diğeri 25 alan istiyor)
+3. **Tüketicileri sen güncelleyemiyor musun?**
+   (kırıcı değişiklikte onların kodunu sen düzeltemiyorsun)
+4. **İzleme ve önbellek kurumun altyapısına mı bağlı?**
+   → Bu soruya **"evet"** cevabı GraphQL'in **aleyhinedir**, lehine değil.
+
+### Dördüncü sorunun ağırlığı
+
+Kurum projelerinde sistemi canlıda **DevOps ekibi** izler. GraphQL'de tüm
+istekler tek adrese (`/graphql`) gittiği için *"hangi uç yavaşladı, hangisi hata
+veriyor"* sorusu izleme aracında **görünmez.** Aynı sebeple HTTP önbelleği de
+devre dışı kalır.
+
+⛔ Kurum projesinde bu iki kayıp, açık bir gerekçe olmadan kabul edilmez.
+
+### GraphQL eklenirse
+
+Mevcut REST kaldırılmaz; yanına ikinci bir kapı açılır ve **servis katmanına
+dokunulmaz.** Karar ADR ile kayda geçer; ADR'de yukarıdaki dört sorudan
+hangilerinin "evet" olduğu yazılır.
+
+⚠️ Bedeli baştan yazılır: HTTP önbelleğinin kaybı, izlemenin körleşmesi,
+yetkilendirmenin alan bazına inmesi, N+1 sorgu riski ve bunlar için gereken ek
+çözümler.
+
+### Terim notu
+
+REST bir mimari **stildir**; onunla yazılmış sisteme **RESTful** denir.
+GraphQL ise bir **sorgu dili ve şartnamedir** — "GraphQL-ful" gibi bir sıfat
+yoktur, yalnızca *"GraphQL API"* denir. REST'e uyum **derecelidir**, GraphQL
+şartnamesine uyum **ikilidir**.
 
 ## Kullanılmayacaklar
 - Redux / MobX — TanStack Query + Zustand yeterli

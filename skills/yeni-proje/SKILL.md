@@ -299,7 +299,7 @@ mikro servislerde (webhook alıcı, proxy) tercih edilir.
 | Konu | Seçim | Gerekçe |
 |---|---|---|
 | HTTP adaptörü | **Express** (Nest varsayılanı) | Darboğaz veritabanıdır, HTTP katmanı değil. Fastify'ın kazancı bu senaryoda ölçülemez; adaptör tek satırla değiştirilebilir |
-| API biçimi | **REST** | HTTP önbelleği çalışır, uç bazında izlenir, DevOps tanır. GraphQL yalnızca *kontrol etmediğin* çok sayıda istemci varsa |
+| API biçimi | **REST** (varsayılan) | GraphQL eklenip eklenmeyeceği `00-stack.md` → "API biçimi" bölümündeki **dört soru** ile karara bağlanır. Soruları sen sor, cevabı sen yorumla; hepsi "hayır" ise GraphQL'i gündeme getirme. ⚠️ İkisi birbirini dışlamıyor — aynı sistemde yan yana çalışabilirler |
 | Sürümleme | `/api/v1/...` **baştan** | Kural ve gerekçesi `03-api-guidelines.md` → "Sözleşme ömrü"nde, burada tekrarlanmaz. Mobil varsa **zorunlu**: uygulama kullanıcının telefonunda eski sürümde kalır |
 | Tip paylaşımı | Monorepo + `packages/contracts` | Zod şeması tek yerde; API alan adı değişince frontend **derlenmez** — hata çalışma anına kalmaz |
 
