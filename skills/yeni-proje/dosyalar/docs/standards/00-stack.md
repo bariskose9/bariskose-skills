@@ -68,15 +68,32 @@ hedefi). Ayrı backend, ikinci bir deploy · CORS · kimlik doğrulamanın iki
 tarafta kurgulanması · tiplerin elle paylaşılması · yerel geliştirmede dört
 süreç demektir. Bu bedel **karşılığı varsa** ödenir.
 
-Dört soru — **hepsi "hayır" ise Next tek başına, en az biri "evet" ise
+⛔ **Soruları sormadan önce NEDEN sorulduğunu söyle:**
+
+> *"Dört soru soracağım. Amacım şunu belirlemek: her şeyi tek bir programda mı
+> yazacağız (Next.js), yoksa arayüzü ve API'yi ayrı iki programa mı böleceğiz
+> (Next.js + NestJS). Ayırmanın bedeli var — iki deploy, ek ayar, iki yerde
+> kimlik doğrulama — bu yüzden karşılığı olmadan ayırmıyoruz."*
+
+**Sorularda geçen terimler:**
+
+| Terim | Ne demek |
+|---|---|
+| **İstemci / tüketici** | API'den veri çeken program (web arayüzü, mobil uygulama, başka kurumun sistemi) |
+| **Zamanlanmış görev** | Kimse ekranı açmasa da belirli saatlerde kendiliğinden çalışan iş |
+| **Webhook** | Dış bir sistemin sana istek atması (ödeme sağlayıcısının "ödeme tamamlandı" bildirimi gibi) |
+| **DI yaşam döngüsü** | Bir nesnenin bellekte ne kadar yaşayacağı: uygulama boyunca tek kopya mı, her istekte yeni mi |
+| **Sunucusuz platform** | Vercel gibi, sürekli açık bir sunucu yerine istek geldikçe çalışan ortamlar |
+
+**Sorular. Hepsi "hayır" ise Next tek başına; en az biri "evet" ise
 Next (arayüz) + NestJS (API + worker):**
 
-1. API'yi kendi web arayüzünden **başkası** tüketecek mi? (mobil, başka sistem)
+1. API'yi kendi web arayüzünden **başkası** tüketecek mi? (mobil uygulama,
+   başka bir sistem)
 2. Kullanıcı istek atmasa da **kendiliğinden** çalışması gereken iş var mı?
-   (zamanlanmış görev, kuyruk, webhook karşılama)
-3. Katmanlı mimari + **DI yaşam döngüsü** (singleton/scoped) + çok modüllü yapı
-   gerekiyor mu?
-4. Kod kurumun **kendi sunucusunda** mı çalışacak (sunucusuz platform yok)?
+   (gece çalışan tarama, zamanlanmış hatırlatma, webhook karşılama)
+3. Katmanlı mimari, **DI yaşam döngüsü** ve çok modüllü bir yapı gerekiyor mu?
+4. Kod kurumun **kendi sunucusunda** mı çalışacak? (sunucusuz platform yok)
 
 **Gerekçe:** Next Route Handler ile API yazılabilir ama üç şeyi veremez —
 sürekli çalışan arka plan süreci, DI konteyneri ve yaşam döngüleri, zorlanan
@@ -109,17 +126,43 @@ kuralları HTTP'den bağımsız tutulsun (`01-architecture.md`).
 
 ### Kullanıcıya sorulacak dört soru
 
-Kurulumda (`/yeni-proje` Adım 1) bu dört soru sorulur. **Hepsine "hayır" ise
-REST tek başına yeterlidir** ve GraphQL gündeme getirilmez.
+⛔ **Soruları sormadan önce NEDEN sorulduğunu söyle.** Kullanıcı, cevabının
+hangi karara dönüşeceğini bilmeden cevap veremez. Şu cümleyle aç:
+
+> *"Şimdi dört soru soracağım. Amacım şunu belirlemek: API'nin yalnızca REST
+> olarak mı yazılacağı, yoksa yanına bir de GraphQL kapısı mı ekleneceği.
+> Cevaplarına göre hangisinin daha mantıklı olduğunu birlikte göreceğiz."*
+
+**Sorularda geçen terimler — sormadan önce açıkla:**
+
+| Terim | Ne demek |
+|---|---|
+| **İstemci (client)** | API'ye istek atan program. Senin web arayüzün, mobil uygulaman, başka bir kurumun sistemi — hepsi birer istemci |
+| **Tüketici (consumer)** | Aynı şey. "API'yi tüketmek" = o API'den veri almak |
+| **İzleme (monitoring)** | Sistem canlıdayken neyin yavaşladığını, neyin hata verdiğini gösteren araçlar. Kurumlarda genelde DevOps ekibinin kurduğu ayrı bir sistem |
+| **Önbellek (cache)** | Sık istenen verinin geçici olarak saklanması; aynı istek tekrar gelince veritabanına gitmeden cevaplanır |
+
+**Sorular. Hepsine "hayır" ise REST tek başına yeterlidir** ve GraphQL gündeme
+getirilmez:
 
 1. **API'yi senin yazmadığın istemciler tüketecek mi?**
-   (başka müdürlük, yüklenici firma, merkezî sistem, açık veri portalı)
+   Yani senin kontrol etmediğin programlar bu API'den veri çekecek mi —
+   başka bir müdürlüğün sistemi, yüklenici firmanın portalı, merkezî bir devlet
+   sistemi, açık veri portalı gibi.
+   *(Kendi web'in ve kendi mobilin "hayır" sayılır — onları sen yazıyorsun.)*
+
 2. **Tüketicilerin veri ihtiyaçları birbirinden belirgin farklı mı?**
-   (biri 3 alan istiyor, diğeri 25 alan istiyor)
+   Biri kaydın 3 alanını isterken diğeri 25 alanını mı istiyor? Yoksa hepsi
+   aşağı yukarı aynı bilgiyi mi kullanıyor?
+
 3. **Tüketicileri sen güncelleyemiyor musun?**
-   (kırıcı değişiklikte onların kodunu sen düzeltemiyorsun)
+   API'de kırıcı bir değişiklik yaptığında, o istemcilerin kodunu düzeltmek
+   senin elinde mi, yoksa başka bir ekibi beklemek zorunda mısın?
+
 4. **İzleme ve önbellek kurumun altyapısına mı bağlı?**
-   → Bu soruya **"evet"** cevabı GraphQL'in **aleyhinedir**, lehine değil.
+   Sistemi canlıda sen mi izleyeceksin, yoksa DevOps ekibinin kendi araçları mı?
+   → ⚠️ Bu soruya **"evet"** cevabı GraphQL'in **aleyhinedir**, lehine değil.
+   Sebebi aşağıda.
 
 ### Dördüncü sorunun ağırlığı
 

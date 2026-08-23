@@ -218,6 +218,37 @@ ikisi geride kaldı ve sonraki oturum eski gerekçeyi savunmaya başladı.
 dosyaları çoğaldıkça aynı gerekçeyi üç kez yazmak en kolay yoldur; altı ay sonra
 hangisinin güncel olduğunu kimse bilemez.
 
+## ⛔ SORU SORMADAN ÖNCE NEDEN SORDUĞUNU SÖYLE
+
+Kullanıcıya bir soru sorulacaksa, önce **cevabın hangi karara dönüşeceği**
+söylenir. Aksi hâlde kullanıcı boşlukta cevap verir: neyin sınandığını bilmediği
+için ya rastgele seçer ya "sen bilirsin" der — ve o cevap üzerine kurulan karar
+gerekçesiz kalır.
+
+**Kalıp:**
+
+> *"Şimdi N soru soracağım. Amacım şunu belirlemek: <karar>. Cevaplarına göre
+> <A seçeneği> mi <B seçeneği> mi daha uygun, birlikte göreceğiz."*
+
+Sonra sorular sorulur. Bitince **karar bildirilir**, tekrar sorulmaz:
+
+> *"Üçüne 'evet' geldi, o yüzden <B> uygun. Sebebi: …"*
+
+### Sorunun içindeki terimler açıklanır
+
+Bir soruda kullanıcının bilmediği bir terim geçiyorsa, **soru sorulmadan önce**
+tek satırla açıklanır. *"İstemci"*, *"tüketici"*, *"izleme"*, *"önbellek"*,
+*"yaşam döngüsü"* gibi kelimeler yazılımcı olmayan veya farklı alandan gelen
+biri için boştur.
+
+⛔ Terimi açıklamadan sorulan soru, cevabı da geçersiz kılar — kullanıcı neyi
+onayladığını bilmiyordur.
+
+⚠️ Bu kural, `"Mühendislik seçimi kullanıcıya devredilmez"` kuralıyla çelişmez.
+Orada yasaklanan şey **kararı** kullanıcıya bırakmaktır. Burada anlatılan ise
+kararı vermek için gereken **olguyu** öğrenmektir: *"kaç istemci olacak"* bir
+olgudur, *"REST mi GraphQL mi"* bir karardır. Olgu sorulur, karar verilir.
+
 ## Kapsam kontrolü
 İstenmeyen iyileştirme yapma. "Bu arada şunu da düzelttim" yasak —
 gördüğün sorunu **bildir**, ayrı iş olarak planla.
