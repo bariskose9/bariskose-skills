@@ -220,6 +220,45 @@ yükseltmeye çalışır ve aynı duvara toslar.
 - Bir bağımlılıkta yamalanmış sürüm varsa ama bağımlılık ağacı eskisini çekiyorsa,
   `package.json` → `overrides` ile yükseltilir ve gerekçesi PR'da yazılır.
 
+## ⛔ STACK KURULURKEN HER TEKNOLOJİNİN GÜNCEL ALTERNATİFİ TARANIR
+
+Yazılım sürekli değişiyor. Bu dosyadaki tercihler **yazıldıkları gündeki**
+ölçümlere dayanıyor; bugün hâlâ doğru oldukları **varsayılamaz.**
+
+⛔ **Kurulumda (Adım 1) stack listesi hafızadan aktarılmaz.** Her satır için
+ajan şunu fiilen çalıştırır:
+
+```bash
+npm view <paket> version time.modified          # hâlâ bakımda mı
+curl -s https://api.npmjs.org/downloads/point/last-week/<paket>   # ne kadar yaygın
+```
+
+### Ne zaman kullanıcıya sorulur
+
+| Bulgu | Ajan ne yapar |
+|---|---|
+| Seçili paket hâlâ yaygın ve bakımda | Sessizce devam eder — soru sorulmaz |
+| Seçili paketin **son yayını 18 aydan eski** | ⚠️ Bildirir, alternatifi ölçer, **sorar** |
+| Ölçülebilir biçimde **daha yaygın** bir alternatif çıkmış | ⚠️ İki rakamı yan yana koyar, **sorar** |
+| Alternatif niş ama teknik olarak üstün | Bildirir ama **önermez** — yaygınlık kriteri kazanır |
+
+⛔ **Ajan tek başına stack değiştirmez.** Bulgu sunulur, karar geliştiricinin.
+Sebebi: projeyi o sürdürecek ve o teknolojiyi o öğrenecek.
+
+### Karar verildikten sonra
+
+| Karar | Nereye yazılır |
+|---|---|
+| Değişiklik **kabul edildi** | Projede ADR + `docs/project/teknoloji-ve-plan.md` |
+| Değişiklik **her projede geçerli** | ⭐ `/kit-senkron` ile **bu dosyaya** — ölçüm tarihiyle birlikte |
+| Değişiklik **reddedildi** | ADR'ye *"değerlendirildi, seçilmedi"* olarak — aynı soru bir daha araştırılmasın |
+
+⭐ **Ölçüm tarihi olmadan rakam yazılmaz.** *"BullMQ 7.9M/hafta"* değil,
+**"BullMQ 7.9M/hafta (2026-08 ölçümü)"**. Tarihsiz rakam, bir sonraki okuyucuya
+güncel olduğunu **yanlış** söyler.
+
+---
+
 ## Yeni bağımlılık ekleme kuralı
 Eklemeden önce sor ve şunu göster: ne işe yarıyor, alternatifi ne, paket boyutu,
 son güncelleme tarihi, açık güvenlik uyarısı var mı. Tek fonksiyon için paket eklenmez.

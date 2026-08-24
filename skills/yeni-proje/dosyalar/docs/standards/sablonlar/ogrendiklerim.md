@@ -10,6 +10,28 @@
 
 ---
 
+## ⭐ Artık biliyorum — bu terimler bir daha açıklanmasın
+
+> **Bu listeyi ajan okur ve anlatım düzeyini ona göre ayarlar.**
+> Listede **olmayan** terim üç adımda açılır (gerçek hayat örneği → yazılımdaki
+> tanımı → bu projede nerede). Listede **olan** terim doğrudan kullanılır.
+>
+> **Listeye giriş:** Bir konu üçüncü kez geçtiğinde ve kullanıcı soru sormadan
+> devam ettiğinde ajan **sorar** — kullanıcının kendiliğinden eklemesi beklenmez.
+>
+> **Listeden çıkış:** Kullanıcı *"bunu tekrar açıkla"* derse satır geri alınır.
+> ⛔ Listeye girmiş olmak kalıcı değildir; unutmak normaldir.
+>
+> ⚠️ Bu liste **kite gitmez** — ama `/yeni-proje` yeni projeye başlarken bir
+> önceki projeden **kopyalar.** Seviye projeler arasında taşınır.
+
+<!--
+Biçim:  - `terim` — hangi projede/adımda oturdu (tarih)
+Örnek:  - `transaction` — bakim-is-emri, adım 6 (2026-08-24)
+-->
+
+---
+
 ## Sormayı unuttuğum sorular
 
 <!--

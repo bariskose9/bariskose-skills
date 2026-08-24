@@ -73,6 +73,22 @@ anda uğraşılır ve **çıkan hatanın hangisinden geldiği ayırt edilemez.**
 ⛔ **"Önce ekranı yapalım."** Ekran, henüz var olmayan bir veri şekline göre
 tasarlanır; arka uç yazılınca baştan elden geçirilir.
 
+> ⚠️ **Bu yasak mutlak DEĞİL — kuralın gerçek hâli şudur:**
+>
+> ⭐ Sıra *"önce arka uç"* değil, **"önce VERİ ŞEKLİ kesinleşsin".** Arka uç
+> yazmak, veri şeklini kesinleştirmenin bir yoludur. Zaten kesinleşmişse o iş
+> bitmiştir.
+>
+> | Durum | Doğru sıra |
+> |---|---|
+> | Arka uç **zaten var** (API'ler yazılmış, veritabanı ayakta) | **Önce arayüz (UI)** — önce mevcut API sözleşmesi `packages/contracts`'a Zod şeması olarak yazılır, sonra ekran |
+> | **Yalnızca arayüz** değişiyor (yeniden tasarım) | Sadece arayüz |
+> | Ürün belirsiz, önce görülmesi gerekiyor | Tıklanabilir **taslak** → arka uç → gerçek arayüz. ⛔ Taslak atılmak üzere yapılır, içine iş kuralı yazılmaz |
+>
+> ⛔ **Bu karar proje BAŞINDA verilir, ortasında değil** ve gerekçesiyle
+> `docs/project/teknoloji-ve-plan.md` içine yazılır. Yarısında sıra
+> değiştirmek iki yaklaşımın maliyetini birden ödemektir.
+
 ⛔ **"Testleri sona bırakalım."** Test her adımda yazılır, son adımda yalnızca
 tamamlanır. Sona bırakılan test, çalışan kodu onaylamaktan ibaret kalır — hata
 bulmaz.

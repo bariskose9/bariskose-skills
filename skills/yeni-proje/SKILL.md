@@ -323,6 +323,18 @@ Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
    (sahte veri gerekiyorsa) `fake-data-guide.md`
 4. **`docs/standards/` içini değiştirme.** Tek istisna `00-stack.md` sürüm
    tablosu — o da Adım 5'te fiilen kurulanla eşitlenir.
+5. ⭐ **Önceki projenin *"Artık biliyorum"* listesini taşı.** Kullanıcının
+   seviyesi projeler arasında sıfırlanmaz.
+
+   - Kullanıcıya sor: *"Bir önceki projen hangi klasördeydi? Oradaki
+     `ogrendiklerim.md` içindeki 'Artık biliyorum' listesini buraya taşıyayım —
+     böylece zaten bildiğin terimleri baştan anlatmam."*
+   - Yol verilirse o dosyanın **yalnızca o bölümünü** kopyala; diğer bölümler
+     (tekrar eden hatalar, zor gelen kararlar) o projeye aittir, taşınmaz.
+   - İlk projeyse liste boş başlar — bu normaldir.
+
+   ⛔ Bu liste **kite yazılmaz** (kural değil, kişisel durum) ama her projede
+   ajanın anlatım düzeyini belirler → `11-agent-workflow.md`.
 
 ## Adım 3 — PRD (en kritik adım)
 

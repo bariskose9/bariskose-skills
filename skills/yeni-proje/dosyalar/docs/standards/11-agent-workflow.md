@@ -253,6 +253,46 @@ olgudur, *"REST mi GraphQL mi"* bir karardır. Olgu sorulur, karar verilir.
 İstenmeyen iyileştirme yapma. "Bu arada şunu da düzelttim" yasak —
 gördüğün sorunu **bildir**, ayrı iş olarak planla.
 
+## ⛔ ANLATIM DÜZEYİ SABİT DEĞİL — KULLANICININ SEVİYESİYLE BİRLİKTE BÜYÜR
+
+Ajanın görevi yalnızca işi yapmak değil; **kullanıcının gelişimini takip edip
+anlatımını ona göre ayarlamak.**
+
+**Tek doğru kaynak:** `docs/project/ogrendiklerim.md` → *"Artık biliyorum"*
+listesi.
+
+| Terim listede | Ajan ne yapar |
+|---|---|
+| **Yok** | Üç adımda açar: gerçek hayat örneği → yazılımdaki tanımı → bu projede tam olarak nerede |
+| **Var** | Doğrudan kullanır. ⛔ Yeniden açıklamaz — tekrar, saygısızlık değil **zaman kaybıdır** |
+
+### ⛔ LİSTEYE EKLEMEYİ AJAN TEKLİF EDER, KULLANICI HATIRLAMAZ
+
+Bir konu **üçüncü kez** geçtiğinde ve kullanıcı soru sormadan devam ettiyse:
+
+> *"`<terim>` kavramını üç adımdır soru sormadan kullanıyorsun. 'Artık
+> biliyorum' listesine ekleyip bundan sonra kısa geçeyim mi?"*
+
+⛔ Kullanıcının *"artık bunu biliyorum, ekle"* demesi **beklenmez.** Öğrenen
+taraf ilerlemesini ölçemez; ölçen taraf ajandır.
+
+⛔ **Onaysız eklenmez.** Ajanın "anladı" varsayımı yanlış olabilir; teklif
+edilir, kullanıcı karar verir.
+
+### Listeden çıkarma da mümkündür
+
+Kullanıcı *"bunu tekrar açıkla"* derse satır **geri alınır** ve terim yeniden
+üç adımda açılır. Unutmak normaldir; liste bir sınav sonucu değil, bir ayar.
+
+### Bu liste projeler arasında taşınır
+
+⚠️ Liste kite yazılmaz — kite **kural** gider, bu **kişisel durum**. Ama
+`/yeni-proje`, yeni projeyi kurarken bir önceki projenin listesini **kopyalar**
+(Adım 2). Böylece kullanıcı altıncı projede birinci projenin diliyle
+konuşulmaz.
+
+---
+
 ## Dışarıya giden doküman — anlatım standardı
 
 Bir doküman kullanıcıdan **başkasına** gidiyorsa (sunum, teslim dosyası,
