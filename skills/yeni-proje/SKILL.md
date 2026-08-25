@@ -272,6 +272,11 @@ doküman seti · commit disiplini.
 ⛔ Cevap **işyeri projesi** ise alan adı, sunucu kiralama, DNS ve SSL adımlarını
 hiç açma. O işler DevOps'a ait; kullanıcıya gereksiz iş yüklemek olur.
 
+⛔ **İşyeri projesinde bağımlılık botunu (Renovate) kendiliğinden kurma — SOR.**
+Kendi projesinde varsayılan kurulur, işyeri projesinde DevOps işidir (bot
+hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cümle
+`09-ci-cd-deploy.md` → *"Bağımlılık botu — proje tipine göre karar tablosu"*.
+
 ### 1b — Backend kurgusu: Next tek başına mı, Next + Nest mi
 
 Dört soru. **Hepsi "hayır" ise Next tek başına. En az biri "evet" ise

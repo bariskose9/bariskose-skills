@@ -176,6 +176,65 @@ otomasyondur. Bu yüzden:
 ## Bağımlılık ve lisans politikası
 - Yeni paket eklerken lisans kontrol edilir; GPL/AGPL paketler onay ister.
 - Dependabot/Renovate ile güvenlik güncellemeleri otomatik PR olarak gelir.
+
+### ⭐ Bağımlılık botu — proje tipine göre KARAR TABLOSU
+
+⛔ **Bot her projede kendiliğinden kurulmaz.** Kurulum maliyeti proje tipine
+göre kökten değişir:
+
+| | **Kendi projem** | **İşyeri projesi** |
+|---|---|---|
+| Varsayılan | ✅ **Kurulur** — sorulmaz | ⛔ **Kurulmaz** — önce SORULUR |
+| Kurulum | GitHub uygulaması, iki tık, altyapı yok | Bot hesabı + zamanlanmış hat + runner + registry erişimi |
+| Kim kurar | Kullanıcı | **DevOps** — kullanıcının yetkisi yok |
+| ⚠️ Gizli engel | Yok | **Kapalı kurum ağı** `registry.npmjs.org`'a çıkamayabilir → bot hiç çalışamaz |
+
+**İşyeri projesinde ne yapılır:** Bot kurulmaz ama **hazırlığı teslim edilir** —
+maliyeti sıfıra yakın:
+
+| # | Ne | Nereye |
+|---|---|---|
+| 1 | `renovate.json` yapılandırması | Depoya |
+| 2 | *"Bot çalıştırılırsa şunlar gerekli"* notu | `altyapi-durumu.md` |
+| 3 | Bağımlılık politikası: ne otomatik geçer, ne incelenir | `00-stack.md` |
+
+⭐ Doğru devir biçimi budur: geliştirici **politikayı** yazar, DevOps
+**çalıştırmaya** karar verir. Çalıştırmasa da dosya zararsızdır.
+
+⛔ **Ajan işyeri projesinde bot kurmadan önce sorar:**
+
+> *"Bağımlılık güncelleme botu (Renovate) kurulsun mu? İşyeri projesinde bu
+> DevOps işidir — bot hesabı, zamanlanmış hat ve npm registry erişimi gerekir.
+> Şimdilik yalnızca yapılandırmayı teslim paketine koyabilirim."*
+
+### ⛔ YENİ ALTYAPI ARACI ÖNCE KENDİ PROJENDE DENENİR
+
+Bu yalnızca Renovate için değil — **her yeni bot, servis veya altyapı aracı**
+için geçerli genel kural.
+
+| Sıra | Nerede | Ne kazanılır |
+|---|---|---|
+| 1 | **Kendi projende kur ve kullan** | Haftada kaç PR geliyor, gürültü ne kadar, nasıl ayarlanır — **ölçülür** |
+| 2 | Ayarları oturtup ölçüyü topla | Somut rakam elde edilir |
+| 3 | Kuruma **ölçüyle** git | *"Şunu istiyorum"* değil, *"şu işi şöyle yapıyor, maliyeti şu"* |
+
+⭐ **Sebebi öğrenme değil, pazarlık gücü.** Kurumda bir altyapı isteği, ne
+istediğini net bilmeyen birinden geldiğinde reddedilir. Ölçüyle gelen istek
+tartışılır.
+
+⚠️ Ajan, kullanıcı kendi projesinde bir aracı bir süre kullandıysa **kuruma
+taşımayı teklif eder** — kullanıcının hatırlaması beklenmez
+(`11-agent-workflow.md` → *"Öğretmek gönüllüdür"*).
+
+> **ℹ️ Renovate'in maliyeti — sık sorulan**
+>
+> | Soru | Cevap |
+> |---|---|
+> | Ücretli mi | ⛔ Hayır. **AGPL-3.0 açık kaynak** (2026-08 ölçümü: v44, 370K indirme/hafta, aktif) |
+> | Yapay zekâ mı | ⛔ **Hayır.** Deterministik bir program: `package.json`'ı okur, registry'ye sürüm sorar, PR açar |
+> | AI abonelik jetonu (token) harcar mı | ⛔ **Hayır, sıfır.** Claude/LLM ile hiçbir ilgisi yok |
+> | Nerede çalışır | Barındırılan uygulama (GitHub) **veya** kendi CI hattında (her yerde) |
+> | Gerçek maliyeti ne | Kendi çalıştırırsan **CI dakikası**; asıl maliyet **PR'ları inceleyecek insan zamanı** |
 - Kritik güvenlik açığı olan paket sürümü ile deploy yapılmaz.
 - **Bir CLI veya jeneratör paket/bileşen eklediyse, bağımlılık dosyasının farkı
   OKUNUR.** Bu araçlar kendi varsayımlarına göre ek paket kurar; kurdukları paket
