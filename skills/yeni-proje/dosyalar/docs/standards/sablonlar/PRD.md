@@ -40,6 +40,30 @@ sessizce büyür.
 
 - <yapılmayacak şey> — <neden: faz 2 / gereksiz / yasal engel / maliyet>
 
+## 2b. Varsayımlar — doğrulanmayı bekleyen kararlar
+
+<!--
+BU BÖLÜM NEDEN VAR
+Gereksinim belgeleri eksik gelir (docs/standards/11-agent-workflow.md →
+"Gereksinim doğru varsayılmaz"). Cevabı beklerken iş durmasın diye bazı
+noktalarda makul bir varsayımla ilerlenir.
+
+⛔ Varsayım YAPILMASI yasak değil; SESSİZCE yapılması yasak. Yazılmayan
+varsayım, altı ay sonra "gereksinim buymuş" sanılır ve kimse sorgulamaz.
+
+⚠️ Yalnızca EKRAN METNİ / GÖRÜNÜM düzeyindeki eksikler varsayımla geçilir.
+Veri modelini veya iş kuralını etkileyen eksikte İŞ DURUR ve sorulur —
+yanlışsa geri dönüş pahalıdır.
+
+Doğrulanan satır buradan silinir ve ilgili bölüme GERÇEK gereksinim olarak
+yazılır. Yanlış çıkan satır ise ADR'ye "şu varsayım yanlıştı, şu değişti"
+diye geçer.
+-->
+
+| # | Varsayım | Neden böyle varsaydık | Yanlışsa ne değişir | Kim onaylayacak | Durum |
+|---|---|---|---|---|---|
+| V1 | <ne varsayıldı> | <belgede yoktu, şu yüzden bu makuldü> | <hangi kod/tablo/ekran etkilenir> | <kişi/kurum> | ⬜ bekliyor |
+
 ## 3. Kullanıcı rolleri
 
 <!-- Her rol için: ne görebilir, ne yapabilir, neyi ASLA yapamaz. Yetki

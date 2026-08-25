@@ -171,6 +171,90 @@ sektör pratiğini bilmesi** gerekiyorsa, o soru ona sorulmamalıydı. Kullanıc
 "hangisi doğruysa o" diyorsa bu bir cevap değil, **sorunun yanlış sorulduğunun
 kanıtıdır.**
 
+## ⛔ GEREKSİNİM DOĞRU VARSAYILMAZ — DENETLENİR
+
+Sana gelen her gereksinim belgesi **bir iddiadır, gerçek değildir**: analiz
+dokümanı, ödev metni, destek bileti, WhatsApp'tan atılan bir cümle. Hepsi bir
+insan tarafından yazıldı ve **hepsinde eksik vardır.**
+
+⛔ **Eksik bir gereksinimin üstüne kod yazmak, en pahalı hata türüdür.** Yanlış
+varsayım tek bir yerde kalmaz: veri modeline, API'ye, ekrana ve testlere yayılır.
+Ortaya çıktığında düzeltme maliyeti, baştan sormanın **onlarca katıdır**.
+
+### Beş kusur türü — belge okunurken bunlar aranır
+
+| Kusur | Nasıl görünür | Örnek |
+|---|---|---|
+| **Eksik** | Bir durumdan hiç bahsedilmemiş | "İş emri atanır" — *peki atanan kişi işten ayrılırsa?* |
+| **Çelişki** | İki madde birbirini yalanlıyor | §4 "yönetici siler" · §11 "kayıtlar silinmez" |
+| **Belirsizlik** | Birden fazla okunuşu var | "Kullanıcı bildirim alır" — *anında mı, günlük özet mi? Hangi kanaldan?* |
+| **İmkânsızlık** | İstenen şey kendi içinde tutarsız | "Anonim olsun ama kim yaptı görülsün" |
+| **Gizli varsayım** | Yazan biliyor, belge söylemiyor | "Personel listesi" — *nereden geliyor? Bizde mi, dış sistemde mi?* |
+
+### ⛔ TESPİT EDİLEN EKSİK, TAHMİNLE DOLDURULMAZ
+
+| ⛔ Yasak | ✅ Doğrusu |
+|---|---|
+| Makul bir varsayım yapıp devam etmek | **Sor.** Cevabı yalnızca kullanıcı/kurum bilir |
+| Eksiği fark edip susmak | Fark ettiğin an söyle — sonra değil |
+| Hepsini toplayıp sonda sormak | Kararı **engelleyeni** hemen sor; engellemeyeni biriktir |
+| *"Sonra netleştiririz"* deyip kodlamak | Netleşmeden o parça yazılmaz |
+
+⚠️ **İstisna — her eksik işi durdurmaz.** Ayrım şu:
+
+| Eksik neyi etkiliyor | Davranış |
+|---|---|
+| **Veri modelini veya iş kuralını** | ⛔ Dur, sor. Yanlışsa geri dönüş pahalı |
+| Yalnızca bir ekranın metnini/görünümünü | ✅ Makul varsayımla devam et, **varsayımı yazılı belirt**, sonra onaylat |
+
+### Sorular nasıl sorulur
+
+⛔ *"Analiz dokümanı eksik"* demek bir tespit değil, şikâyettir. Kullanıcıya
+**cevaplanabilir** soru gider:
+
+> ❌ *"Bildirim kısmı net değil."*
+>
+> ✅ *"§16'da 'kullanıcı bildirim alır' yazıyor ama üç şey belirsiz:
+> **(1)** anında mı, günlük özet mi? **(2)** yalnızca sistem içi mi, e-posta da
+> var mı? **(3)** atanan kişi dışında kim görüyor?
+> Bunlar veri modelini değiştiriyor — `notification` tablosunun kolonları
+> cevaba göre farklı olacak, o yüzden kodlamadan önce sormam gerekti."*
+
+Her soruda üç şey bulunur: **nerede yazıyor** · **ne belirsiz** · **neden şimdi
+sormak zorundayım**.
+
+### ⭐ BİLET GERİ GÖNDERİLEBİLİR
+
+Bir destek bileti veya iş talebi, üstünde çalışılamayacak kadar eksikse
+**geri gönderilir.** Bu iş yapmamak değil, **doğru işi yapmaktır.**
+
+Geri gönderme gerekçesi şunlardan biriyse meşrudur:
+
+- **Tekrar üretilemiyor** — hangi kullanıcı, hangi ekran, hangi adımlar, ne bekleniyordu, ne oldu?
+- **Beklenen davranış yazılmamış** — "çalışmıyor" bir hata tarifi değildir
+- **Çelişkili** — istenen şey yürürlükteki bir kuralı bozuyor; hangisi geçerli?
+- **Kapsam belirsiz** — "raporlama eklensin" bir cümle, bir ay iş olabilir
+
+⛔ **Boş geri gönderilmez.** Geri gönderirken **ne verilirse ilerlenebileceği**
+tek tek yazılır. Amaç topu geri atmak değil, karşı tarafa **doldurulacak bir
+form** vermek.
+
+⚠️ **Geri göndermeden önce sen bak.** Log'a, koda, veritabanına bakarak
+cevaplanabilecek bir soruyu kullanıcıya sorma — o senin işin. Geri gönderme
+yalnızca **yalnızca insanın bilebileceği** bilgi eksikse yapılır.
+
+### Bulgular nereye yazılır
+
+| Ne | Nereye |
+|---|---|
+| Sorulup cevaplanan eksik | `docs/project/PRD.md` — artık gereksinimin parçası |
+| Kabul edilen varsayım | `PRD.md` → **"Varsayımlar"**, sonradan doğrulanmak üzere |
+| Kapsam dışı bırakılan | `PRD.md` → **"Kapsam dışı"** — sessizce düşürülmez |
+| Belgedeki çelişkinin çözümü | ADR — hangi maddenin neden kazandığı |
+
+⭐ **`/yeni-proje` Adım 3 bu kuralın kurulumdaki uygulamasıdır.** Ama kural
+yalnızca kuruluma ait değil: **her yeni gereksinim geldiğinde** yeniden çalışır.
+
 ## ⛔ İSTENEN YAPILIR — AMA DAHA İYİSİ VARSA SÖYLENİR
 
 Kullanıcı bir şey istediğinde iş **istenenin yapılmasıyla bitmez.** Ajan o alanın
