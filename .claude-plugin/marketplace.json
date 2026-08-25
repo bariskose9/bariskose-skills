@@ -10,7 +10,7 @@
     {
       "name": "proje-kiti",
       "source": "./",
-      "description": "Yeni projeyi tek komutla kurar: mühendislik standartları, PRD çıkarma görüşmesi, yol haritası, iskelet ve canlıya çıkış. Türkçe.",
+      "description": "Yeni projeyi tek komutla kurar: mühendislik standartları, PRD çıkarma görüşmesi, yol haritası, iskelet ve canlıya çıkış. Ayrıca kite geri yazma (/kit-senkron) ve YouTube videosundan eksik best practice çıkarma (/video-analiz). Türkçe.",
       "homepage": "https://github.com/bariskose9/bariskose-skills",
       "license": "MIT",
       "keywords": [
@@ -19,7 +19,8 @@
         "standards",
         "turkish",
         "prd",
-        "roadmap"
+        "roadmap",
+        "video-analysis"
       ]
     }
   ]

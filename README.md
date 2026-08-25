@@ -55,6 +55,26 @@ Bir projede yeni bir mühendislik kuralı öğrendiğinde çalıştır. Projenin
 Bu olmadan kit ilk günkü halinde donar: sen öğrendikçe projelerin iyileşir ama
 **yeni projelerin geriden başlar**.
 
+### `/video-analiz <youtube-url>`
+
+Bir YouTube videosunu **transkriptinden** analiz eder ve kitte eksik olanı bulur.
+
+```
+/video-analiz https://www.youtube.com/watch?v=...
+```
+
+Videodaki iddiaları kural cümlesine çevirir, `docs/standards/` ile karşılaştırır
+ve üç kutuya ayırır: **zaten var** · **eklenmeli** · **eklenmemeli (gerekçesiyle)**.
+Ayrıca kitin **hiç dosyası olmayan bir alan** çıkıyor mu diye kapsam haritası
+çıkarır. Rakamlar `npm` ile ölçülür; kite yazmadan önce sana sorulur.
+
+**Sınır:** video izlenmez, ses duyulmaz — yalnızca altyazı okunur. Videonun
+değeri ekrandaki kodda/diyagramda ise ve anlatılmıyorsa kaçırılır. Altyazısı
+olmayan videoda analiz **yapılmaz**.
+
+`yt-dlp` yoksa kendisi kurar; YouTube erişimi kırdığında **kendini güncelleyip**
+tekrar dener.
+
 ## Bağımlılıklar
 
 `/yeni-proje` şunlara dayanır ve eksikse **izin isteyerek** kurar:
@@ -78,8 +98,11 @@ skills/
 │       └── docs/standards/
 │           ├── 00–17          ← mühendislik kuralları (projeden bağımsız)
 │           └── sablonlar/     ← doldurulacak proje dokümanları
-└── kit-senkron/
-    └── SKILL.md
+├── kit-senkron/
+│   └── SKILL.md
+└── video-analiz/
+    ├── SKILL.md
+    └── bin/yt-transkript.mjs  ← kendini onaran transkript alıcı
 ```
 
 `docs/standards/` **projeye göre değişmez.** Bir kural projeye özel hale

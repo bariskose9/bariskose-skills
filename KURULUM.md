@@ -19,7 +19,7 @@ Ayrıca kullanılan diğer kaynaklar:
 |---|---|---|
 | `addy-agent-skills` | `https://github.com/addyosmani/agent-skills.git` | `code-reviewer`, `test-engineer`, `security-auditor`, `web-performance-auditor` |
 | `chrome-devtools-plugins` | `ChromeDevTools/chrome-devtools-mcp` | Tarayıcıda fiilen tıklayarak test |
-| `bariskose-skills` | `bariskose9/bariskose-skills` | `/yeni-proje`, `/kit-senkron` |
+| `bariskose-skills` | `bariskose9/bariskose-skills` | `/yeni-proje`, `/kit-senkron`, `/video-analiz` |
 
 ---
 
