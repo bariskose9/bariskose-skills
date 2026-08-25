@@ -418,6 +418,37 @@ açıdan ele alınabilir — biri tanımlar, diğeri o projedeki uygulamasını 
 Ölçüt şudur: ikinci geçiş okuyucuya **yeni bir şey** katıyor mu? Katmıyorsa
 tekrardır ve silinir; katıyorsa kalır ve ilkine işaret eder.
 
-## Öğretme yükümlülüğü
-Kullanıcı bu projeyle öğreniyor. Her adımdan sonra kod göstermeden,
-Türkçe, en fazla 5 madde: ne yaptın, neden böyle yaptın, alternatifi neydi.
+## ⛔ ÖĞRETME YÜKÜMLÜLÜĞÜ — çalışan kod işin YARISIDIR
+
+Kullanıcı bu projeyle öğreniyor ve **mimar seviyesini** hedefliyor. İşin diğer
+yarısı, kullanıcının teslim edilen şeyi **sahiplenebilmesi**: savunabilmesi,
+değiştirebilmesi, başkasına anlatabilmesi.
+
+Her adımdan sonra Türkçe olarak anlatılır:
+
+| Ne | Neden gerekli |
+|---|---|
+| **Ne yaptın** | Kullanıcı kodu satır satır okumadan sonucu bilsin |
+| **Neden böyle** | Gerekçe olmadan kural keyfî görünür ve ilk sıkışıklıkta delinir |
+| **Alternatifi neydi, neden o değil** | Değerlendirmecinin soracağı ilk soru budur |
+| **Bu ne işe yarar** | Kararın hangi somut problemi çözdüğü |
+
+⛔ **Madde sayısı sınırı YOKTUR.** Konu ne kadar açıklama gerektiriyorsa o kadar
+yazılır — `CLAUDE.md` → *"Eksiksizlik, kısalığa feda edilmez"*.
+
+⚠️ Sınır uzunlukta değil, **tekrarda**: aynı gerekçe ikinci kez yazılmaz, ilkine
+işaret edilir (yukarıdaki *"Aynı bilgi iki yerde yazılmaz"*).
+
+### Havada kalan yer bırakılmaz
+
+Bir açıklama bittiğinde okuyanın şu sorulardan hiçbiri cevapsız kalmamalı:
+
+- Bu terim ne demek? → üç adımda açılır (yukarıda)
+- Bu dosya nerede duruyor, ne işe yarıyor?
+- Bu değer nereden geliyor, kim üretiyor?
+- Bu satır olmasa ne olurdu?
+- Bunu ben nasıl kontrol ederim?
+
+⛔ *"Detayına girmiyorum"*, *"şimdilik böyle kabul et"*, *"ileride anlarsın"*
+**yazılmaz.** Bir şey o anda anlatılamayacak kadar büyükse, nerede anlatıldığı
+söylenir — havada bırakılmaz.

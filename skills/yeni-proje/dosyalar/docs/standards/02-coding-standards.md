@@ -30,13 +30,30 @@
 
 ### ⛔ KOD, OKUYAMAYAN BİRİ İÇİN DE ANLAŞILIR OLUR
 
-Bu projelerin kodunu yalnızca yazılımcılar okumuyor. Kararı savunan kişi,
-kurumdaki iş birimi ve teknik incelemeyi yapan değerlendirmeci de okuyor.
+Bu projelerin kodunu yalnızca kıdemli yazılımcılar okumuyor:
+
+| Okuyucu | Ne arıyor |
+|---|---|
+| **Junior geliştirici** | "Burada ne oluyor, ben nasıl benzerini yazarım" |
+| **Denetçi / değerlendirmeci** | ⭐ Kodu **hiç okumadan**: "bu parça neden var, neyi çözüyor" |
+| **Kararı savunan kişi** | "Bu neden böyle yapıldı, alternatifi neydi" |
+| **Kurumdaki iş birimi** | "Bizim istediğimiz kural burada mı duruyor" |
+
 Bu yüzden **her kod bloğu, kod okumayı hiç bilmeyen birinin de takip
 edebileceği kadar Türkçe yorumla açıklanır.**
 
-Yorumlar **veri akışını** anlatır: bu veri nereden geliyor, burada ne oluyor,
-nereye gidiyor.
+Yorumlar iki şeyi birden anlatır:
+
+1. **Veri akışı** — bu veri nereden geliyor, burada ne oluyor, nereye gidiyor
+2. ⭐ **Çözülen problem** — bu blok **neden var**; olmasaydı ne bozulurdu
+
+⛔ **İkincisi atlanmaz.** Yalnızca akış yazılırsa denetçi *"tamam ama bu neden
+gerekliydi"* sorusuyla baş başa kalır — ve o soru, teknik incelemede sorulan
+ilk sorudur.
+
+⛔ **Yorum uzunluğundan tasarruf edilmez** (`CLAUDE.md` → *"Eksiksizlik,
+kısalığa feda edilmez"*). Anlaşılırlığa hizmet eden satır bedava; okuyanın
+kafasında soru bırakmak pahalıdır.
 
 ```ts
 // Kullanıcının formda doldurduğu bilgiler buraya geliyor
