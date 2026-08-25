@@ -233,8 +233,38 @@ taşımayı teklif eder** — kullanıcının hatırlaması beklenmez
 > | Ücretli mi | ⛔ Hayır. **AGPL-3.0 açık kaynak** (2026-08 ölçümü: v44, 370K indirme/hafta, aktif) |
 > | Yapay zekâ mı | ⛔ **Hayır.** Deterministik bir program: `package.json`'ı okur, registry'ye sürüm sorar, PR açar |
 > | AI abonelik jetonu (token) harcar mı | ⛔ **Hayır, sıfır.** Claude/LLM ile hiçbir ilgisi yok |
-> | Nerede çalışır | Barındırılan uygulama (GitHub) **veya** kendi CI hattında (her yerde) |
-> | Gerçek maliyeti ne | Kendi çalıştırırsan **CI dakikası**; asıl maliyet **PR'ları inceleyecek insan zamanı** |
+> | Nerede çalışır | Barındırılan uygulama (GitHub) **veya** kendin, kendi CI hattında |
+> | Gerçek maliyeti ne | Aşağıdaki tablo |
+>
+> **Maliyet iki kalemde ve ikisi de küçük:**
+>
+> | Kalem | Ne kadar |
+> |---|---|
+> | **CI dakikası** | Her PR bir CI koşusu tetikler (~5–10 dk makine zamanı). Açık depoda GitHub Actions **ücretsiz**; özel depoda aylık ücretsiz kotanın çok altında kalır |
+> | **İnsan zamanı** | ⭐ Yalnızca **major (ana) sürümlerde.** Yama ve minor sürümler otomatik birleşebilir |
+>
+> ⭐ **Otomatik birleştirme (automerge) kilit özellik:** Renovate, CI yeşilse
+> PR'ı **kendisi birleştirir**. Testlerin güçlüyse yama ve minor güncellemeler
+> hiç kimseye uğramadan geçer — insan maliyeti **sıfır**.
+>
+> ```json
+> // renovate.json — kademeli güven
+> {
+>   "packageRules": [
+>     { "matchUpdateTypes": ["patch", "minor"], "automerge": true },
+>     { "matchUpdateTypes": ["major"], "automerge": false }
+>   ]
+> }
+> ```
+>
+> ⛔ **Major sürüm neden otomatik geçmez:** *Major* demek, üreticinin
+> **kırıcı değişiklik** yaptığını ilan etmesi demektir. Testler yeşil yansa
+> bile davranış değişmiş olabilir; göç notunu (migration guide) **birinin
+> okuması** gerekir.
+>
+> ⚠️ **Automerge'in ön şartı testlerdir.** Test kapsamı zayıfsa "CI yeşil"
+> hiçbir şey kanıtlamaz ve automerge bozuk kodu sessizce ana dala sokar.
+> Automerge açılmadan önce `06-testing.md` kapıları gerçekten kuruludur.
 - Kritik güvenlik açığı olan paket sürümü ile deploy yapılmaz.
 - **Bir CLI veya jeneratör paket/bileşen eklediyse, bağımlılık dosyasının farkı
   OKUNUR.** Bu araçlar kendi varsayımlarına göre ek paket kurar; kurdukları paket
