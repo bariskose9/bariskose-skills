@@ -110,15 +110,43 @@ bedavadır; okuyanın kafasında soru bırakmak pahalıdır.
 
 > **Ölçüt:** *Okuyan kişi için havada kalan tek bir yer bile olmamalı.*
 
+#### ⛔ AMA EKSİKSİZLİK, ANSİKLOPEDİ DEMEK DEĞİLDİR
+
+Bu kuralın tek gerçek riski budur ve sınırı nettir:
+
+> **Eksiksizlik = okuyanın İŞİNİ YAPABİLMESİ için gereken her şey.**
+> **Değil = konunun akademik/ansiklopedik tamamı.**
+
+**Ayırt edici test — üç sorudan biri "evet" ise yazılır:**
+
+1. Bu bilgi olmadan kullanıcı **bir karar veremez** mi?
+2. Bu bilgi olmadan bir **hatayı bulamaz** mı?
+3. Bu bilgi olmadan incelemede gelecek bir **soruya cevap veremez** mi?
+
+Üçü de "hayır" ise **yazılmaz** — ilgisiz derinliktir.
+
+| ✅ Yazılır (yazılım geliştirirken lazım) | ⛔ Yazılmaz (niş derinlik) |
+|---|---|
+| Bu index neden gerekli, olmasaydı ne olurdu | B-tree'nin sayfa bölme algoritması |
+| JWT nasıl doğrulanıyor, süresi dolunca ne oluyor | HMAC-SHA256'nın matematiksel ispatı |
+| Transaction olmasa hangi veri bozulurdu | PostgreSQL MVCC'nin iç yapısı ve `vacuum` davranışı |
+| `version` kolonu çakışmayı nasıl yakalıyor | İyimser kilidin dağıtık sistemler literatüründeki varyantları |
+| Bu paketi neden seçtik, alternatifi neydi | Paketin sürüm geçmişi ve bakımcı değişiklikleri |
+
+⭐ **Sınır sabit değil — KARARA DOKUNUYORSA içeri girer.** MVCC ayrıntısı
+normalde gereksizdir; ama bu projede yaşanan bir hatayı o açıklıyorsa **yazılır.**
+Ölçüt derinlik değil, **bu işe değmesi**.
+
 ⚠️ **Bu "uzun yaz" demek DEĞİL** — `11-agent-workflow.md` → *"Aynı bilgi iki
-yerde yazılmaz"* kuralı hâlâ geçerli. İkisi çelişmiyor:
+yerde yazılmaz"* kuralı hâlâ geçerli. Üçü birlikte şu sınırı çiziyor:
 
 | | Serbest | Yasak |
 |---|---|---|
-| Bir konuyu **eksiksiz** açmak | ✅ Ne kadar sürerse | — |
+| İşe yarayan bir konuyu **eksiksiz** açmak | ✅ Ne kadar sürerse | — |
 | Aynı gerekçeyi **ikinci kez** yazmak | — | ⛔ İşaret edilir, tekrarlanmaz |
+| Karara dokunmayan **derinliğe inmek** | — | ⛔ İlgisiz, yazılmaz |
 
-Yani: **bir kez, ama tam.**
+Yani: **işe yarayanı, bir kez, ama tam.**
 
 ---
 

@@ -452,3 +452,8 @@ Bir açıklama bittiğinde okuyanın şu sorulardan hiçbiri cevapsız kalmamal�
 ⛔ *"Detayına girmiyorum"*, *"şimdilik böyle kabul et"*, *"ileride anlarsın"*
 **yazılmaz.** Bir şey o anda anlatılamayacak kadar büyükse, nerede anlatıldığı
 söylenir — havada bırakılmaz.
+
+⚠️ **Bu listenin sınırı var:** sorular **bu projede iş yapmak için** gerekli
+olanla sınırlıdır, konunun ansiklopedik tamamıyla değil. Ölçüt `CLAUDE.md` →
+*"Eksiksizlik, ansiklopedi demek değildir"*: bilgi bir **karara**, bir **hata
+avına** veya incelemede gelecek bir **soruya** dokunmuyorsa yazılmaz.
