@@ -78,11 +78,38 @@ ADR yazılır, izin verilen kaynaklar **beyaz liste** olur (`*` asla) ve o yol
 - Liste dönen tüm endpoint'ler sayfalanır. Sınırsız liste dönülmez.
 - `limit` için bir **üst tavan** vardır ve istemcinin gönderdiği değer bu tavanla
   kırpılır. Tavansız `limit`, sayfalamayı olmamış sayar.
-- Büyüyen veya sık değişen listelerde **imleç (cursor/keyset)** tabanlı sayfalama
-  kullanılır, `offset` değil. `offset` ile ilerlerken araya yeni kayıt girerse
-  kullanıcı bir kaydı iki kez görür ya da hiç görmez; ayrıca büyük `offset`
-  değerleri veritabanına atlanan satırların hepsini saydırır.
-- Kısa ve durağan listelerde `offset` yeterlidir — seçim gerekçesiyle yazılır.
+### ⭐ Offset mü cursor mu — KARAR TABLOSU
+
+⛔ **Bu karar her projede yeniden türetilmez.** Tabloya bak, seç, gerekçeyi yaz.
+
+| Durumdan **biri** varsa | Yöntem |
+|---|---|
+| Ekranda **sayfa numarası** var ("Sayfa 7") | **offset** |
+| **Toplam sayı** gösteriliyor ("48 kayıttan 1–20") | **offset** |
+| Kullanıcı filtreleyip daraltıyor, derine inmiyor | **offset** |
+| **Sonsuz kaydırma** (aşağı indikçe yükleniyor) | **cursor** |
+| Liste **sürekli akıyor** (bildirim, olay günlüğü, akış) | ⛔ **cursor** |
+| Tablo büyük **ve** derin sayfalama gerçekten oluyor | **cursor** |
+| Dışa aktarma / toplu okuma (tüm kayıtları gez) | **cursor** |
+
+**Neden böyle — iki teknik sebep:**
+
+1. **Derin sayfa maliyeti.** `OFFSET 99980` demek, veritabanının o 99.980
+   satırı **okuyup atması** demektir. Atlanan satır bedava değildir; 5.000.
+   sayfa saniyelere çıkar. Cursor'da 1. sayfa ile 5.000. sayfa **aynı hızdadır**
+   — ikisi de "şu noktadan sonraki N kayıt" sorusudur.
+2. **Kayma (drift).** Kullanıcı 2. sayfaya bakarken listenin başına yeni kayıt
+   girerse her şey bir sıra kayar: bir kaydı **iki kez** görür, bir kaydı
+   **hiç** görmez. Cursor bir kaydı işaret ettiği için bundan etkilenmez.
+
+**Cursor'ın bedeli:** *"7. sayfaya git"* diyemezsin ve toplam sayfa sayısını
+gösteremezsin. Yalnızca ileri/geri gider.
+
+⚠️ **Offset seçildiyse iki koruma zorunludur:** `limit` tavanı **ve** sayfa
+parametresi doğrulaması. Aksi hâlde `?page=999999` isteği veritabanını
+milyonlarca satır taramaya zorlar.
+
+⭐ Seçim **gerekçesiyle** `docs/api.md` veya ADR'ye yazılır.
 
 ## Sözleşme ömrü — sürüm, kırıcı değişiklik, emeklilik
 

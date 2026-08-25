@@ -310,7 +310,17 @@ Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
 ## Adım 2 — Kit dosyalarını yerleştir
 
 1. `dosyalar/` içeriğini projeye kopyala: `CLAUDE.md`, `CALISMA-KILAVUZU.md`,
-   `REPO-YAPISI.md`, `docs/standards/**`
+   `REPO-YAPISI.md`, `docs/standards/**`, **`.vscode/extensions.json`**
+
+   ⭐ `.vscode/extensions.json` sayesinde kullanıcı projeyi VS Code'da açtığında
+   *"önerilen eklentiler var"* uyarısı çıkar ve **Install All** ile hepsi
+   birden kurulur. Neden hangi eklenti olduğu
+   `docs/standards/sablonlar/vscode-eklentileri.md` içinde — o dosyayı da
+   `docs/project/` altına aç.
+
+   ⚠️ Stack farklıysa listeyi **uyarla**: Prisma yoksa Prisma eklentisi,
+   Tailwind yoksa Tailwind eklentisi çıkarılır. Kurulan araca karşılık gelmeyen
+   eklenti önerilmez.
 
    ⚠️ `CALISMA-KILAVUZU.md` **kullanıcı için**; `CLAUDE.md` ajan için. Kurulum
    bitince kullanıcıya *"nasıl devam edeceğin bu dosyada"* diye söylenir.

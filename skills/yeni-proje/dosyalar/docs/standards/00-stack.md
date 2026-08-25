@@ -257,6 +257,66 @@ Sebebi: projeyi o sürdürecek ve o teknolojiyi o öğrenecek.
 **"BullMQ 7.9M/hafta (2026-08 ölçümü)"**. Tarihsiz rakam, bir sonraki okuyucuya
 güncel olduğunu **yanlış** söyler.
 
+### ⭐ TARAMA NE ZAMAN TEKRARLANIR — katmanlı sıklık
+
+Ölçüm tarihi yazmanın asıl işlevi budur: **eskiyeni görebilmek.**
+
+⛔ Kurulumdaki tarama tek seferlik değildir. Ama **sabit ve sık bir takvim de
+yanlıştır** — sebebi aşağıda. Üç katman var:
+
+| Katman | Sıklık | Ne yakalar | Kim |
+|---|---|---|---|
+| Güvenlik ve sürüm | **Haftalık** | Yama, minor, major sürüm | 🤖 **Renovate** (otomatik PR/MR) |
+| Ölçüm tazeleme | **6 ay** | Yaygınlık kayması, ölen paket | Ajan |
+| **Olay tetikli** | **Anında** | Aşağıdaki dört an | Ajan |
+
+#### ⭐ Tarihten bağımsız — HER ZAMAN taranacak dört an
+
+Bunlar takvim beklemez; asıl değer buradadır:
+
+| # | An | Neden |
+|---|---|---|
+| 1 | **`/yeni-proje` kurulumunda** | Zaten stack seçiliyor — en doğru an |
+| 2 | ⭐ **Teslim / sunum / teknik inceleme öncesi** | Savunulacak her rakam güncel olmalı. Bayat bir ölçüm, incelemede tüm gerekçeyi çürütür |
+| 3 | **Bir paket fiilen sorun çıkardığında** | Sorun, alternatife bakmak için yeterli sebeptir |
+| 4 | **Major sürüm çıktığında** | Kırıcı değişiklik var mı, göç maliyeti ne |
+
+#### ⛔ Neden 3 ay değil de 6 ay — gerekçe
+
+**Renovate zaten haftalık çalışıyor** ve sürüm tarafını kapatıyor. Manuel
+taramanın yakaladığı tek şey botun göremediğidir: *"paket ölüyor mu, yerine
+daha yaygını çıkmış mı?"* Bu **yıllarla ölçülen** bir değişimdir — ekosistem
+geçişleri (Jest→Vitest, Moment→date-fns) yıllar aldı.
+
+⚠️ **Sık tarama kuralı öldürür.** Üç ayda bir bakılırsa cevap neredeyse her
+seferinde *"değişmedi"* olur; sürekli "bir şey yok" diyen uyarı **kapatılan**
+uyarıdır. Kuralın değeri yazılı olmasında değil, **uygulanmasında**.
+
+#### Tarama nasıl yapılır
+
+Bu dosyadaki **herhangi bir ölçüm tarihi 6 aydan eskiyse** — ya da yukarıdaki
+dört andan biri geldiyse — ajan işe başlamadan önce tarar ve bulguyu bildirir:
+
+> *"`00-stack.md`'deki ölçümler <tarih> tarihli, 3 aydan eski. Taradım:
+> `<paket>` için durum değişmiş — <eski rakam> → <yeni rakam>. Diğerleri aynı.
+> Değiştirelim mi?"*
+
+**Ne aranır:**
+
+| Kontrol | Eşik | Sonuç |
+|---|---|---|
+| Seçili paketin son yayını | 18 aydan eski | ⚠️ Bildir, alternatif ölç |
+| Seçili paketin indirme sayısı | Belirgin düşüş | ⚠️ Bildir |
+| Alternatifin indirme sayısı | Seçiliyi geçmiş | ⚠️ İkisini yan yana koy, sor |
+| Ana sürüm atlamış mı | Yeni major | ⚠️ Kırıcı değişiklik var mı bak |
+
+⛔ **Tarama sonucu otomatik uygulanmaz.** Bulgu sunulur, karar geliştiricinindir
+(yukarıdaki kural). Değişmeyen satırların **tarihi yine de güncellenir** —
+"baktım, aynı" bilgisi de bilgidir.
+
+⚠️ **Tarama işi geciktirmez.** Oturumun asıl işi yapılır; tarama bulgusu
+**ayrı bir başlıkta** sunulur ve kullanıcı isterse o zaman ele alınır.
+
 ---
 
 ## Yeni bağımlılık ekleme kuralı

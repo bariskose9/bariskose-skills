@@ -171,6 +171,42 @@ sektör pratiğini bilmesi** gerekiyorsa, o soru ona sorulmamalıydı. Kullanıc
 "hangisi doğruysa o" diyorsa bu bir cevap değil, **sorunun yanlış sorulduğunun
 kanıtıdır.**
 
+## ⛔ AYNI KARAR İKİNCİ KEZ TÜRETİLMEZ — KİTE TABLO OLARAK YAZILIR
+
+Mühendislikte bazı sorular **her projede aynen tekrar eder**: offset mi cursor
+mu · UUID mi artan sayı mı · soft delete mi hard delete mi · senkron mu kuyruk
+mu · monorepo mu ayrı depo mu.
+
+⛔ **Bu soruların cevabı her seferinde sıfırdan düşünülmez.** Aynı muhakemeyi
+tekrar yapmak hem zaman kaybıdır hem de **her seferinde farklı cevap verme**
+riski taşır — proje tutarlılığı böyle kaybolur.
+
+### Karar tablosu nasıl yazılır
+
+Bir karar ikinci kez karşına çıktığında kite **tablo olarak** yazılır:
+
+| Bileşen | Ne yazar |
+|---|---|
+| **Senaryo sütunu** | *Hangi durumda* — gözlenebilir, tartışmasız koşullar |
+| **Seçim sütunu** | O durumda **ne kullanılır** |
+| **Gerekçe** | Tablonun altında, teknik sebep — kural keyfî görünmesin |
+| **Bedeli** | Seçilenin **eksik tarafı** ne — gizlenmez |
+| **Zorunlu koruma** | Seçim yapıldıysa **ayrıca** ne kurulmalı |
+
+⭐ Örnek: `03-api-guidelines.md` → *"Offset mü cursor mu — KARAR TABLOSU"*.
+
+### Ölçüt — her karar tabloya girmez
+
+| Karar | Kite girer mi |
+|---|---|
+| Her projede tekrar eden, **stack'ten bağımsız** | ✅ Evet — tablo |
+| Bu projeye özel, iş kuralından doğan | ⛔ Hayır — **ADR**'ye |
+| Yalnızca üslup/zevk | ⛔ Hayır — tabloya değmez |
+
+⚠️ **Tablo bir kez yazılınca dondurulmaz.** Yeni bir senaryo çıkarsa satır
+eklenir; ölçüm eskiyorsa `00-stack.md` → *"Üç ayda bir periyodik tarama"*
+kuralı işler.
+
 ## ⛔ GEREKSİNİM DOĞRU VARSAYILMAZ — DENETLENİR
 
 Sana gelen her gereksinim belgesi **bir iddiadır, gerçek değildir**: analiz
