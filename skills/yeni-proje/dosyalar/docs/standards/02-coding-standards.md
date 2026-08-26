@@ -42,14 +42,39 @@ Bu projelerin kodunu yalnızca kıdemli yazılımcılar okumuyor:
 Bu yüzden **her kod bloğu, kod okumayı hiç bilmeyen birinin de takip
 edebileceği kadar Türkçe yorumla açıklanır.**
 
-Yorumlar iki şeyi birden anlatır:
+Yorumlar **üç** şeyi birden anlatır:
 
-1. **Veri akışı** — bu veri nereden geliyor, burada ne oluyor, nereye gidiyor
-2. ⭐ **Çözülen problem** — bu blok **neden var**; olmasaydı ne bozulurdu
+| # | Ne yazar | Cevapladığı soru |
+|---|---|---|
+| 1 | **Veri akışı** | Bu veri **nereden** geliyor, burada **ne** oluyor, **nereye** gidiyor |
+| 2 | ⭐ **Çözülen problem** | Bu blok **neden var**; olmasaydı ne bozulurdu |
+| 3 | ⭐ **Etki alanı** | Bu satır **başka nereyi** etkiliyor; değiştirilirse ne kırılır |
 
-⛔ **İkincisi atlanmaz.** Yalnızca akış yazılırsa denetçi *"tamam ama bu neden
-gerekliydi"* sorusuyla baş başa kalır — ve o soru, teknik incelemede sorulan
-ilk sorudur.
+⛔ **Üçü de yazılır, hiçbiri atlanmaz.**
+
+- Yalnızca akış yazılırsa denetçi *"tamam ama bu neden gerekliydi"* sorusuyla
+  baş başa kalır — ve o soru, teknik incelemede sorulan **ilk** sorudur.
+- Etki alanı yazılmazsa, kodu sonradan değiştiren kişi **neyi kırdığını
+  bilmeden** değiştirir. En pahalı hatalar buradan çıkar.
+
+**Üçü birlikte — örnek:**
+
+```ts
+// 1️⃣ AKIŞ: Kullanıcının okuduğu sürüm numarası isteğin içinde geliyor.
+// 2️⃣ NEDEN: İki kişi aynı kaydı aynı anda düzenlerse, ikincisi birincinin
+//    yazdığını sessizce silerdi. Bu şart onu engelliyor.
+// 3️⃣ ETKİ: version kolonu her başarılı yazmada +1 artıyor. Bu satır
+//    kaldırılırsa iyimser kilit TAMAMEN devre dışı kalır — testler yine
+//    yeşil yanar, sorun yalnızca canlıda iki kullanıcıyla görünür.
+const sonuc = await prisma.workOrder.updateMany({
+  where: { id: girdi.id, version: girdi.version },
+  data:  { durum: girdi.durum, version: { increment: 1 } },
+});
+```
+
+⭐ **Ölçüt:** Kodu **hiç okumayan** bir denetçi, yalnızca yorumları okuyarak
+*"bu parça ne yapıyor, neden var, dokunursam ne olur"* sorularının üçüne de
+cevap verebilmeli.
 
 ⛔ **Yorum uzunluğundan tasarruf edilmez** (`CLAUDE.md` → *"Eksiksizlik,
 kısalığa feda edilmez"*). Anlaşılırlığa hizmet eden satır bedava; okuyanın
