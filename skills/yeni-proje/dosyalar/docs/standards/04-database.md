@@ -23,20 +23,41 @@ Yukarıdaki kural bir çelişki doğuruyor gibi görünür:
 ⛔ **Birini diğerine feda etme.** İki katman da kendi yerleşik pratiğini korur;
 aradaki çeviriyi **Prisma** yapar.
 
+Aynı alanın üç ayrı yerdeki adı:
+
+| Nerede | Adı |
+|---|---|
+| TypeScript kodunda | `dueAt` |
+| **Prisma şemasında** | ⭐ `dueAt @map("due_at")` — ikisini bağlayan satır |
+| PostgreSQL tablosunda | `due_at` |
+
+```
+ SEN YAZARSIN          PRİSMA ÇEVİRİR              VERİTABANINDA OLUŞUR
+ wo.dueAt         ←→   dueAt @map("due_at")   ←→   kolon: due_at
+ prisma.workOrder ←→   @@map("work_orders")   ←→   tablo: work_orders
+```
+
 ```prisma
-model WorkOrder {                          // ← kodda: prisma.workOrder
-  id           String   @id @default(uuid())
-  code         String   @unique
+model WorkOrder {
+  // Bu satırlarda @map YOK — ad iki dünyada da aynı
+  id    String @id @default(uuid())
+  code  String @unique
 
-  // ⭐ KÖPRÜ BURADA:
-  //    sol  → TypeScript'te yazacağın ad   (camelCase)
-  //    sağ  → PostgreSQL'de oluşacak kolon (snake_case)
-  dueAt        DateTime @map("due_at")
-  createdAt    DateTime @default(now()) @map("created_at")
+  //  dueAt   DateTime   @map("due_at")
+  //  ─────              ──────────────
+  //    ↑                      ↑
+  //    │                      └── PostgreSQL'de oluşacak KOLON adı
+  //    └───────────────────────── Kodda yazacağın ALAN adı
+  dueAt     DateTime @map("due_at")
+  createdAt DateTime @default(now()) @map("created_at")
 
-  @@map("work_orders")                     // ← tablonun kendisi: çoğul snake_case
+  // @@map (İKİ @) alanı değil, TABLONUN KENDİSİNİ eşler
+  @@map("work_orders")
 }
 ```
+
+⭐ **Özeti:** `@map` bir **alanı**, `@@map` bir **tabloyu** eşler. Sol taraf
+senin yazdığın, sağ taraf veritabanında duran.
 
 Kod tarafında **hiç alt çizgi görmezsin**:
 
