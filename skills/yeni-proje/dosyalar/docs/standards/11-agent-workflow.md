@@ -432,6 +432,32 @@ neyi bozdum?"*
 kaçan şeyler hep aynı türden olur ve kullanıcı bulur — o da kitin
 *"kullanıcıya iş bırakma"* ilkesini çiğner.
 
+### ⭐ ÜÇÜ MEKANİK — KOMUTLA ÇALIŞTIRILIR, HATIRLANMAZ
+
+⛔ **Hatırlamaya dayalı kural, bağlam dolduğunda ilk düşen şeydir.** Bu kural
+yazıldığı oturumda **iki kez çiğnendi** — kanıt kendisidir.
+
+Bu yüzden mekanikleştirilebilen kontroller **komuta** çevrildi:
+
+```bash
+node "$CLAUDE_PLUGIN_ROOT/skills/kit-senkron/bin/denetim.mjs" [klasör]
+```
+
+| Ne kontrol eder | Nasıl |
+|---|---|
+| **Kırık dosya referansı** | Anılan `.md` gerçekten var mı |
+| **Kırık bölüm atfı** | *"BÖLÜM H"*, *"E.4"* denen yer hedefte var mı |
+| **Bayat türetilmiş dosya** | `md/` yeni, `pdf/` eski mi |
+
+⭐ **İleriye dönük referanslar elenir** — kurulumdan sonra oluşacak dosyalar
+(`CLAUDE.md`, `PRD.md`, `docs/*`) yanlış alarm üretmez.
+
+⛔ **Commit'ten önce çalıştırılır.** Çıktı temizse söylenir; bulgu varsa
+giderilir veya gerekçesi yazılır.
+
+⚠️ **Dördüncü kontrol — terim çakışması — mekanikleşmez.** Anlam gerektirir;
+o elle yapılır (aşağıdaki tablo).
+
 ### Dört kontrol — sırayla, istisnasız
 
 | # | Kontrol | Nasıl | Ne yakalar |
