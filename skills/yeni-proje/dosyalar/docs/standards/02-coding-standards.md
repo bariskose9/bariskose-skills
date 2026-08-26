@@ -153,6 +153,40 @@ async olustur(girdi: TalepOlusturDto) {
 }
 ```
 
+#### "Bu kadar yorum performansı etkilemez mi" — ÖLÇÜLDÜ, hayır
+
+Bu itiraz her projede çıkar. Cevabı ölçümle verilir, tartışmayla değil.
+
+**Ölçüm (2026-08-26, esbuild ile üretim derlemesi):**
+
+| | Yorumlu | Yorumsuz | Fark |
+|---|---|---|---|
+| Kaynak dosya | 2.138 bayt | 522 bayt | 4.1 kat |
+| **Üretim derlemesi** | **364 bayt** | **364 bayt** | ⭐ **bayt bayt AYNI** |
+| Sıkıştırılmış | 264 bayt | 265 bayt | 1 bayt (gürültü) |
+
+⭐ **Derleyici üretim derlemesinde yorumları tamamen siler.** Kullanıcının
+tarayıcısına inen dosyada tek bir yorum yoktur.
+
+| Neyi etkiler | Cevap |
+|---|---|
+| İşlemci · RAM | ⛔ **Sıfır** — yorum çalıştırılmaz, belleğe yüklenmez |
+| Kullanıcının indirdiği dosya | ⛔ **Sıfır** — çıktı birebir aynı (ölçüldü) |
+| Disk / depo | Kaynak ~4 kat büyür; metin olduğu için mutlak artış küçük ve git sıkıştırır |
+| Derleme süresi | Ölçülemeyecek kadar az |
+
+**⚠️ Gerçek maliyet başka yerde — ikisi de teknik değil:**
+
+1. **AI bağlam penceresi.** Yorumlu dosyayı okumak ~4 kat jeton harcar.
+   Yönetimi: dosya baştan sona değil, **gereken bölüm** okunur.
+2. ⛔ **Bayat yorum riski.** Kod değişip yorum kalırsa okuyan **yanlış
+   bilgilenir** — ve *yanlış bir gerekçe, yorumsuz bırakmaktan kötüdür*
+   (aşağıda). Bu yüzden `10-definition-of-done.md`'de bir işin bitmiş
+   sayılma şartına *"ilgili yorumlar güncellendi"* dahildir.
+
+⛔ **Yani "performans" bu kuralı gevşetmek için gerekçe değildir.** Gevşetmenin
+tek meşru gerekçesi tekrar/gürültüdür ve onun da ölçütü aşağıda.
+
 #### Kapsam — istisna yok
 
 | Nerede | Yorumlanır mı |
