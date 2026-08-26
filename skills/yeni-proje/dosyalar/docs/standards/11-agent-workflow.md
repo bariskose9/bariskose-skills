@@ -35,6 +35,73 @@ uygulanır**. Yüklenmeden yazılan etiket yanlış beyandır.
 - Konu değiştiğinde `/clear` kullan.
 - Her oturum başında CLAUDE.md ve ilgili PRD bölümü yeniden okunur.
 
+### ⛔ DOSYANIN TAMAMI OKUNMAZ — ÖNCE BAŞLIK BLOĞU
+
+`02-coding-standards.md` her dosyanın başına **dört halkalı** bir blok yorum
+koyduruyor: `NEREDEN` · `NE` · `NEREYE` · `SONUÇ`. Bu blok yalnızca insan için
+değil — ⭐ **aranabilir bir bağımlılık haritasıdır.**
+
+⛔ **Bir dosyayı değiştirmeden önce ilgili dosyaların gövdesini okuma.** Önce
+başlık bloklarını oku; çoğu zaman karar için o yeter.
+
+#### Üç adımlı etki taraması
+
+**1) Bu dosya neyi etkiliyor** — kendi başlık bloğundaki `NEREYE` satırı:
+
+```bash
+sed -n '/^\/\*\*/,/\*\//p' <dosya>
+```
+
+**2) Bu dosyaya kim bağımlı** — adını yorumlarda arayan tek komut:
+
+```bash
+grep -rn "NEREDEN.*<dosya-adı>\|NEREYE.*<dosya-adı>" --include="*.ts" apps/ packages/
+```
+
+| Ne bulur | Anlamı |
+|---|---|
+| `NEREYE ... <dosya>` | O dosya **buraya veri gönderiyor** |
+| `NEREDEN ... <dosya>` | O dosya **buradan veri alıyor** |
+
+**3) Bulunanların yalnızca BAŞLIK BLOĞUNU oku:**
+
+```bash
+for f in <bulunan-dosyalar>; do
+  echo "── $f"; sed -n '/^\/\*\*/,/\*\//p' "$f" | head -20
+done
+```
+
+⭐ **Kazanç:** 200 satırlık bir dosyanın başlık bloğu ~15 satırdır. On dosyanın
+etkisini görmek için 2.000 satır yerine ~150 satır okunur — bağlamın büyük
+kısmı korunur.
+
+⚠️ **Gövde ne zaman okunur:** başlık bloğu soruyu cevaplamıyorsa, ya da
+**değiştireceğin** dosya ise. O zaman tamamı okunur — tahminle kod yazılmaz.
+
+#### ⛔ Bu yöntem statik analizin YERİNE GEÇMEZ
+
+| Yöntem | Ne verir | Güvenilirliği |
+|---|---|---|
+| Başlık bloğu taraması | **Hızlı ilk harita** — anlamsal etki, "ne bozulur" | ⚠️ Yoruma bağlı |
+| `import` taraması / `dependency-cruiser` | **Kesin** bağımlılık listesi | ✅ Koddan üretilir |
+
+⛔ **Bir şeyi kaldırıyor veya imzasını değiştiriyorsan** başlık bloğuyla
+yetinme — gerçek `import` bağlarını da tara. Yorum bayatlamış olabilir.
+
+⚠️ Bu yöntemin çalışması **yorumların güncel olmasına** bağlıdır. Bayat bir
+`NEREYE` satırı seni yanlış dosyaya götürür — bu yüzden
+`10-definition-of-done.md`'de *"ilgili yorumlar güncellendi"* şartı var.
+
+#### Aynı mantık dokümanlarda da geçerli
+
+Büyük bir belgeyi (200 sayfalık teknoloji rehberi gibi) baştan sona okuma:
+**başlık listesini** çıkar, gereken bölümü oku.
+
+```bash
+grep -n "^#\{1,3\} " <belge.md>     # önce harita
+sed -n '4271,4400p' <belge.md>        # sonra yalnızca gereken bölüm
+```
+
 ## Belirsizlikte davranış
 Varsayım yapma. Sor. Yanlış varsayımla yazılmış 200 satır,
 sorulmuş 1 sorudan pahalıdır.

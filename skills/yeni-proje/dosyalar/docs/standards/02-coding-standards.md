@@ -187,6 +187,40 @@ tarayıcısına inen dosyada tek bir yorum yoktur.
 ⛔ **Yani "performans" bu kuralı gevşetmek için gerekçe değildir.** Gevşetmenin
 tek meşru gerekçesi tekrar/gürültüdür ve onun da ölçütü aşağıda.
 
+#### ⭐ BAŞLIK BLOĞU SABİT BİÇİMDE YAZILIR — aranabilir olsun diye
+
+Dört halka **serbest metin değil, sabit etiketlerle** yazılır. Sebebi
+pratik: bu blok yalnızca insan için değil, ⭐ **aranabilir bir bağımlılık
+haritasıdır.**
+
+```ts
+/**
+ * <BİR CÜMLELİK BAŞLIK>
+ *
+ * NEREDEN : <dosya/yolu.ts> → <ne geliyor, hangi biçimde>
+ * NE      : <burada ne oluyor, hangi kural uygulanıyor>
+ * NEREYE  : <dosya/yolu.ts> → <ne gidiyor, hangi biçimde>
+ * SONUÇ   : <görünür karşılığı — ekranda ne, veritabanında hangi kayıt>
+ */
+```
+
+⛔ **`NEREDEN` ve `NEREYE` satırlarında GERÇEK DOSYA YOLU geçer.** *"Servis
+katmanından geliyor"* değil, `apps/api/src/work-orders/work-orders.service.ts`.
+
+**Neden bu kadar katı:** Bir dosyayı değiştirmeden önce kimin etkileneceği tek
+komutla bulunuyor:
+
+```bash
+grep -rn "NEREDEN.*work-orders.service\|NEREYE.*work-orders.service" apps/ packages/
+```
+
+⭐ Böylece on dosyanın **gövdesini** okumak yerine yalnızca **başlık bloklarını**
+okumak yetiyor — 2.000 satır yerine ~150 satır. Yöntemin tamamı
+`11-agent-workflow.md` → *"Dosyanın tamamı okunmaz — önce başlık bloğu"*.
+
+⚠️ **Bu, yorumu güncel tutmayı zorunlu kılar.** Bayat bir `NEREYE` satırı
+sonraki oturumu yanlış dosyaya götürür.
+
 #### Kapsam — istisna yok
 
 | Nerede | Yorumlanır mı |
