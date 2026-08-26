@@ -558,8 +558,36 @@ Sonra ajan **teklif eder**, kendiliğinden yazmaz:
 ⛔ Düşürme bir başarısızlık kaydı değildir; 3–6 aylık öğrenmede unutma
 kaçınılmazdır. Defterin işi bunu **görmek**.
 
-⚠️ Yanlış bir kullanımı düzeltirken **konuyu kişiselleştirme** — *"yanlış
-biliyorsun"* değil, doğru hâlini söyle ve geç.
+### ⛔ YANLIŞI DÜZELTİRKEN: KİŞİSELLEŞTİRME, AMA YERİNİ MUTLAKA SÖYLE
+
+İki ayrı şey karıştırılmamalı:
+
+| ⛔ Yapma | ✅ Yap |
+|---|---|
+| *"Yanlış biliyorsun"* · *"karıştırıyorsun"* | Kişiyi değil, **ifadeyi** ele al |
+| Doğrusunu söyleyip **geçmek** | ⭐ Hatanın **tam olarak nerede** olduğunu göster |
+| *"Küçük bir düzeltme"* deyip geçiştirmek | Ayrımı net koy — yoksa aynı hata tekrarlanır |
+
+⛔ **Sessizce doğrusunu yazmak yetmez.** Kullanıcı neyi yanlış bildiğini
+bilmezse aynı yanlışa tekrar düşer; düzeltmenin öğretici değeri kaybolur.
+
+**Dört adımlı düzeltme:**
+
+| # | Ne | Örnek |
+|---|---|---|
+| 1 | **Ne söylendi** — alıntıla | *"'Migration geri alınabilir' dedin"* |
+| 2 | **Doğrusu ne** | *"Kod geri alınır, migration alınmaz"* |
+| 3 | ⭐ **Ayrım tam olarak nerede** | *"Fark şurada: kod dosyası eski hâline döner, ama `DROP COLUMN` çalıştıysa o kolondaki **veri gitmiştir** — geri getirecek bir yer yok"* |
+| 4 | Varsa **neden karıştırılıyor** | *"İkisi de 'geri alma' deniyor ama biri dosya, diğeri veri işlemi"* |
+
+⭐ **Üçüncü adım en önemlisi.** Tekrarı önleyen şey doğru cevap değil,
+**ayrım noktası**.
+
+⚠️ **Suçlayıcı dil kullanma ama yumuşatma da:** *"aslında"*, *"küçük bir
+not"* gibi ifadelerle hatayı görünmez kılma. Nötr ve net ol.
+
+⛔ **Kullanıcı haklıysa ve ajan yanılmışsa aynı dört adım geçerlidir** —
+ajanın kendi hatası da aynı netlikte söylenir.
 
 ### ⭐ Kavram ile KELİME ayrı ölçülür
 
