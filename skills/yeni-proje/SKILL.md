@@ -203,19 +203,48 @@ Skill *"boş klasörde"* diyor ama gerçek hayatta klasör çoğu zaman **tam bo
 değildir** — hazırlık deposu klonlanmış, `.gitignore` yazılmış, VS Code
 ayarları konmuş olur. ⛔ Bu durumda durup kullanıcıyı boşuna uğraştırma.
 
-**Klasördekilere bak ve karar ver:**
+**Klasördekilere bak ve üç kutudan birine at:**
 
-| Bulunan | Karar |
+### ✅ Devam — dokunma, üzerine yazma
+
+| Bulunan | Nereden gelir |
 |---|---|
-| `.git/`, `.gitignore`, `.gitattributes` | ✅ **Devam** — zaten senin de kuracakların |
-| `.vscode/`, `.claude/` | ✅ **Devam** — birleştir, aşağıya bak |
-| `README.md`, `LICENSE` | ✅ **Devam** — üzerine yazma, koru |
-| Doküman klasörü (`_devir/`, `docs/`, `notlar/`) | ✅ **Devam** — dokunma |
-| ⛔ `package.json`, `pnpm-lock.yaml` | **DUR ve SOR** |
-| ⛔ `src/`, `apps/`, `packages/` | **DUR ve SOR** |
-| ⛔ `node_modules/`, `dist/`, `.next/` | **DUR ve SOR** |
+| `.git/`, `.gitignore`, `.gitattributes` | ⭐ **En sık:** GitHub'da depo açarken README/`.gitignore` eklenmiş, sonra klonlanmış |
+| `README.md`, `LICENSE` | Aynı sebep |
+| `.vscode/`, `.claude/`, `.idea/` | Editör ayarları — **birleştir**, aşağıya bak |
+| Doküman klasörü (`_devir/`, `docs/`, `notlar/`) | Hazırlık belgeleri |
+| Analiz dokümanı (`.docx`, `.pdf`) | ⭐ Kurumun gönderdiği şartname — **Adım 3'te lazım olacak**, sakın silme |
+| Tasarım dosyaları (Figma dışa aktarımı, logo, mockup) | Tasarımcıdan gelmiş |
+| Örnek veri (`.csv`, `.xlsx`) | Kurumdan gelmiş — veri modelinde işe yarar |
 
-⭐ **Ayrım şu:** *"belge ve ayar"* varsa devam; *"var olan bir uygulama"*
+⭐ Bunlar **kurulumu engellemez.** Analiz dokümanı ve örnek veri ayrıca
+**değerlidir** — Adım 3'te kullanılacak.
+
+### ⚠️ Devam et AMA önce şunu yap
+
+| Bulunan | ⛔ İlk commit'ten ÖNCE |
+|---|---|
+| `.env`, `.env.local` | **`.gitignore`'a ekle.** Değerleri `.env.example`'a **ad olarak** taşı |
+| `.pem`, `.key`, `.p12`, `id_rsa` | ⛔ **`.gitignore`'a ekle** — özel anahtar asla commit edilmez |
+| Kimlik/şifre içeren dosya (`credentials.json`, `secrets.*`) | `.gitignore` + kullanıcıya **söyle** |
+| `.DS_Store`, `Thumbs.db`, `desktop.ini` | `.gitignore`'a ekle — işletim sistemi çöpü |
+| Yedek dosya (`*.zip`, `eski-yedek/`) | Kullanıcıya sor: taşıyalım mı, gitignore mu |
+
+⛔ **Bu kutu atlanamaz.** Bir gizli anahtar bir kez commit edilirse **git
+geçmişinde kalır**; sonradan silmek yetmez, anahtarı değiştirmek gerekir.
+Kurulum ilk commit'i attığı için bu kontrol **kurulumdan önce** yapılır.
+
+### ⛔ DUR ve SOR — var olan uygulama
+
+| Bulunan | Neyi gösterir |
+|---|---|
+| `package.json`, `pnpm-lock.yaml`, `requirements.txt` | Kurulu bir proje var |
+| `src/`, `apps/`, `packages/`, `lib/` | Kod var |
+| `node_modules/`, `venv/`, `dist/`, `.next/` | Çalıştırılmış bir proje var |
+| `prisma/`, `migrations/` | Veri modeli **zaten kurulmuş** |
+| `Dockerfile`, `docker-compose.yml` | Altyapı kurgusu var |
+
+⭐ **Ayrım şu:** *"belge, ayar ve veri"* varsa devam; *"var olan bir uygulama"*
 varsa dur. Kurulum var olan kodun üzerine yazamaz.
 
 **Durursan ne söylenir:**
