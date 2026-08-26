@@ -29,6 +29,60 @@ Kurallara uymak amaç değil, araç. Kitin tamamı **üç sonucu** hedefliyor:
 ⚠️ Bir kural bu üç sonuca hizmet etmiyorsa **sorgulanır.** Kural ezberlenmez,
 gerekçesiyle uygulanır.
 
+## ⭐ KİT NEREYE GİDİYOR — hedeflenen son durum
+
+Kit olgunlaştıkça kullanıcının **karar yükü azalır**, ama **öğrenmesi
+azalmaz.** Hedef şu:
+
+| Kullanıcının işi | Zamanla |
+|---|---|
+| Mimari ve stack'i **birlikte konuşmak** | ⭐ Kalır — en değerli kısım |
+| Kurulumda soruları cevaplamak | Kalır ama kısalır (kit çoğunu biliyor) |
+| İş kurallarını anlatmak (PRD) | ⭐ Kalır — yalnızca o bilir |
+| Teknoloji seçimlerini araştırmak | ⛔ **Kaybolur** — kitte yazılı |
+| Her adımda "nasıl yapılmalı" düşünmek | ⛔ **Kaybolur** — kitte yazılı |
+| Onay vermek | Kalır — ama aşağıdaki şartla |
+
+⭐ **Varılmak istenen yer:** `/yeni-proje` denir, sorular cevaplanır, mimari
+konuşulur, gerisi **onayla ilerler** — ve kullanıcı her adımda **neyi neden
+yaptırdığını öğrenir.**
+
+⛔ **Kitte olmayan bir best practice fark edilirse** — ajan da fark edebilir,
+kullanıcı da — o anda eklenir. Kit hiçbir zaman "bitmiş" sayılmaz
+(`11-agent-workflow.md` → *"İstenen yapılır ama daha iyisi varsa söylenir"*).
+
+### ⛔ BU HEDEFİN TEHLİKELİ KENARI: ONAY, ANLAMAK DEĞİLDİR
+
+Kit iyileştikçe kullanıcının rolü **onay vermeye** yaklaşıyor. Buradaki risk
+şudur:
+
+> ⚠️ Kullanıcı anlamadan *"tamam"* demeye başlarsa, kit **birinci sonucunu
+> kaybeder** — "kullanıcı ne yaptığını anlıyor". Kod yine doğru çıkar ama
+> kullanıcı onu **savunamaz**, değiştiremez, anlatamaz.
+
+⛔ **Bu, kitin en sinsi başarısızlık biçimidir**, çünkü dışarıdan başarı gibi
+görünür: proje çalışıyor, testler yeşil, teslim zamanında. Eksik olan tek şey
+**kullanıcının kendisi.**
+
+**Ajanın sorumluluğu — onayı YAPISI GEREĞİ bilgili kıl:**
+
+| ⛔ Yanlış | ✅ Doğrusu |
+|---|---|
+| *"Şunu yaptım, onaylıyor musun?"* | *"Şunu yaptım. **Sebebi** şu. Yanlış olsaydı **şu** bozulurdu. Onaylıyor musun?"* |
+| Onayı bir kapı gibi geçmek | Onayı bir **anlatma fırsatı** gibi kullanmak |
+| Uzun bir işi tek onaya yığmak | Kararları ayrı ayrı sunmak |
+
+⚠️ **Uyarı işareti:** Kullanıcı arka arkaya **hiç soru sormadan** onaylıyorsa
+iki ihtimal var — ya gerçekten anladı, ya da takip etmeyi bıraktı. Ajan bunu
+**varsayamaz**; anlatımın o kısmını sadeleştirmek yerine *"burada şunu
+seçtim, alternatifi şuydu — bir sakınca görüyor musun?"* diye **kararı
+görünür kılar.**
+
+⛔ **Onay hızlandırmak için açıklama kısaltılmaz.** Kısalmanın tek meşru
+sebebi, kullanıcının o konuyu **artık biliyor olmasıdır** — ve bu
+`ogrendiklerim.md` → *"Artık biliyorum"* listesiyle **kayda geçer**, ajanın
+tahminiyle değil.
+
 ## Yapım planı nasıl sıralanır — dört kural
 
 `docs/project/roadmap.md` adımları rastgele değil, aşağıdaki dört kurala göre
