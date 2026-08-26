@@ -10,6 +10,66 @@
 ## İsimlendirme
 - Tablo: çoğul `snake_case` (`appointments`, `order_items`)
 - Kolon: `snake_case` · Prisma model adı: `PascalCase` tekil (`Appointment`)
+
+### ⭐ İKİ DÜNYA, İKİ STANDART — köprü `@map` ile kurulur
+
+Yukarıdaki kural bir çelişki doğuruyor gibi görünür:
+
+| Katman | Yerleşik standart |
+|---|---|
+| **TypeScript / NestJS** | `camelCase` alan · `PascalCase` tip · **tekil** |
+| **PostgreSQL** | `snake_case` kolon · **çoğul** tablo |
+
+⛔ **Birini diğerine feda etme.** İki katman da kendi yerleşik pratiğini korur;
+aradaki çeviriyi **Prisma** yapar.
+
+```prisma
+model WorkOrder {                          // ← kodda: prisma.workOrder
+  id           String   @id @default(uuid())
+  code         String   @unique
+
+  // ⭐ KÖPRÜ BURADA:
+  //    sol  → TypeScript'te yazacağın ad   (camelCase)
+  //    sağ  → PostgreSQL'de oluşacak kolon (snake_case)
+  dueAt        DateTime @map("due_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+
+  @@map("work_orders")                     // ← tablonun kendisi: çoğul snake_case
+}
+```
+
+Kod tarafında **hiç alt çizgi görmezsin**:
+
+```ts
+// NESNE: TypeScript standardı — temiz camelCase
+const created = await this.prisma.workOrder.create({
+  data: { code, dueAt },
+});
+
+// ⭐ Prisma arka planda şu SQL'i üretir — PostgreSQL standardı:
+// INSERT INTO "work_orders" ("id","code","due_at","created_at") VALUES (…)
+```
+
+⭐ **Bu, katman bağımsızlığının somut karşılığıdır** (`01-architecture.md`):
+veritabanı adlandırması değişirse yalnızca `@map` satırları değişir, uygulama
+kodunun tek satırı bile dokunulmaz.
+
+⛔ **`@map` sonradan eklenmez.** İlk migration'dan **önce** yazılır; sonra
+eklenirse kolon yeniden adlandırma migration'ı gerekir ve veri taşıma riski
+doğar.
+
+⚠️ **Kurum kendi isimlendirme kuralını verirse** yalnızca `@map` tarafı ona
+uydurulur; TypeScript tarafı **değişmez**. Köprünün varlık sebebi tam olarak
+budur.
+
+> **ℹ️ Elle yazmak zorunda mıyım — evet, ve bu iyi**
+>
+> `prisma-case-format` gibi araçlar `@map` satırlarını otomatik üretebiliyor
+> (2026-08 ölçümü: 44K indirme/hafta — Prisma'nın 16.8M'i yanında **niş**).
+>
+> ⛔ Kite alınmadı: yaygınlık ölçütünü geçmiyor ve şemayı **üreten** bir araç,
+> şemanın tek doğru kaynağı olma özelliğini zayıflatır. `@map` satırları elle
+> yazılır; zaten model başına birkaç satırdır.
 - Yabancı anahtar: `<tekil_tablo>_id` (`user_id`)
 - Boolean: `is_`/`has_` öneki (`is_active`)
 - Tarih: `created_at`, `updated_at`, `deleted_at` (UTC saklanır, ekranda TR saatine çevrilir)

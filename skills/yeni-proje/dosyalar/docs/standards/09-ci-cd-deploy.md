@@ -177,6 +177,49 @@ otomasyondur. Bu yüzden:
 - Yeni paket eklerken lisans kontrol edilir; GPL/AGPL paketler onay ister.
 - Dependabot/Renovate ile güvenlik güncellemeleri otomatik PR olarak gelir.
 
+### ⛔ CI PLATFORMA BAĞIMLI YAZILMAZ — adımlar betikte, dosya ince sarmalayıcı
+
+Kurum bugün GitHub, yarın GitLab kullanabilir. ⛔ CI adımlarını platform
+dosyasının içine yazmak, taşınmayı **projeyi yeniden kurmaya** çevirir.
+
+**Kural:** gerçek adımlar `package.json` içinde **tek bir betikte** toplanır:
+
+```json
+{ "scripts": {
+  "ci:verify": "pnpm lint && pnpm typecheck && pnpm test && pnpm test:integration && pnpm test:arch && pnpm build"
+}}
+```
+
+Platform dosyaları yalnızca **onu çağırır**:
+
+```yaml
+# .github/workflows/ci.yml          # .gitlab-ci.yml
+- run: pnpm install --frozen-lockfile
+- run: pnpm ci:verify               #   script: pnpm ci:verify
+```
+
+**Üç yönlü kazanç:**
+
+| # | Kazanç |
+|---|---|
+| 1 | ⭐ Aynı kapıyı **kendi makinende** tek komutla koşturursun — CI'ı beklemezsin |
+| 2 | Hangi platforma gidilirse gidilsin CI çalışır; mantık iki yerde kopyalanmaz |
+| 3 | Kural değişince **tek yer** güncellenir (`package.json`), iki dosya değil |
+
+⭐ **İki dosya da baştan yazılır**, kurum hangisini kullanırsa kullansın.
+Kullanılmayan dosya zararsızdır; taşınma günü **ek iş çıkmaz.**
+
+⚠️ **Yalnızca isimler farklıdır** (`03-api-guidelines.md` → PR/MR ayrımı):
+
+| | GitHub | GitLab |
+|---|---|---|
+| Dosya | `.github/workflows/ci.yml` | `.gitlab-ci.yml` |
+| Değişiklik önerisi | Pull Request | Merge Request |
+| Komut satırı | `gh` | `glab` |
+
+⛔ **Teslim linki**, kurumun fiilen kullandığı platformdan verilir — ikisinden
+birini seçmek bu kurulumu değiştirmez.
+
 ### ⭐ Bağımlılık botu — proje tipine göre KARAR TABLOSU
 
 ⛔ **Bot her projede kendiliğinden kurulmaz.** Kurulum maliyeti proje tipine
