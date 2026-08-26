@@ -335,7 +335,13 @@ Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
    `sonraki-adim-prompt.md` · `teknoloji-ve-plan.md` · `ogrendiklerim.md` ·
    `decisions/ADR-000-sablon.md` ·
    (veritabanı varsa) `data-model.md` · (dış servis varsa) `integrations.md` ·
-   (sahte veri gerekiyorsa) `fake-data-guide.md`
+   (sahte veri gerekiyorsa) `fake-data-guide.md` ·
+   ⭐ **(işyeri projesiyse) `kurumdan-ogrenilecekler.md`**
+
+   ⛔ **`kurumdan-ogrenilecekler.md` yalnızca işyeri projesinde açılır.**
+   Kendi projende soracak bir kurum yok. İçindeki üç DevOps sorusu
+   (`CALISMA-KILAVUZU.md` → *"DevOps sınırı"*) **işe başlamadan** sorulur —
+   cevapları hem oraya hem `altyapi-durumu.md`'ye işlenir.
 4. **`docs/standards/` içini değiştirme.** Tek istisna `00-stack.md` sürüm
    tablosu — o da Adım 5'te fiilen kurulanla eşitlenir.
 5. ⭐ **Önceki projenin *"Artık biliyorum"* listesini taşı.** Kullanıcının
