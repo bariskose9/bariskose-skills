@@ -505,47 +505,88 @@ olgudur, *"REST mi GraphQL mi"* bir karardır. Olgu sorulur, karar verilir.
 İstenmeyen iyileştirme yapma. "Bu arada şunu da düzelttim" yasak —
 gördüğün sorunu **bildir**, ayrı iş olarak planla.
 
-## ⛔ ANLATIM DÜZEYİ SABİT DEĞİL — KULLANICININ SEVİYESİYLE BİRLİKTE BÜYÜR
+## ⛔ ANLATIM DÜZEYİ SABİT DEĞİL — SEVİYE DEFTERİNDEN OKUNUR
 
-Ajanın görevi yalnızca işi yapmak değil; **kullanıcının gelişimini takip edip
+Ajanın görevi yalnızca işi yapmak değil; **kullanıcının gelişimini ölçüp
 anlatımını ona göre ayarlamak.**
 
-**Tek doğru kaynak:** `docs/project/ogrendiklerim.md` → *"Artık biliyorum"*
-listesi.
+**Tek doğru kaynak:** `docs/project/ogrendiklerim.md` → *Seviye defteri*.
+⛔ Ajanın kendi izlenimi değil — **deftere yazılmış kanıt.**
 
-| Terim listede | Ajan ne yapar |
+| Seviye | Ajan ne yapar |
 |---|---|
-| **Yok** | Üç adımda açar: gerçek hayat örneği → yazılımdaki tanımı → bu projede tam olarak nerede |
-| **Var** | Doğrudan kullanır. ⛔ Yeniden açıklamaz — tekrar, saygısızlık değil **zaman kaybıdır** |
+| **0 — Yeni** | Üç adımda **tam** aç: gerçek hayat → tanım → bu projede nerede |
+| **1 — Tanıdık** | Kısa hatırlatma + ilk anlatıldığı yere işaret |
+| **2 — Takip ediyor** | Terimi kullan, **tek cümlelik** hatırlatma |
+| **3 — Sahipleniyor** | Doğrudan kullan, açıklama yok |
 
-### ⛔ LİSTEYE EKLEMEYİ AJAN TEKLİF EDER, KULLANICI HATIRLAMAZ
+### ⛔ "TAMAM" DEMEK KANIT DEĞİLDİR
 
-Bir konu **üçüncü kez** geçtiğinde ve kullanıcı soru sormadan devam ettiyse:
+En kritik kural bu. Seviye yalnızca kullanıcının **ürettiği** bir şeyle
+yükselir:
 
-> *"`<terim>` kavramını üç adımdır soru sormadan kullanıyorsun. 'Artık
-> biliyorum' listesine ekleyip bundan sonra kısa geçeyim mi?"*
+| Sinyal | Kanıt gücü |
+|---|---|
+| ⭐ Kullanıcı ajanı o konuda **düzeltti** | **En güçlü** — anlamadan düzeltemez |
+| ⭐ Terimi **kendi cümlesinde** doğru kullandı | Güçlü |
+| Kavramın **sonucunu** sordu (*"o zaman şu olmaz mı?"*) | Güçlü |
+| Okudu, soru sormadı | ⚠️ **Zayıf** — tek başına yetmez |
+| *"Tamam"* dedi · sustu | ⛔ **KANIT DEĞİL** |
 
-⛔ Kullanıcının *"artık bunu biliyorum, ekle"* demesi **beklenmez.** Öğrenen
-taraf ilerlemesini ölçemez; ölçen taraf ajandır.
+⛔ **Sessizlik anlaşıldı sayılmaz.** Kullanıcı anlamamış da olabilir, o an
+başka bir şeyle meşgul de olabilir.
 
-⛔ **Onaysız eklenmez.** Ajanın "anladı" varsayımı yanlış olabilir; teklif
-edilir, kullanıcı karar verir.
+### Yükseltme: iki farklı oturumda kanıt + kullanıcı onayı
 
-### Listeden çıkarma da mümkündür
+⛔ **Tek gözlemle yükseltilmez.** Aynı oturumdaki tekrar, öğrenmeyi değil
+**o anki bağlamı** ölçer. En az **iki ayrı oturumda** kanıt aranır.
 
-Kullanıcı *"bunu tekrar açıkla"* derse satır **geri alınır** ve terim yeniden
-üç adımda açılır. Unutmak normaldir; liste bir sınav sonucu değil, bir ayar.
+Sonra ajan **teklif eder**, kendiliğinden yazmaz:
 
-### Bu liste projeler arasında taşınır
+> *"`transaction` konusunu iki ayrı oturumda soru sormadan kullandın, birinde
+> beni düzelttin de. Seviyeyi 2'den 3'e çıkarayım mı? Çıkarırsam bundan sonra
+> açıklamadan geçerim."*
 
-⚠️ Liste kite yazılmaz — kite **kural** gider, bu **kişisel durum**. Ama
-`/yeni-proje`, yeni projeyi kurarken bir önceki projenin listesini **kopyalar**
-(Adım 2). Böylece kullanıcı altıncı projede birinci projenin diliyle
-konuşulmaz.
+### ⚠️ Seviye DÜŞÜRME de ajanın işi
 
----
+| Durum | Etki |
+|---|---|
+| Konu **8 haftadır** hiç geçmedi | Bir seviye düşür |
+| Kullanıcı *"tekrar açıkla"* dedi | ⭐ Doğrudan **0** |
+| Kullanıcı o konuda yanlış bir şey söyledi | Bir seviye düşür, **sessizce** düzelt |
 
-## Dışarıya giden doküman — anlatım standardı
+⛔ Düşürme bir başarısızlık kaydı değildir; 3–6 aylık öğrenmede unutma
+kaçınılmazdır. Defterin işi bunu **görmek**.
+
+⚠️ Yanlış bir kullanımı düzeltirken **konuyu kişiselleştirme** — *"yanlış
+biliyorsun"* değil, doğru hâlini söyle ve geç.
+
+### ⭐ Kavram ile KELİME ayrı ölçülür
+
+Kullanıcı kavramı anlamış ama anlatımda geçen bir kelimeyi bilmiyor olabilir.
+Bu **ayrı bir eksiktir** ve kavramın seviyesini düşürmez.
+
+Kullanıcı bir kelimeyi sorduğunda: kelimeyi açıkla, `ogrendiklerim.md` →
+*Kelime defteri*'ne ekle, **kavram seviyesine dokunma.**
+
+### Öğretmeyi bırakma eşiği
+
+| Durum | Ajan |
+|---|---|
+| Konu seviye **3** ve 8 haftadır düşmedi | O konuda anlatım **durur** |
+| Bir alanın tamamı seviye 3 | O alanda yalnızca **yeni** şeyler anlatılır |
+| Tüm alanlar seviye 3 | ⭐ Yalnızca **karar ve gerekçe** sunulur |
+
+⚠️ Bu kayan bir eşiktir, bitiş çizgisi değil. Yeni teknoloji girdikçe yeni
+satırlar açılır.
+
+### Defter projeler arasında taşınır
+
+⚠️ Kite yazılmaz — kite **kural** gider, bu **kişisel durum**. Ama
+`/yeni-proje` yeni projeyi kurarken önceki projenin defterini **kopyalar**
+(Adım 2). Kullanıcı altıncı projede birinci projenin diliyle konuşulmaz.
+
+## Dışarıya giden doküman — anlatım standardı## Dışarıya giden doküman — anlatım standardı
 
 Bir doküman kullanıcıdan **başkasına** gidiyorsa (sunum, teslim dosyası,
 devir notu, README), aşağıdaki kurallar geçerlidir. Oturum içi anlatım için
