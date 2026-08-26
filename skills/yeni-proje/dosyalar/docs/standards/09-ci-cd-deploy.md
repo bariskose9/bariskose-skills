@@ -265,6 +265,56 @@ taşımayı teklif eder** — kullanıcının hatırlaması beklenmez
 > ⚠️ **Automerge'in ön şartı testlerdir.** Test kapsamı zayıfsa "CI yeşil"
 > hiçbir şey kanıtlamaz ve automerge bozuk kodu sessizce ana dala sokar.
 > Automerge açılmadan önce `06-testing.md` kapıları gerçekten kuruludur.
+
+### ⛔ PR BİRLEŞTİRİLMEDEN ÖNCE AJAN DA DENETLER
+
+CI kapıları **makinenin ölçebildiğini** ölçer: derleniyor mu, testler geçiyor
+mu, katman kuralı bozulmuş mu. ⛔ **Ölçemediği şeyler var** — ve gerçek hatalar
+çoğu zaman oralarda olur:
+
+| CI yakalar | ⛔ CI yakalayamaz |
+|---|---|
+| Test kırmızı | **Test yanlış şeyi doğruluyor** |
+| Tip hatası | Tip doğru ama **iş kuralı yanlış** |
+| Katman ihlali | Katman temiz ama **sorumluluk yanlış yerde** |
+| Lint uyarısı | Kod çalışıyor ama **okunmuyor** |
+| — | **Yorumlar eksik veya yanlış** (`02-coding-standards.md`) |
+| — | Yeni bir **güvenlik açığı** veya sızıntı |
+| — | Belge güncellenmemiş (ADR, `teknoloji-ve-plan.md`) |
+
+⭐ **Bu yüzden PR birleştirilmeden önce ajan da inceler.** Sıra şudur:
+
+```
+Kod yazıldı
+  └─► CI kapıları  (lint · tip · test · mimari · derleme)
+       └─► ⭐ AJAN İNCELEMESİ  (code-reviewer + security-auditor)
+            └─► Bulgular düzeltildi
+                 └─► Kullanıcıya SUNULDU ve onaylandı
+                      └─► PR birleştirilir
+```
+
+⛔ **CI yeşil olması PR'ı birleştirmek için YETMEZ.** İki kapı birden geçilir:
+makine kapısı **ve** inceleme kapısı.
+
+**Ajan neyi inceler:**
+
+| Denetim | Araç | Ne arar |
+|---|---|---|
+| Kod incelemesi | `code-reviewer` | Doğruluk, okunabilirlik, mimari, sorumluluk dağılımı |
+| Güvenlik | `security-auditor` | Yetki aşımı, sızıntı, IDOR, gizli değer |
+| Test kalitesi | `test-engineer` | Test **gerçekten** bir şey doğruluyor mu |
+| Yorumlar | `02-coding-standards.md` | Junior ve **kodu okumayan denetçi** anlar mı |
+
+⚠️ **Bulgu çıkarsa PR açılmaz/birleştirilmez** — önce düzeltilir. Düzeltilmeyecek
+bir bulgu varsa gerekçesi PR açıklamasına yazılır, sessizce geçilmez.
+
+⛔ **Bu, Renovate'in automerge'ü için de geçerli mi — HAYIR, ayrım var:**
+
+| PR türü | Ajan incelemesi |
+|---|---|
+| **İnsan/ajan yazdığı kod** | ⛔ **Zorunlu** — yukarıdaki akış |
+| Renovate **yama/minor** güncellemesi | Gerekmez — kod değişmiyor, yalnızca sürüm numarası. CI kapısı yeterli |
+| Renovate **major** güncellemesi | ⭐ **Zorunlu** — kırıcı değişiklik ilan edilmiş; göç notu okunur, etkilenen kod taranır |
 - Kritik güvenlik açığı olan paket sürümü ile deploy yapılmaz.
 - **Bir CLI veya jeneratör paket/bileşen eklediyse, bağımlılık dosyasının farkı
   OKUNUR.** Bu araçlar kendi varsayımlarına göre ek paket kurar; kurdukları paket
