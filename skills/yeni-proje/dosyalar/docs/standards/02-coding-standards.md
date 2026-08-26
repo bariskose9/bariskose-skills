@@ -76,34 +76,128 @@ const sonuc = await prisma.workOrder.updateMany({
 *"bu parça ne yapıyor, neden var, dokunursam ne olur"* sorularının üçüne de
 cevap verebilmeli.
 
-### Hangi satır KENDİ yorumunu alır
+### ⛔ ÖLÇÜT: KODU SİL, YORUMLARI BIRAK — SİSTEM HÂLÂ ANLAŞILIYOR MU
 
-Her satıra yorum yazmak da yanlıştır — gürültü olur ve önemli olan kaybolur.
-Ayrım şu:
+Bu, yorum kuralının **tek gerçek ölçüsüdür.** Satır sayısı değil, **anlatının
+bütünlüğü**.
 
-| Satır türü | Yorum | Örnek |
-|---|---|---|
-| **Bir karar içeriyor** | ⭐ **Kendi satırı** | `where: { version }` · `skip: 1` · `'use client'` |
-| **Bir kural uyguluyor** | ⭐ **Kendi satırı** | Yetki kontrolü, durum geçişi, kısıt |
-| **Yan etkisi var** | ⭐ **Kendi satırı** | Transaction açma, kuyruğa iş bırakma, önbellek temizleme |
-| **Adı zaten anlatıyor** | ⛔ Yorum yok | `const kullanicilar = await bul()` |
-| Bir işin adımları | Bloğun **başına tek yorum** | `// 1) Girdiyi doğrula` |
-| Tekrar eden kalıp | İlkine yorum, sonrakiler geçilir | Aynı `select` biçimi |
+> **Bir dosyadaki bütün kodu silip yalnızca yorumları bıraktığında, okuyan
+> kişi o dosyanın ne yaptığını, veriyi nereden alıp nereye götürdüğünü ve
+> sonunda ekranda ya da veritabanında ne olduğunu anlayabilmeli.**
+
+Anlatıda **boşluk kalan her yer**, yorum eksiği demektir. Ölçüt budur;
+"şu satıra yorum yazılır, şuna yazılmaz" listesi değildir.
+
+#### Yorum dosya sınırlarını GEÇER — zincir kesilmez
+
+⛔ En sık yapılan eksiklik: yorumun yalnızca **o dosyanın içini** anlatması.
+Sistem birden çok dosyaya yayılıyor; yorum da zinciri göstermeli.
+
+Her önemli yorumda **dört halka** bulunur:
+
+| Halka | Ne yazar |
+|---|---|
+| **NEREDEN** | Bu veri hangi **dosyadan**, hangi biçimde geliyor |
+| **NE** | Burada ne oluyor, hangi kural uygulanıyor |
+| **NEREYE** | Hangi **dosyaya**, hangi biçimde gidiyor |
+| ⭐ **SONUÇ** | Bunun **görünür** karşılığı ne: ekranda ne beliriyor, veritabanına hangi kayıt hangi biçimde yazılıyor |
+
+⭐ **Dördüncü halka atlanmaz.** Kodu okumayan biri için tek somut şey odur.
+
+```ts
+// apps/api/src/work-orders/work-orders.service.ts
+
+/**
+ * İŞ EMRİ OLUŞTURMA
+ *
+ * NEREDEN : apps/web/.../talep-formu.tsx  → kullanıcının doldurduğu form
+ *           HTTP POST /api/v1/work-orders ile JSON olarak geliyor.
+ *           Gövde, packages/contracts/work-order.ts şemasından GEÇMİŞ durumda
+ *           (geçmeseydi bu metot hiç çağrılmazdı, 400 dönerdi).
+ *
+ * NE      : Üç kural sırayla uygulanıyor — lokasyon aktif mi, varlık kullanımda
+ *           mı, SLA süresi ne. Kurallar packages/domain içinde, burada değil.
+ *
+ * NEREYE  : prisma → PostgreSQL "WorkOrder" ve "WorkOrderHistory" tabloları
+ *           (tek transaction) · BullMQ kuyruğuna gecikmeli hatırlatma işi
+ *
+ * SONUÇ   : Veritabanında IE-2026-000148 numaralı YENİ BİR SATIR oluşur,
+ *           durumu "ACIK", sla_bitis_zamani dolu. Kullanıcının ekranında iş
+ *           emri listesi tazelenir ve kayıt en üstte görünür. SLA süresinin
+ *           yarısında atanan kişiye bildirim düşer.
+ */
+async olustur(girdi: TalepOlusturDto) {
+
+  // NEREDEN: girdi.lokasyonId, formdaki açılır listeden geldi.
+  // NE     : Lokasyon pasifse iş emri açılamaz (ödev §5.2).
+  // ETKİ   : Bu kontrol kaldırılırsa kapatılmış binalara iş emri açılır ve
+  //          hiç kimseye atanamaz — kayıt sistemde asılı kalır.
+  const lokasyon = await this.lokasyonlar.aktifBul(girdi.lokasyonId);
+  if (!lokasyon) throw new LokasyonPasifHatasi(girdi.lokasyonId);
+
+  // NE   : SLA hesabı — hangi politikanın uygulanacağını Factory seçiyor.
+  //        Seçim önceliğe + varlık kritikliğine + iş emri türüne bakıyor (E.4).
+  // NEREYE: Çıkan tarih aşağıda sla_bitis_zamani kolonuna yazılacak.
+  const politika = this.slaFabrikasi.sec(girdi);
+  const plan = politika.hesapla(girdi);
+
+  // ⭐ NE   : Kayıt ve ilk geçmiş satırı TEK transaction içinde yazılıyor.
+  //    ETKİ: Ayrılırsa, ikincisi hata verdiğinde geçmişi olmayan bir iş emri
+  //          kalır. O kayıt hiçbir raporda doğru görünmez ve durum makinesi
+  //          "nereden geldi" sorusuna cevap veremez.
+  return this.prisma.$transaction(async (tx) => {
+    const olusan = await tx.workOrder.create({ … });
+    await tx.workOrderHistory.create({ … });
+    return olusan;
+  });
+}
+```
+
+#### Kapsam — istisna yok
+
+| Nerede | Yorumlanır mı |
+|---|---|
+| Backend servisleri, controller'lar | ✅ |
+| Frontend bileşenleri, hook'lar | ✅ |
+| `packages/domain` iş kuralları | ✅ — ⭐ **en çok buraya** gerekiyor |
+| Prisma şeması, migration'lar | ✅ — hangi kolon neden var |
+| Testler | ✅ — bu test **neyi** kanıtlıyor |
+| `Dockerfile`, `compose`, CI dosyaları | ✅ |
+| Yapılandırma dosyaları | ✅ — hangi ayar neyi değiştiriyor |
+
+⛔ *"Burası basit, gerek yok"* denmez. Basit görünen yer, o sistemi ilk kez
+gören için basit değildir.
+
+#### Tekrar ve gürültü nasıl önlenir
+
+Eksiksizlik **tekrar** demek değil:
+
+| Durum | Nasıl yazılır |
+|---|---|
+| Aynı kalıp bir dosyada 5 kez | ⭐ **İlkinde tam anlat**, sonrakilerde `// aynı kalıp — yukarıdaki açıklamaya bak` |
+| Değişken adı zaten anlatıyor | Ayrı yorum yerine **bloğun** anlatısına dahil et |
+| Bir işin adımları | Adım başına kısa satır: `// 1) Doğrula  2) Kaydet  3) Bildir` |
+| Dosyanın tamamı tek iş yapıyor | Dosya başına **blok yorum**, içeride yalnızca kararlar |
 
 ⛔ **Yorum "ne" yazmaz, kodun söylemediğini yazar.**
 
 ```ts
-// ⛔ GÜRÜLTÜ — kod zaten söylüyor
+// ⛔ GÜRÜLTÜ — kod zaten söylüyor, anlatıya hiçbir şey katmıyor
 const kullanici = await prisma.user.findUnique({ where: { id } }); // kullanıcıyı bul
 
 // ✅ DEĞER — kodun söylemediği
-// ⚠️ findUnique null döner, findUniqueOrThrow değil. Aşağıdaki kontrol
-//    kaldırılırsa 500 hatası alırız, kullanıcı da sebebini anlamaz.
+// ⚠️ findUnique NULL döner (findUniqueOrThrow değil). Aşağıdaki kontrol
+//    kaldırılırsa kullanıcı silinmiş bir kayda tıkladığında 500 alır ve
+//    ekranda sebebi anlaşılmayan bir hata görür.
 const kullanici = await prisma.user.findUnique({ where: { id } });
 ```
 
-⭐ **Pratik test:** Yorumu sil ve koda bak. *"Bunu neden böyle yaptığını hâlâ
-anlıyor muyum"* — evet ise yorum gereksizdi, hayır ise gerekliydi.
+⭐ **İki testi birlikte uygula:**
+
+| Test | Sorusu | Başarısızsa |
+|---|---|---|
+| **Bütünlük** | Kodu silsem, yorumlardan sistemi anlar mıyım | Yorum **eksik** |
+| **Gürültü** | Bu yorumu silsem, bir şey kaybeder miyim | Yorum **fazla** |
 
 ### Blok başı yorumu — uzun fonksiyonlarda
 
@@ -170,6 +264,9 @@ bunlara **zorunlu** olarak uygulanır. İddian ölçülemiyorsa işaret koyma, d
 yorum yaz.
 
 ### Yorumun anlatacağı şey
+
+> Ana ölçüt yukarıda: *"Kodu sil, yorumları bırak — sistem hâlâ anlaşılıyor
+> mu?"* Bu tablo o ölçütün **satır düzeyindeki** karşılığı.
 
 | Yaz | Yazma |
 |---|---|
