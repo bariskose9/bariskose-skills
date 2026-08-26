@@ -78,3 +78,53 @@ Local ve preview ortamlarında ekranın üstünde renkli bir şerit görünür
 - [ ] Migration otomatik çalışıyor mu?
 - [ ] Arama motorlarına kapalı mı (`noindex` — preview için zorunlu)?
 - [ ] Ortam etiketi ekranda görünüyor mu?
+
+
+## ⛔ PORT BOŞ MU — VARSAYILMAZ, ÖLÇÜLÜR
+
+Ajan *"bu makinede başka proje yok, portlar serbesttir"* **diyemez** — o
+makineyi görmedi.
+
+**Kurulumda fiilen bakılır:**
+
+```bash
+# macOS / Linux
+lsof -nP -iTCP:3000 -sTCP:LISTEN
+# Windows (PowerShell)
+netstat -ano | findstr :3000
+```
+
+| Sonuç | Ne yapılır |
+|---|---|
+| Boş | Varsayılan kullanılır (3000/4000/5432/6379) |
+| Dolu | ⭐ Kaydırılır (3100/4100/…), `.env`'e yazılır, kullanıcıya **söylenir** |
+
+⚠️ Docker konteynerleri de port tutar: `docker ps` ile bakılır — durmuş bir
+proje bile portu bırakmamış olabilir.
+
+⛔ Konteyner **içi** portlar hiç değişmez; yalnızca **host eşlemesi** kaydırılır.
+
+## ⛔ DOSYA ADI BÜYÜK/KÜÇÜK HARF — sessiz kırılma
+
+| Platform | Duyarlı mı |
+|---|---|
+| macOS · Windows | ⛔ **Hayır** — `WorkOrder.ts` ile `workorder.ts` **aynı** sayılır |
+| ⭐ Linux konteyneri · CI | ✅ **Evet** — **farklı** dosya |
+
+**Sonucu:** `import './workOrder'` yazıp dosya adı `WorkOrder.ts` ise kod
+geliştiricinin makinesinde **çalışır**, Docker'da ve CI'da **patlar.**
+
+⚠️ Kullanıcı Mac'te veya Windows'ta çalıştığı için bu hata **yerelde asla
+görünmez** — ancak CI kırmızı yanınca fark edilir.
+
+**Kural — ajan uygular, kullanıcıya sorulmaz:**
+
+| Konu | Kural |
+|---|---|
+| Dosya adı | ⭐ Tek biçim: `kebab-case` (`work-order.service.ts`) |
+| Klasör adı | `kebab-case` |
+| `import` yolu | Dosya adıyla **birebir** aynı |
+| React bileşen **dosyası** | `kebab-case`; bileşenin **kendisi** `PascalCase` |
+
+⛔ **Aynı klasörde yalnızca büyük/küçük harfle ayrışan iki dosya olamaz.**
+Git bunları macOS/Windows'ta **tek dosya** sanar ve biri sessizce kaybolur.
