@@ -197,6 +197,47 @@ mesajını `KURULUM.md`'ye işle.
 
 ⚠️ Platform bu ikisinden biri değilse (Linux) adımı **atla** ve sebebini söyle.
 
+## ⛔ Adım 0c — KLASÖR BOŞ DEĞİLSE: neyin kabul edilebilir olduğu
+
+Skill *"boş klasörde"* diyor ama gerçek hayatta klasör çoğu zaman **tam boş
+değildir** — hazırlık deposu klonlanmış, `.gitignore` yazılmış, VS Code
+ayarları konmuş olur. ⛔ Bu durumda durup kullanıcıyı boşuna uğraştırma.
+
+**Klasördekilere bak ve karar ver:**
+
+| Bulunan | Karar |
+|---|---|
+| `.git/`, `.gitignore`, `.gitattributes` | ✅ **Devam** — zaten senin de kuracakların |
+| `.vscode/`, `.claude/` | ✅ **Devam** — birleştir, aşağıya bak |
+| `README.md`, `LICENSE` | ✅ **Devam** — üzerine yazma, koru |
+| Doküman klasörü (`_devir/`, `docs/`, `notlar/`) | ✅ **Devam** — dokunma |
+| ⛔ `package.json`, `pnpm-lock.yaml` | **DUR ve SOR** |
+| ⛔ `src/`, `apps/`, `packages/` | **DUR ve SOR** |
+| ⛔ `node_modules/`, `dist/`, `.next/` | **DUR ve SOR** |
+
+⭐ **Ayrım şu:** *"belge ve ayar"* varsa devam; *"var olan bir uygulama"*
+varsa dur. Kurulum var olan kodun üzerine yazamaz.
+
+**Durursan ne söylenir:**
+
+> *"Bu klasörde zaten bir proje var (`package.json` gördüm). `/yeni-proje`
+> sıfırdan kurulum yapar ve mevcut yapıyı bozabilir. Üç seçenek: **(1)** boş
+> bir klasörde başlayalım, **(2)** mevcut projeye kit dosyalarını **ekleyeyim**
+> (kurulum değil, yalnızca standartlar), **(3)** neyi hedeflediğini anlat,
+> ona göre karar verelim."*
+
+### Var olan dosyalar üzerine YAZILMAZ, BİRLEŞTİRİLİR
+
+| Dosya | Nasıl |
+|---|---|
+| `.gitignore` | Eksik satırlar **eklenir**, mevcutlar korunur |
+| `.vscode/extensions.json` | ⭐ Listeler **birleştirilir** — kullanıcının eklediği eklentiler silinmez |
+| `.claude/settings.json` | İzinler birleştirilir |
+| `README.md` | ⛔ Üzerine yazılmaz; yoksa oluşturulur |
+
+⛔ **Kullanıcının kendi eklediği hiçbir şey sessizce silinmez.** Bir çakışma
+varsa söylenir, kararı kullanıcı verir.
+
 ## Adım 1 — Proje tipi ve stack
 
 Tek tek sor, varsayım yapma:
