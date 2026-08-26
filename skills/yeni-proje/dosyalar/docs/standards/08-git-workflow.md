@@ -48,6 +48,61 @@ kaçınılmaz. **Kural bu yüzden "açık PR varken dal açma".**
 - Bir commit tek bir mantıksal değişiklik içerir. Formatlama ile davranış değişikliği aynı commit'te olmaz.
 - **Onaysız commit/push/merge yok** (bkz. CLAUDE.md §6.3).
 
+## ⛔ GIT KİMLİĞİ — bir kez sorulur, sonra sorulmaz
+
+Commit'lerin üstünde bir **ad ve e-posta** durur. Bu bilgi `git config`'den
+gelir ve **makinede kalıcıdır.**
+
+### Ajan ne yapar — önce BAKAR, sonra sorar
+
+```
+git config user.email  →  DOLU mu?
+   │
+   ├─ DOLU  → ⛔ SORMA. Zaten ayarlı, geç.
+   │          (Yalnızca proje tipiyle uyuşmuyorsa uyar — aşağıda)
+   │
+   └─ BOŞ   → SOR:  "Commit'lerde hangi ad ve e-posta görünsün?"
+              → ayarla → ⛔ bir daha sorma
+```
+
+⛔ **Her oturumda sorulmaz.** `git config` bir kez yazıldığında makinede kalır;
+tekrar sormak kullanıcıya zaten cevapladığı bir soruyu yöneltmektir.
+
+### ⭐ AYNI MAKİNEDE İKİ KİMLİK — `--local` şart
+
+Kullanıcı aynı bilgisayarda hem **kişisel** hem **kurum** projesi yapıyorsa,
+tek bir global ayar ikisine birden **yanlış** olur.
+
+| Ayar | Kapsamı | Ne zaman |
+|---|---|---|
+| `git config --global` | ⚠️ **Makinedeki tüm depolar** | Yalnızca tek kimlik varsa |
+| ⭐ `git config --local` | **Sadece bu depo** | ⛔ Kurum projesinde **zorunlu** |
+
+```bash
+# Kurum projesinde — YALNIZCA bu depo için
+git config --local user.name  "Ad Soyad"
+git config --local user.email "ad.soyad@kurum.gov.tr"
+```
+
+⛔ **İşyeri projesinde `--global` kullanılmaz.** Kullanıldığında kişisel
+projelerin commit'leri de kurum e-postasıyla imzalanır — geri alınması
+commit geçmişini yeniden yazmayı gerektirir.
+
+### Uyuşmazlık kontrolü — sessizce geçilmez
+
+Ajan kurulumda **proje tipini biliyor** (`CLAUDE.md` §0). Mevcut git kimliği
+ona uymuyorsa **söyler**:
+
+> *"Bu bir işyeri projesi ama git kimliği kişisel görünüyor
+> (`kilicarslan45@gmail.com`). Commit'ler bu adresle imzalanacak. Kurumun
+> verdiği adresi bu depoya özel ayarlayayım mı?"*
+
+⚠️ **Sorup geçmez, ayarlar.** Kullanıcı *"evet"* derse `--local` ile yazar ve
+`altyapi-durumu.md`'ye not düşer.
+
+⛔ **İlk commit'ten önce yapılır.** Sonra fark edilirse geçmişteki commit'ler
+yanlış kimlikle kalır.
+
 ## Pull Request
 - Başlık = commit özeti. Açıklamada: ne, neden, nasıl test edildi, ekran görüntüsü.
 - PR küçük tutulur (tercihen < 400 satır değişiklik).
