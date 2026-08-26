@@ -423,6 +423,46 @@ pratikse, iş bitiminde sorulur:
 ⛔ **Onaysız yazılmaz** ve **ölçülmeden yazılmaz** — `00-stack.md` → *"Stack
 kurulurken her teknolojinin güncel alternatifi taranır"*.
 
+## ⛔ YAZDIKTAN SONRA DENETLE — dört kontrol, her seferinde
+
+Bir kural, bölüm veya dosya yazmak **işin yarısıdır.** Diğer yarısı: *"şimdi
+neyi bozdum?"*
+
+⚠️ **Bu bir düşünme derinliği meselesi değil, süreç meselesidir.** Atlanınca
+kaçan şeyler hep aynı türden olur ve kullanıcı bulur — o da kitin
+*"kullanıcıya iş bırakma"* ilkesini çiğner.
+
+### Dört kontrol — sırayla, istisnasız
+
+| # | Kontrol | Nasıl | Ne yakalar |
+|---|---|---|---|
+| 1 | **Çelişki** | Yeni kuralın anahtar ifadelerini **tüm kural dosyalarında** ara | *"En fazla 5 madde"* varken *"madde sınırı yok"* yazmak |
+| 2 | ⭐ **Terim çakışması** | Kullandığın **her yeni terimi** ara — başka anlamda geçiyor mu | *"Mapping"* hem nesne dönüşümü hem ad eşlemesi anlamında |
+| 3 | **Kırık referans** | *"Şu bölüme bak"* dediğin **her yerin var olduğunu** doğrula | PRD'de olmayan bir bölüme atıf yapmak |
+| 4 | **Bayatlama** | Değişen şeyin **anıldığı yerleri** tara: sürüm, sayı, dosya adı, komut | Kite komut ekleyip kılavuzu güncellememek |
+
+### Kontrolün kapsamı — nereye bakılır
+
+| Neyi değiştirdin | Nereleri tara |
+|---|---|
+| `docs/standards/` içinde bir kural | Diğer 17 standart · `CLAUDE.md` · **kullanıcı kılavuzu** |
+| Kullanıcıya bakan bir belge | Aynı konuyu anlatan diğer belgeler |
+| Bir dosyayı yeniden adlandırdın/sildin | ⛔ **Tüm** depo — referanslar |
+| Bir sayı/ölçüm yazdın | Aynı sayının geçtiği her yer |
+
+⛔ **"Bu küçük bir ekleme" diye atlanmaz.** Terim çakışması ve kırık referans
+tam olarak küçük eklemelerden doğar.
+
+### Sonucu bildirme
+
+Denetimde bir şey bulunduysa **söylenir**, sessizce düzeltilmez:
+
+> *"Bunu eklerken şunu fark ettim: `X` terimi zaten `Y` bölümünde başka
+> anlamda kullanılıyormuş. İkisine karşılıklı ayrım notu koydum."*
+
+⭐ Bulunmadıysa da bir cümle yeter: *"Çelişki taraması temiz."* Kullanıcı
+denetimin **yapıldığını** bilmeli.
+
 ## ⛔ AYNI BİLGİ İKİ YERDE YAZILMAZ — biri diğerine İŞARET EDER
 
 Bir olgu (kural, gerekçe, sürüm, komut, port) **tek bir dosyada yaşar.** Başka
