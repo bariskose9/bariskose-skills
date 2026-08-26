@@ -76,6 +76,52 @@ const sonuc = await prisma.workOrder.updateMany({
 *"bu parça ne yapıyor, neden var, dokunursam ne olur"* sorularının üçüne de
 cevap verebilmeli.
 
+### Hangi satır KENDİ yorumunu alır
+
+Her satıra yorum yazmak da yanlıştır — gürültü olur ve önemli olan kaybolur.
+Ayrım şu:
+
+| Satır türü | Yorum | Örnek |
+|---|---|---|
+| **Bir karar içeriyor** | ⭐ **Kendi satırı** | `where: { version }` · `skip: 1` · `'use client'` |
+| **Bir kural uyguluyor** | ⭐ **Kendi satırı** | Yetki kontrolü, durum geçişi, kısıt |
+| **Yan etkisi var** | ⭐ **Kendi satırı** | Transaction açma, kuyruğa iş bırakma, önbellek temizleme |
+| **Adı zaten anlatıyor** | ⛔ Yorum yok | `const kullanicilar = await bul()` |
+| Bir işin adımları | Bloğun **başına tek yorum** | `// 1) Girdiyi doğrula` |
+| Tekrar eden kalıp | İlkine yorum, sonrakiler geçilir | Aynı `select` biçimi |
+
+⛔ **Yorum "ne" yazmaz, kodun söylemediğini yazar.**
+
+```ts
+// ⛔ GÜRÜLTÜ — kod zaten söylüyor
+const kullanici = await prisma.user.findUnique({ where: { id } }); // kullanıcıyı bul
+
+// ✅ DEĞER — kodun söylemediği
+// ⚠️ findUnique null döner, findUniqueOrThrow değil. Aşağıdaki kontrol
+//    kaldırılırsa 500 hatası alırız, kullanıcı da sebebini anlamaz.
+const kullanici = await prisma.user.findUnique({ where: { id } });
+```
+
+⭐ **Pratik test:** Yorumu sil ve koda bak. *"Bunu neden böyle yaptığını hâlâ
+anlıyor muyum"* — evet ise yorum gereksizdi, hayır ise gerekliydi.
+
+### Blok başı yorumu — uzun fonksiyonlarda
+
+10 satırdan uzun bir işte, üstüne **ne yaptığının özeti** yazılır; içeride
+yalnızca karar satırları yorumlanır:
+
+```ts
+/**
+ * İş emrini kapatır.
+ *
+ * AKIŞ  : istek → kural kontrolü → durum güncelleme → geçmiş kaydı → bildirim
+ * KURAL : yalnızca ATANMIŞ veya DEVAM durumundan kapatılabilir (E.5)
+ * ETKİ  : kapanan iş emri normal güncellemeyle DEĞİŞTİRİLEMEZ; SLA sayacı durur
+ *         ve bekleyen hatırlatma işi iptal edilir
+ */
+async kapat(id: string, cozum: string) { … }
+```
+
 ⛔ **Yorum uzunluğundan tasarruf edilmez** (`CLAUDE.md` → *"Eksiksizlik,
 kısalığa feda edilmez"*). Anlaşılırlığa hizmet eden satır bedava; okuyanın
 kafasında soru bırakmak pahalıdır.
