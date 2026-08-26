@@ -75,6 +75,21 @@ olmayan videoda analiz **yapılmaz**.
 `yt-dlp` yoksa kendisi kurar; YouTube erişimi kırdığında **kendini güncelleyip**
 tekrar dener.
 
+### `/pdf-uret <dosya.md>`
+
+Markdown belgesini **karanlık temalı PDF**'e çevirir — telefonda okumak için.
+
+```
+/pdf-uret docs/project/teknoloji-ve-plan.md
+```
+
+Yalnızca **Node** ve **Chrome** kullanır; üçüncü taraf PDF aracı gerektirmez.
+Yazdıracaksan `--acik` ile aydınlık sürüm üretilir.
+
+⛔ Üretilen PDF **doğrulanmadan teslim edilmez**: dosya oluştu mu · içerik tam
+mı (sayfa sayısı ölçülür) · karanlık gerçekten uygulandı mı. Sessiz içerik
+kırpılması yaşandığı için bu üç kontrol zorunlu.
+
 ## Bağımlılıklar
 
 `/yeni-proje` şunlara dayanır ve eksikse **izin isteyerek** kurar:
@@ -100,9 +115,12 @@ skills/
 │           └── sablonlar/     ← doldurulacak proje dokümanları
 ├── kit-senkron/
 │   └── SKILL.md
-└── video-analiz/
+├── video-analiz/
+│   ├── SKILL.md
+│   └── bin/yt-transkript.mjs  ← kendini onaran transkript alıcı
+└── pdf-uret/
     ├── SKILL.md
-    └── bin/yt-transkript.mjs  ← kendini onaran transkript alıcı
+    └── bin/md-pdf.mjs         ← markdown → karanlık PDF
 ```
 
 `docs/standards/` **projeye göre değişmez.** Bir kural projeye özel hale
