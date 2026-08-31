@@ -106,6 +106,30 @@ sed -n '4271,4400p' <belge.md>        # sonra yalnızca gereken bölüm
 Varsayım yapma. Sor. Yanlış varsayımla yazılmış 200 satır,
 sorulmuş 1 sorudan pahalıdır.
 
+## ⛔ ÜÇÜNCÜ BAŞARISIZ DÜZELTMEDEN SONRA KOD YAZILMAZ
+
+Aynı hata için üst üste üç yama tutmadıysa, dördüncüyü deneme. Üç başarısız
+düzeltme **yanlış hipotez** işareti değildir; **yanlış yapı** işaretidir.
+
+| Deneme | Ne yapılır |
+|---|---|
+| 1–2 | Hipotez kurulur, ölçülür, düzeltilir |
+| **3. başarısız** | ⛔ **DUR.** Kod yazma. Semptomu değil, yapıyı sorgula |
+
+Durduktan sonra sırayla:
+
+1. Üç denemenin **ortak varsayımını** yaz — üçü de neye inanıyordu
+2. O varsayım yanlışsa neyin değişeceğini yaz
+3. Bulguyu kullanıcıya sun ve **mimari tartışması aç**: bu yapı bu problemi
+   çözebilir mi, yoksa yeniden mi kurulmalı
+
+⛔ **"Bir deneme daha" cümlesi bu kuralın ihlalidir.** İki başarısız denemeden
+sonra kendini bu cümleyi kurarken yakalarsan, üçüncü denemeyi değil bu bölümü
+uygula.
+
+Kök neden bulunmadan yapılan düzeltme semptomu taşır: hata başka yerden çıkar
+ve ilk düzeltme kalıcı borç olarak kodda kalır.
+
 ## Devralınan kaydın ÖNERDİĞİ ÇÖZÜM de bir iddiadır
 
 `06-testing.md` bir kaydın **sebebinin** doğrulanmadan devralınamayacağını

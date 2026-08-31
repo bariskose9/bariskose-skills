@@ -466,6 +466,19 @@ ama olup olmayacağı ilk gün sorulur, çünkü API'yi etkiler.
   palet · karakter ve yoğunluk · benzer **2–3 gerçek ürün adı**. Kullanıcının
   tercihi yoksa **sen öner ve gerekçelendir** — menü açıp seçime zorlama
   (`11-agent-workflow.md`). Cevaplar Adım 4'te ADR olur.
+
+  **Karar nasıl verilir — sormakla yetinme:**
+  1. Kullanıcı referans ürün verdiyse onları `chrome-devtools` MCP ile **fiilen
+     aç ve incele**: tipografi ölçeği, boşluk ritmi, renk kullanımı, hareket var mı
+  2. Referans vermediyse alanın **yerleşik örneklerini araştır** — kamu hizmeti
+     sitesiyle bir SaaS panelinin tasarım dili aynı değildir
+  3. **İki farklı yön öner** (ör. *"ciddi ve yoğun"* · *"ferah ve sıcak"*), her
+     biri için yazı ailesi + palet + **tek bir ekranın taslağını göster**
+  4. Kullanıcı seçtikten sonra ADR yazılır
+
+  ⛔ **Önizleme göstermeden "hangi renk olsun" diye sorma.** Kullanıcı kelimeyle
+  değil, **görerek** karar verir; kelimeyle sorulan tasarım sorusu cevapsız kalır
+  ve karar yine modele düşer.
   ⛔ **Bu karar verilmeden arayüz kodu yazılmaz** (arayüz sırası geldiğinde).
   Kararsız bırakılan yerde model kendi varsayılanına düşer (mor gradient, her şeye
   `rounded-2xl`, tek tip kart ızgarası) ve ekran "yapay zekâ işi" görünür.
@@ -474,6 +487,18 @@ ama olup olmayacağı ilk gün sorulur, çünkü API'yi etkiler.
   etkilediğini** unutma: render stratejisini ve slug'ın veritabanında saklanıp
   saklanmayacağını belirler. Veri modeli yazılmadan bilinmeli; sonradan
   değiştirmek en pahalı düzeltmedir.
+- ⭐ **Her özellik için DEĞER sorusu sorulur** — kapsam sorusundan farklıdır.
+  Kapsam *"ne yapılacak"* der; değer sorusu *"yapılmalı mı"* diye sorar:
+  **"Bu ekran hangi kullanıcı problemini çözüyor? Olmasaydı kullanıcı ne
+  yapardı? Bu problem gerçekten yaşanıyor mu, yoksa varsayılıyor mu?"**
+
+  ⚠️ **Kurum projesinde bu soru ayrıca kıymetlidir.** Analiz birimi çoğu zaman
+  *çözümü* yazar ("şu ekran olsun"), *problemi* değil. Çözümün arkasındaki
+  problemi sorman, **yanlış ekranı kusursuz yapmanı** engeller.
+
+  ⛔ Cevap alınamayan özellik reddedilmez — `PRD.md` §2b Varsayımlar'a
+  **"değeri doğrulanmadı"** olarak yazılır ve roadmap'te sonraya alınır.
+  Sessizce yapmak da, sessizce atmak da yanlıştır.
 - **"§9 Açık sorular" bölümü boşalmadan kod yazma.** Cevabını bilmediğin şeyi
   kendin doldurma — yanlış varsayım en pahalı hatadır.
 - ⛔ **KULLANICI HESABI VARSA `§5.x Hesap yönetimi ve veri hakları` DOLDURULUR
@@ -492,8 +517,9 @@ ama olup olmayacağı ilk gün sorulur, çünkü API'yi etkiler.
 
    ⭐ **Arayüzü olan projede tasarım yönü de ADR olur**
    (`ADR-<sıradaki>-tasarim-yonu.md` — numara sabit değildir, sırayı takip et):
-   Adım 3'te alınan yazı ailesi, palet, karakter ve referans ürünler buraya yazılır. Sonraki oturum bu dosyaya bakarak aynı
-   görünümü sürdürür; yazılmazsa her oturum kendi zevkine göre kayar.
+   Adım 3'te alınan yazı ailesi, palet, karakter ve referans ürünler buraya
+   yazılır. Sonraki oturum bu dosyaya bakarak aynı görünümü sürdürür;
+   yazılmazsa her oturum kendi zevkine göre kayar.
 3. `altyapi-durumu.md`: **boş bile olsa şimdi aç.** İlk hesap açıldığı anda
    yazılmaya başlar; sonradan hatırlamak işe yaramaz.
 4. `teknoloji-ve-plan.md`: **projenin öğretici belgesi.** Şablon
@@ -512,6 +538,23 @@ ama olup olmayacağı ilk gün sorulur, çünkü API'yi etkiler.
 5. `sonraki-adim-prompt.md`: şu notla oluştur —
    *"Henüz doldurulmadı. İlk roadmap adımı bitince `15-oturum-devri.md`
    protokolüne göre baştan yazılacak."*
+
+### Adım 4 kapanışı — yol haritası DENETLENİR
+
+⛔ **Roadmap yazıldığı gibi kabul edilmez.** Yazan da sensin, denetleyen de
+sensin — ama üç ayrı gözle bak. Bu denetim beş dakika sürer; atlanan bir sıra
+hatası haftalar sürer.
+
+| Göz | Soru | Kırmızı bayrak |
+|---|---|---|
+| **Ürün** | İlk çalışan sürüm hangi adımda çıkıyor? Kullanıcı ilk kez ne zaman fayda görür | Faydanın son adımda toplanması |
+| **Mühendislik** | Hangi adım diğerlerini kilitliyor? Bir adım tıkanırsa kaçı durur | Tek adıma bağlı 5+ adım · geri dönülemez sıralama |
+| **Tasarım / kullanım** | Kullanıcının uçtan uca tamamlayacağı ilk akış hangi adımda bütünlenir | Ekranların tek tek var olup akışın hiç kapanmaması |
+
+Bulunan sorun **roadmap'te düzeltilir**, not olarak bırakılmaz.
+⚠️ Bu denetim kullanıcı onayının yerine geçmez: düzeltilmiş roadmap yine
+kullanıcıya sunulur ve onayı beklenir (`CLAUDE.md` kapı 2).
+
 
 ## Adım 5 — İskeleti kur
 
@@ -593,6 +636,9 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 
 - [ ] `CLAUDE.md` §0 dolu mu
 - [ ] PRD'de açık soru kaldı mı
+- [ ] PRD'de **"değeri doğrulanmadı"** işaretli özellik varsa roadmap'te
+      sonraya alındı mı (sessizce yapılmadı, sessizce atılmadı)
+- [ ] Yol haritası **üç gözle denetlendi** mi (ürün · mühendislik · kullanım)
 - [ ] Her şablon dolduruldu mu (boş şablon bırakmak hiç açmamaktan kötüdür)
 - [ ] `altyapi-durumu.md` bu oturumda yapılan **her** dış işlemi içeriyor mu
 - [ ] `00-stack.md` sürümleri `package.json` ile birebir aynı mı
