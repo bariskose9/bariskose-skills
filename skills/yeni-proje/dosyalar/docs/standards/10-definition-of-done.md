@@ -35,6 +35,17 @@ Bir iş, aşağıdaki maddelerin **tamamı** işaretlenmeden "bitti" sayılmaz.
 - [ ] Yükleniyor / boş / hata durumları var
 - [ ] Klavye ile gezilebiliyor, kontrast yeterli
 - [ ] Kullanıcıya görünen tüm metinler Türkçe ve anlaşılır
+- [ ] Tasarım yönü ADR'sine uyuluyor; AI varsayılanlarına düşülmedi
+      (`07-ui-design-system.md` → *AI varsayılanı*)
+- [ ] Animasyon varsa `prefers-reduced-motion` destekleniyor, yalnızca
+      `transform`/`opacity` animasyonlanıyor
+
+## SEO — yalnızca indekslenecek sayfalarda (`18-seo.md`)
+- [ ] JavaScript'siz gelen HTML'de ana içerik var (`curl` ile bakıldı)
+- [ ] Sayfanın kendine özgü `title` + `description`'ı ve canonical adresi var
+- [ ] Tek `h1`, başlık seviyesi atlanmıyor
+- [ ] `sitemap.xml` bu sayfayı içeriyor (ya da bilerek dışarıda)
+- [ ] Yapılandırılmış veri varsa sayfada görünenle **aynı**
 
 ## Tarayıcı doğrulaması
 - [ ] Akış gerçekten tıklanarak denendi (kod okuyup varsaymak yeterli değil)

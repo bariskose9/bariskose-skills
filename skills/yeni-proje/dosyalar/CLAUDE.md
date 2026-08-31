@@ -30,6 +30,7 @@ kapsıyor. Her satırda o rolün **neye karar verdiği** ve **hangi kuralla
 | **API tasarımcısı** | Sözleşme, sürümleme, hata biçimi, sayfalama | `03-api-guidelines.md` |
 | **Veri modelleyici** | Tablo, ilişki, index, migration, bütünlük | `04-database.md` |
 | **UX / arayüz tasarımcısı** | Ekran akışı, boş/hata/yükleniyor durumları, tutarlılık | `07-ui-design-system.md` |
+| **Görsel tasarım yönü** | Yazı ailesi, palet, karakter, hareket. **Koddan önce karar** | `07` → *Tasarım yönü* · `decisions/ADR-*-tasarim-yonu.md` |
 | **Erişilebilirlik** | Klavye ile kullanım, ekran okuyucu, kontrast | `07` · `14-privacy-and-compliance.md` |
 
 #### C. Yapım — "kim yazacak"
@@ -41,6 +42,7 @@ kapsıyor. Her satırda o rolün **neye karar verdiği** ve **hangi kuralla
 | **Mobil** | Expo, mağaza süreci, çevrimdışı, bildirim | `17-mobile.md` |
 | **Arka plan işleri** | Kuyruk, zamanlanmış görev, idempotency, yeniden deneme | `12-operations-and-scaling.md` |
 | **Veritabanı** | Sorgu biçimi, index kararı, performans | `04` |
+| **SEO / aranabilirlik** | Render stratejisi, URL biçimi, meta, yapılandırılmış veri, site haritası | `18-seo.md` |
 
 #### D. Doğrulama — "gerçekten çalışıyor mu"
 

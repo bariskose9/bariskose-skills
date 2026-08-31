@@ -40,7 +40,12 @@ Bu kit iki dış parçaya dayanır:
 
 | Parça | Ne için |
 |---|---|
-| `agent-skills@addy-agent-skills` | `interview-me`, `security-and-hardening`, `code-review-and-quality`, `test-driven-development` |
+| `agent-skills@addy-agent-skills` | `interview-me`, `security-and-hardening`, `code-review-and-quality`, `test-driven-development`, **`frontend-ui-engineering`** |
+
+⭐ `frontend-ui-engineering` arayüz yazarken okunur: bileşen kurgusu, durum
+yönetimi ve **"Avoid the AI Aesthetic"** bölümü. Bizim `07-ui-design-system.md`
+ile çakışmaz, onu tamamlar — **çakışma olursa `07` üstündür** (Türkçe, bu kite
+özel ve token sistemimize bağlı).
 | `chrome-devtools-mcp@chrome-devtools-plugins` | Ekranları tarayıcıda **fiilen tıklayarak** doğrulama |
 
 1. Kurulu olanları gör: `claude plugin list`
@@ -437,6 +442,17 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
   **kapsam dışı ne** · roller ve her rolün yapamadığı · her modülün iş kuralları
   (sayı vererek) · hata durumunda ne olacağı
 - Cevapları `docs/project/PRD.md` şablonuna yaz.
+- ⭐ **Arayüzü olan her projede tasarım yönü de sorulur**
+  (`07-ui-design-system.md` → *"Tasarım yönü — koddan ÖNCE karar"*): yazı ailesi ·
+  palet · karakter ve yoğunluk · benzer **2–3 gerçek ürün adı**. Kullanıcının
+  tercihi yoksa **sen öner ve gerekçelendir** — menü açıp seçime zorlama
+  (`11-agent-workflow.md`). Cevaplar Adım 4'te ADR olur.
+  ⛔ **Bu karar verilmeden arayüz kodu yazılmaz.** Kararsız bırakılan yerde model
+  kendi varsayılanına düşer (mor gradient, her şeye `rounded-2xl`, tek tip kart
+  ızgarası) ve ekran "yapay zekâ işi" görünür.
+- **Herkese açık site ise SEO kapsamı netleşir** (`18-seo.md` → *"Kapsam kararı"*):
+  hangi sayfalar indekslenecek, hangileri kapalı kalacak. ⛔ Bu cevap **render
+  stratejisini** belirler; sonradan değiştirmek en pahalı düzeltmedir.
 - **"§9 Açık sorular" bölümü boşalmadan kod yazma.** Cevabını bilmediğin şeyi
   kendin doldurma — yanlış varsayım en pahalı hatadır.
 - ⛔ **KULLANICI HESABI VARSA `§5.x Hesap yönetimi ve veri hakları` DOLDURULUR
@@ -452,6 +468,11 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
    modeli+tohumlama. Mobil varsa **son adım** olarak yer alır.
 2. `decisions/ADR-001-*.md`: genellikle "neden bu stack / neden tek repo".
    `ADR-000-sablon.md` biçimini kullan.
+
+   ⭐ **Arayüzü olan projede ikinci ADR tasarım yönüdür**
+   (`ADR-002-tasarim-yonu.md`): Adım 3'te alınan yazı ailesi, palet, karakter ve
+   referans ürünler buraya yazılır. Sonraki oturum bu dosyaya bakarak aynı
+   görünümü sürdürür; yazılmazsa her oturum kendi zevkine göre kayar.
 3. `altyapi-durumu.md`: **boş bile olsa şimdi aç.** İlk hesap açıldığı anda
    yazılmaya başlar; sonradan hatırlamak işe yaramaz.
 4. `teknoloji-ve-plan.md`: **projenin öğretici belgesi.** Şablon
@@ -505,7 +526,16 @@ yayınsız bırakır.
 5. **Yapılan her dış işlemi anında `altyapi-durumu.md`'ye yaz** — hangi hesap,
    panelde ne seçildi, hangi değişken hangi ortamda. ⛔ Anahtar **değeri** yazılmaz
 6. Duman testi: anasayfa açılıyor mu, `/api/health` yeşil mi
-7. Kendi sunucusuna çıkılıyorsa (Vercel değil): sunucu kirala → Docker Engine
+7. **Herkese açık siteyse arama motoruna tanıt** (`18-seo.md` → §9). Yayınlamak
+   yetmez, haber vermek gerekir:
+   - `sitemap.xml` ve `robots.txt` canlıda dönüyor mu — `curl` ile bak
+   - `curl -s <adres> | grep <içerikten bir cümle>` → JavaScript'siz HTML'de ana
+     içerik **görünmeli**; görünmüyorsa render stratejisi yanlış, önce o düzeltilir
+   - Google Search Console'a mülk ekleme, doğrulama ve site haritası gönderme
+     adımlarını **kullanıcıya tek tek söyle ve bekle** (hesap gerektirir)
+   - Yapılanı `altyapi-durumu.md`'ye yaz: hangi hesap, hangi doğrulama yöntemi
+   ⛔ Panel/kurum içi uygulamada bu adım **atlanır**; `robots.txt` ile kapatılır.
+8. Kendi sunucusuna çıkılıyorsa (Vercel değil): sunucu kirala → Docker Engine
    kur → `docker compose up -d` → domain'i DNS'te IP'ye yönlendir → reverse
    proxy (Caddy) ile HTTPS. Her adımda kullanıcıyı yönlendir, bekle.
 
@@ -552,6 +582,15 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 - [ ] `sonraki-adim-prompt.md` bir sonraki adımı tarif ediyor mu
 - [ ] `teknoloji-ve-plan.md` açıldı mı ve kurulumda alınan kararlar işlendi mi
 - [ ] `CALISMA-KILAVUZU.md` kopyalandı mı ve kullanıcıya yeri söylendi mi
+- [ ] **Arayüz varsa:** tasarım yönü ADR'si yazıldı mı (yazı ailesi, palet,
+      karakter, referans ürünler)
+- [ ] **Arayüz varsa:** 375 / 768 / 1440px'te, açık ve koyu temada ekran
+      görüntüsü alınıp **fiilen bakıldı** mı (`07-ui-design-system.md` →
+      *"Görsel doğrulama"*). Konsol hatası kaldı mı
+- [ ] **Açık siteyse:** `sitemap.xml` + `robots.txt` üretiliyor, her sayfanın
+      kendi `title`/`description`/canonical'ı var, tek `h1` (`18-seo.md`)
+- [ ] **Açık siteyse:** `curl` ile alınan HTML'de ana içerik görünüyor mu
+- [ ] **Preview ortamı `noindex` mi** — hem `robots.txt` hem sayfa seviyesinde
 
 Sonra kullanıcıya **Türkçe, en fazla 5 maddede** özet ver: ne kuruldu, canlı
 adres, sıradaki roadmap adımı, senden beklenen (varsa hesap/ayar).

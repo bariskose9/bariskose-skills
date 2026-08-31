@@ -37,7 +37,7 @@ Sırasıyla şunlar olur:
 1. Eksik bağımlılıklar (aşağıda) **sorularak** kurulur — kurulu olana dokunulmaz
 2. Proje tipi sorulur: web · mobil (Expo) · ikisi
 3. Stack sorulur — varsayılan dışında bir şey istiyorsan söylersin
-4. Mühendislik standartları (`docs/standards/00–17`) projeye yerleştirilir
+4. Mühendislik standartları (`docs/standards/00–18`) projeye yerleştirilir
 5. Analiz dokümanın istenir, eksikler **tek tek** sorularak `PRD.md` çıkarılır
 6. Yol haritası, ilk mimari karar (ADR) ve altyapı durumu dosyası yazılır
 7. İskelet kurulur, GitHub deposu açılır, hosting + veritabanı + CI bağlanır
