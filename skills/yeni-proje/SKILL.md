@@ -448,45 +448,6 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
   **kapsam dışı ne** · roller ve her rolün yapamadığı · her modülün iş kuralları
   (sayı vererek) · hata durumunda ne olacağı
 - Cevapları `docs/project/PRD.md` şablonuna yaz.
-
-### Görüşmenin SONUNDA — tasarım yönü ve SEO kapsamı
-
-⛔ **Bu iki blok görüşmenin sonuna bırakılır.** Kapsam, roller ve iş kuralları
-netleşmeden sorulmaz. *Gerekçe:* tek tek soru sorulan bir görüşmede "hangi yazı
-tipi" sorusu erken gelirse kullanıcının dikkati üründen görünüme kayar ve kapsam
-soruları yarım kalır. Ürün önce, görünüm sonra.
-
-⚠️ Bunlar **karar**, iş değil. Yol haritası sırası değişmez (altyapı → veri
-modeli → backend → arayüz); sadece arayüz sırası geldiğinde kararın **hazır
-olması** sağlanır. Aynı mantık mobil kararında da uygulanır: mobil son adımdır
-ama olup olmayacağı ilk gün sorulur, çünkü API'yi etkiler.
-
-- ⭐ **Arayüzü olan her projede tasarım yönü sorulur**
-  (`07-ui-design-system.md` → *"Tasarım yönü — koddan ÖNCE karar"*): yazı ailesi ·
-  palet · karakter ve yoğunluk · benzer **2–3 gerçek ürün adı**. Kullanıcının
-  tercihi yoksa **sen öner ve gerekçelendir** — menü açıp seçime zorlama
-  (`11-agent-workflow.md`). Cevaplar Adım 4'te ADR olur.
-
-  **Karar nasıl verilir — sormakla yetinme:**
-  1. Kullanıcı referans ürün verdiyse onları `chrome-devtools` MCP ile **fiilen
-     aç ve incele**: tipografi ölçeği, boşluk ritmi, renk kullanımı, hareket var mı
-  2. Referans vermediyse alanın **yerleşik örneklerini araştır** — kamu hizmeti
-     sitesiyle bir SaaS panelinin tasarım dili aynı değildir
-  3. **İki farklı yön öner** (ör. *"ciddi ve yoğun"* · *"ferah ve sıcak"*), her
-     biri için yazı ailesi + palet + **tek bir ekranın taslağını göster**
-  4. Kullanıcı seçtikten sonra ADR yazılır
-
-  ⛔ **Önizleme göstermeden "hangi renk olsun" diye sorma.** Kullanıcı kelimeyle
-  değil, **görerek** karar verir; kelimeyle sorulan tasarım sorusu cevapsız kalır
-  ve karar yine modele düşer.
-  ⛔ **Bu karar verilmeden arayüz kodu yazılmaz** (arayüz sırası geldiğinde).
-  Kararsız bırakılan yerde model kendi varsayılanına düşer (mor gradient, her şeye
-  `rounded-2xl`, tek tip kart ızgarası) ve ekran "yapay zekâ işi" görünür.
-- **Herkese açık site ise SEO kapsamı netleşir** (`18-seo.md` → *"Kapsam kararı"*):
-  hangi sayfalar indekslenecek, hangileri kapalı kalacak. ⛔ Bu cevabın **backend'i
-  etkilediğini** unutma: render stratejisini ve slug'ın veritabanında saklanıp
-  saklanmayacağını belirler. Veri modeli yazılmadan bilinmeli; sonradan
-  değiştirmek en pahalı düzeltmedir.
 - ⭐ **Her özellik için DEĞER sorusu sorulur** — kapsam sorusundan farklıdır.
   Kapsam *"ne yapılacak"* der; değer sorusu *"yapılmalı mı"* diye sorar:
   **"Bu ekran hangi kullanıcı problemini çözüyor? Olmasaydı kullanıcı ne
@@ -506,6 +467,49 @@ ama olup olmayacağı ilk gün sorulur, çünkü API'yi etkiler.
   girecek · hesap silinince ne SİLİNİYOR, ne hangi KANUN gereği ne kadar
   SAKLANIYOR. Kurallar `14-privacy-and-compliance.md` → "Hesap silme"
   bölümünde; **oradaki "anonimleştirme demeyin" uyarısını atlamayın.**
+
+### Görüşmenin SONUNDA — tasarım yönü ve SEO kapsamı
+
+⛔ **Aşağıdaki iki soru görüşmenin sonuna bırakılır.** Kapsam, roller ve iş
+kuralları netleşmeden sorulmaz. *Gerekçe:* tek tek soru sorulan bir görüşmede
+"hangi yazı tipi" sorusu erken gelirse kullanıcının dikkati üründen görünüme
+kayar ve kapsam soruları yarım kalır. Ürün önce, görünüm sonra.
+
+⚠️ Bunlar **karar**, iş değil. Yol haritası sırası değişmez (altyapı → veri
+modeli → backend → arayüz); sadece arayüz sırası geldiğinde kararın **hazır
+olması** sağlanır. Aynı mantık mobil kararında da uygulanır: mobil son adımdır
+ama olup olmayacağı ilk gün sorulur, çünkü API'yi etkiler.
+
+**1. Tasarım yönü** — arayüzü olan her projede sorulur
+(`07-ui-design-system.md` → *"Tasarım yönü — koddan ÖNCE karar"*): yazı ailesi ·
+palet · karakter ve yoğunluk · benzer **2–3 gerçek ürün adı**. Kullanıcının
+tercihi yoksa **sen öner ve gerekçelendir** — menü açıp seçime zorlama
+(`11-agent-workflow.md`). Cevaplar Adım 4'te ADR olur.
+
+Karar **sormakla yetinilerek** verilmez:
+
+1. Kullanıcı referans ürün verdiyse onları `chrome-devtools` MCP ile **fiilen
+   aç ve incele**: tipografi ölçeği, boşluk ritmi, renk kullanımı, hareket var mı
+2. Referans vermediyse alanın **yerleşik örneklerini araştır** — kamu hizmeti
+   sitesiyle bir SaaS panelinin tasarım dili aynı değildir
+3. **İki farklı yön öner** (ör. *"ciddi ve yoğun"* · *"ferah ve sıcak"*), her
+   biri için yazı ailesi + palet + **tek bir ekranın taslağını göster**
+4. Kullanıcı seçtikten sonra ADR yazılır
+
+⛔ **Önizleme göstermeden "hangi renk olsun" diye sorma.** Kullanıcı kelimeyle
+değil, **görerek** karar verir; kelimeyle sorulan tasarım sorusu cevapsız kalır
+ve karar yine modele düşer.
+
+⛔ **Bu karar verilmeden arayüz kodu yazılmaz** (arayüz sırası geldiğinde).
+Kararsız bırakılan yerde model kendi varsayılanına düşer (mor gradient, her şeye
+`rounded-2xl`, tek tip kart ızgarası) ve ekran "yapay zekâ işi" görünür.
+
+**2. SEO kapsamı** — herkese açık site ise netleşir (`18-seo.md` →
+*"Kapsam kararı"*): hangi sayfalar indekslenecek, hangileri kapalı kalacak.
+
+⛔ Bu cevabın **backend'i etkilediğini** unutma: render stratejisini ve slug'ın
+veritabanında saklanıp saklanmayacağını belirler. Veri modeli yazılmadan
+bilinmeli; sonradan değiştirmek en pahalı düzeltmedir.
 
 ## Adım 4 — Yol haritası ve ilk kararlar
 
