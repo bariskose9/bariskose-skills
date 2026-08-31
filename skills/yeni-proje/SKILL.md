@@ -542,14 +542,23 @@ ama olup olmayacağı ilk gün sorulur, çünkü API'yi etkiler.
 ### Adım 4 kapanışı — yol haritası DENETLENİR
 
 ⛔ **Roadmap yazıldığı gibi kabul edilmez.** Yazan da sensin, denetleyen de
-sensin — ama üç ayrı gözle bak. Bu denetim beş dakika sürer; atlanan bir sıra
+sensin — ama beş ayrı gözle bak. Bu denetim beş dakika sürer; atlanan bir sıra
 hatası haftalar sürer.
 
 | Göz | Soru | Kırmızı bayrak |
 |---|---|---|
 | **Ürün** | İlk çalışan sürüm hangi adımda çıkıyor? Kullanıcı ilk kez ne zaman fayda görür | Faydanın son adımda toplanması |
-| **Mühendislik** | Hangi adım diğerlerini kilitliyor? Bir adım tıkanırsa kaçı durur | Tek adıma bağlı 5+ adım · geri dönülemez sıralama |
+| **Risk** | En çok **bilinmeyen** hangi adımda? O adım neden erken değil | Riskli işin sona bırakılması — geç öğrenilen "bu böyle olmuyor" önceki adımları çöpe atar |
+| **Geri alınabilirlik** | Hangi adım geri dönülemez (veri modeli, ödeme, kamuya duyuru)? Öncesinde doğrulama var mı | Geri dönülemez adımın doğrulanmadan yapılması |
+| **Dış bağımlılık** | Hangi adım **senin yapamadığın** bir şeye bağlı (hesap açma, kurum onayı, yetki, ödeme) | Bunların geç fark edilmesi — ajan bekler, takvim kayar |
+| **Mühendislik** | Hangi adım diğerlerini kilitliyor? Bir adım tıkanırsa kaçı durur | Tek adıma bağlı 5+ adım |
 | **Tasarım / kullanım** | Kullanıcının uçtan uca tamamlayacağı ilk akış hangi adımda bütünlenir | Ekranların tek tek var olup akışın hiç kapanmaması |
+
+⭐ **"Dış bağımlılık" satırı kurum projesinde en kritik olanıdır.** Kitin
+"İş bölümü" kuralı ajanın neyi yapamayacağını söyler (hesap açma, kurumdan
+yetki alma, ödeme); roadmap bunları **önceden** işaretlemezse iş o adıma
+gelince durur. İşaretlenenler `kurumdan-ogrenilecekler.md`'ye de yazılır ve
+**işe başlamadan** sorulur.
 
 Bulunan sorun **roadmap'te düzeltilir**, not olarak bırakılmaz.
 ⚠️ Bu denetim kullanıcı onayının yerine geçmez: düzeltilmiş roadmap yine
@@ -638,7 +647,8 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 - [ ] PRD'de açık soru kaldı mı
 - [ ] PRD'de **"değeri doğrulanmadı"** işaretli özellik varsa roadmap'te
       sonraya alındı mı (sessizce yapılmadı, sessizce atılmadı)
-- [ ] Yol haritası **üç gözle denetlendi** mi (ürün · mühendislik · kullanım)
+- [ ] Yol haritası **denetlendi** mi (ürün · risk · geri alınabilirlik ·
+      dış bağımlılık · mühendislik · kullanım)
 - [ ] Her şablon dolduruldu mu (boş şablon bırakmak hiç açmamaktan kötüdür)
 - [ ] `altyapi-durumu.md` bu oturumda yapılan **her** dış işlemi içeriyor mu
 - [ ] `00-stack.md` sürümleri `package.json` ile birebir aynı mı

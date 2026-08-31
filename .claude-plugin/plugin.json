@@ -1,6 +1,6 @@
 {
   "name": "proje-kiti",
-  "version": "1.68.0",
+  "version": "1.69.0",
   "description": "Yeni projeyi tek komutla kurar: mühendislik standartları, PRD çıkarma görüşmesi, yol haritası, iskelet ve canlıya çıkış. Türkçe.",
   "author": {
     "name": "Barış Köse"
