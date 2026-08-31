@@ -36,7 +36,13 @@ Bulunamazsa **dur ve kullanıcıya söyle** — dosyaları ezberden yeniden yazm
 
 ## Adım 0 — Bağımlılıklar
 
-Bu kit iki dış parçaya dayanır:
+Bu kit iki dış parçaya dayanır.
+
+⛔ **Bu adım yalnızca KURAR, hiçbirini çalıştırmaz.** Aşağıdaki skill'lerin her
+biri kendi sırası gelince okunur (`interview-me` → Adım 3, `frontend-ui-engineering`
+→ arayüz kodu yazılırken, `test-driven-development` → özellik geliştirilirken).
+Adım 0'da kurulu olmaları, işlerin sırasını **değiştirmez**: yol haritası
+sırası her zaman altyapı → veri modeli → backend → arayüz.
 
 | Parça | Ne için |
 |---|---|
@@ -442,17 +448,32 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
   **kapsam dışı ne** · roller ve her rolün yapamadığı · her modülün iş kuralları
   (sayı vererek) · hata durumunda ne olacağı
 - Cevapları `docs/project/PRD.md` şablonuna yaz.
-- ⭐ **Arayüzü olan her projede tasarım yönü de sorulur**
+
+### Görüşmenin SONUNDA — tasarım yönü ve SEO kapsamı
+
+⛔ **Bu iki blok görüşmenin sonuna bırakılır.** Kapsam, roller ve iş kuralları
+netleşmeden sorulmaz. *Gerekçe:* tek tek soru sorulan bir görüşmede "hangi yazı
+tipi" sorusu erken gelirse kullanıcının dikkati üründen görünüme kayar ve kapsam
+soruları yarım kalır. Ürün önce, görünüm sonra.
+
+⚠️ Bunlar **karar**, iş değil. Yol haritası sırası değişmez (altyapı → veri
+modeli → backend → arayüz); sadece arayüz sırası geldiğinde kararın **hazır
+olması** sağlanır. Aynı mantık mobil kararında da uygulanır: mobil son adımdır
+ama olup olmayacağı ilk gün sorulur, çünkü API'yi etkiler.
+
+- ⭐ **Arayüzü olan her projede tasarım yönü sorulur**
   (`07-ui-design-system.md` → *"Tasarım yönü — koddan ÖNCE karar"*): yazı ailesi ·
   palet · karakter ve yoğunluk · benzer **2–3 gerçek ürün adı**. Kullanıcının
   tercihi yoksa **sen öner ve gerekçelendir** — menü açıp seçime zorlama
   (`11-agent-workflow.md`). Cevaplar Adım 4'te ADR olur.
-  ⛔ **Bu karar verilmeden arayüz kodu yazılmaz.** Kararsız bırakılan yerde model
-  kendi varsayılanına düşer (mor gradient, her şeye `rounded-2xl`, tek tip kart
-  ızgarası) ve ekran "yapay zekâ işi" görünür.
+  ⛔ **Bu karar verilmeden arayüz kodu yazılmaz** (arayüz sırası geldiğinde).
+  Kararsız bırakılan yerde model kendi varsayılanına düşer (mor gradient, her şeye
+  `rounded-2xl`, tek tip kart ızgarası) ve ekran "yapay zekâ işi" görünür.
 - **Herkese açık site ise SEO kapsamı netleşir** (`18-seo.md` → *"Kapsam kararı"*):
-  hangi sayfalar indekslenecek, hangileri kapalı kalacak. ⛔ Bu cevap **render
-  stratejisini** belirler; sonradan değiştirmek en pahalı düzeltmedir.
+  hangi sayfalar indekslenecek, hangileri kapalı kalacak. ⛔ Bu cevabın **backend'i
+  etkilediğini** unutma: render stratejisini ve slug'ın veritabanında saklanıp
+  saklanmayacağını belirler. Veri modeli yazılmadan bilinmeli; sonradan
+  değiştirmek en pahalı düzeltmedir.
 - **"§9 Açık sorular" bölümü boşalmadan kod yazma.** Cevabını bilmediğin şeyi
   kendin doldurma — yanlış varsayım en pahalı hatadır.
 - ⛔ **KULLANICI HESABI VARSA `§5.x Hesap yönetimi ve veri hakları` DOLDURULUR
@@ -469,9 +490,9 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
 2. `decisions/ADR-001-*.md`: genellikle "neden bu stack / neden tek repo".
    `ADR-000-sablon.md` biçimini kullan.
 
-   ⭐ **Arayüzü olan projede ikinci ADR tasarım yönüdür**
-   (`ADR-002-tasarim-yonu.md`): Adım 3'te alınan yazı ailesi, palet, karakter ve
-   referans ürünler buraya yazılır. Sonraki oturum bu dosyaya bakarak aynı
+   ⭐ **Arayüzü olan projede tasarım yönü de ADR olur**
+   (`ADR-<sıradaki>-tasarim-yonu.md` — numara sabit değildir, sırayı takip et):
+   Adım 3'te alınan yazı ailesi, palet, karakter ve referans ürünler buraya yazılır. Sonraki oturum bu dosyaya bakarak aynı
    görünümü sürdürür; yazılmazsa her oturum kendi zevkine göre kayar.
 3. `altyapi-durumu.md`: **boş bile olsa şimdi aç.** İlk hesap açıldığı anda
    yazılmaya başlar; sonradan hatırlamak işe yaramaz.
