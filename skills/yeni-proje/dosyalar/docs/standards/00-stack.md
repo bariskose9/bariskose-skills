@@ -3,7 +3,19 @@
 Bu dosya "neyi kullanıyoruz, neyi kullanmıyoruz" sorusunun tek cevabıdır.
 Burada olmayan bir kütüphane projeye eklenmeden önce **onay alınır** ve ADR yazılır.
 
-## Zorunlu stack
+## Stack — başlangıç noktası, dondurulmuş liste DEĞİL
+
+⛔ **Bu tablo bir örnektir ve her projede yeniden ölçülür.** Aşağıdaki
+*"STACK KURULURKEN HER TEKNOLOJİNİN GÜNCEL ALTERNATİFİ TARANIR"* bölümü
+kurulumda fiilen çalıştırılır: ajan her satırı ölçer, itirazı veya daha iyi bir
+alternatifi varsa **gerekçesiyle sunar**, kararı **geliştirici** verir.
+
+- Kabul edilen değişiklik → projede ADR + `teknoloji-ve-plan.md`
+- Her projede geçerliyse → `/kit-senkron` ile bu dosyaya geri yazılır
+- Reddedilen → ADR'ye *"değerlendirildi, seçilmedi"* (aynı soru bir daha
+  araştırılmasın)
+
+⛔ Ajan **tek başına** stack değiştirmez; bulguyu sunar, onayı bekler.
 
 Sürüm sütunu **fiilen kurulu** olanı gösterir; `package.json` ile birebir aynıdır.
 
@@ -223,11 +235,25 @@ madde sessizce çiğnenmez.
 - **TypeORM** — Prisma tercih edilir (4 kat yaygın, şema tek dosyada okunur,
   `synchronize` gibi veri kaybettiren bir kestirme yolu yok).
 
-<!-- ⛔ SENKRON SINIRI — bu satırın ÜSTÜ kitle ortaktır ve kit-senkron tarafından
-     eşitlenir. Projeye özel "kullanmıyoruz" maddeleri AŞAĞIYA yazılır.
-     Gerekçesiz madde yazılmaz; sonraki oturum gerekçesiz yasağı anlamaz ve
-     delmeye çalışır. Sınırı SİLME — silinirse genel yasaklar da senkrondan
-     düşer ve kite yazılan yeni bir yasak bu projeye hiç ulaşmaz. -->
+<!-- ⛔ SENKRON SINIRI — bu satır MAKİNE tarafından okunur, SİLİNMEZ.
+     /kit-senkron bu satırı arar; bulamazsa bu bölümün TAMAMINI senkron dışı
+     bırakır ve kite sonradan yazılan genel bir yasak bu projeye hiç ulaşmaz.
+     2026-08-11'de tam olarak bu yaşandı. -->
+
+### ⬆ Yukarısı KİTTEN gelir · ⬇ Aşağısı YALNIZCA bu proje
+
+| | Yukarıdaki maddeler | Aşağıdaki maddeler |
+|---|---|---|
+| Kimin | Her projede aynı, kitten gelir | Yalnızca bu projeye ait |
+| Kim değiştirir | `/kit-senkron` — **elle değiştirilmez** | Bu projede sen yazarsın |
+| Kite geri gider mi | Zaten kitte | **Hayır**, projede kalır |
+
+Aşağıya bu projede kullanılmayacak şeyleri **gerekçesiyle** yaz. Gerekçesiz
+madde yazma: sonraki oturum anlamaz ve delmeye çalışır.
+
+<!-- Örnek biçim (bu yorumu silip altına yazabilirsin):
+- Docker — bu proje yalnızca Vercel'e çıkıyor, local'de de ihtiyaç olmadı
+-->
 
 ## Sürüm sütunu nasıl doldurulur
 

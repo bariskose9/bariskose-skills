@@ -193,7 +193,7 @@ dışı bırakmak kolay ama pahalıdır: genel bölümlere yazılan dersler de k
 
 | Kural | Bölüm |
 |---|---|
-| ⛔ Asla senkronlanmaz | `## Zorunlu stack` — fiilen kurulu sürümler |
+| ⛔ Asla senkronlanmaz | `## Stack` tablosu — fiilen kurulu sürümler |
 | ⛔ Kite özel, projeye inmez | `## Sürüm sütunu nasıl doldurulur` |
 | ✅ Senkronlanır | Diğer tüm bölümler |
 

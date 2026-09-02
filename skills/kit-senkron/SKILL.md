@@ -68,7 +68,7 @@ yazılan bir ders karşı tarafa hiç geçmiyordu.
 
 | Kural | Bölüm |
 |---|---|
-| ⛔ **Asla senkronlanmaz** | `## Zorunlu stack` — fiilen kurulu sürümler ve "henüz kurulu değil" gibi projeye ait durum. Kite taşınırsa sonraki proje yanlış bilgiyle başlar |
+| ⛔ **Asla senkronlanmaz** | `## Stack` tablosu — fiilen kurulu sürümler ve "henüz kurulu değil" gibi projeye ait durum. Kite taşınırsa sonraki proje yanlış bilgiyle başlar |
 | ⛔ **Kite özel, projeye inmez** | `## Sürüm sütunu nasıl doldurulur` — ajana tabloyu nasıl dolduracağını anlatan kurulum talimatı |
 | ✅ **Senkronlanır** | Diğer tüm bölümler |
 

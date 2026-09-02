@@ -428,7 +428,7 @@ Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
 
    | Nerede | Ne yazılır |
    |---|---|
-   | `## Zorunlu stack` tablosu | Fiilen kurulu sürümler — Adım 5'te `package.json` ile eşitlenir |
+   | `## Stack` tablosu | Fiilen kurulu sürümler — Adım 5'te `package.json` ile eşitlenir |
    | `## Kullanılmayacaklar` içindeki `<!-- ⛔ SENKRON SINIRI -->` satırının **ALTI** | Bu projeye özel "şunu kullanmıyoruz" maddeleri, **gerekçesiyle** |
 
    ⛔ **Sınır satırı silinmez.** Silinirse o bölümün tamamı senkron dışı kalır ve
