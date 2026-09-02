@@ -191,13 +191,37 @@ yoktur, yalnızca *"GraphQL API"* denir. REST'e uyum **derecelidir**, GraphQL
 şartnamesine uyum **ikilidir**.
 
 ## Kullanılmayacaklar
-- Redux / MobX — TanStack Query + Zustand yeterli
-- **Çıplak Express backend** — Nest zaten Express'i içeriyor ve yapı getiriyor
-- MongoDB — ilişkisel veri modeli kullanıyoruz
-- jQuery, Bootstrap, Material UI — Tailwind + shadcn ile çakışır
-- `moment.js` — yerine `date-fns`
-- TypeORM — Prisma tercih edilir (4 kat yaygın, şema tek dosyada okunur,
-  `synchronize` gibi veri kaybettiren bir kestirme yolu yok)
+
+Her madde **neden** kullanılmadığını söyler. ⛔ Gerekçesiz yasak sonraki
+oturumda delinir. Bir maddenin gerekçesi bu projede geçerli değilse **yasak da
+geçerli değildir** — o zaman ADR yazılır ve karar gerekçesiyle değiştirilir;
+madde sessizce çiğnenmez.
+
+- **MongoDB** — bu kitin hedeflediği işler (başvuru, kayıt, randevu, yetki,
+  ödeme) **ilişkiseldir**: yabancı anahtar, bütünlük kuralı ve çok tablolu
+  transaction ister. Postgres bunları veritabanı seviyesinde zorlar; Mongo'da
+  yabancı anahtar ve bildirimsel bütünlük yoktur, aynı garantiler uygulama
+  koduna taşınır ve ilk eşzamanlı istekte kaybedilir (`04-database.md` →
+  benzersiz index + transaction).
+  ⭐ **Meşru istisna:** şeması gerçekten belirsiz, ilişkisiz ve yüksek hacimli
+  veri (ham log, olay akışı, sensör kaydı). Böyle bir modül çıkarsa bu bir yasak
+  değil **ADR konusudur** — Postgres `jsonb` ile karşılaştırılır, ölçülür, karar
+  yazılır.
+- **Redux / MobX** — durum ikiye ayrılır: sunucu durumu ve istemci durumu.
+  Sunucu durumunu TanStack Query zaten önbellek, yeniden deneme ve geçersiz
+  kılmayla yönetiyor; geriye kalan istemci durumu Zustand'ın birkaç satırıyla
+  çözülüyor. Redux bu ikisinin üstüne yalnızca kalıp kod ekler.
+- **Çıplak Express backend** — Nest zaten Express'in üstünde çalışıyor ve modül
+  yapısını, bağımlılık enjeksiyonunu hazır getiriyor. Çıplak Express aynı yapıyı
+  elle kurmayı gerektirir ve her projede farklı çıkar; ortak kural yazılamaz.
+- **jQuery, Bootstrap, Material UI** — Tailwind + shadcn'in yanında **iki ayrı
+  stil sistemi** oluşur: özgüllük (specificity) savaşları, çifte paket boyutu ve
+  iki farklı token kaynağı. `07-ui-design-system.md` tek token ölçeği şart koşuyor.
+- **`moment.js`** — geliştiricileri tarafından **bakım moduna alındı** ve yeni
+  projeler için önerilmiyor. Ayrıca değişken (mutable) API'si var ve ağaç
+  sarsmaya (tree-shaking) kapalı. Yerine `date-fns` + `tr` yerel ayarı.
+- **TypeORM** — Prisma tercih edilir (4 kat yaygın, şema tek dosyada okunur,
+  `synchronize` gibi veri kaybettiren bir kestirme yolu yok).
 
 <!-- ⛔ SENKRON SINIRI — bu satırın ÜSTÜ kitle ortaktır ve kit-senkron tarafından
      eşitlenir. Projeye özel "kullanmıyoruz" maddeleri AŞAĞIYA yazılır.

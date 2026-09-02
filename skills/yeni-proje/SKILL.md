@@ -423,8 +423,21 @@ Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
    Kendi projende soracak bir kurum yok. İçindeki üç DevOps sorusu
    (`CALISMA-KILAVUZU.md` → *"DevOps sınırı"*) **işe başlamadan** sorulur —
    cevapları hem oraya hem `altyapi-durumu.md`'ye işlenir.
-4. **`docs/standards/` içini değiştirme.** Tek istisna `00-stack.md` sürüm
-   tablosu — o da Adım 5'te fiilen kurulanla eşitlenir.
+4. **`docs/standards/` içini değiştirme** — istisna **bölüm** seviyesindedir,
+   dosya seviyesinde değil. `00-stack.md`'de iki yer projeye aittir:
+
+   | Nerede | Ne yazılır |
+   |---|---|
+   | `## Zorunlu stack` tablosu | Fiilen kurulu sürümler — Adım 5'te `package.json` ile eşitlenir |
+   | `## Kullanılmayacaklar` içindeki `<!-- ⛔ SENKRON SINIRI -->` satırının **ALTI** | Bu projeye özel "şunu kullanmıyoruz" maddeleri, **gerekçesiyle** |
+
+   ⛔ **Sınır satırı silinmez.** Silinirse o bölümün tamamı senkron dışı kalır ve
+   kite sonradan yazılan genel bir kural bu projeye hiç ulaşmaz
+   (`15-oturum-devri.md` → senkron sınırı). 2026-08-11'de yaşandı.
+
+   ⛔ **Gerekçesiz yasak yazılmaz.** Sonraki oturum gerekçesiz maddeyi anlamaz
+   ve delmeye çalışır. Bir yasağın gerekçesi bu projede geçerli değilse yasak da
+   geçerli değildir — ADR yazılır, madde sessizce çiğnenmez.
 5. ⭐ **Önceki projenin *"Artık biliyorum"* listesini taşı.** Kullanıcının
    seviyesi projeler arasında sıfırlanmaz.
 
