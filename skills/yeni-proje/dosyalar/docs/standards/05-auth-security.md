@@ -34,6 +34,36 @@ koda dağıtılmaz. Değiştirilecekse ADR yazılır.
 - JWT imza anahtarı (`AUTH_SECRET`) her ortamda farklıdır ve en az 32 bayttır.
 - Algoritma sabittir (HS256); `alg: none` veya istemciden gelen algoritma kabul edilmez.
 
+### ⛔ İPTAL KENDİLİĞİNDEN ÇALIŞMAZ — `tokenVersion` gerekir
+
+Yukarıdaki iki kural (*"çıkışta ve şifre değişiminde tüm oturumlar geçersizleşir"*)
+**kendiliğinden gerçekleşmez.** JWT kendi içinde taşınır: sunucu onu **imzasına**
+bakarak doğrular, veritabanına hiç gitmez. Bu yüzden iptal edilmiş bir token,
+süresi dolana kadar **geçerli görünmeye devam eder.**
+
+**Çözüm:** kullanıcı tablosunda bir `tokenVersion` tamsayısı tutulur ve JWT'ye
+yazılır. Çıkışta, şifre değişiminde ve çalınma şüphesinde bu sayı **artırılır**;
+eski tokenlar artık eşleşmez.
+
+Kontrol **her istekte yapılmaz** — bedeli her istekte veritabanına gitmektir.
+Katmanlı yapılır:
+
+| Ne zaman kontrol edilir | Neden |
+|---|---|
+| ⛔ **Her yazma işleminde** (kayıt, güncelleme, silme) | İptal edilmiş oturum veri değiştirmemeli |
+| ⛔ **Para, kişisel veri ve admin işlemlerinde** | Zararın geri alınamadığı yerler |
+| **Token yenilenirken** — Auth.js `updateAge` **5 dakikaya** çekilir (varsayılanı 24 saat) | Okumada bayatlık penceresi en fazla 5 dakika olur |
+| Sıradan okuma isteğinde | Kontrol yok; imza yeterli |
+
+⚠️ **Bu bir ödünleşmedir ve PRD'ye yazılır:** kabul edilen bayatlık penceresi
+kaç dakika? Anında iptal şartsa (bankacılık düzeyi) her istekte kontrol edilir
+ve gecikme bedeli kabul edilir.
+
+⭐ **"Session caching" (oturum önbellekleme) bu stack'te GEREKSİZDİR.** Oturum
+zaten çerezin içinde taşınıyor, veritabanında değil — önbelleklenecek bir sorgu
+yok. Önbellek gerekiyorsa **`tokenVersion` kontrolü** için gerekir, oturumun
+kendisi için değil.
+
 ## Yetkilendirme
 - Kontrol **her zaman sunucuda**. UI'da butonu gizlemek yetkilendirme değildir.
 - Rol modeli: `guest` (salt okuma) · `user` (kendi kayıtları) · `admin`.

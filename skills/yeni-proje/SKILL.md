@@ -622,6 +622,13 @@ yayınsız bırakır.
 1. GitHub deposu aç (`gh`), dalı push et
 2. Hosting + veritabanı bağla. **Hesap gerektiren her adımda kullanıcıya ne
    yapacağını adım adım söyle ve bekle** — onun yerine hesap açamazsın
+
+   ⛔ **BÖLGE EŞLEŞMESİ — varsayılana bırakma.** Veritabanı bölgesi ile
+   fonksiyon bölgesi **aynı** seçilir (`12-operations-and-scaling.md` → *bölge
+   eşleşmesi*). Vercel varsayılanı ABD'dir (`iad1`); veritabanını Frankfurt'ta
+   açarsan her sorgu Atlantik'i iki kez geçer ve sayfa 1–2 saniye geç açılır.
+   Türkiye/Avrupa kitlesi için ikisi de Frankfurt (`fra1` + `eu-central`).
+   Seçilen bölgeler `altyapi-durumu.md`'ye yazılır.
 3. CI kur: `lint → typecheck → test → build`
 4. `GET /api/health` (uygulama + veritabanı) ekle ve canlıda çalıştığını göster
 5. **Yapılan her dış işlemi anında `altyapi-durumu.md`'ye yaz** — hangi hesap,
@@ -681,6 +688,8 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 - [ ] `altyapi-durumu.md` bu oturumda yapılan **her** dış işlemi içeriyor mu
 - [ ] `00-stack.md` sürümleri `package.json` ile birebir aynı mı
 - [ ] **6a ise:** canlı adres ve `/api/health` çalışıyor mu
+- [ ] **6a ise:** veritabanı ve fonksiyon **aynı bölgede** mi, ikisi de
+      `altyapi-durumu.md`'ye yazıldı mı
 - [ ] **6b ise:** `docker compose up --build` temiz makinede ayağa kalkıyor mu,
       `.env.example` eksiksiz mi, sağlık uçları yeşil mi
 - [ ] `.env` commit edilmemiş, `.env.example` commit edilmiş mi
