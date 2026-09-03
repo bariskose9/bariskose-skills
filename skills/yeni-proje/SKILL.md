@@ -291,7 +291,10 @@ Tek tek sor, varsayım yapma:
 **Varsayılan stack:** Next.js App Router + TypeScript (strict) + Tailwind +
 shadcn/ui + Prisma + PostgreSQL + Zod · mobil varsa Expo, aynı REST API.
 Kullanıcı farklı bir şey söylerse (başka sunucu, başka veritabanı, başka
-hosting) **onu kullan**, tartışma.
+hosting) **onu kullan.** İtirazın varsa **bir kez**, gerekçesiyle söyle
+(`11-agent-workflow.md` → *"İSTENEN YAPILIR — AMA DAHA İYİSİ VARSA SÖYLENİR"*);
+kullanıcı kararında ısrar ederse tartışmayı kapat ve yap.
+⛔ Sessizce yapmak da yanlıştır, ısrar etmek de.
 
 ### 1a — Bu proje kimin için: sınıflandırmayı SEN yap
 
@@ -460,6 +463,14 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
 - En az şunlar netleşmeden geçme: kim kullanacak · hangi problemi çözüyor ·
   **kapsam dışı ne** · roller ve her rolün yapamadığı · her modülün iş kuralları
   (sayı vererek) · hata durumunda ne olacağı
+- ⭐ **"Aynı anda kaç kişi, ne zaman?"** — bu soru atlanmaz. Başvuru açılışı,
+  etkinlik kaydı, yemek saati gibi **tarihi belli kalabalık** varsa mimari
+  baştan ona göre kurulur (`12-operations-and-scaling.md` → *ani yük*).
+  ⛔ Tahmin edilmez, sorulur. Cevap "bilmiyorum" ise bu bir varsayımdır ve
+  `PRD.md` §2b'ye yazılır.
+- **Arka planda çalışacak iş var mı?** — e-posta/SMS, PDF veya rapor üretimi,
+  görsel boyutlandırma, zamanlanmış hatırlatma. Varsa kuyruk **baştan** kurulur
+  ve türü mimariye göre seçilir (`00-stack.md` → *İş kuyruğu*); yoksa kurulmaz.
 - Cevapları `docs/project/PRD.md` şablonuna yaz.
 - ⭐ **Her özellik için DEĞER sorusu sorulur** — kapsam sorusundan farklıdır.
   Kapsam *"ne yapılacak"* der; değer sorusu *"yapılmalı mı"* diye sorar:

@@ -110,6 +110,77 @@ Büyütme kararı **ölçümle** verilir, tahminle değil. Sıra:
 
 Erken optimizasyon yapılmaz. Önce ölç, sonra düzelt, sonra tekrar ölç.
 
+## ⛔ BÖLGE EŞLEŞMESİ — sunucu ile veritabanı aynı kıtada olur
+
+En sık yapılan ve en sessiz hata: uygulama bir bölgede, veritabanı başka
+bölgede. Her sorgu okyanus geçer; 10 sorgulu bir sayfa 1–2 saniye geç açılır.
+
+⛔ **Kurulumda ikisi de açıkça seçilir ve `altyapi-durumu.md`'ye yazılır.**
+Varsayılana bırakılmaz — Vercel varsayılanı ABD'dir (`iad1`), veritabanını
+Frankfurt'ta açarsan her istek Atlantik'i iki kez geçer.
+
+| Kullanıcı kitlesi | Veritabanı bölgesi | Fonksiyon bölgesi |
+|---|---|---|
+| Türkiye / Avrupa | Frankfurt (`eu-central`) | **Aynısı** (`fra1`) |
+| Kurum sunucusu | Kurumun bulunduğu yer | Aynı ağ |
+
+### ⚠️ "Edge'e taşıyalım, hızlanır" — çoğu zaman YANLIŞ
+
+Edge çalışma zamanı kodu kullanıcıya yaklaştırır, **veritabanına değil.**
+Üstelik Edge'de doğrudan Postgres bağlantısı (TCP) açılamaz; araya HTTP
+sürücüsü girer. Veritabanın tek bölgedeyse Edge'e taşımak her sorguyu
+**yavaşlatır**, hızlandırmaz.
+
+| Sayfa | Nerede çalışmalı |
+|---|---|
+| Veritabanına giden her şey | **Veritabanının yanındaki bölgede** |
+| Statik / ISR ile üretilmiş sayfa | CDN'den gelir; zaten Edge'dedir, ayrıca ayar gerekmez |
+| Yalnızca çerez okuyup yönlendiren middleware | Edge uygun |
+
+⛔ **Asıl sorun genellikle "10 API isteği"nin kendisidir.** Açılışta on ayrı
+istek atılıyorsa çözüm bölge değiştirmek değil, **sunucu bileşeninde tek seferde
+veri çekmektir** (`01-architecture.md` → katman sırası). Bölge eşleşmesi bunun
+yerine geçmez, ikisi ayrı iştir.
+
+## ⛔ ANİ YÜK (spike) — tarihi belli kalabalık BAŞTAN planlanır
+
+Başvuru açılışı, etkinlik kaydı, yemek saati: saat 12:00'de 20.000 kişi aynı
+anda girer. Bu, kademeli büyüme değildir; **planlanabilir bir olaydır** ve
+plansız girilirse sistem o dakikada çöker.
+
+⛔ **PRD'de "aynı anda kaç kişi ve ne zaman" sorusu sorulur.** Cevap yoksa
+tasarım yapılamaz — tahmin edilmez, sorulur.
+
+### Darboğaz HTTP katmanı değil, VERİTABANI BAĞLANTISIDIR
+
+Yaygın yanılgı, HTTP çatısını hızlandırmaktır (Express → Fastify gibi). Ani
+yükte istekler HTTP'de değil, **veritabanı bağlantı sayısında** birikir:
+
+| Mimari | Ne olur |
+|---|---|
+| **Sunucusuz** (Vercel/Lambda) | Fonksiyon sayısı saniyeler içinde binlere çıkar; her biri veritabanına bağlanmak ister. Postgres bağlantı sayısı sınırlıdır → **veritabanı çöker, uygulama ayakta kalır** |
+| **Kendi sunucun** (NestJS) | Kapasite önceden büyütülmediyse CPU/RAM dolar → **uygulama çöker, kimse hizmet alamaz** |
+
+⛔ Bu yüzden Fastify'a geçmek ani yük gerekçesiyle **savunulamaz**: HTTP
+ayrıştırması darboğaz değildir. Fastify ölçülmüş bir HTTP darboğazı varsa
+seçilir, "trafik çok olacak" sezgisiyle değil.
+
+### Ani yük öncesi zorunlu beş madde
+
+| # | Ne | Neden |
+|---|---|---|
+| 1 | **Bağlantı havuzu (pooler)** — sunucusuzda zorunlu | Binlerce fonksiyonu az sayıda gerçek bağlantıya indirir. Yoksa veritabanı ilk dakikada düşer |
+| 2 | **Yazma işlerini kuyruğa al** | Kayıt kabul edilir, işlenmesi kuyruğa gider; kullanıcı beklemez, veritabanı sıraya girer |
+| 3 | **Okuma sayfalarını statik/ISR yap** | 20.000 kişinin çoğu **okumaya** gelir. Statik sayfa CDN'den döner, veritabanına hiç gitmez |
+| 4 | **Hız sınırı** (IP + oturum) | Yenile tuşuna basan kullanıcı ve bot yükü ikiye katlar |
+| 5 | **Sıra/bekleme ekranı** — kapasite aşılırsa | Beyaz ekran ve zaman aşımı yerine *"sıradasınız"* demek, çökmüş görünmekten iyidir |
+
+⭐ **Yük testi ile doğrulanır**, varsayımla değil: beklenen sayının **iki katıyla**
+test edilir ve sonuç `altyapi-durumu.md`'ye ölçüm tarihiyle yazılır.
+
+⛔ **Kendi sunucundaysan ölçeklendirme olaydan ÖNCE elle büyütülür.** Otomatik
+ölçeklendirme dakikalar içinde tepki verir; ani yük saniyeler içinde gelir.
+
 ### Ayrı backend varsa: bağımsız ölçeklenebilirlik BAŞTAN kurulur
 
 Web, API ve worker **ayrı ayrı kopyalanabilmelidir.** Bu sonradan eklenen bir

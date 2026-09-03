@@ -19,6 +19,15 @@ alternatifi varsa **gerekçesiyle sunar**, kararı **geliştirici** verir.
 
 Sürüm sütunu **fiilen kurulu** olanı gösterir; `package.json` ile birebir aynıdır.
 
+⭐ **Bu projede gerekmeyen satır SİLİNMEZ, DURUMU YAZILIR.** Silinirse altı ay
+sonra *"bunu neden kurmadık"* sorusu yeniden araştırılır. Üç durum:
+
+| İşaret | Anlamı |
+|---|---|
+| `✅ kurulu` | Fiilen var; sürüm sütunu doludur |
+| `⏳ sonra` | Gerekecek ama henüz değil — **hangi adımda** geleceği yazılır |
+| `➖ bu projede yok` | **Gerekçesiyle** — örn. *"mobil yok, Expo kurulmadı"* |
+
 | Katman | Seçim | Sürüm | Not |
 |---|---|---|---|
 | Framework | Next.js (App Router) | 16 | Pages Router kullanılmaz |
@@ -118,14 +127,52 @@ Ayrı backend seçildiyse:
 | Konu | Seçim | Gerekçe |
 |---|---|---|
 | Çatı | **NestJS** (çıplak Express değil) | Nest zaten Express'in üstünde çalışır; ayrıca modül, DI, Guard, Interceptor, Pipe, Filter getirir. Çıplak Express yalnızca 5–10 uçlu tek amaçlı serviste |
-| HTTP adaptörü | **Express** (Nest varsayılanı) | İstek süresinin ~%95'i veritabanında geçer; HTTP katmanını hızlandırmak toplamda ölçülemez. Emek index'lere harcanır. *(Fastify adaptörü tek satırla değişir — ama ölçmeden geçilmez)* |
+| HTTP adaptörü | **Express** (Nest varsayılanı) | İstek süresinin ~%95'i veritabanında geçer; HTTP katmanını hızlandırmak toplamda ölçülemez. Emek index'lere harcanır. *(Fastify adaptörü tek satırla değişir — ama ölçmeden geçilmez)* · **Ani yük gerekçesi de yeterli değildir**, aşağıya bak |
 | API biçimi | **REST** (varsayılan) | Karar kuralı aşağıda — "API biçimi" |
 | Sürümleme | `/api/v1/...` baştan | Kural `03-api-guidelines.md` → "Sözleşme ömrü"nde. Mobil varsa zorunlu |
 | Monorepo aracı | pnpm workspaces + **Turborepo** | Yapı `01-architecture.md`'de. Nx daha güçlü ama kendi eklenti dünyasını getirir — bu boyutta gereksiz |
 | Tip paylaşımı | `packages/contracts` | Zod şeması tek yerde; API alanı değişince frontend **derlenmez**, hata çalışma anına kalmaz |
-| İş kuyruğu | BullMQ + Redis | Node'un fiili standardı; gecikmeli + tekrarlayan iş, retry, yatay ölçekleme |
+| İş kuyruğu | BullMQ + Redis | **Yalnızca sürekli açık worker varsa.** Sunucusuzda çalışmaz — aşağıya bak |
 | Log | `nestjs-pino` | JSON üretir; kurumsal toplama sistemleri düz metin toplayamaz (`12-operations-and-scaling.md`) |
 | İstek bağlamı | `nestjs-cls` | Aktif kullanıcı ve correlation ID'yi katmanlara parametre geçmeden taşır; statik erişim yasağının karşılığı |
+
+## İş kuyruğu — mimariye göre DEĞİŞİR, tek doğru yok
+
+⛔ **BullMQ sunucusuz ortamda çalışmaz.** BullMQ sürekli açık bir Redis'e ve
+7/24 ayakta duran bir worker sürecine ihtiyaç duyar. Vercel/Lambda'da fonksiyon
+yanıtı döndürdüğü an kapanır; worker yaşayamaz. Bu bir yapılandırma sorunu
+değil, **mimari uyumsuzluktur.**
+
+| Kurgu | Kuyruk | Neden |
+|---|---|---|
+| **Next tek başına** (Vercel) | **Inngest** veya **Upstash QStash** | Sunucusuz uyumlu: iş HTTP ile tetiklenir, tekrar deneme ve zamanlama servis tarafında |
+| **Next + NestJS worker** (kendi sunucun / konteyner) | **BullMQ + Redis** | Worker zaten sürekli açık; Redis'i de sen çalıştırıyorsun |
+| **Kurum sunucusu, kuyruk altyapısı zaten var** | Kurumunkini kullan | `kurumdan-ogrenilecekler.md`'de sorulur — RabbitMQ/Kafka varsa yenisi kurulmaz |
+
+### Ne zaman kurulur — baştan mı, sonra mı
+
+⭐ **Şu işlerden biri varsa BAŞTAN kurulur:** e-posta/SMS gönderimi · PDF veya
+rapor üretimi · görsel boyutlandırma · dış servise toplu istek · zamanlanmış
+hatırlatma.
+
+Gerekçe: bu işler istek döngüsünün içinde yapılırsa kullanıcı beklerken sunucu
+zaman aşımına düşer, ve **sonradan çıkarmak** servis katmanını yeniden yazmayı
+gerektirir. Baştan kurmak yapımı yavaşlatmaz; sadece "işi kuyruğa at" satırı
+yazılır.
+
+⛔ **Hiçbiri yoksa kurulmaz.** Kullanılmayan kuyruk, bakımı ve maliyeti olan
+ölü altyapıdır. Satır `➖ bu projede yok` olarak işaretlenir.
+
+### Maliyet — sürekli açık sunucu bedeli
+
+| Seçenek | Ödenen |
+|---|---|
+| Inngest / QStash | **Kullanım başına.** Ücretsiz katman küçük projeye yeter; iş yoksa ücret yok |
+| BullMQ + Redis | **Sürekli açık iki şey**: Redis örneği + worker konteyneri. İş olmasa da fatura işler |
+
+⛔ Bu yüzden **düşük hacimli projede BullMQ seçmek pahalıdır.** Zaten kendi
+sunucun ayakta duruyorsa maliyet zaten ödenmiştir, o zaman BullMQ mantıklıdır.
+Karar ADR'ye yazılır.
 
 ## API biçimi — REST tek başına mı, yanına GraphQL de mi
 

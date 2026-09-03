@@ -9,6 +9,19 @@
 
 ## Yazım
 - Prettier ayarları tartışılmaz; format kavgası yapılmaz.
+- ⛔ **ESLint ile Prettier ÇAKIŞIR — `eslint-config-prettier` ile susturulur.**
+  ESLint'in biçim kuralları (girinti, tırnak, noktalı virgül) Prettier'in
+  yaptığıyla çelişir; ikisi de açıksa kaydedince biri diğerinin işini bozar ve
+  CI kırmızı kalır. `eslint-config-prettier` bu kuralları **kapatır** ve
+  ESLint yalnızca mantık hatalarına bakar.
+  - Uzantı listesi **en sonda** olur; sonrakiler öncekini ezer.
+  - ⭐ **Next tek başınaysa** `eslint-config-next` biçim kurallarını zaten
+    getirmez, ama `eslint-config-prettier` yine eklenir — üçüncü parti
+    eklentiler biçim kuralı taşıyabilir.
+  - ⛔ **Next + NestJS ise iki ayrı yapılandırma gerekir.** Nest kendi ESLint
+    kurulumuyla gelir ve Next'inkini bilmez; her paket kendi dosyasını taşır,
+    ortak kurallar `packages/` altında paylaşılır. Tek bir kök dosyaya
+    yığılırsa iki çatının kuralları birbirini ezer.
 - ESLint hatası olan kod commit edilmez. Kural devre dışı bırakılacaksa
   satır bazlı ve gerekçeli: `// eslint-disable-next-line <kural> -- <neden>`
 - Import sırası: dış paketler → iç modüller (`@/`) → göreli → tipler.
