@@ -108,11 +108,17 @@ const tema = (karanlik) => {
   -webkit-print-color-adjust: exact !important;
   print-color-adjust: exact !important;
 }
-@page { size: A4; margin: 18mm 16mm; }
+/* ⛔ @page kenar boşluğu SIFIR olmalı. Chrome o boşluğu sayfanın kendi
+   arka planıyla (beyaz) boyar, gövdenin arka planıyla değil — karanlık
+   temada sayfanın dört yanında beyaz çerçeve kalır ve loş ortamda göz
+   alır. Boşluk body'nin padding'i olarak verilir; böylece koyu zemin
+   kağıdın kenarına kadar gider. */
+@page { size: A4; margin: 0; }
 html, body { background: ${z.bg} !important; color: ${z.yazi}; }
 body {
   font-family: -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
   font-size: 10.5pt; line-height: 1.65; margin: 0;
+  padding: 18mm 16mm;
 }
 h1,h2,h3,h4 { color: ${z.b3}; line-height: 1.3; margin: 1.4em 0 .5em; }
 h1 { color: ${z.b1}; font-size: 19pt; border-bottom: 2px solid ${z.cizgi}; padding-bottom: .25em; }
