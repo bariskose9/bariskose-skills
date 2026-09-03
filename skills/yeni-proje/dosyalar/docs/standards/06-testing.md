@@ -172,3 +172,57 @@ API sözleşmesi (contract) testleri web ile paylaşılır.
 3. Ana iş akışı baştan sona
 4. Hatalı girdide doğru hata mesajı
 5. Dark mode aç/kapa, 375px mobil görünüm
+
+## ⭐ ÖZELLİK BİTİNCE — BEŞ GÖZLE DOĞRULAMA
+
+⛔ **Test yeşil olması "bitti" demek değildir.** Otomatik testler *kodun
+yaptığını* doğrular; *doğru şeyi yaptığını* doğrulamaz. Bir özellik bitince ajan
+aşağıdaki beş gözden **sırayla** geçer, sonucunu kullanıcıya **öğreterek** sunar.
+
+⚠️ **Bu liste bir test uzmanının kafasındaki listedir.** Amaç aradan uzman
+çıkarmak değil, o uzmanın baktığı yerleri **bilerek** bakabilmektir.
+
+### Sıra — atlanmaz, karıştırılmaz
+
+| # | Göz | Ajan neyi yapar | Kullanıcı gözle neye bakar |
+|---|---|---|---|
+| 1 | **Backend** | Mutlu yol + hata yolları + yetkisiz erişim + boş sonuç. Sınır değerler (0, 1, çok uzun metin, Türkçe karakter). Eşzamanlılık: aynı işlem iki kez aynı anda | — (ajan kanıt sunar) |
+| 2 | **Veri** | Kayıt gerçekten yazıldı mı — `prisma studio` ile **bakılır**. İlişkiler doğru mu, yetim kayıt kaldı mı | Studio ekranında kendi kaydını gör |
+| 3 | **Frontend** | 375 / 768 / 1440px · açık ve koyu tema · konsol hatası · ağ hatası · dört ekran durumu (yükleniyor/boş/hata/dolu) | Ekran görüntülerine bak: metin taşıyor mu, hizalar tutuyor mu |
+| 4 | **Tasarım / UX** | Tasarım yönü ADR'sine uygun mu, AI slop kalıbı var mı (`07-ui-design-system.md`). Her eylem 100ms içinde karşılık veriyor mu | ⭐ **Asıl senin katmanın:** "teknik olarak çalışıyor ama kullanıcı olarak saçma" dediğin yer |
+| 5 | **Güvenlik + işletme** | Yetki ve sahiplik kontrolü · girdi doğrulama · hata mesajı iç detay sızdırmıyor · yeni sorgu N+1 üretmiyor · sayfa performans bütçesinde | — (ajan kanıt sunar) |
+
+### ⛔ ETKİ ALANI — "başka nereyi bozdum"
+
+Her özellik bittiğinde ajan **bu üç soruyu yazılı cevaplar**:
+
+1. Bu değişiklik hangi **başka ekranları** etkiliyor? (aynı bileşeni kullananlar)
+2. Hangi **başka API uçlarını** etkiliyor? (aynı servisi veya tabloyu kullananlar)
+3. Veri modeli değiştiyse hangi **eski kayıtlar** etkilendi? (migration geri alınabilir mi)
+
+⛔ *"Sadece şu dosyaya dokundum"* cevap değildir. Etkilenen yer **açıkça
+listelenir ve en az biri fiilen açılıp kontrol edilir.**
+
+### ⭐ ÖĞRETME ZORUNLULUĞU — doğrulama aynı zamanda derstir
+
+Ajan doğrulamayı bitirince kullanıcıya şunu **Türkçe, kod göstermeden** anlatır:
+
+| Ne söylenir | Örnek |
+|---|---|
+| Ne kontrol edildi, **neden o kontrol** | *"Aynı anda iki randevu denedim, çünkü iki kişi aynı saniyede tıklarsa çift kayıt oluşabilir — benzersiz index bunu veritabanı seviyesinde engelliyor"* |
+| **Sen gözle neye bakmalısın** ve neden | *"Şu ekranda butona basınca 2 saniye hiçbir şey olmuyor gibi hissediliyor mu? Ölçüm 180ms diyor ama algı ölçümden farklı olabilir"* |
+| Bulunan sorun varsa **kök nedeni** | *"Hata mesajı yanlış alanı gösteriyordu; sebebi tek şemadan dönen genel hata"* |
+
+⛔ **"Test geçti" tek başına rapor değildir.** Neyin test edildiği söylenmezse
+kullanıcı neyin test edilmediğini bilemez.
+
+⭐ Öğrenilen her yeni terim `docs/project/ogrendiklerim.md` → *"Artık biliyorum"*
+listesine eklenir; ajan sonraki oturumda o terimi baştan açıklamaz.
+
+### Ne zaman dış QA aracı gerekir
+
+| Durum | Karar |
+|---|---|
+| Tek kişilik ekip, yukarıdaki beş göz uygulanıyor | ⛔ **Gerekmez.** Ek araç ek bakım demektir |
+| Bağımsız QA yükümlülüğü var (kurum şartnamesi) | Şartname ne diyorsa o |
+| Ekip büyüdü, kod yazan ile test eden ayrıldı | Değerlendirilir, ADR ile |

@@ -1,6 +1,6 @@
 # `proje-kiti` — Kit Ne Yapıyor
 
-**Sürüm:** 1.74.0 · **Tarih:** 2026-09-03
+**Sürüm:** 1.76.0 · **Tarih:** 2026-09-04
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Bu belge, kitin **kurulumdan canlıya çıkışa kadar** ne yaptığını anlatır.
@@ -38,7 +38,7 @@ Kit her şeyi kendi yapmaz; iki dış parçayı **çağırır**.
 
 ### Addy Osmani'nin `agent-skills` paketi
 
-25 skill içeren, İngilizce, süreç odaklı bir kütüphane. Kit **beşini** çağırır:
+25 skill içeren, İngilizce, süreç odaklı bir kütüphane. Kit **yedisini** çağırır:
 
 | Skill | Kitin hangi adımında | Ne yapıyor |
 |---|---|---|
@@ -47,6 +47,11 @@ Kit her şeyi kendi yapmaz; iki dış parçayı **çağırır**.
 | `test-driven-development` | Özellik geliştirilirken | Önce başarısız test, sonra kod (RED → GREEN → REFACTOR) |
 | `security-and-hardening` | Güvenlik denetiminde | Girdi doğrulama, oturum yönetimi, üçüncü parti entegrasyon riskleri |
 | `code-review-and-quality` | Birleştirme (merge) öncesi | Doğruluk, okunabilirlik, mimari, güvenlik, performans — beş eksenli inceleme |
+| `source-driven-development` | Kütüphane kullanılırken | Resmi dokümandan doğrulama — ezberden eski kalıp yazmayı engeller |
+| `browser-testing-with-devtools` | Doğrulamada | Chrome DevTools ile gerçek tarayıcıda kontrol |
+| `debugging-and-error-recovery` | Bir şey bozulduğunda | Yeniden üret → yerini bul → düzelt → koruma testi yaz |
+| `incremental-implementation` | Özellik geliştirilirken | İnce dikey dilim; her dilim ayrı doğrulanır |
+| `doubt-driven-development` | Yüksek riskli kararda | Kararı taze bağlamla çapraz sorgular (kamu hizmeti, geri alınamaz işlem) |
 
 ⚠️ **Çakışma olursa kitin kendi standardı üstündür.** Sebebi: kitin kuralları
 Türkçe ve bu stack'in token sistemine bağlı.
@@ -189,4 +194,4 @@ dallanmadır: üç proje sonra elinde birbirinden sapmış üç kopya olur.
 
 ---
 
-*Bu belge `proje-kiti` v1.74.0 için üretilmiştir. Kit değiştikçe güncellenir.*
+*Bu belge `proje-kiti` v1.76.0 için üretilmiştir. Kit değiştikçe güncellenir.*

@@ -43,6 +43,7 @@ kapsıyor. Her satırda o rolün **neye karar verdiği** ve **hangi kuralla
 | **Arka plan işleri** | Kuyruk, zamanlanmış görev, idempotency, yeniden deneme | `12-operations-and-scaling.md` |
 | **Veritabanı** | Sorgu biçimi, index kararı, performans | `04` |
 | **SEO / aranabilirlik** | Render stratejisi, URL biçimi, meta, yapılandırılmış veri, site haritası | `18-seo.md` |
+| **Test / doğrulama** | Özellik bitince beş gözle kontrol, etki alanı, öğretme | `06-testing.md` → *beş gözle doğrulama* |
 
 #### D. Doğrulama — "gerçekten çalışıyor mu"
 

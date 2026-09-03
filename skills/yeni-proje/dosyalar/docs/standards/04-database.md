@@ -95,6 +95,54 @@ budur.
 - Boolean: `is_`/`has_` öneki (`is_active`)
 - Tarih: `created_at`, `updated_at`, `deleted_at` (UTC saklanır, ekranda TR saatine çevrilir)
 
+## ⭐ VERİ MODELİNİ GÖRMEK — tablolar ve ilişkiler gözle izlenir
+
+⛔ **Şemayı yalnızca `schema.prisma` dosyasından okumak yetmez.** Kod okuyarak
+"hangi tablo hangisine bağlı" sorusunu cevaplamak, ilişki sayısı arttıkça
+imkânsızlaşır. İki araç kurulur ve **kullanıcıya nasıl açacağı öğretilir.**
+
+### 1. Prisma Studio — tabloları gezmek
+
+```bash
+npx prisma studio          # tarayıcıda localhost:5555
+```
+
+Excel tablosu gibi açılır: kayıtları görürsün, ilişki alanına tıklayınca bağlı
+kayda gidersin, elle kayıt ekleyip silebilirsin. Docker'daki PostgreSQL'e
+`DATABASE_URL` üzerinden bağlanır — ek kurulum gerekmez.
+
+⭐ **Kurulumdan sonra bir kez açılır ve kullanıcıya gösterilir.** Tohum (seed)
+verisi yazıldıktan sonra "işte kayıtların burada" demek, veritabanını soyut bir
+şey olmaktan çıkarır.
+
+⛔ **Üretim veritabanına Studio ile bağlanılmaz.** Yanlışlıkla kayıt silmek tek
+tıklıktır. Yalnızca local ve gerekiyorsa preview.
+
+### 2. ER diyagramı — ilişkileri tek resimde görmek
+
+Prisma'da hazır gelmez; üreteciyle şemadan **otomatik** çıkarılır:
+
+```bash
+npm i -D prisma-erd-generator @mermaid-js/mermaid-cli
+```
+
+`schema.prisma` içine üretici eklenir; `prisma generate` her çalıştığında
+diyagram `docs/project/veri-modeli.md` (veya `.svg`) olarak **yeniden yazılır**.
+
+⭐ **Elle çizilmez.** Elle çizilen diyagram ilk şema değişikliğinde yalan söyler
+ve kimse fark etmez. Şemadan üretilen diyagram yalan söyleyemez.
+
+⚠️ Diyagram `data-model.md` şablonunun yerine geçmez: diyagram **ne bağlı**
+olduğunu gösterir, `data-model.md` **neden öyle** olduğunu anlatır.
+
+### Bu proje bunlara ihtiyaç duyar mı
+
+| Proje | Gerek var mı |
+|---|---|
+| Backend'i biz yazıyoruz (Next route handler veya NestJS) | ✅ **Evet** — veri modelini görmeden doğru API tasarlanmaz |
+| API tasarlıyoruz | ✅ Evet |
+| Yalnızca hazır API tüketiliyor, veritabanı bizde değil | ➖ **Hayır.** Bize lazım olan veri modeli değil, **API sözleşmesi** (`03-api-guidelines.md`) |
+
 ## Zorunlu alanlar
 Her tabloda: `id` (uuid/cuid), `created_at`, `updated_at`.
 Kullanıcı verisi tutan tablolarda `user_id` + yabancı anahtar kısıtı.

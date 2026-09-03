@@ -46,7 +46,15 @@ sırası her zaman altyapı → veri modeli → backend → arayüz.
 
 | Parça | Ne için |
 |---|---|
-| `agent-skills@addy-agent-skills` | `interview-me`, `security-and-hardening`, `code-review-and-quality`, `test-driven-development`, **`frontend-ui-engineering`** |
+| `agent-skills@addy-agent-skills` | `interview-me`, `security-and-hardening`, `code-review-and-quality`, `test-driven-development`, **`frontend-ui-engineering`**, **`debugging-and-error-recovery`**, **`incremental-implementation`**, **`doubt-driven-development`** |
+
+⭐ Üçü sonradan eklendi, sebepleriyle:
+`debugging-and-error-recovery` — kitte *"üç başarısız denemede dur"* kuralı var
+ama **nasıl** hata ayıklanacağı yoktu (yeniden üret → yerini bul → düzelt →
+koruma testi yaz). `incremental-implementation` — *"adım adım"* deniyordu, yöntemi
+yazılı değildi (ince dikey dilim, her dilim ayrı doğrulanır).
+`doubt-driven-development` — **yüksek riskli işte** (kamu hizmeti, geri alınamaz
+işlem, güvenlik) kararı taze bağlamla çapraz sorgular.
 
 ⭐ `frontend-ui-engineering` arayüz yazarken okunur: bileşen kurgusu, durum
 yönetimi ve **"Avoid the AI Aesthetic"** bölümü. Bizim `07-ui-design-system.md`
@@ -610,6 +618,14 @@ kullanıcıya sunulur ve onayı beklenir (`CLAUDE.md` kapı 2).
    kullanılmıyorsa **nedenini yaz**
 4. `REPO-YAPISI.md`'yi gerçek klasör yapısına göre doldur
 5. İlk commit — `08-git-workflow.md` biçimiyle
+6. ⭐ **ÇALIŞAN ŞEYİ GÖSTER — iskelet bitince, hesap istemeden önce.**
+   `npm run dev` çalıştır, `chrome-devtools` MCP ile aç, **ekran görüntüsü al ve
+   kullanıcıya sun.** Prisma Studio'yu da bir kez aç ve tabloları göster
+   (`04-database.md`).
+
+   ⛔ **Bu adım atlanamaz.** Kullanıcı ilk çalışan şeyi görmeden hiçbir hesap
+   açmamalı, hiçbir ödeme yapmamalı. *Gerekçe:* kurulumun doğru gittiğinin tek
+   kanıtı ekranda açılan sayfadır; dosya listesi kanıt değildir.
 
 ## Adım 6 — Yayın: Adım 1a'daki cevaba göre İKİYE ayrılır
 

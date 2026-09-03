@@ -51,6 +51,13 @@ Bir iş, aşağıdaki maddelerin **tamamı** işaretlenmeden "bitti" sayılmaz.
 - [ ] Akış gerçekten tıklanarak denendi (kod okuyup varsaymak yeterli değil)
 - [ ] Konsolda hata yok, network'te başarısız istek yok
 
+## Beş gözle doğrulama (`06-testing.md`)
+- [ ] Backend · Veri · Frontend · Tasarım/UX · Güvenlik gözlerinin **beşi de** geçildi
+- [ ] **Etki alanı** yazıldı: hangi ekranlar, hangi API uçları, hangi eski kayıtlar
+- [ ] Etkilenen yerlerden **en az biri fiilen açılıp** kontrol edildi
+- [ ] Kullanıcıya *ne kontrol edildi ve neden* anlatıldı; yeni terimler
+      `ogrendiklerim.md`'ye eklendi
+
 ## Teslim
 - [ ] Commit raporu sunuldu ve onaylandı
 - [ ] PR açıldı, CI yeşil, preview URL doğrulandı
