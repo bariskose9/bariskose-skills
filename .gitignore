@@ -1,3 +1,5 @@
 
 # Kişisel çalışma notları ve üretilen belgeler — depoya girmez
 docs/
+# Seviye defteri açık — her oturumda görünsün diye
+!docs/ogrendiklerim.md

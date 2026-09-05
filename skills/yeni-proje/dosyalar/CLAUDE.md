@@ -148,6 +148,31 @@ açılır"* kuralıyla açılır (gerçek hayat örneği → yazılımdaki tanı
 projede nerede). İngilizcesi parantez içinde verilir — kullanıcı aradığında
 bulabilsin.
 
+### ⭐ TERİM BİÇİMİ — eğik çizgiyle, yaygın eş anlamlılarıyla birlikte
+
+Bir terim ilk geçtiğinde tek karşılığıyla değil, **yaygın kullanılan bütün
+adlarıyla** yazılır; aralarında eğik çizgi olur.
+
+*Gerekçe:* kullanıcı aynı şeyi üç ayrı isimle duyacak — Türkçe belgede bir,
+İngilizce dokümanda bir, ekip toplantısında bir başkası. Üçünü de tanımadıkça
+aynı şeyden bahsedildiğini anlamaz ve arama kutusuna ne yazacağını bilemez.
+
+| ⛔ Eksik | ✅ Doğrusu |
+|---|---|
+| *"katman"* | **katman / layer / tier** |
+| *"sözleşme (contract)"* | **sözleşme / contract / API sözleşmesi** |
+| *"kuyruk (queue)"* | **kuyruk / queue / job queue / iş kuyruğu** |
+| *"yarış koşulu"* | **yarış koşulu / race condition** |
+| *"önbellek"* | **önbellek / cache / cacheleme** |
+| *"dağıtım"* | **yayına alma / deploy / deployment** |
+
+⚠️ **Yalnızca ilk geçişte.** Aynı yazının devamında tek bir ad kullanılır;
+her cümlede üç adı birden yazmak metni okunmaz hâle getirir.
+
+⛔ Sektörde **fiilen İngilizcesi kullanılan** bir terimin Türkçesi zorlanmaz.
+*"Commit"* commit'tir; *"işleme"* diye çevrilmez. Böyle durumlarda İngilizcesi
+esas alınır, yanına ne işe yaradığı yazılır.
+
 ⭐ Terim *"Artık biliyorum"* listesindeyse doğrudan kullanılır, tekrar
 açıklanmaz (`11-agent-workflow.md` → *"Anlatım düzeyi sabit değil"*).
 
