@@ -106,6 +106,44 @@ sed -n '4271,4400p' <belge.md>        # sonra yalnızca gereken bölüm
 Varsayım yapma. Sor. Yanlış varsayımla yazılmış 200 satır,
 sorulmuş 1 sorudan pahalıdır.
 
+## ⛔ KALİTE ÇITASI SESSİZCE DÜŞÜRÜLMEZ
+
+Bir kontrol kırmızı yandığında iki yol vardır: **sorunu düzeltmek** ya da
+**kontrolü susturmak.** İkincisi her zaman daha hızlıdır, bu yüzden refleks
+hâline gelir. Ajanın en sinsi başarısızlık biçimi budur — iş *"yeşil"* görünür,
+oysa yalnızca ölçüm kapatılmıştır.
+
+⛔ **Bir değişikliği geçirmek için aşağıdakiler yapılmaz:**
+
+| Yasak | Neye benzer |
+|---|---|
+| Susturma yorumu eklemek | `@ts-ignore` · `eslint-disable` · `@ts-expect-error` |
+| Testi atlamak veya silmek | `it.skip(...)` · `describe.skip` · testi dosyadan çıkarmak |
+| İddiayı (assertion) zayıflatmak | `expect(x).toBe(3)` yerine `expect(x).toBeDefined()` |
+| Eşiği aşağı çekmek | Kapsam %80 → %60 · LCP 2.5s → 4s · paket bütçesini büyütmek |
+| Boş yakalama bırakmak | `catch {}` — hata yutulur, kimse görmez |
+| Tipi gevşetmek | `any`'ye kaçmak, `strict` kapatmak |
+| ⛔ **Kuralın kendisini değiştirmek** | Standart dosyasını, çıtayı düşürecek biçimde düzenlemek |
+
+⭐ **Son satır en önemlisi: çıtayı tanımlayan dosya, bir değişikliği geçirmek
+için düzenlenmez.** Çıta gerçekten değişecekse bu ayrı bir karardır — ADR ile
+alınır ve **tek başına**, başka hiçbir değişiklikle birlikte olmadan yapılır.
+
+### Gerçek bir istisna varsa — susturma yasak değil, GEREKÇESİZ susturma yasak
+
+1. Susturma **satır bazlı** olur; dosya veya proje bazlı asla
+2. Yanına **neden** yazılır: `// eslint-disable-next-line <kural> -- <sebep>`
+3. **Commit raporunda ayrıca bildirilir** — koda gömülü kalmaz
+4. Ne zaman kaldırılabileceği yazılır, ki sonraki oturum kaldırabilsin
+
+⛔ **Bunu kullanıcıya söylemeden yapmak, işi bitmiş gibi göstermektir.**
+Kullanıcı kodun her satırını okumuyor; sessizce eklenen bir `@ts-ignore` onun
+için **görünmezdir.** Görünmez olduğu için de asla kaldırılmaz.
+
+⚠️ **Ayırt edici soru:** *"Bu değişiklikten sonra kontrol, eskisinin yakaladığı
+bir hatayı hâlâ yakalar mı?"* Cevap hayırsa çıta düşmüştür — düzeltme değil,
+gizlemedir.
+
 ## ⛔ ÜÇÜNCÜ BAŞARISIZ DÜZELTMEDEN SONRA KOD YAZILMAZ
 
 Aynı hata için üst üste üç yama tutmadıysa, dördüncüyü deneme. Üç başarısız

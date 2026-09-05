@@ -73,6 +73,16 @@ denetimi…).
 
 ⚠️ **Çakışmada kitin kendi standardı üstündür.**
 
+**2026-09-05'te 15'i tek tek denetlendi.** Sonuç:
+
+| Skill | Durum |
+|---|---|
+| `constraint-driven-development` | ⛔ **GERÇEK BOŞLUKTU** — "kalite çıtası sessizce düşürülmez" kuralı kite alındı (v1.82.0). Skill yine de çağrılmıyor; kural artık kitte |
+| `code-simplification` | ⚠️ Kısmi — kitte boyut sınırları var (300/50 satır), sadeleştirme turu yok. İzlenecek |
+| `deprecation-and-migration` | ⚠️ Karşılığı yok ama **şimdi gerekmiyor** — kit yeni proje kuruyor, eski sistem emekliye ayırmıyor. Eski sistem taşıma işi çıkarsa yeniden bakılır |
+| `observability-and-instrumentation` | ✅ Kitin `12-operations` bölümü bu ölçekte **daha iyi** (Sentry'ye özgü, KVKK süzgeci, "gözlem katmanı uygulamayı düşüremez" kuralı). RED metrik/kardinalite yok ama o ölçekte değiliz |
+| Diğer 11 | ✅ Kitte doğrudan karşılığı var |
+
 ### `docs/` kapalı, seviye defteri açık
 
 `.gitignore` `docs/`'u kapatır, `!docs/ogrendiklerim.md` ile defteri açar.

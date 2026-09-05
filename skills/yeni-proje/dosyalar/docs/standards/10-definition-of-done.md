@@ -12,6 +12,11 @@ Bir iş, aşağıdaki maddelerin **tamamı** işaretlenmeden "bitti" sayılmaz.
 ## Kod
 - [ ] `lint` temiz, `typecheck` temiz, `build` başarılı
 - [ ] `any` yok, ölü kod yok, konsol çıktısı bırakılmadı
+- [ ] ⛔ **Kalite çıtası düşürülmedi** (`11-agent-workflow.md`): yeni susturma
+      yorumu (`@ts-ignore`, `eslint-disable`) yok · atlanan/silinen test yok ·
+      zayıflatılmış iddia yok · aşağı çekilmiş eşik yok · boş `catch` yok
+- [ ] Zorunlu bir susturma varsa **gerekçesi yazıldı ve commit raporunda
+      bildirildi** — sessizce bırakılmadı
 - [ ] Katman ihlali yok (bileşen içinden DB çağrısı yok)
 
 ## Test
