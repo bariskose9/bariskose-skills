@@ -55,6 +55,30 @@ Repository    → prisma.randevu.create({ data })
 ⚠️ **Serviste `req`/`res` görürsen HTTP sızmıştır**, API'ye taşı.
 Bu iki sızıntı, katman ihlalinin en sık iki biçimidir.
 
+### ⛔ "KÜÇÜK PROJEDE BİRLEŞTİRİLEBİLİR" — DEĞERLENDİRİLDİ, REDDEDİLDİ
+
+Yaygın tavsiye şudur: *"prototip veya hafta sonu projesinde API ve iş mantığı
+aynı dosyaya yazılabilir, hantallıktan kaçınılır."* **Bu kitte geçerli değildir.**
+
+*Gerekçe — tavsiyenin dayanağı çökmüştür:* birleştirmenin klasik sebebi
+**geliştiricinin yazma süresiydi**. Üç dosya açmak, üç kez `import` yazmak
+zaman alıyordu. Kod bir ajan tarafından yazıldığında bu maliyet **sıfırdır** —
+üç dosya da bir dosya da aynı sürede oluşur. Ödünleşmenin maliyet tarafı
+kalktı, fayda tarafı (bakım, test edilebilirlik, **anlaşılabilirlik**) aynen
+duruyor.
+
+İkinci gerekçe: bu kitin amacı yalnızca çalışan kod değil, **sahiplenilen**
+koddur (`02-coding-standards.md` → *"Kod, okuyamayan biri için de anlaşılır
+olur"*). Katmanların birleştirilmesi, kodu anlaşılır kılan sınırları tam da
+siler.
+
+⛔ **"Bu proje küçük" bir istisna gerekçesi değildir.** Küçük projelerin çoğu
+küçük kalmaz; kalanlarda da maliyet zaten sıfırdı.
+
+⚠️ Gerçek bir istisna çıkarsa (ölçülmüş bir sebep, bu ikisinden birini
+çürüten bir durum) ajan **önerir ve gerekçelendirir**; kullanıcı karar verir
+ve karar **ADR'ye** yazılır. Sessizce birleştirilmez.
+
 ## Klasör yapısı — özellik bazlı
 
 ```
