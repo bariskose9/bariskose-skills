@@ -1,5 +1,8 @@
 # bariskose-skills
 
+> 🧭 **Bu depo üzerinde çalışacaksan önce [`docs/DEVIR.md`](docs/DEVIR.md) oku** —
+> nerede kalındığı, kesinleşmiş kararlar ve yeniden tartışılmayacak konular orada.
+
 Barış Köse'nin Claude Code kiti. Yeni bir projeye başlarken iskeleti kurmak
 kullanıcının işi olmasın diye var.
 
