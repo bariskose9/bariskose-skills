@@ -296,8 +296,34 @@ Tek tek sor, varsayım yapma:
 3. **Backend kurgusu:** aşağıdaki dört soruyu **sen sor, sen karara bağla**
 4. **Proje adı** ve **hedef kullanıcı kitlesi** (bir cümle)
 
-**Varsayılan stack:** Next.js App Router + TypeScript (strict) + Tailwind +
-shadcn/ui + Prisma + PostgreSQL + Zod · mobil varsa Expo, aynı REST API.
+### ⛔ STACK'İ HEMEN KURMA — önce dayatılan bir şey var mı diye SOR
+
+⚠️ **Kurum/işyeri projesinde stack çoğu zaman kurumdan gelir**: şartname,
+analiz dokümanı, kurumun standart teknolojileri veya DevOps'un desteklediği
+platform. Varsayılanı kurup sonra *"aslında bizde şu kullanılıyor"* cevabını
+almak, geri alınması pahalı bir hatadır.
+
+⛔ **Kurum projesi sinyali aldığın anda, stack'e karar vermeden önce sor:**
+
+1. *"Elinde analiz dokümanı, şartname veya teknik gereksinim listesi var mı?"*
+   — varsa **oku, sonra konuş** (Adım 3'te tekrar kullanılacak)
+2. *"Kurumun zorunlu tuttuğu teknoloji, sunucu veya veritabanı var mı?"*
+3. *"Kod nerede çalışacak — kurumun kendi sunucusu mu, bulut mu?"*
+   (`00-stack.md` → sunucusuz platform kurumun sunucusunda çalışmaz)
+
+Cevaplar `kurumdan-ogrenilecekler.md`'ye yazılır.
+
+⚠️ **Kendi projende de sorulur, ama tek soruyla:** *"Aklında belirli bir
+teknoloji var mı, yoksa ben mi seçeyim?"*
+
+### Varsayılan stack — dayatılan bir şey YOKSA
+
+Next.js App Router + TypeScript (strict) + Tailwind + shadcn/ui + Prisma +
+PostgreSQL + Zod · mobil varsa Expo, aynı REST API.
+
+⭐ Bu bir başlangıç noktasıdır, dondurulmuş liste değil (`00-stack.md`) — her
+satır kurulumda yeniden ölçülür.
+
 Kullanıcı farklı bir şey söylerse (başka sunucu, başka veritabanı, başka
 hosting) **onu kullan.** İtirazın varsa **bir kez**, gerekçesiyle söyle
 (`11-agent-workflow.md` → *"İSTENEN YAPILIR — AMA DAHA İYİSİ VARSA SÖYLENİR"*);
