@@ -17,6 +17,44 @@ Veritabanı
 **Kural:** Katman atlanmaz. Bileşen içinden Prisma çağrılmaz. Route handler içine
 iş mantığı yazılmaz. Servis katmanı `Request`/`Response` nesnesi tanımaz.
 
+## ⭐ BU KOD HANGİ KATMANA AİT — pratik test
+
+*"Route handler'a iş mantığı yazılmaz"* kuralı, **iş mantığının ne olduğu**
+bilinmeden uygulanamaz. Yazmak üzere olduğun koda şunu sor:
+
+| Soru | Cevabı "evet" ise |
+|---|---|
+| İçinde **if/else, döngü veya hesap** var mı? | **Servis** |
+| Bir **karar** veriyor mu — *"bu izin verilir mi"*, *"tutar ne olur"*? | **Servis** |
+| İşin bir **kuralını** uyguluyor mu? | **Servis** |
+| Sadece veri **okuyup yazıyor** mu (`findMany`, `create`, `update`)? | **Repository** |
+| Gelen isteği **doğruluyor**, yetki bakıyor, HTTP koduna çeviriyor mu? | **API** |
+| Ekranda bir şey **gösteriyor** mu? | **UI** |
+
+### Ayırt edici cümle
+Servis **"ne yapılmalı"** sorusunu cevaplar · Repository **"nereden alınır"** ·
+API **"kim istedi, cevabı nasıl döneriz"** · UI **"nasıl görünür"**.
+
+### Aynı iş, üç katmana bölünmüş
+
+```
+API           → Zod ile gövdeyi doğrula · oturumdan kullanıcıyı al
+                · servisi çağır · sonucu 201 olarak dön
+                (⛔ burada "aynı gün ikinci randevu" kontrolü YAPILMAZ)
+
+Servis        → Çalışma saati içinde mi?  ← karar
+                Aynı gün başka randevu var mı?  ← kural
+                Yoksa hata fırlat; varsa repository'yi çağır
+                (⛔ burada `res.status(400)` YAZILMAZ — servis HTTP bilmez)
+
+Repository    → prisma.randevu.create({ data })
+                (⛔ burada tek bir if bile OLMAZ)
+```
+
+⚠️ **Repository'de `if` görürsen kural sızmıştır**, servise taşı.
+⚠️ **Serviste `req`/`res` görürsen HTTP sızmıştır**, API'ye taşı.
+Bu iki sızıntı, katman ihlalinin en sık iki biçimidir.
+
 ## Klasör yapısı — özellik bazlı
 
 ```
