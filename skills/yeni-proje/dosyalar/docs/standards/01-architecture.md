@@ -17,6 +17,82 @@ Veritabanı
 **Kural:** Katman atlanmaz. Bileşen içinden Prisma çağrılmaz. Route handler içine
 iş mantığı yazılmaz. Servis katmanı `Request`/`Response` nesnesi tanımaz.
 
+## ⭐ BİR İSTEĞİN TAM YOLU — kim ne yapar, ORM nerede durur
+
+Katman listesi *hangi kutuların olduğunu* söyler; bu bölüm **bir isteğin
+baştan sona nereden geçtiğini** ve her durakta kimin sorumlu olduğunu.
+
+```
+İstemci → API → Servis → Repository → ORM (Prisma) → SQL → PostgreSQL
+   │        │       │          │            │
+tarayıcı  ────── senin yazdığın kod ────  kütüphane   veritabanı
+mobil                                     (kurulur,
+                                        yazılmaz)
+```
+
+⛔ **Repository ile ORM aynı şey DEĞİLDİR.** Repository senin yazdığın bir
+dosyadır (`randevu.repository.ts`); ORM onun **kullandığı** pakettir. Şemada
+*"Repository (Prisma)"* biçiminde birleştirilmesi yaygın bir hatadır ve katman
+sınırını görünmez kılar.
+
+### Durak durak — randevu oluşturma örneği
+
+| # | Durak | Ne yapar | Ne YAPMAZ |
+|---|---|---|---|
+| 1 | **İstemci** | `POST /api/randevular` ile gövdeyi gönderir | İş kuralı bilmez |
+| 2 | **API katmanı**<br>`*.controller.ts` / `route.ts` | Zod ile gövdeyi doğrular · kimliği çözer · servisi çağırır · sonucu HTTP'ye çevirir (201/422) | ⛔ İş kuralı **yazılmaz** |
+| 3 | **Servis katmanı**<br>`*.service.ts` | Kuralları uygular: çalışma saati içinde mi · aynı gün ikinci randevu var mı · slot dolu mu | ⛔ `req`/`res` **tanımaz**, HTTP kodu döndürmez |
+| 4 | **Repository katmanı**<br>`*.repository.ts` | ORM'e ne isteneceğini söyler: `prisma.randevu.create({ data })` | ⛔ Tek bir `if` bile **bulunmaz** |
+| 5 | **ORM (Prisma)** | Çağrıyı SQL'e, dönen satırı nesneye çevirir — **iki yönlü eşleme** | Karar vermez, kural bilmez |
+| 6 | **PostgreSQL** | SQL'i çalıştırır, satırı döndürür | — |
+
+Cevap aynı yoldan **geri tırmanır**: repository nesneyi döndürür → servis
+döndürür → API onu HTTP yanıtına çevirir.
+
+### ORM ne demek, somut olarak
+
+**ORM / Object-Relational Mapping / nesne-ilişki eşleme** — koddaki nesneler
+ile veritabanı tabloları arasında çeviri yapan kütüphane. Repository'de şunu
+yazarsın:
+
+```ts
+prisma.randevu.create({ data: { doktorId: "d-42", tarih: "2026-09-10" } })
+```
+
+Prisma bunu şuna çevirir ve veritabanına o gider:
+
+```sql
+INSERT INTO "Randevu" ("doktorId","tarih") VALUES ('d-42','2026-09-10') RETURNING *;
+```
+
+Dönen satırı da geri çevirip TypeScript nesnesi olarak verir. Adındaki
+*"eşleme"* bu çift yönlü çeviridir.
+
+### ⛔ İKİ YAYGIN YANLIŞ ANLAMA
+
+**1. "ORM gelen isteği doğrular."** Hayır. İki ayrı şey karışıyor:
+
+| Ne doğrulanır | Ne zaman | Kim yapar |
+|---|---|---|
+| Gelen **isteğin** içeriği | Çalışma anında, her istekte | **Zod** |
+| **Kodun** tabloyla uyumu | Derleme anında, sen yazarken | **TypeScript**, Prisma'nın ürettiği tiplerden |
+
+Olmayan bir alana yazmaya çalışırsan proje **derlenmez** — hata kullanıcıya
+değil sana çıkar. Ama bu bir çalışma anı kontrolü değil, tip sisteminin işidir.
+
+**2. "Gerekirse migration istek sırasında çalışır."** ⛔ **Asla.** Migration /
+şema göçü veritabanının **yapısını** değiştirir (tablo açmak, sütun eklemek,
+index koymak) ve yukarıdaki okun üstünde **hiç yer almaz**:
+
+| Ne zaman | Komut |
+|---|---|
+| Şemayı değiştirdiğinde, kendi bilgisayarında | `prisma migrate dev` |
+| Yayına alırken, bir kez | `prisma migrate deploy` |
+
+*Gerekçe:* ani yükte 20.000 isteğin her birinin veritabanı yapısını değiştirmeye
+kalkması felaket olurdu. Yapı **önceden** hazırdır; istekler yalnızca veri
+okur ve yazar.
+
 ## ⭐ BU KOD HANGİ KATMANA AİT — pratik test
 
 *"Route handler'a iş mantığı yazılmaz"* kuralı, **iş mantığının ne olduğu**
