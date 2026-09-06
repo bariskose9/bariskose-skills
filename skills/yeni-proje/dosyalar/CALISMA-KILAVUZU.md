@@ -199,9 +199,10 @@ Gerisi sohbet. Sırayla şunlar olur:
 | Adım | Ne oluyor | Senden ne isteniyor |
 |---|---|---|
 | **0** | Eklentiler kontrol edilir, platform tespit edilir, ses bildirimi kurulur | İzin |
-| **1** | Kim için · proje tipi · backend kurgusu (4 soru) · API biçimi (4 soru) · proje adı | Cevaplar |
+| **1** | Kim için · proje tipi · **elimizde ne hazır** · kurum bir şey dayatıyor mu · proje adı | Cevaplar |
 | **2** | Kit dosyaları projeye kopyalanır | — |
 | **3** | ⭐ **PRD görüşmesi** — en uzun adım | Analiz dokümanını verirsin, tek tek soru cevaplarsın |
+| **3b** | ⭐ **Stack kararı** — backend kurgusu (4 soru) · API biçimi (4 soru) · kuyruk | Onay |
 | **4** | Yol haritası, ilk kararlar, teknoloji-ve-plan iskeleti | Onay |
 | **5** | İskelet kurulur — ilk kod | Onay |
 | **6** | Yayın veya teslim paketi (1. adımdaki cevaba göre) | Duruma göre |
@@ -214,6 +215,19 @@ proje ve net yol haritası"**.
 ⛔ **Adım 3'te acele etme.** Analiz dokümanında yazmayan onlarca karar orada
 netleşir. Cevabı bilinmeyen bir kural kodlanırsa yanlış varsayım tüm katmanlara
 yayılır.
+
+### ⭐ Neden stack kararı PRD'DEN SONRA
+
+Adım 1 teknoloji seçmez; yalnızca **kısıtları** toplar (kim için, elde ne var,
+kurum ne dayatıyor). Asıl karar Adım 3b'dedir. Sebebi şu: backend kurgusunu
+belirleyen dört soru aslında **ürün sorusudur** —
+
+- *"API'yi senin yazmadığın biri tüketecek mi?"*
+- *"Kullanıcı istek atmasa da kendiliğinden çalışması gereken iş var mı?"*
+
+Bunların cevabı PRD görüşmesinde çıkar. Önce sorulursa sen tahmin ederek
+cevaplarsın ve mimari yanlış temele oturur. ⛔ **Sıra bilerek böyle:** önce
+*ne yapacağız*, sonra *neyle yapacağız*.
 
 ---
 
@@ -233,7 +247,7 @@ geçerlidir. İlerleme **roadmap adımlarıyla** olur.
 6. Ajan denetimi     → ⭐ ajan kendi yazdığını inceler, bulguları düzeltir
 7. Commit + öneri    → değişiklik önerisi açılır
 8. Kutucuk ✅        → roadmap'te o adım işaretlenir
-9. Kararları yaz     → teknoloji-ve-plan.md güncellenir
+9. Kararları yaz     → ADR (gerekçe) + teknoloji-ve-plan.md (anlatım)
 10. Devir notu       → sırada ne var yazılır
 11. /clear           → yeni oturuma temiz başla
 ```
@@ -960,8 +974,17 @@ practice. Kolon silme ve yeniden adlandırma iki aşamaya bölünür.
 | İşyeri projesi, kurumun DevOps ekibi var | **C** — sen git'e gönderirsin |
 | Öğrenmek istiyorsun, süreci görmek istiyorsun | **B** — en çok şey öğretir |
 
-⭐ **Karar `docs/project/teknoloji-ve-plan.md` dosyasına gerekçesiyle yazılır**,
-`altyapi-durumu.md` de o karara göre dolar.
+⭐ **Karar iki yere birden yazılır ve ikisi farklı iş yapar:**
+
+| Dosya | Ne tutar |
+|---|---|
+| `decisions/ADR-*.md` | ⭐ **Gerekçenin evi** — bağlam, karar, elenen alternatifler, kabul edilen bedel |
+| `teknoloji-ve-plan.md` | Kararın **anlatımı** — bu teknoloji nedir, neden burada. Gerekçeyi kopyalamaz, ADR'ye **işaret eder** |
+| `altyapi-durumu.md` | Karara göre açılan hesaplar ve hangi anahtar hangi ortamda |
+
+⛔ **Gerekçe iki yerde yazılmaz.** Yazılırsa biri güncellenir, öbürü bayatlar ve
+hangisinin doğru olduğu anlaşılmaz. Hangi kararın ADR gerektirdiği
+`docs/standards/00-stack.md` → *"KARAR NEREYE YAZILIR"* tablosunda.
 
 ---
 

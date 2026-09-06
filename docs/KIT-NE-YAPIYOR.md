@@ -1,6 +1,6 @@
 # `proje-kiti` — Kit Ne Yapıyor
 
-**Sürüm:** 1.89.0 · **Tarih:** 2026-09-06
+**Sürüm:** 1.90.0 · **Tarih:** 2026-09-06
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Bu belge, kitin **kurulumdan canlıya çıkışa kadar** ne yaptığını anlatır.
@@ -80,11 +80,14 @@ devam et"* kuralı kitin *"plan sun, onayımı bekle"* kapısıyla çelişir.
 Addy'nin paketi ve chrome-devtools MCP kurulu mu bakar, **yalnızca eksik olanı**
 kurar. ⛔ Bu adım hiçbir skill'i çalıştırmaz, sadece kurar.
 
-### Adım 1 — Proje tipi ve stack
+### Adım 1 — Kimin için, elde ne var, dayatılan ne var
+⛔ **Bu adım teknoloji kararı VERMEZ**, yalnızca kısıtları toplar:
 - **Bu proje kimin için?** `kendi projem` / `kurum projesi` — sonraki her şeyi
   bu belirler
-- Web mi, mobil (Expo) mi, ikisi mi
-- **Backend kurgusu:** Next.js tek başına mı, Next + NestJS mi
+- Web mi, mobil (Expo) mi, ikisi mi (mobil son adımdır ama **ilk gün** sorulur)
+- ⭐ **Elimizde ne hazır** — sekiz senaryo: veritabanı bizde mi, tablolar hazır
+  mı, API var mı, kimlik kurumdan mı geliyor, eski sistemle entegrasyon var mı
+- Kurum bir teknoloji **dayatıyor mu** — dayatma kitin varsayılanını yener
 - Klasör boşsa devam eder; doluysa **ne olduğuna bakar** ve gerekirse durup sorar
 
 ### Adım 2 — Kit dosyalarını yerleştir
@@ -107,6 +110,17 @@ kurulur; yoksa kurulmaz).
 
 **Görüşmenin sonunda** tasarım yönü ve SEO kapsamı sorulur (ürün önce,
 görünüm sonra).
+
+### Adım 3b — Stack kararı
+⭐ **Teknoloji şimdi seçilir, PRD bittikten sonra.** Backend kurgusu (4 soru),
+API biçimi (4 soru), iş kuyruğu ve ani yük önlemleri burada karara bağlanır.
+
+*Gerekçe:* o sorular aslında **ürün sorusudur** — *"API'yi başkası tüketecek mi",
+"kendiliğinden çalışan iş var mı"*. Cevapları PRD'de çıkar. Önce sorulursa
+kullanıcı tahmin ederek cevaplar ve mimari yanlış temele oturur.
+
+Sonra stack listesi **ölçülür** (`npm view` + haftalık indirme), kitin
+varsayılanından sapıldıysa **ADR yazılır** ve `CLAUDE.md` §0 tamamlanır.
 
 ### Adım 4 — Yol haritası ve ilk kararlar
 Adımlar bağımlılık sırasına göre. ADR'ler (Architecture Decision Record —
@@ -244,5 +258,5 @@ dallanmadır: üç proje sonra elinde birbirinden sapmış üç kopya olur.
 
 ---
 
-*Bu belge `proje-kiti` v1.89.0 için üretilmiştir. Kit değiştikçe güncellenir —
+*Bu belge `proje-kiti` v1.90.0 için üretilmiştir. Kit değiştikçe güncellenir —
 sürüm satırı `plugin.json` ile eşleşmezse `denetim.mjs` commit'i durdurur.*

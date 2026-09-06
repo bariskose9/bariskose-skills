@@ -66,7 +66,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | Dosya | Kim okur | Ne |
 |---|:--:|---|
 | `CLAUDE.md` | Ajan | **Çalışma protokolü ve sekiz zorunlu kapı.** §0'ı kurulum doldurur |
-| `CALISMA-KILAVUZU.md` | **Sen** | Projeyi nasıl yürüteceğin — terimler, oturum ritmi, dosya açıklamaları |
+| `CALISMA-KILAVUZU.md` | **Sen** | Projeyi nasıl yürüteceğin — terimler, oturum ritmi, dosya açıklamaları. ⚠️ Ajan bunu da kendiliğinden okumaz; senin kılavuzun, ama **güncel tutmak onun işi** |
 | `REPO-YAPISI.md` | İkisi | Hangi iş hangi klasörde — kurulumdan sonra doldurulur |
 | `.vscode/extensions.json` | — | VS Code eklenti önerileri |
 | `.claude/settings.json` | — | Salt okunur komutlar için hazır izin listesi |
@@ -132,9 +132,11 @@ der. Hangisini okuyacağın ne aradığına bağlı; üçü birbirini tekrar etm
 
 ### `calisma-dokumanlari/` — senin çalışma notların
 
-⛔ **Ajan bu klasörü OKUMAZ** (kural taşımaz, bağlamı şişirir) — ama
-`denetim.mjs` onu **denetler**: kite bir kural eklenip buradaki notlar geride
-kalırsa kırık atıf olarak çıkar. *"Okunmaz"* ile *"denetlenmez"* ayrı şeylerdir.
+⚠️ **Ajan bu klasörü kendiliğinden AÇMAZ** — kural taşımaz ve bağlamı şişirir.
+Ama **yasak değil:** *"şunu teknoloji planıma ekle"* dediğinde okur. Ayrıca
+`denetim.mjs` onu **her zaman denetler**: kite bir kural eklenip buradaki notlar
+geride kalırsa kırık atıf olarak çıkar. *"Kendiliğinden okunmaz"* ile
+*"denetlenmez"* ayrı şeylerdir.
 
 | Dosya | Ne |
 |---|---|
@@ -160,9 +162,10 @@ kalırsa kırık atıf olarak çıkar. *"Okunmaz"* ile *"denetlenmez"* ayrı şe
 |---|---|---|
 | **0** | Bağımlılıkları kurar, platformu tespit eder, sesli bildirim kurar | İzin ver |
 | **0c** | Klasör boş değilse üç kutuya ayırır | Var olan proje varsa karar ver |
-| **1** | Elde ne var envanteri, dayatılan stack var mı sorar, stack'i ölçer | Analiz dokümanını ver, soruları cevapla |
+| **1** | Kim için · elde ne var envanteri · kurum bir şey dayatıyor mu. ⛔ Teknoloji **seçmez** | Analiz dokümanını ver, soruları cevapla |
 | **2** | Kural dosyalarını ve şablonları yerleştirir | — |
 | **3** | **PRD görüşmesi** — tek tek soru sorar | ⛔ **En kritik adım.** İş kurallarını yalnızca sen bilirsin |
+| **3b** | ⭐ **Stack kararı** — backend kurgusu, API biçimi, kuyruk; sonra listeyi ölçer | Kararı onayla |
 | **4** | Yol haritası + ilk ADR'ler, sonra beş gözle denetler | Yol haritasını onayla |
 | **5** | İskeleti kurar, çalışan ekranı **gösterir** | Ekrana bak — hesap açmadan önce |
 | **6a** | Kendi projen: canlıya çıkarır | Hesap aç, ödeme yap, DNS ayarla |
@@ -171,6 +174,12 @@ kalırsa kırık atıf olarak çıkar. *"Okunmaz"* ile *"denetlenmez"* ayrı şe
 
 ⚠️ **Adım 3 atlanmaz.** Analiz dokümanı her zaman eksiktir; ajan eksiği
 tahminle doldurursa yanlış varsayım veri modeline, API'ye ve ekrana yayılır.
+
+⭐ **Sıra bilerek böyle: önce *ne yapacağız*, sonra *neyle yapacağız*.**
+Backend kurgusunu ve API biçimini belirleyen sekiz soru aslında **ürün
+sorusudur** (*"API'yi başkası tüketecek mi", "kendiliğinden çalışan iş var
+mı"*). PRD'den önce sorulursa tahmin ederek cevaplarsın ve mimari yanlış
+temele oturur. Bu yüzden Adım 1 yalnızca **kısıt** toplar, karar 3b'dedir.
 
 ---
 

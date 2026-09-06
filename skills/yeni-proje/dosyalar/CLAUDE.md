@@ -269,6 +269,19 @@ Sürümler `docs/standards/00-stack.md` içinde ve **fiilen kurulanla eşitlenir
 
 **Çakışma kuralı:** Kural ile benim isteğim çakışırsa **DUR, sor.** Kendi başına karar verme.
 
+### ⚠️ Kendiliğinden OKUNMAYAN dosyalar — yasak değil, varsayılan değil
+
+| Dosya | Neden |
+|---|---|
+| `CALISMA-KILAVUZU.md` | **Benim** kılavuzum, senin kuralın değil. Bağlamını şişirir — ama **güncel tutmak senin işin** |
+| Çalışma notu klasörlerim (`_devir/`, `notlar/` gibi) | Kural taşımaz |
+
+⭐ **İstediğimde okursun.** *"Şunu kılavuza ekle"*, *"o notu güncelle"* dediğimde
+ilgili dosyayı açarsın. Kural şu: **kendiliğinden açma, istenince aç.**
+
+⛔ Bir kural değiştiğinde `CALISMA-KILAVUZU.md`'de o kuralı anlatan yer varsa
+**oraya da yaz** — yoksa kılavuz sessizce yalan söylemeye başlar.
+
 ---
 
 ## 2. Skill Seçimi ve Şeffaflık

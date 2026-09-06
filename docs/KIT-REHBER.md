@@ -1,6 +1,6 @@
 # `proje-kiti` — Ne Yapıyor, Nasıl Yapıyor
 
-**Sürüm:** 1.89.0 · **Tarih:** 2026-09-06
+**Sürüm:** 1.90.0 · **Tarih:** 2026-09-06
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Terimler ilk geçtikleri yerde açıklanır. Sonda toplu bir sözlük vardır.
@@ -130,10 +130,17 @@ projeye özel.
 sayfayı açar, tıklar, ekran görüntüsü alır, hataları okur.
 **MCP** (Model Context Protocol): yapay zekâya dış araç bağlama standardı.
 
-### Adım 1 — Proje tipi
+### Adım 1 — Kim için ve elde ne var
+
+⛔ **Burada teknoloji seçilmez, kısıt toplanır.**
 
 Sorular: **Bu proje kimin için?** (kendi projen mi, kurum projesi mi — sonraki
-her şeyi bu belirler) · web mi mobil mi · sunucu tarafı nasıl kurulacak.
+her şeyi bu belirler) · web mi mobil mi · **elimizde ne hazır** (veritabanı,
+tablolar, API, kimlik sistemi kurumdan mı geliyor) · kurum bir teknoloji
+**dayatıyor mu**.
+
+**Dayatma:** şartnamede veya kurumun standardında yazan teknoloji. Yazılıysa
+kitin varsayılanı geçmez, **o uygulanır** ve sapma varsa gerekçesi kayda geçer.
 
 ### Adım 2 — Kural dosyalarını yerleştir
 
@@ -154,6 +161,20 @@ problemi çözüyor? Olmasaydı kullanıcı ne yapardı?"* Kurum projelerinde an
 birimi çoğu zaman **çözümü** yazar, **problemi** değil.
 
 Görüşmenin sonunda tasarım yönü ve arama motoru kapsamı sorulur.
+
+### Adım 3b — Stack kararı
+
+Teknoloji **şimdi** seçilir. Sebebi şu: sunucu tarafının nasıl kurulacağını
+belirleyen sorular aslında ürün sorusudur — *"bu API'yi senin yazmadığın biri
+de kullanacak mı?"*, *"kimse ekranı açmasa da kendiliğinden çalışması gereken
+bir iş var mı?"*. Bunların cevabı PRD görüşmesinde çıkar.
+
+⛔ Önce sorulsaydı sen tahmin ederek cevaplardın ve mimari yanlış temele
+otururdu. **Önce ne yapacağız, sonra neyle yapacağız.**
+
+Karar verildikten sonra listedeki her paket **ölçülür** (hâlâ bakımda mı, daha
+yaygın bir alternatif çıkmış mı) ve kitin varsayılanından sapıldıysa gerekçesi
+**ADR** olarak yazılır.
 
 ### Adım 4 — Yol haritası
 

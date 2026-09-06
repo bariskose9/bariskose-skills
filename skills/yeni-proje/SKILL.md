@@ -295,15 +295,25 @@ varsa dur. Kurulum var olan kodun üzerine yazamaz.
 ⛔ **Kullanıcının kendi eklediği hiçbir şey sessizce silinmez.** Bir çakışma
 varsa söylenir, kararı kullanıcı verir.
 
-## Adım 1 — Proje tipi ve stack
+## Adım 1 — Kimin için, elde ne var, dayatılan ne var
+
+⛔ **BU ADIM TEKNOLOJİ KARARI VERMEZ.** Burada yalnızca **kısıtlar** toplanır:
+kim için yapıyoruz, elimizde ne hazır, kurum neyi dayatıyor. Stack kararı
+**Adım 3b'de**, PRD bittikten sonra verilir.
+
+*Gerekçe:* backend kurgusunun dört sorusu (*"API'yi başkası tüketecek mi",
+"kendiliğinden çalışan iş var mı"*) ve API biçiminin dört sorusu **ürün
+sorularıdır** — cevapları PRD görüşmesinde çıkar. PRD'den önce sorulursa
+kullanıcı tahmin ederek cevaplar ve mimari yanlış temele oturur.
 
 Tek tek sor, varsayım yapma:
 
 1. **Bu proje kimin için?** → `kendi projem` · `kurum projesi`
    Bu ilk soru, çünkü sonraki her şeyi belirliyor (Adım 6 tamamen buna bakar).
 2. **Proje tipi:** web · mobil (Expo) · ikisi (ortak API)
-3. **Backend kurgusu:** aşağıdaki dört soruyu **sen sor, sen karara bağla**
-4. **Proje adı** ve **hedef kullanıcı kitlesi** (bir cümle)
+   ⭐ Mobil **son adımdır** ama olup olmayacağı **ilk gün** sorulur; API'yi ve
+   oturum kararını etkiler (`17-mobile.md`).
+3. **Proje adı** ve **hedef kullanıcı kitlesi** (bir cümle)
 
 ### ⛔ ELİMİZDE NE HAZIR — envanteri ÇIKAR, sonra karar ver
 
@@ -413,37 +423,6 @@ PostgreSQL + Zod · mobil varsa Expo, aynı REST API.
 ⭐ Bu bir başlangıç noktasıdır, dondurulmuş liste değil (`00-stack.md`) — her
 satır kurulumda yeniden ölçülür.
 
-#### ⛔ 1c — LİSTEYİ ÖLÇ, EZBERDEN AKTARMA
-
-⚠️ **Bu adım atlanabilir görünür ve tam da bu yüzden yazıldı.** Kural
-`00-stack.md` → *"STACK KURULURKEN HER TEKNOLOJİNİN GÜNCEL ALTERNATİFİ
-TARANIR"* içinde yazılıydı ama akışta onu **çalıştıran bir adım yoktu**;
-bölge eşleşmesinin başına gelenin aynısı. Artık burada.
-
-Kuracağın her satır için fiilen koştur:
-
-```bash
-npm view <paket> version time.modified
-curl -s https://api.npmjs.org/downloads/point/last-week/<paket>
-```
-
-| Bulgu | Ne yapılır |
-|---|---|
-| Yaygın ve bakımda | Sessizce devam — soru sorulmaz |
-| **Son yayını 18 aydan eski** | ⚠️ Bildir, alternatifi ölç, **sor** |
-| Ölçülebilir biçimde daha yaygın alternatif çıkmış | ⚠️ İki rakamı yan yana koy, **sor** |
-| Alternatif niş ama teknik olarak üstün | Bildir, **önerme** — yaygınlık kazanır |
-
-⛔ **Ajan tek başına stack değiştirmez**; bulguyu sunar, kararı kullanıcı verir.
-⭐ **Ölçüm tarihi olmadan rakam yazılmaz** — *"7.9M/hafta (2026-09 ölçümü)"*.
-Sonuç `00-stack.md` sürüm tablosuna ve `teknoloji-ve-plan.md`'ye işlenir.
-
-Kullanıcı farklı bir şey söylerse (başka sunucu, başka veritabanı, başka
-hosting) **onu kullan.** İtirazın varsa **bir kez**, gerekçesiyle söyle
-(`11-agent-workflow.md` → *"İSTENEN YAPILIR — AMA DAHA İYİSİ VARSA SÖYLENİR"*);
-kullanıcı kararında ısrar ederse tartışmayı kapat ve yap.
-⛔ Sessizce yapmak da yanlıştır, ısrar etmek de.
-
 ### 1a — Bu proje kimin için: sınıflandırmayı SEN yap
 
 İki mod vardır, üçüncüsü yoktur: **işyeri projesi** ve **kendi projem**.
@@ -509,41 +488,6 @@ Kendi projesinde varsayılan kurulur, işyeri projesinde DevOps işidir (bot
 hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cümle
 `09-ci-cd-deploy.md` → *"Bağımlılık botu — proje tipine göre karar tablosu"*.
 
-### 1b — Backend kurgusu: Next tek başına mı, Next + Nest mi
-
-Dört soru. **Hepsi "hayır" ise Next tek başına. En az biri "evet" ise
-Next (arayüz) + NestJS (API + worker).**
-
-1. API'yi kendi web arayüzünden **başkası** tüketecek mi? (mobil, başka sistem)
-2. Kullanıcı istek atmasa da **kendiliğinden** çalışması gereken iş var mı?
-   (zamanlanmış görev, kuyruk, webhook karşılama)
-3. Katmanlı mimari + **DI yaşam döngüsü** (singleton/scoped) + çok modüllü yapı
-   gerekiyor mu?
-4. Kod kurumun **kendi sunucusunda** mı çalışacak (sunucusuz platform yok)?
-
-**Neden bu kural:** Next.js Route Handler ile API yazılabilir ama üç şeyi
-veremez — sürekli çalışan arka plan süreci, DI konteyneri ve yaşam döngüleri,
-zorlanan katman sınırları. Bunlara ihtiyaç yoksa ikinci bir sunucu **saf
-maliyettir**: iki deploy, CORS, kimlik doğrulamanın iki tarafta kurgulanması,
-tiplerin paylaşılması, yerel geliştirmede dört süreç.
-
-⛔ **Express'i çıplak seçme.** NestJS zaten Express'in üstünde çalışır; Nest'i
-seçince Express'i almış olursun. Çıplak Express yalnızca tek amaçlı, 5–10 uçlu
-mikro servislerde (webhook alıcı, proxy) tercih edilir.
-
-**Ayrı backend seçildiyse kararlar:**
-
-| Konu | Seçim | Gerekçe |
-|---|---|---|
-| HTTP adaptörü | **Express** (Nest varsayılanı) | Darboğaz veritabanıdır, HTTP katmanı değil. Fastify'ın kazancı bu senaryoda ölçülemez; adaptör tek satırla değiştirilebilir |
-| API biçimi | **REST** (varsayılan) | GraphQL eklenip eklenmeyeceği `00-stack.md` → "API biçimi" bölümündeki **dört soru** ile karara bağlanır. Soruları sen sor, cevabı sen yorumla; hepsi "hayır" ise GraphQL'i gündeme getirme. ⚠️ İkisi birbirini dışlamıyor — aynı sistemde yan yana çalışabilirler |
-| Sürümleme | `/api/v1/...` **baştan** | Kural ve gerekçesi `03-api-guidelines.md` → "Sözleşme ömrü"nde, burada tekrarlanmaz. Mobil varsa **zorunlu**: uygulama kullanıcının telefonunda eski sürümde kalır |
-| Tip paylaşımı | Monorepo + `packages/contracts` | Zod şeması tek yerde; API alan adı değişince frontend **derlenmez** — hata çalışma anına kalmaz |
-
-Mobil seçilirse `05-auth-security.md` ve `17-mobile.md` birlikte okunur:
-oturum kararı **baştan** hem çerezi hem jetonu kapsayacak şekilde alınır.
-Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
-
 ## Adım 2 — Kit dosyalarını yerleştir
 
 1. `dosyalar/` içeriğini projeye kopyala: `CLAUDE.md`, `CALISMA-KILAVUZU.md`,
@@ -561,7 +505,9 @@ Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
 
    ⚠️ `CALISMA-KILAVUZU.md` **kullanıcı için**; `CLAUDE.md` ajan için. Kurulum
    bitince kullanıcıya *"nasıl devam edeceğin bu dosyada"* diye söylenir.
-2. `CLAUDE.md` §0 bloğunu Adım 1'deki cevaplarla **doldur**
+2. `CLAUDE.md` §0 bloğunu Adım 1'deki cevaplarla **doldur** — proje adı, tip,
+   ana dal, diller. ⚠️ **`STACK` ve `DEPLOY` satırları şimdilik boş kalır**
+   (`<Adım 3b'de doldurulacak>` yazılır); o karar PRD'den sonra verilir.
 3. `docs/standards/sablonlar/` içindeki şablonları `docs/project/` altına aç:
    `PRD.md` · `roadmap.md` · `altyapi-durumu.md` · `CHANGELOG.md` ·
    `sonraki-adim-prompt.md` · `teknoloji-ve-plan.md` · `ogrendiklerim.md` ·
@@ -697,6 +643,108 @@ Kararsız bırakılan yerde model kendi varsayılanına düşer (mor gradient, h
 ⛔ Bu cevabın **backend'i etkilediğini** unutma: render stratejisini ve slug'ın
 veritabanında saklanıp saklanmayacağını belirler. Veri modeli yazılmadan
 bilinmeli; sonradan değiştirmek en pahalı düzeltmedir.
+
+## Adım 3b — STACK KARARI: artık cevaplar elde
+
+⛔ **Bu adım Adım 3 bitmeden başlamaz.** Aşağıdaki kararların hepsi PRD'de
+netleşen cevaplara dayanır; PRD'siz sorulursa kullanıcı tahmin eder.
+
+| Karar | Hangi PRD cevabından çıkar |
+|---|---|
+| Backend kurgusu (Next tek başına mı, + Nest mi) | API'yi kim tüketecek · kendiliğinden çalışan iş var mı |
+| API biçimi (REST tek başına mı, + GraphQL mi) | Tüketicileri sen mi yazıyorsun · ihtiyaçları farklı mı |
+| İş kuyruğu kurulacak mı, hangisi | Arka planda çalışacak iş var mı (`00-stack.md` → *"İş kuyruğu"*) |
+| Ani yük önlemleri | Aynı anda kaç kişi, ne zaman (`12-operations-and-scaling.md`) |
+| Oturum stratejisi | Mobil var mı (`05-auth-security.md` + `17-mobile.md` birlikte) |
+
+Sıra: **3b.1** backend kurgusu → **3b.2** API biçimi → **3b.3** listeyi ölç →
+**3b.4** kararı yaz.
+
+### 3b.1 — Backend kurgusu: Next tek başına mı, Next + Nest mi
+
+Dört soru. **Hepsi "hayır" ise Next tek başına. En az biri "evet" ise
+Next (arayüz) + NestJS (API + worker).**
+
+1. API'yi kendi web arayüzünden **başkası** tüketecek mi? (mobil, başka sistem)
+2. Kullanıcı istek atmasa da **kendiliğinden** çalışması gereken iş var mı?
+   (zamanlanmış görev, kuyruk, webhook karşılama)
+3. Katmanlı mimari + **DI yaşam döngüsü** (singleton/scoped) + çok modüllü yapı
+   gerekiyor mu?
+4. Kod kurumun **kendi sunucusunda** mı çalışacak (sunucusuz platform yok)?
+
+**Neden bu kural:** Next.js Route Handler ile API yazılabilir ama üç şeyi
+veremez — sürekli çalışan arka plan süreci, DI konteyneri ve yaşam döngüleri,
+zorlanan katman sınırları. Bunlara ihtiyaç yoksa ikinci bir sunucu **saf
+maliyettir**: iki deploy, CORS, kimlik doğrulamanın iki tarafta kurgulanması,
+tiplerin paylaşılması, yerel geliştirmede dört süreç.
+
+⛔ **Express'i çıplak seçme.** NestJS zaten Express'in üstünde çalışır; Nest'i
+seçince Express'i almış olursun. Çıplak Express yalnızca tek amaçlı, 5–10 uçlu
+mikro servislerde (webhook alıcı, proxy) tercih edilir.
+
+**Ayrı backend seçildiyse kararlar:**
+
+| Konu | Seçim | Gerekçe |
+|---|---|---|
+| HTTP adaptörü | **Express** (Nest varsayılanı) | Darboğaz veritabanıdır, HTTP katmanı değil. Fastify'ın kazancı bu senaryoda ölçülemez; adaptör tek satırla değiştirilebilir |
+| API biçimi | **REST** (varsayılan) | GraphQL eklenip eklenmeyeceği `00-stack.md` → "API biçimi" bölümündeki **dört soru** ile karara bağlanır. Soruları sen sor, cevabı sen yorumla; hepsi "hayır" ise GraphQL'i gündeme getirme. ⚠️ İkisi birbirini dışlamıyor — aynı sistemde yan yana çalışabilirler |
+| Sürümleme | `/api/v1/...` **baştan** | Kural ve gerekçesi `03-api-guidelines.md` → "Sözleşme ömrü"nde, burada tekrarlanmaz. Mobil varsa **zorunlu**: uygulama kullanıcının telefonunda eski sürümde kalır |
+| Tip paylaşımı | Monorepo + `packages/contracts` | Zod şeması tek yerde; API alan adı değişince frontend **derlenmez** — hata çalışma anına kalmaz |
+
+Mobil seçilirse `05-auth-security.md` ve `17-mobile.md` birlikte okunur:
+oturum kararı **baştan** hem çerezi hem jetonu kapsayacak şekilde alınır.
+Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
+
+### 3b.2 — API biçimi: REST tek başına mı, yanına GraphQL de mi
+
+Karar kuralı ve **dört soru** `00-stack.md` → *"API biçimi"* içinde; burada
+tekrarlanmaz. ⭐ Soruları sen sor, cevabı sen yorumla; hepsi *"hayır"* ise
+GraphQL'i gündeme **getirme**.
+
+⚠️ İkisi birbirini dışlamaz — aynı sistemde yan yana çalışabilirler.
+
+### 3b.3 — ⛔ LİSTEYİ ÖLÇ, EZBERDEN AKTARMA
+
+⚠️ **Bu adım atlanabilir görünür ve tam da bu yüzden yazıldı.** Kural
+`00-stack.md` → *"STACK KURULURKEN HER TEKNOLOJİNİN GÜNCEL ALTERNATİFİ
+TARANIR"* içinde yazılıydı ama akışta onu **çalıştıran bir adım yoktu**;
+bölge eşleşmesinin başına gelenin aynısı. Artık burada.
+
+Kuracağın her satır için fiilen koştur:
+
+```bash
+npm view <paket> version time.modified
+curl -s https://api.npmjs.org/downloads/point/last-week/<paket>
+```
+
+| Bulgu | Ne yapılır |
+|---|---|
+| Yaygın ve bakımda | Sessizce devam — soru sorulmaz |
+| **Son yayını 18 aydan eski** | ⚠️ Bildir, alternatifi ölç, **sor** |
+| Ölçülebilir biçimde daha yaygın alternatif çıkmış | ⚠️ İki rakamı yan yana koy, **sor** |
+| Alternatif niş ama teknik olarak üstün | Bildir, **önerme** — yaygınlık kazanır |
+
+⛔ **Ajan tek başına stack değiştirmez**; bulguyu sunar, kararı kullanıcı verir.
+⭐ **Ölçüm tarihi olmadan rakam yazılmaz** — *"7.9M/hafta (2026-09 ölçümü)"*.
+Sonuç `00-stack.md` sürüm tablosuna ve `teknoloji-ve-plan.md`'ye işlenir.
+
+Kullanıcı farklı bir şey söylerse (başka sunucu, başka veritabanı, başka
+hosting) **onu kullan.** İtirazın varsa **bir kez**, gerekçesiyle söyle
+(`11-agent-workflow.md` → *"İSTENEN YAPILIR — AMA DAHA İYİSİ VARSA SÖYLENİR"*);
+kullanıcı kararında ısrar ederse tartışmayı kapat ve yap.
+⛔ Sessizce yapmak da yanlıştır, ısrar etmek de.
+
+### 3b.4 — Kararı yaz ve `CLAUDE.md` §0'ı tamamla
+
+1. `CLAUDE.md` §0'daki `STACK` ve `DEPLOY` satırlarını **doldur**
+2. `00-stack.md` tablosunu seçilenlere göre işaretle (`✅ kurulu` · `⏳ sonra` ·
+   `➖ bu projede yok` — hepsi **gerekçeli**)
+3. ⛔ Kitin varsayılanından sapıldıysa **ADR yaz** (`00-stack.md` →
+   *"KARAR NEREYE YAZILIR"*) ve `teknoloji-ve-plan.md`'de hangi **kutuda**
+   olduğunu belirt
+4. Ölçüm yaptıysan rakamı **tarihiyle** yaz
+
+---
 
 ## Adım 4 — Yol haritası ve ilk kararlar
 
@@ -864,7 +912,7 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
       `teknoloji-ve-plan.md`'de hangi kutuda olduğu belirtildi mi
       (`00-stack.md` → *"KARAR NEREYE YAZILIR"*)
 - [ ] `00-stack.md` sürümleri `package.json` ile birebir aynı mı
-- [ ] **Stack taraması fiilen koşturuldu mu** (Adım 1c): her satır için
+- [ ] **Stack taraması fiilen koşturuldu mu** (Adım 3b.3): her satır için
       `npm view` + haftalık indirme ölçüldü, bulgular **ölçüm tarihiyle**
       yazıldı mı. ⛔ "Baktım, aynı" da bir sonuçtur ve tarihi güncellenir
 - [ ] **6a ise:** canlı adres ve `/api/health` çalışıyor mu

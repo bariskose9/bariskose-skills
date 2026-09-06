@@ -140,8 +140,12 @@ for (const p of hepsi) {
   //    (*"Sadece dosya adı vermek yetmez; hangi başlık olduğu yazılır"*)
   for (const m of metin.matchAll(/`([\w./-]+\.md)`(?:['’][a-zçğıöşü]+)?\s*(?:→|->)/gu)) {
     const hedef = basename(m[1]);
-    const ham = bolumAdi(metin.slice(m.index + m[0].length));
+    let ham = bolumAdi(metin.slice(m.index + m[0].length));
     if (!ham) continue;
+    // ⭐ Türkçe çekim ekini kes: "E.9'a yeni alt bölüm" → "E.9".
+    //    Kesilmezse ek, başlık adının parçası sanılır ve uydurma bulgu çıkar.
+    const ek = ham.match(/^(§\s*\d+|BÖLÜM\s+[0-9A-ZÇĞİÖŞÜ]+|[A-ZÇĞİÖŞÜ]\.\d{1,2})['’]/u);
+    if (ek) ham = ek[1];
     const bol = norm(ham);
     if (bol.length < 3) continue;
     const gruplar = hedefiCoz(relative(kok, p), hedef);

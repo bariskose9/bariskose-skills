@@ -23,7 +23,7 @@ düzeyde anlatacağın oradan okunur, senin izleniminden değil.
 | `skills/yeni-proje/dosyalar/docs/standards/` | **19 standart — kuralın kaynağı** | ✅ |
 | `docs/` | Devir belgesi + seviye defteri | ✅ |
 | `ICINDEKILER.md` | **Kullanıcının haritası** — kit ne yapar, hangi dosya kimin işi | ⚠️ Yalnızca güncellemek için |
-| `calisma-dokumanlari/` | Kullanıcının çalışma notları | ⛔ **Okuma** — kural değil, bağlamı şişirir |
+| `calisma-dokumanlari/` | Kullanıcının çalışma notları ve uçtan uca örnek proje | ⚠️ **Kendiliğinden okuma** — istenince oku |
 
 ## ⛔ Commit öncesi zorunlu
 
@@ -43,6 +43,19 @@ denetim betiği bunu zorlar.
 
 ⚠️ **Damgayı güncellemek belgeyi okumak demektir.** Sayıyı körlemesine artırmak
 kuralı değil, görüntüsünü korur.
+
+### ⚠️ `calisma-dokumanlari/` — yasak değil, VARSAYILAN değil
+
+Bu klasörü **kendiliğinden okuma**: kural taşımaz ve bağlamı şişirir. Ama
+kullanıcı *"bunu teknoloji planıma ekle"*, *"şu notu güncelle"* dediğinde
+**elbette okunur** — istenen dosya, istenen kadar.
+
+| Durum | Davranış |
+|---|---|
+| Oturum açılışı, genel çalışma | ⛔ Açma |
+| Kullanıcı o belgeden söz etti veya işaret etti | ✅ **Oku** |
+| Kite kural yazarken *"bu nereden geldi"* gerekiyor | ✅ Oku, ama **yalnızca ilgili bölümü** |
+| Denetim betiği | ✅ Her zaman tarar — *"okunmaz"* ile *"denetlenmez"* ayrı şeylerdir |
 
 ⛔ **Kite yeni bir dosya eklediysen `ICINDEKILER.md`'ye satır ekle.** O belge
 kullanıcının haritasıdır ve ajan onu okumaz — ama **güncellemek ajanın işidir.**
