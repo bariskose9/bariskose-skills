@@ -130,8 +130,12 @@ kapıyı tam da en çok işe yarayacağı yerde kapatır.**
 Sebep: E2E setleri genellikle **üretim yapısına karşı** koşar — `next build &&
 next start`, `vite preview`, derlenmiş bir konteyner. Yani E2E sırasında
 `NODE_ENV === "production"`'dur ve kapı, gerçek tarayıcıdan geçen her istekte
-**sessizce** devre dışı kalır. Ölçülmüş örnek: bu projede E2E sunucusu
-`playwright.config.ts` içinde `next build && next start` ile kalkıyor.
+**sessizce** devre dışı kalır. Ölçülmüş örnek: bir projede E2E sunucusu
+`playwright.config.ts` içinde `next build && next start` ile kalkıyordu; kapı
+tüm E2E koşusu boyunca kapalıydı ve testler yeşil yanıyordu.
+
+⚠️ **Kendi projende ölç:** `playwright.config.ts` içindeki `webServer.command`
+üretim yapısı mı başlatıyor? Öyleyse `NODE_ENV`'e bağlı her kapı E2E'de kapalıdır.
 
 **Kural:**
 

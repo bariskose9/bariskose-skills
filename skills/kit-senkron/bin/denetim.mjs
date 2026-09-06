@@ -111,11 +111,17 @@ for (const p of hepsi) {
     const gruplar = basliklar.get(hedef);
     if (!gruplar) continue;                          // dosya yok → 1. kontrolün işi
     const sayi = ham.match(/^§\s*(\d+)/);
+    // ⭐ "BÖLÜM E" / "E.4" biçimi: numaralı bölüm atfı — başlığın BAŞINDA aranır.
+    //    teknoloji-ve-plan.md gibi numaralı belgelerde kod yorumları buraya atıf
+    //    yapar; eski betiğin korumaya çalıştığı şey buydu (yanlış dosya adıyla).
+    const bolum = /^(bölüm [0-9a-zçğıöşü]|[a-zçğıöşü] \d{1,2})$/u.test(bol);
     const bulundu = gruplar.some((hs) =>
       hs.some((h) =>
         sayi
           ? h.startsWith(`${sayi[1]} `) || h.startsWith(`${sayi[1]}.`)
-          : h.includes(bol) || bol.includes(h),
+          : bolum
+            ? h.startsWith(`${bol} `) || h === bol
+            : h.includes(bol) || bol.includes(h),
       ),
     );
     if (!bulundu) bulgular.push(["KIRIK BÖLÜM", yerel, `${hedef} → "${ham.trim()}" başlığı yok`]);

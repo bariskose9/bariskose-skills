@@ -18,7 +18,7 @@
 | E-posta doğrulama kodu | 5 dakika | 6 hane, tek kullanımlık |
 | Telefon doğrulama kodu | 5 dakika | 6 hane, tek kullanımlık |
 | Şifre sıfırlama kodu | 5 dakika | 6 hane, tek kullanımlık, kullanılınca iptal |
-| Koltuk rezervasyon kilidi | 10 dakika | Süre dolunca koltuk serbest kalır |
+| Rezervasyon kilidi (koltuk, slot, stok) | 10 dakika | Süre dolunca kaynak serbest kalır |
 
 **Neden bağlantı değil kod:** doğrulama ve sıfırlama akışlarının tamamı tek bir
 mekanizmayla (OTP) yürür. Tek mekanizma = tek hız sınırı, tek denetim kaydı,
@@ -209,6 +209,21 @@ Tip + boyut + uzantı doğrulanır (sadece istemci tarafında değil).
 Dosya adı sanitize edilir, orijinal ad kullanılmaz. Yüklenen dosya uygulama
 sunucusundan değil ayrı depolamadan (Vercel Blob) servis edilir.
 
-## Ödeme (bu proje: sahte)
-Gerçek kart verisi **hiçbir koşulda** saklanmaz. Sahte ödeme akışında bile
-kart numarası veritabanına yazılmaz; sadece son 4 hane ve sahte işlem kimliği tutulur.
+## Ödeme
+
+Gerçek kart verisi **hiçbir koşulda** saklanmaz: kart numarası, CVV ve son
+kullanma tarihi veritabanına yazılmaz. Tutulan tek şey **son 4 hane** ve
+**sağlayıcının işlem kimliğidir**.
+
+⛔ **Bu kural ödemenin gerçek mi simüle mi olduğuna BAKMAZ.** Simüle akışta da
+aynen uygulanır — sahte akış, gerçeğin yerine takılacağı iskelettir. Simülasyon
+kararı, gerçeğine geçiş yolu ve geçiş kontrol listesi:
+`00-stack.md` → *"SİMÜLE EDİLEN DIŞ SERVİS"*.
+
+- Tutar, indirim ve para birimi **sunucuda** belirlenir; istemcinin gönderdiği
+  tutar reddedilir (`03-api-guidelines.md` → *"Doğrulama"*).
+- Ödeme uçları **idempotency anahtarı** taşır — aynı anahtar iki kez tahsilat
+  üretmez.
+- Kart verisi mümkünse **hiç sunucumuza uğramaz**: sağlayıcının barındırdığı
+  form veya jetonlaştırma (tokenization) kullanılır. Uğramayan veri sızmaz.
+- Simüle akışta ekranda **açıkça** yazar: *"Bu bir test ödemesidir."*

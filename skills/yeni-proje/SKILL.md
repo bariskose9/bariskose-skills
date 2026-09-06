@@ -620,6 +620,20 @@ Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
 - **Arka planda çalışacak iş var mı?** — e-posta/SMS, PDF veya rapor üretimi,
   görsel boyutlandırma, zamanlanmış hatırlatma. Varsa kuyruk **baştan** kurulur
   ve türü mimariye göre seçilir (`00-stack.md` → *İş kuyruğu*); yoksa kurulmaz.
+- ⭐ **Dış servis GERÇEK mi, şimdilik simüle mi?** — ödeme, kimlik sorgulama
+  (KPS benzeri), SMS, e-imza, kurum entegrasyonu. Bu soru atlanmaz, çünkü
+  cevabı **mimariyi değil takvimi** belirler: gerçek servis sözleşme, üye iş
+  yeri hesabı veya kurum izni ister ve bunlar **ajanın yapamadığı** işlerdir.
+
+  | Cevap | Ne yapılır |
+  |---|---|
+  | Gerçek, hesap **hazır** | Sağlayıcı `00-stack.md`'ye yazılır, anahtarlar `altyapi-durumu.md`'ye |
+  | Gerçek, hesap **yok** | ⛔ Roadmap'te **dış bağımlılık** olarak işaretlenir, `kurumdan-ogrenilecekler.md`'ye yazılır |
+  | Şimdilik **simüle** | ADR yazılır; gerçeğine geçiş roadmap'te **ayrı adım** olur |
+
+  ⛔ **Simülasyon kararı "sonra bakarız" olarak bırakılmaz.** Kural, gerçeğe
+  geçiş kontrol listesi ve sahte akışta da geçerli kalan güvenlik maddeleri:
+  `00-stack.md` → *"SİMÜLE EDİLEN DIŞ SERVİS"*.
 - Cevapları `docs/project/PRD.md` şablonuna yaz.
 - ⭐ **Her özellik için DEĞER sorusu sorulur** — kapsam sorusundan farklıdır.
   Kapsam *"ne yapılacak"* der; değer sorusu *"yapılmalı mı"* diye sorar:
@@ -843,6 +857,12 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
       dış bağımlılık · mühendislik · kullanım)
 - [ ] Her şablon dolduruldu mu (boş şablon bırakmak hiç açmamaktan kötüdür)
 - [ ] `altyapi-durumu.md` bu oturumda yapılan **her** dış işlemi içeriyor mu
+- [ ] **Simüle edilen bir dış servis varsa** ADR'si yazıldı mı, gerçeğine geçiş
+      roadmap'te **ayrı adım** olarak duruyor mu, ekranda test uyarısı var mı
+      (`00-stack.md` → *"SİMÜLE EDİLEN DIŞ SERVİS"*)
+- [ ] **Kitin varsayılanından sapılan her karar** ADR'ye yazıldı mı ve
+      `teknoloji-ve-plan.md`'de hangi kutuda olduğu belirtildi mi
+      (`00-stack.md` → *"KARAR NEREYE YAZILIR"*)
 - [ ] `00-stack.md` sürümleri `package.json` ile birebir aynı mı
 - [ ] **Stack taraması fiilen koşturuldu mu** (Adım 1c): her satır için
       `npm view` + haftalık indirme ölçüldü, bulgular **ölçüm tarihiyle**

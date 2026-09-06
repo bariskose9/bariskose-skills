@@ -33,12 +33,59 @@ isimlendirme biçimi, dizin düzeni ve CI platformu da bu sıraya tabidir.**
 Kurum `npm` kullanıyorsa kitin `pnpm` tercihi geçmez; kurum `PascalCase`
 dosya adı istiyorsa kitin `kebab-case` tercihi geçmez.
 
-⭐ Sapma **ADR'ye yazılır** — *"kit şunu diyor, biz şunu yapıyoruz, çünkü
-şartname §N şöyle diyor"*. Yazılmayan sapma, sonraki oturuma "burada doğru olan
-buymuş" diye görünür (`11-agent-workflow.md` → *"Sapma nasıl yazılır"*).
-
 ⚠️ **Dayatma olup olmadığı TAHMİN EDİLMEZ, SORULUR** — `SKILL.md` Adım 1,
 *"STACK'İ HEMEN KURMA"*.
+
+### ⛔ KARAR NEREYE YAZILIR — yönlendirme tablosu
+
+⛔ **Her seçim ADR gerektirmez, ama hiçbir seçim de kayıtsız kalmaz.** Ölçüt
+şudur: *"altı ay sonra biri 'bu neden böyle' diye sorarsa cevabı nerede?"*
+Cevap sohbet geçmişiyse, o cevap **yoktur**.
+
+| Durum | Nereye yazılır | ADR şart mı |
+|---|---|---|
+| Dayatma vardı, kitin varsayılanıyla **aynıydı** | Stack tablosu + `teknoloji-ve-plan.md` **Kutu 1** | ⛔ Hayır |
+| Dayatma vardı, **eşdeğerini** kullandık | ADR (kısa) + **Kutu 2** | ✅ Evet |
+| Dayatma **yoktu**, kitin varsayılanı kuruldu | Stack tablosu yeter | ⛔ Hayır |
+| ⭐ Dayatma **yoktu**, kitin varsayılanından **sapıldı** | ⛔ **ADR** + **Kutu 3** | ✅ Evet |
+| Dayatma vardı, **uymadık** | ⛔ **ADR** + **Kutu 4** + ölçü | ✅ Evet |
+| Geri dönüşü pahalı her karar (veritabanı, oturum, şifreleme, dış servis) | ⛔ **ADR** | ✅ Evet |
+
+⭐ **"Kutu" ne demek:** `teknoloji-ve-plan.md` → *"Kararların dört kutusu"*.
+Her teknoloji anlatılırken hangi kutuda olduğu yazılır; okuyan bir bakışta
+*"bu istendi mi, biz mi ekledik"* sorusunu cevaplar.
+
+#### İki dosya, iki ayrı iş — karıştırılmaz
+
+| | `decisions/ADR-*.md` | `teknoloji-ve-plan.md` |
+|---|---|---|
+| Ne | Kararın **bağlayıcı kaydı** | Kararın **anlatımı** |
+| Kim için | Sonraki oturum · başka geliştirici · denetçi | Öğrenen kişi · devralan kişi |
+| İçinde ne var | Bağlam · karar · **elenen alternatifler** · bedel | Bu teknoloji nedir, neden burada, hangi kutuda |
+| Kaç tane | Karar başına **bir dosya** | Projede **tek dosya**, her adımda büyür |
+| Gerekçe nerede yaşar | ⭐ **Burada** | ⛔ Kopyalanmaz — ADR'ye **işaret edilir** |
+
+⛔ **Gerekçe iki yerde yazılmaz** (`11-agent-workflow.md` → *"AYNI BİLGİ İKİ
+YERDE YAZILMAZ"*). ADR gerekçenin evidir; `teknoloji-ve-plan.md` *"neden bu
+seçildi — ADR-004"* der ve devam eder. İkisi ayrı ayrı yazılırsa biri
+güncellenir, diğeri bayatlar ve hangisinin doğru olduğu anlaşılmaz.
+
+⚠️ **İkisi de projenin deposunda durur** (`docs/project/`), kitte değil. Sebebi:
+projeyi devralan başka bir yazılımcı depoyu klonladığında kararları da almış
+olur. Kite yalnızca **her projede geçerli olan kural** gider (`/kit-senkron`).
+
+#### Onay sırası — kullanıcı neyi onaylıyor
+
+1. Ajan seçimi **yapar** ve gerekçesini söyler (`11-agent-workflow.md` →
+   *"MÜHENDİSLİK SEÇİMİ KULLANICIYA DEVREDİLMEZ"*)
+2. ⛔ Analiz dokümanında yazmayan bir seçimse bunu **açıkça belirtir**:
+   *"Şartnamede bu konuda bir şey yok; ben şunu seçtim, sebebi şu"*
+3. Kullanıcı onaylar veya itiraz eder — itiraz ederse karar değişir
+4. ⭐ Karar **hangi kutuda olduğuyla birlikte** yukarıdaki tabloya göre yazılır
+
+⛔ **3. adım atlanamaz ama 1. adım da atlanamaz.** Kullanıcıya menü sunmak
+(*"hangisini istersin?"*) ile seçimi bildirmek (*"şunu seçtim, çünkü…"*) farklı
+şeylerdir; bu kit ikincisini yapar.
 
 Sürüm sütunu **fiilen kurulu** olanı gösterir; `package.json` ile birebir aynıdır.
 
@@ -271,6 +318,57 @@ REST bir mimari **stildir**; onunla yazılmış sisteme **RESTful** denir.
 GraphQL ise bir **sorgu dili ve şartnamedir** — "GraphQL-ful" gibi bir sıfat
 yoktur, yalnızca *"GraphQL API"* denir. REST'e uyum **derecelidir**, GraphQL
 şartnamesine uyum **ikilidir**.
+
+## ⭐ SİMÜLE EDİLEN DIŞ SERVİS — bugün sahte, yarın gerçek
+
+Bazı dış servisler projenin ilk gününde **bağlanamaz**: ödeme sağlayıcısı üye
+iş yeri sözleşmesi ister, kimlik sorgulama servisi (KPS benzeri) kurum izni
+ister, SMS sağlayıcısı fatura ister. Bunlar gelene kadar akış **taklit edilir.**
+
+⛔ **Taklit bir eksiklik değil, bir KARARDIR** — ve karar olduğu için yazılır.
+Yazılmazsa iki şey olur: sonraki oturum sahteyi gerçek sanır, ya da gerçeğe
+geçme günü neyin değişeceğini kimse bilmez.
+
+### Karar nereye yazılır
+
+| Ne | Nereye |
+|---|---|
+| *"Bu servis şu an simüle ediliyor, sebebi şu"* | ⛔ **ADR** — yukarıdaki *"KARAR NEREYE YAZILIR"* tablosu |
+| Gerçeğine geçiş **hangi roadmap adımında** | `roadmap.md` — teknik borç değil, **planlı adım** |
+| Sağlayıcı seçildiğinde hesap ve anahtar durumu | `altyapi-durumu.md` |
+| Kullanıcıya görünen uyarı | Ekranda **açıkça** yazar: *"Bu bir test ödemesidir"* |
+
+### ⛔ NEYİN SAHTE OLDUĞU DEĞİŞİR, MÜHENDİSLİK DEĞİŞMEZ
+
+Simüle edilen şey **veri ve dış çağrıdır**; kural değildir
+(`11-agent-workflow.md` → *"GERÇEK PROJE VARSAYILANI"*). Aşağıdakiler sahte
+akışta da **birebir aynı** uygulanır:
+
+| Kural | Sahte akışta da geçerli mi |
+|---|---|
+| Kart verisi veritabanına yazılmaz, yalnızca son 4 hane + işlem kimliği | ✅ **Evet** |
+| Tutar ve indirim **sunucuda** hesaplanır, istemciden alınmaz | ✅ Evet |
+| İşlem idempotent — aynı anahtar iki kez ödeme üretmez | ✅ Evet |
+| Kimlik sorgusunda ikinci doğrulama alanı + hız sınırı | ✅ Evet (`05-auth-security.md`) |
+| Denetim kaydı yazılır | ✅ Evet |
+| Sorgulanan kimlik numarası log'a yazılmaz | ✅ Evet |
+
+⭐ **Sebep:** sahte akış, gerçeğin geldiği gün **yerine takılacak** olan iskelettir.
+İskeleti gevşek kurarsan gerçeğe geçiş bir entegrasyon değil, yeniden yazım olur.
+
+### Gerçeğine geçilirken — kontrol listesi
+
+1. **Sözleşme ve hesap** hazır mı; anahtarlar hangi ortamda tanımlı (`altyapi-durumu.md`)
+2. **Sağlayıcının sözleşmesi** okundu mu — alan adları, hata kodları, zaman aşımı
+3. ⛔ **Taklit uçlar silinir** (`/api/mock-*`), belgeleri de onlarla gider
+4. **Idempotency ve yeniden deneme** gerçek sağlayıcının davranışına göre ölçülür
+5. **Test kartları / test kimlikleri** yalnızca `local` ve `preview`'da; production'da **asla**
+6. ⛔ **Kişisel veri envanteri güncellenir** — gerçek servise gerçek veri gidiyor
+   (`14-privacy-and-compliance.md`); aydınlatma metni ve işleyici listesi değişir
+7. Geçiş **ADR'ye** yazılır: *"ADR-00X'i yerini aldı"*
+
+⚠️ **Bu adım roadmap'te ayrı bir satırdır.** *"Sonra gerçeğine geçeriz"* bir plan
+değildir; hangi adımda, neyin geldiğinde geçileceği yazılır.
 
 ## Kullanılmayacaklar
 

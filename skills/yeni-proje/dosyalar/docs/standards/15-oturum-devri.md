@@ -71,6 +71,8 @@ Cevap "yanlış iş yapar" ise aşağıdaki tabloya göre yaz.
 | Bilgi türü | Dosya | Örnek |
 |---|---|---|
 | **Neden böyle yaptık** (mimari karar) | `docs/project/decisions/ADR-*.md` | "Oturum JWT değil veritabanında, çünkü…" |
+| **Hangi karar ADR olur, hangisi olmaz** | `00-stack.md` → *"KARAR NEREYE YAZILIR"* | Dayatma vardı mı, sapıldı mı — tabloya bakılır |
+| **Teknoloji ne, neden burada** (anlatım) | `docs/project/teknoloji-ve-plan.md` | Gerekçe ADR'de; burada ona işaret edilir |
 | **Ne yayınlandı** (sürüm günlüğü) | `docs/project/CHANGELOG.md` | "Kayıt akışı eklendi, şu üç hata düzeltildi" |
 | **Nerede kaldık, sırada ne var** | `docs/project/roadmap.md` | Adım tablosu + teknik borç listesi |
 | **Bilinen eksik, kabul edilmiş bedel** | `docs/project/roadmap.md` teknik borç | "Telefon doğrulaması simüle ediliyor" |
@@ -194,8 +196,14 @@ dışı bırakmak kolay ama pahalıdır: genel bölümlere yazılan dersler de k
 | Kural | Bölüm |
 |---|---|
 | ⛔ Asla senkronlanmaz | `## Stack` tablosu — fiilen kurulu sürümler |
-| ⛔ Kite özel, projeye inmez | `## Sürüm sütunu nasıl doldurulur` |
-| ✅ Senkronlanır | Diğer tüm bölümler |
+| ✅ Senkronlanır | **Diğer tüm bölümler**, `## Sürüm sütunu nasıl doldurulur` dahil |
+
+⚠️ **`## Sürüm sütunu nasıl doldurulur` eskiden "kite özel, projeye inmez"
+sayılıyordu; bu yanlıştı.** O bölüm, sürüm tablosunu **kim bakıyorsa** ona
+talimat verir — ve o kişi projede de vardır: `SKILL.md` Adım 5 tabloyu
+`package.json` ile eşitlemeyi projede zorunlu tutuyor. Kurulum zaten
+`docs/standards/**` klasörünü olduğu gibi kopyaladığı için bölüm projeye
+**fiilen iniyordu**; kural ile davranış çelişiyordu. Kural davranışa uyduruldu.
 
 **Karışık bölümlerde sınır bir işaretleyicidir:**
 

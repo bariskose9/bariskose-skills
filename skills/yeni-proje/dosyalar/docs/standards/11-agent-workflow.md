@@ -284,8 +284,12 @@ bir soru sormak demektir:
 **Kural:** Bir mühendislik sorusunda seçenekleri kullanıcıya menü olarak sunup
 kararı ona bırakma. **Kararı sen ver**, ölçüt şudur:
 
-> *Bu ürünü gerçekten kullanan bir kurum (bu projede: bir büyükşehir belediyesi)
-> ve onun nöbetçi ekibi için, sektörde yerleşik pratik hangisini söylüyor?*
+> *Bu ürünü gerçekten kullanan bir kurum ve onun nöbetçi ekibi için, sektörde
+> yerleşik pratik hangisini söylüyor?*
+
+⚠️ **"Kurum" yerine projenin gerçek muhatabını koy** — belediye, hastane,
+yüklenici firma, son kullanıcı. Ölçüt aynı kalır: **gerçek kullanıcısı ve
+gerçek nöbetçisi olan** bir sistemde ne doğruysa o.
 
 Sonra kararı **bildir** — gerekçesi, elenen alternatifi ve kaynağıyla. Bildirmek
 onay istemek değildir; kullanıcı itiraz ederse karar değişir, itiraz etmezse

@@ -177,9 +177,10 @@ Her önemli yorumda **dört halka** bulunur:
  *
  * SONUÇ   : Veritabanında IE-2026-000148 numaralı YENİ BİR SATIR oluşur,
  *           status (durum) alanı "OPEN", sla_due_at (SLA bitiş zamanı) dolu.
- *           Kullanıcının ekranında iş
- *           emri listesi tazelenir ve kayıt en üstte görünür. SLA süresinin
- *           yarısında atanan kişiye bildirim düşer.
+ *           Kullanıcının ekranında iş emri listesi tazelenir ve kayıt en üstte
+ *           görünür. SLA süresinin yarısında atanan kişiye bildirim düşer.
+ *
+ * KAYNAK  : `teknoloji-ve-plan.md` → "BÖLÜM E" (SLA politikası nasıl seçilir)
  */
 async create(input: CreateWorkOrderDto) {
 
@@ -192,6 +193,7 @@ async create(input: CreateWorkOrderDto) {
 
   // NE   : SLA hesabı — hangi politikanın uygulanacağını Factory seçiyor.
   //        Seçim önceliğe + varlık kritikliğine + iş emri türüne bakıyor.
+  // KAYNAK: `teknoloji-ve-plan.md` → "BÖLÜM E" · kararın gerekçesi ADR'de
   // NEREYE: Çıkan tarih aşağıda sla_due_at (SLA bitiş zamanı) kolonuna yazılacak.
   const policy = this.slaFactory.resolve(input);
   const plan = policy.calculate(input);
@@ -258,6 +260,27 @@ haritasıdır.**
  * SONUÇ   : <görünür karşılığı — ekranda ne, veritabanında hangi kayıt>
  */
 ```
+
+#### ⭐ BEŞİNCİ HALKA: `KAYNAK` — bu kural nereden geliyor
+
+Bir yorum bir **iş kuralı** anlatıyorsa ("kapalı lokasyona iş emri açılamaz"),
+o kuralın nerede kararlaştırıldığı da yazılır. Aksi hâlde sonraki oturum kuralı
+kodda görür, gerekçesini bulamaz ve *"gereksiz galiba"* diye kaldırır.
+
+| Kaynak | Biçim |
+|---|---|
+| Projenin öğretici belgesi | `teknoloji-ve-plan.md` → *"BÖLÜM E"* · alt bölümü varsa *"E.4"* |
+| Mimari karar | `ADR-006` |
+| İş gereksinimi | `PRD.md` → *"§5.2"* |
+
+⭐ **Bu atıflar denetlenir.** `denetim.mjs` her `<dosya>.md` → *"Bölüm"* atfını
+hedef dosyadaki gerçek başlığa karşı doğrular; olmayan bir bölüme atıf yapmak
+**commit'i durdurur**. Numaralı biçim (`BÖLÜM E`, `E.4`, `§9`) da tanınır.
+
+⛔ **Uydurma bölüm adı yazma.** Kuralın nerede kararlaştırıldığını bilmiyorsan
+`KAYNAK` satırını boş bırakma — **kararı ara ve bul**, yoksa kural
+kararlaştırılmamış demektir ve `11-agent-workflow.md` → *"GEREKSİNİM DOĞRU
+VARSAYILMAZ"* işler.
 
 ⛔ **`NEREDEN` ve `NEREYE` satırlarında GERÇEK DOSYA YOLU geçer.** *"Servis
 katmanından geliyor"* değil, `apps/api/src/work-orders/work-orders.service.ts`.
@@ -451,6 +474,11 @@ Sayı ve metin sabitleri koda gömülmez; `src/config/` altında adlandırılır
   ekranda `Europe/Istanbul`. Sunucu saat dilimine güvenilmez.
 - Sıralama ve arama Türkçe karakter duyarlıdır (`localeCompare("tr")`);
   "İ/ı" dönüşümü için `toLocaleLowerCase("tr")`.
+  ⛔ **İstisna — URL slug'ında Türkçe küçültme KULLANILMAZ.** Türkçe kuralında
+  `I` harfinin küçüğü `ı`'dır; `IZMIR` → `ızmır` olur ve adres bozulur. Slug
+  üretimi `en-US` kuralıyla yapılır, gerekçesi ve dönüşüm tablosu
+  `18-seo.md` → *"URL biçimi"* içinde. İkisi çelişmiyor: **ekranda okunan
+  metin** Türkçe kuralla, **adres** İngilizce kuralla küçültülür.
 
 ## Kullanıcıya görünen metin (copy) kuralları
 - Sade, kısa, teknik terimsiz Türkçe. "Hata: 500" değil → "Şu an bağlanamıyoruz, biraz sonra tekrar deneyin."

@@ -69,8 +69,7 @@ yazılan bir ders karşı tarafa hiç geçmiyordu.
 | Kural | Bölüm |
 |---|---|
 | ⛔ **Asla senkronlanmaz** | `## Stack` tablosu — fiilen kurulu sürümler ve "henüz kurulu değil" gibi projeye ait durum. Kite taşınırsa sonraki proje yanlış bilgiyle başlar |
-| ⛔ **Kite özel, projeye inmez** | `## Sürüm sütunu nasıl doldurulur` — ajana tabloyu nasıl dolduracağını anlatan kurulum talimatı |
-| ✅ **Senkronlanır** | Diğer tüm bölümler |
+| ✅ **Senkronlanır** | **Diğer tüm bölümler**, `## Sürüm sütunu nasıl doldurulur` dahil — o talimat tabloyu kim bakıyorsa ona lazımdır ve tablo projede de var |
 
 ### Karışık bölümler — SENKRON SINIRI
 

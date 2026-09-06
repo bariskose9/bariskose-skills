@@ -1,15 +1,20 @@
 # 14 — Gizlilik, KVKK ve Denetlenebilirlik
 
 Kamu/vatandaş odaklı uygulamalarda bu bölüm isteğe bağlı değildir.
-Bu proje sahte veriyle çalışsa bile alışkanlık doğru kurulur.
+
+⛔ **Proje sahte veriyle çalışıyor olsa bile kurallar birebir uygulanır.**
+Sahte olan veridir, yükümlülük değil — ve sahte akış gerçeğin yerine takılacak
+iskelettir (`00-stack.md` → *"SİMÜLE EDİLEN DIŞ SERVİS"*). Gevşek kurulan bir
+iskelet, gerçek veri geldiği gün ihlale dönüşür.
 
 ## Veri minimizasyonu
 - Gerekmeyen veri **toplanmaz**. "İleride lazım olur" gerekçesiyle alan eklenmez.
 - Her yeni kişisel veri alanı için cevaplanır: neden gerekli, ne kadar saklanacak,
   kim erişebilir, nasıl silinecek.
 - Sağlık verisi, din, biyometri gibi özel nitelikli veri **hiç toplanmaz**.
-- Kimlik numarası yalnızca kimlik doğrulama zorunluysa toplanır (bkz. sahte KPS akışı);
-  şifrelenerek saklanır, maskelenerek gösterilir, log'a yazılmaz ve
+- Kimlik numarası yalnızca kimlik doğrulama zorunluysa toplanır — dış kimlik
+  sorgulama servisi (KPS benzeri) **gerçek de olsa simüle de edilse** aynı kural
+  geçerlidir; şifrelenerek saklanır, maskelenerek gösterilir, log'a yazılmaz ve
   başka hiçbir amaçla kullanılmaz.
 
 ## Saklama ve silme

@@ -221,14 +221,26 @@ geliyorsa durumsuzluk kuralı çiğnenmiş demektir.
 Suçlu aranmaz, süreç düzeltilir.
 
 ## Hizmet hedefleri (SLO)
-Ölçülebilir hedef yoksa "yavaş" tartışması bitmez. Bu proje için:
-- Kullanılabilirlik: aylık %99
-- API p95 yanıt süresi: < 500ms
-- Hata oranı: < %1
+
+Ölçülebilir hedef yoksa "yavaş" tartışması bitmez. ⭐ **Aşağıdakiler
+BAŞLANGIÇ değerleridir**, dondurulmuş hedef değil — her projede gözden geçirilir
+ve kabul edilen değer `PRD.md` → *"Kalite gereksinimleri"* içine yazılır.
+
+| Hedef | Başlangıç değeri |
+|---|---|
+| Kullanılabilirlik | aylık %99 |
+| API p95 yanıt süresi | < 500ms |
+| Hata oranı | < %1 |
+
+⚠️ **Kurum bir hizmet seviyesi dayatıyorsa o geçerlidir** (`00-stack.md` →
+*"DAYATILAN SEÇİM"*); şartnamedeki rakam buraya yazılır ve sapma ADR'ye girer.
+
 Hedef aşılırsa performans işi, yeni özellik işinin önüne geçer.
 
 ## Planlı görevler (cron)
-- Süresi dolan koltuk rezervasyonlarını serbest bırakma
+
+Tipik olanlar — projede karşılığı yoksa kurulmaz:
+- Süresi dolan rezervasyonları (koltuk, slot, stok) serbest bırakma
 - Süresi dolan verileri temizleme (saklama politikası)
 - Üyelik bitiş hatırlatması
 Her planlı görev **idempotent** olur: iki kez çalışırsa veri bozulmaz.
