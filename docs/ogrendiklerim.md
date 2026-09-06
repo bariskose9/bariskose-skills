@@ -164,6 +164,26 @@ Boş bırakılan alan seviye 0 sayılır.
 
 ---
 
+## ⭐ Artık biliyorum
+
+<!--
+Seviye 3'e (sahipleniyor) çıkmış terimlerin DÜZ LİSTESİ. Yukarıdaki tablolar
+"hangi konu kaç seviyede" der; bu liste onun ajana bakan çıktısıdır:
+⛔ buradaki bir terim bir daha BAŞTAN AÇIKLANMAZ, doğrudan kullanılır.
+
+Biçim:  - `terim` — tek cümlelik karşılığı (seviye 3'e çıktığı tarih)
+-->
+
+- `ajanın çıktısını denetleme` — üretileni doğrulamadan kabul etmemek (2026-09)
+- `kite kural yazma` — projede öğrenileni kalıcı standarda çevirmek (2026-09)
+- `prompt yazma` — modele ne isteneceğini eksiksiz tarif etmek (2026-09)
+- `bağlam yönetimi` — oturuma neyin girip neyin girmeyeceğini seçmek (2026-09)
+
+⚠️ **Ajan buraya kendiliğinden yazmaz, teklif eder.** Seviye yükseltme kuralı
+yukarıda: iki ayrı oturumda kanıt + kullanıcı onayı.
+
+---
+
 ## Kelime defteri
 
 <!--

@@ -1,6 +1,12 @@
-
 # Kişisel çalışma notları ve üretilen belgeler — depoya girmez
-docs/
+# ⚠️ "docs/" değil "docs/*" yazılır: klasörün kendisi dışlanırsa git içine
+#    HİÇ bakmaz ve aşağıdaki "!" satırları çalışmaz.
+docs/*
 # Seviye defteri açık — her oturumda görünsün diye
 !docs/ogrendiklerim.md
 !docs/DEVIR.md
+# ⭐ Kullanıcı rehberleri açık — plugin'i kuran kişi kitin döngüsünü görmeli.
+#    ICINDEKILER.md "nerede ne var" der; bu ikisi "nasıl işliyor" ve
+#    "terimler ne demek" der. Üçü üç ayrı derinlik.
+!docs/KIT-REHBER.md
+!docs/KIT-NE-YAPIYOR.md

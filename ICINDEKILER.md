@@ -5,8 +5,9 @@
 > arayacağını, hangi adımda ne yapacağını ve ne zaman devreye gireceğini
 > anlatır.
 >
-> ⛔ **Bayat kalmaz:** `denetim.mjs` her commit öncesi bu listeyi kontrol eder.
-> Kite yeni bir dosya eklenip buraya yazılmazsa **commit durur.**
+> ⛔ **Bayat kalmaz.** `denetim.mjs` her commit öncesi **beş** şeyi denetler:
+> kırık dosya referansı · kırık bölüm atfı · bayat PDF · **haritada görünmeyen
+> dosya** · **bayat sürüm damgası**. Biri bile varsa commit durur.
 
 ---
 
@@ -54,7 +55,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `yeni-proje/SKILL.md` | **Kurulum akışı** — sekiz adım. Ajan bunu izler |
 | `yeni-proje/dosyalar/` | Projeye kopyalanan her şey ↓ |
 | `kit-senkron/SKILL.md` | İki yönlü kural senkronu |
-| `kit-senkron/bin/denetim.mjs` | ⛔ **Commit öncesi zorunlu kontrol** — kırık atıf, bayat PDF, eksik içindekiler |
+| `kit-senkron/bin/denetim.mjs` | ⛔ **Commit öncesi zorunlu kontrol** — beş denetim (yukarıda) |
 | `video-analiz/SKILL.md` | Video → kural dönüşümü |
 | `video-analiz/bin/yt-transkript.mjs` | Transkript alıcı |
 | `pdf-uret/SKILL.md` | PDF üretimi |
@@ -112,6 +113,42 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `integrations.md` | Dış servis varsa | Kimle konuşuyoruz, nasıl |
 | `fake-data-guide.md` | Sahte veri varsa | Gerçekçi ama sahte veri nasıl üretilir |
 | `kurumdan-ogrenilecekler.md` | ⛔ Yalnızca işyeri projesinde | Kuruma sorulacak açık kalanlar |
+
+### `docs/` — kit hakkındaki belgeler
+
+⚠️ Bu klasörün çoğu `.gitignore` ile kapalıdır; aşağıdaki dördü **açıktır** ve
+plugin'i kuran herkes görür.
+
+| Dosya | Kim okur | Ne |
+|---|:--:|---|
+| `KIT-REHBER.md` | **Sen** | ⭐ **Terim terim anlatım** — Claude Code nedir, hangi teknoloji ne işe yarar, sekiz adım, 19 kural dosyası, sonda sözlük. Hiç bilmeyen biri buradan başlar |
+| `KIT-NE-YAPIYOR.md` | **Sen** | ⭐ **Döngü ve kapılar** — dış bağımlılıklar, sekiz adım, özellik sonrası beş göz, sekiz ajan kapısı, kitin nasıl büyüdüğü |
+| `DEVIR.md` | İkisi | Kesinleşmiş kararlar ve **yeniden tartışılmayacak** konular |
+| `ogrendiklerim.md` | İkisi | Senin seviye defterin — anlatım düzeyi buradan okunur |
+
+⭐ **Üçü birlikte üç ayrı derinlik:** `ICINDEKILER.md` *nerede ne var* der,
+`KIT-NE-YAPIYOR.md` *nasıl işliyor* der, `KIT-REHBER.md` *terimler ne demek*
+der. Hangisini okuyacağın ne aradığına bağlı; üçü birbirini tekrar etmez.
+
+### `calisma-dokumanlari/` — senin çalışma notların
+
+⛔ **Ajan bu klasörü OKUMAZ** (kural taşımaz, bağlamı şişirir) — ama
+`denetim.mjs` onu **denetler**: kite bir kural eklenip buradaki notlar geride
+kalırsa kırık atıf olarak çıkar. *"Okunmaz"* ile *"denetlenmez"* ayrı şeylerdir.
+
+| Dosya | Ne |
+|---|---|
+| `OKUBENI.md` | Klasörün kendi indeksi |
+| `1-kit-rehberi.md` | Kit üzerine çalışma notun |
+| `2-teknoloji-kartlari.md` | Teknoloji kartları çalışması |
+| `ornek-proje-bakim-is-emri/` | ⭐ Uçtan uca örnek proje — bakım/iş emri |
+| ↳ `odev.md` | Şartname / ödev metni |
+| ↳ `PRD-taslak.md` | PRD taslağı |
+| ↳ `proje-teknoloji-ve-plan.md` | ⭐ **SDLC belgesi** — uçtan uca yaşam döngüsü anlatımı |
+| ↳ `veri-modeli-ve-sahte-veri-plani.md` | Veri modeli ve sahte veri planı |
+| ↳ `KURUMDAN-OGRENECEKLERIM.md` | Kuruma sorulacaklar |
+| ↳ `YENI-OTURUM.md` | Yeni oturuma verilecek devir notu |
+| ↳ `sunum-anlatim-plani.md` | Sunum ve anlatım planı |
 
 ---
 

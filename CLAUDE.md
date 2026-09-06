@@ -35,6 +35,15 @@ Dört şeyi yakalar: kırık dosya referansı · **kırık bölüm atfı** (`<do
 *"Başlık"* denen başlık hedefte var mı) · bayat PDF · **haritada görünmeyen
 dosya**. **Çıktısını oku** — çalıştırıp kırpmak, atlamakla aynı şeydir.
 
+⛔ **Kural değiştirdiysen kullanıcı rehberlerini de gözden geçir:**
+`docs/KIT-REHBER.md` (terim terim anlatım) ve `docs/KIT-NE-YAPIYOR.md` (döngü ve
+kapılar). İkisi de **depoya girer** — plugin'i kuran kişi kitin nasıl işlediğini
+oradan öğrenir. Sürüm damgaları `plugin.json` ile aynı MAJOR.MINOR olmalı;
+denetim betiği bunu zorlar.
+
+⚠️ **Damgayı güncellemek belgeyi okumak demektir.** Sayıyı körlemesine artırmak
+kuralı değil, görüntüsünü korur.
+
 ⛔ **Kite yeni bir dosya eklediysen `ICINDEKILER.md`'ye satır ekle.** O belge
 kullanıcının haritasıdır ve ajan onu okumaz — ama **güncellemek ajanın işidir.**
 Denetim betiği bunu zorlar: haritada görünmeyen dosya commit'i durdurur.

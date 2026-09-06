@@ -15,12 +15,19 @@
  */
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
 import { join, extname, basename, dirname, relative } from "node:path";
+import { execSync } from "node:child_process";
 
 const kok = process.argv[2] || process.cwd();
 const bulgular = [];
 
-/** Kural taşımayan klasörler — taranmaz. */
-const ATLA = new Set(["node_modules", ".git", "calisma-dokumanlari"]);
+/**
+ * Taranmayan klasörler.
+ * ⚠️ `calisma-dokumanlari/` BURADA DEĞİL — ve bu bilinçli. Ajan o klasörü
+ * OKUMAZ (bağlamı şişirir, kural taşımaz) ama betik onu DENETLER: kite bir
+ * kural eklendiğinde çalışma notları bayat kalırsa kimse fark etmez.
+ * "Okunmaz" ile "denetlenmez" ayrı şeylerdir.
+ */
+const ATLA = new Set(["node_modules", ".git"]);
 
 function dosyalar(d, liste = []) {
   for (const ad of readdirSync(d)) {
@@ -73,14 +80,43 @@ function bolumAdi(kuyruk) {
   return m ? m[1] : null;
 }
 
-/** basename → o adı taşıyan HER dosyanın başlık listesi. */
+/** basename → [{ yol, basliklar }] — aynı adı taşıyan her dosya. */
 const basliklar = new Map();
 for (const p of hepsi) {
   const h = [];
   for (const m of readFileSync(p, "utf8").matchAll(/^#{1,6}\s+(.+)$/gm)) h.push(norm(m[1]));
   const b = basename(p);
   if (!basliklar.has(b)) basliklar.set(b, []);
-  basliklar.get(b).push(h);
+  basliklar.get(b).push({ yol: relative(kok, p), basliklar: h });
+}
+
+/** Bir yolun üst düzey alanı: "skills", "docs", "calisma-dokumanlari"… */
+const alan = (y) => (y.includes("/") ? y.split("/")[0] : ".");
+
+/**
+ * ⭐ Atıf hedefini YAKINLIĞA göre çöz.
+ * Aynı adı taşıyan birden çok dosya olabilir (şablon `PRD.md` ile bir projenin
+ * kendi `PRD.md`'si gibi). Yanlış eşleşme uydurma bulgu üretir:
+ *   1) Aynı klasör → en güçlü aday
+ *   2) Üst klasörlere doğru en yakın olan
+ *   3) Aynı ÜST DÜZEY ALAN içindekiler
+ * ⛔ Hiçbiri yoksa kontrol ATLANIR — başka bir alandaki aynı adlı dosyaya
+ *    karşı denetlemek, ilgisiz iki belgeyi karşılaştırmak olur.
+ */
+function hedefiCoz(kaynakYol, hedefAd) {
+  const adaylar = basliklar.get(hedefAd);
+  if (!adaylar) return null;
+  const kaynakDizin = dirname(kaynakYol);
+  const ayni = adaylar.filter((a) => dirname(a.yol) === kaynakDizin);
+  if (ayni.length) return ayni;
+  let dizin = kaynakDizin;
+  while (dizin && dizin !== "." && dizin !== "/") {
+    const altta = adaylar.filter((a) => a.yol.startsWith(dizin + "/"));
+    if (altta.length) return altta;
+    dizin = dirname(dizin);
+  }
+  const ayniAlan = adaylar.filter((a) => alan(a.yol) === alan(kaynakYol));
+  return ayniAlan.length ? ayniAlan : null;
 }
 
 for (const p of hepsi) {
@@ -108,14 +144,14 @@ for (const p of hepsi) {
     if (!ham) continue;
     const bol = norm(ham);
     if (bol.length < 3) continue;
-    const gruplar = basliklar.get(hedef);
-    if (!gruplar) continue;                          // dosya yok → 1. kontrolün işi
+    const gruplar = hedefiCoz(relative(kok, p), hedef);
+    if (!gruplar) continue;   // hedef yok ya da başka alanda → karşılaştırılmaz
     const sayi = ham.match(/^§\s*(\d+)/);
     // ⭐ "BÖLÜM E" / "E.4" biçimi: numaralı bölüm atfı — başlığın BAŞINDA aranır.
     //    teknoloji-ve-plan.md gibi numaralı belgelerde kod yorumları buraya atıf
     //    yapar; eski betiğin korumaya çalıştığı şey buydu (yanlış dosya adıyla).
     const bolum = /^(bölüm [0-9a-zçğıöşü]|[a-zçğıöşü] \d{1,2})$/u.test(bol);
-    const bulundu = gruplar.some((hs) =>
+    const bulundu = gruplar.some(({ basliklar: hs }) =>
       hs.some((h) =>
         sayi
           ? h.startsWith(`${sayi[1]} `) || h.startsWith(`${sayi[1]}.`)
@@ -150,14 +186,44 @@ for (const p of hepsi) {
 const haritaYolu = join(kok, "ICINDEKILER.md");
 if (existsSync(haritaYolu)) {
   const harita = readFileSync(haritaYolu, "utf8");
+  // ⭐ Yalnızca DEPOYA GİREN dosyalar aranır. Yerel yazışma ve üretilen
+  //    belgeler (.gitignore'daki) haritada olmak zorunda değildir.
+  let izlenen = null;
+  try {
+    izlenen = new Set(
+      execSync("git ls-files", { cwd: kok, encoding: "utf8" }).split("\n").filter(Boolean),
+    );
+  } catch {
+    /* git yoksa dosya sistemine düşülür */
+  }
   for (const dosyaYolu of tumu) {
     const bagil = relative(kok, dosyaYolu);
-    if (!bagil.startsWith("skills/") && bagil.includes("/")) continue;  // kök + skills/
+    if (izlenen && !izlenen.has(bagil)) continue;
     if (!/\.(md|mjs)$/.test(bagil)) continue;
     const ad = basename(bagil);
     if (ad === "ICINDEKILER.md") continue;
     if (!harita.includes(ad))
       bulgular.push(["İÇİNDEKİLER", ad, "ICINDEKILER.md'de yok — haritaya satır ekle"]);
+  }
+}
+
+// 5) BAYAT SÜRÜM DAMGASI — belgede yazan sürüm plugin.json ile aynı mı
+//    ⛔ Kullanıcı rehberleri "Sürüm: X.Y.Z" taşır. Kit değişip damga kalırsa
+//    okuyan, elindeki belgenin güncel olduğunu SANIR — en pahalı bayatlık türü.
+//    ⚠️ Sayıyı güncellemek belgeyi okumak demektir; damgayı körlemesine
+//    artırmak kuralı değil, görüntüsünü korur.
+const pluginYolu = join(kok, ".claude-plugin", "plugin.json");
+if (existsSync(pluginYolu)) {
+  const gercek = JSON.parse(readFileSync(pluginYolu, "utf8")).version;
+  // ⭐ Yalnızca MAJOR.MINOR karşılaştırılır, yama sürümü değil.
+  //    Gerekçe: yama = düzeltme, rehberi yeniden okutmaz. Minor = YENİ KURAL,
+  //    rehber gözden geçirilmeli. Her yamada damga zorlamak, kontrolü
+  //    körlemesine basılan bir mühre çevirirdi.
+  const dal = (v) => v.split(".").slice(0, 2).join(".");
+  for (const p of hepsi) {
+    const m = readFileSync(p, "utf8").match(/^\*\*Sürüm:\*\*\s*([0-9]+\.[0-9]+\.[0-9]+)/m);
+    if (m && dal(m[1]) !== dal(gercek))
+      bulgular.push(["BAYAT SÜRÜM", basename(p), `${m[1]} yazıyor, kit ${gercek} — belgeyi GÖZDEN GEÇİR, sonra damgayı güncelle`]);
   }
 }
 
