@@ -142,6 +142,25 @@ for (const p of hepsi) {
     bulgular.push(["BAYAT PDF", relative(kok, pdf) || basename(pdf), "md daha yeni — yeniden üret"]);
 }
 
+// 4) İÇİNDEKİLER BAYAT MI — kite eklenen her dosya haritada görünür mü
+//    ⭐ Bu kontrol yalnızca KİT DEPOSUNDA çalışır (ICINDEKILER.md varsa).
+//    Kullanıcı projelerinde böyle bir dosya yok, kontrol sessizce atlanır.
+//    ⛔ Gerekçe: harita, yeni dosya eklendiğinde elle güncellenmeye bırakılırsa
+//    ilk eklemede bayatlar ve kimse fark etmez. Hatırlamaya dayalı kural düşer.
+const haritaYolu = join(kok, "ICINDEKILER.md");
+if (existsSync(haritaYolu)) {
+  const harita = readFileSync(haritaYolu, "utf8");
+  for (const dosyaYolu of tumu) {
+    const bagil = relative(kok, dosyaYolu);
+    if (!bagil.startsWith("skills/") && bagil.includes("/")) continue;  // kök + skills/
+    if (!/\.(md|mjs)$/.test(bagil)) continue;
+    const ad = basename(bagil);
+    if (ad === "ICINDEKILER.md") continue;
+    if (!harita.includes(ad))
+      bulgular.push(["İÇİNDEKİLER", ad, "ICINDEKILER.md'de yok — haritaya satır ekle"]);
+  }
+}
+
 // ── Rapor ───────────────────────────────────────────────────────────────────
 if (!bulgular.length) {
   console.log("✓ Denetim temiz — kırık referans, kırık bölüm atfı ve bayat PDF yok.");

@@ -22,6 +22,7 @@ düzeyde anlatacağın oradan okunur, senin izleniminden değil.
 | `skills/yeni-proje/dosyalar/CLAUDE.md` | Projelere kopyalanan ajan kuralları | ✅ |
 | `skills/yeni-proje/dosyalar/docs/standards/` | **19 standart — kuralın kaynağı** | ✅ |
 | `docs/` | Devir belgesi + seviye defteri | ✅ |
+| `ICINDEKILER.md` | **Kullanıcının haritası** — kit ne yapar, hangi dosya kimin işi | ⚠️ Yalnızca güncellemek için |
 | `calisma-dokumanlari/` | Kullanıcının çalışma notları | ⛔ **Okuma** — kural değil, bağlamı şişirir |
 
 ## ⛔ Commit öncesi zorunlu
@@ -30,13 +31,26 @@ düzeyde anlatacağın oradan okunur, senin izleniminden değil.
 node skills/kit-senkron/bin/denetim.mjs .
 ```
 
-Kırık dosya referanslarını ve bayat PDF'leri yakalar. **Çıktısını oku** —
-çalıştırıp kırpmak, atlamakla aynı şeydir.
+Dört şeyi yakalar: kırık dosya referansı · **kırık bölüm atfı** (`<dosya>.md` →
+*"Başlık"* denen başlık hedefte var mı) · bayat PDF · **haritada görünmeyen
+dosya**. **Çıktısını oku** — çalıştırıp kırpmak, atlamakla aynı şeydir.
+
+⛔ **Kite yeni bir dosya eklediysen `ICINDEKILER.md`'ye satır ekle.** O belge
+kullanıcının haritasıdır ve ajan onu okumaz — ama **güncellemek ajanın işidir.**
+Denetim betiği bunu zorlar: haritada görünmeyen dosya commit'i durdurur.
+
+*Gerekçe:* harita elle güncellenmeye bırakılırsa ilk eklemede bayatlar ve kimse
+fark etmez. Kullanıcı olmayan bir dosyayı arar, olan bir dosyayı hiç bilmez.
 
 Sonra: `.claude-plugin/plugin.json` içindeki sürümü artır (yama `1.0.1`,
 yeni kural `1.1.0`), commit, push.
 
 ## ⛔ Yayınlama kuralı
 
-Depo **herkese açıktır.** `skills/` ve `docs/` push edilir. Bunun dışında
-üretilen belgeler diskte kalır; yayınlanacaksa **önce kullanıcıya sorulur.**
+Depo **herkese açıktır.** Push edilen: `skills/` · `ICINDEKILER.md` ·
+`README.md` · `KURULUM.md` · `CLAUDE.md`.
+
+⚠️ **`docs/` klasörü `.gitignore` ile KAPALIDIR** — yalnızca iki dosya açıktır:
+`docs/DEVIR.md` ve `docs/ogrendiklerim.md`. Geri kalan üretilen belgeler
+(rehberler, PDF'ler, oturum notları) diskte kalır; yayınlanacaksa **önce
+kullanıcıya sorulur.**
