@@ -13,8 +13,15 @@ cevap verir; geri kalanını sen yaparsın.
 adları **İngilizce**.
 
 **Kullanıcı kodu okuyup anlayamıyor olabilir.** Her adımdan sonra ne yaptığını
-kod göstermeden, Türkçe, en fazla 5 maddede anlat. Sadece "ne" değil **"neden"**
-de söyle. Emin olmadığın yerde "emin değilim" de — uydurma.
+kod göstermeden, **Türkçe** anlat. Sadece "ne" değil **"neden"** de söyle.
+Emin olmadığın yerde "emin değilim" de — uydurma.
+
+⛔ **Madde sayısı sınırı YOKTUR** — `CLAUDE.md` → *"Bana Karşı Davranış"* ve
+`11-agent-workflow.md` → *"ÖĞRETME YÜKÜMLÜLÜĞÜ"* ile aynı kural. Ne yapıldıysa
+o kadar satır yazılır. *Gerekçe:* bu özeti yalnızca yazılımcı okumuyor —
+destek veren, denetleyen ve karar veren de okuyor; kısaltılan her satır
+onlardan birinin cevabını götürür. **Sınır uzunlukta değil, tekrarda:** aynı
+gerekçe ikinci kez yazılmaz, ilkine işaret edilir.
 
 ## Kit dosyaları nerede
 
@@ -30,7 +37,9 @@ ls "$KIT"
 
 Bulunamazsa **dur ve kullanıcıya söyle** — dosyaları ezberden yeniden yazma.
 
-İçinde: `CLAUDE.md` · `REPO-YAPISI.md` · `docs/standards/00–17` + `sablonlar/`.
+İçinde: `CLAUDE.md` (ajan için) · `CALISMA-KILAVUZU.md` (kullanıcı için) ·
+`REPO-YAPISI.md` · `docs/standards/00–18` (**19 standart**) + `sablonlar/` ·
+`.vscode/extensions.json` · `.claude/settings.json`.
 
 ---
 
@@ -388,7 +397,8 @@ almak, geri alınması pahalı bir hatadır.
    — varsa **oku, sonra konuş** (Adım 3'te tekrar kullanılacak)
 2. *"Kurumun zorunlu tuttuğu teknoloji, sunucu veya veritabanı var mı?"*
 3. *"Kod nerede çalışacak — kurumun kendi sunucusu mu, bulut mu?"*
-   (`00-stack.md` → sunucusuz platform kurumun sunucusunda çalışmaz)
+   (`00-stack.md` → *"Backend kurgusu"*: sunucusuz platform kurumun kendi
+   sunucusunda çalışmaz, dördüncü soru bunu ayırır)
 
 Cevaplar `kurumdan-ogrenilecekler.md`'ye yazılır.
 
@@ -402,6 +412,31 @@ PostgreSQL + Zod · mobil varsa Expo, aynı REST API.
 
 ⭐ Bu bir başlangıç noktasıdır, dondurulmuş liste değil (`00-stack.md`) — her
 satır kurulumda yeniden ölçülür.
+
+#### ⛔ 1c — LİSTEYİ ÖLÇ, EZBERDEN AKTARMA
+
+⚠️ **Bu adım atlanabilir görünür ve tam da bu yüzden yazıldı.** Kural
+`00-stack.md` → *"STACK KURULURKEN HER TEKNOLOJİNİN GÜNCEL ALTERNATİFİ
+TARANIR"* içinde yazılıydı ama akışta onu **çalıştıran bir adım yoktu**;
+bölge eşleşmesinin başına gelenin aynısı. Artık burada.
+
+Kuracağın her satır için fiilen koştur:
+
+```bash
+npm view <paket> version time.modified
+curl -s https://api.npmjs.org/downloads/point/last-week/<paket>
+```
+
+| Bulgu | Ne yapılır |
+|---|---|
+| Yaygın ve bakımda | Sessizce devam — soru sorulmaz |
+| **Son yayını 18 aydan eski** | ⚠️ Bildir, alternatifi ölç, **sor** |
+| Ölçülebilir biçimde daha yaygın alternatif çıkmış | ⚠️ İki rakamı yan yana koy, **sor** |
+| Alternatif niş ama teknik olarak üstün | Bildir, **önerme** — yaygınlık kazanır |
+
+⛔ **Ajan tek başına stack değiştirmez**; bulguyu sunar, kararı kullanıcı verir.
+⭐ **Ölçüm tarihi olmadan rakam yazılmaz** — *"7.9M/hafta (2026-09 ölçümü)"*.
+Sonuç `00-stack.md` sürüm tablosuna ve `teknoloji-ve-plan.md`'ye işlenir.
 
 Kullanıcı farklı bir şey söylerse (başka sunucu, başka veritabanı, başka
 hosting) **onu kullan.** İtirazın varsa **bir kez**, gerekçesiyle söyle
@@ -549,7 +584,8 @@ Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
 
    ⛔ **Sınır satırı silinmez.** Silinirse o bölümün tamamı senkron dışı kalır ve
    kite sonradan yazılan genel bir kural bu projeye hiç ulaşmaz
-   (`15-oturum-devri.md` → senkron sınırı). 2026-08-11'de yaşandı.
+   (`15-oturum-devri.md` → *"İstisnalar — DOSYA değil BÖLÜM seviyesinde"*).
+   2026-08-11'de yaşandı.
 
    ⛔ **Gerekçesiz yasak yazılmaz.** Sonraki oturum gerekçesiz maddeyi anlamaz
    ve delmeye çalışır. Bir yasağın gerekçesi bu projede geçerli değilse yasak da
@@ -724,7 +760,7 @@ kullanıcıya sunulur ve onayı beklenir (`CLAUDE.md` kapı 2).
 4. `REPO-YAPISI.md`'yi gerçek klasör yapısına göre doldur
 5. İlk commit — `08-git-workflow.md` biçimiyle
 6. ⭐ **ÇALIŞAN ŞEYİ GÖSTER — iskelet bitince, hesap istemeden önce.**
-   `npm run dev` çalıştır, `chrome-devtools` MCP ile aç, **ekran görüntüsü al ve
+   `pnpm dev` çalıştır, `chrome-devtools` MCP ile aç, **ekran görüntüsü al ve
    kullanıcıya sun.** Prisma Studio'yu da bir kez aç ve tabloları göster
    (`04-database.md`).
 
@@ -808,6 +844,9 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 - [ ] Her şablon dolduruldu mu (boş şablon bırakmak hiç açmamaktan kötüdür)
 - [ ] `altyapi-durumu.md` bu oturumda yapılan **her** dış işlemi içeriyor mu
 - [ ] `00-stack.md` sürümleri `package.json` ile birebir aynı mı
+- [ ] **Stack taraması fiilen koşturuldu mu** (Adım 1c): her satır için
+      `npm view` + haftalık indirme ölçüldü, bulgular **ölçüm tarihiyle**
+      yazıldı mı. ⛔ "Baktım, aynı" da bir sonuçtur ve tarihi güncellenir
 - [ ] **6a ise:** canlı adres ve `/api/health` çalışıyor mu
 - [ ] **6a ise:** veritabanı ve fonksiyon **aynı bölgede** mi, ikisi de
       `altyapi-durumu.md`'ye yazıldı mı
@@ -827,8 +866,9 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 - [ ] **Açık siteyse:** `curl` ile alınan HTML'de ana içerik görünüyor mu
 - [ ] **Preview ortamı `noindex` mi** — hem `robots.txt` hem sayfa seviyesinde
 
-Sonra kullanıcıya **Türkçe, en fazla 5 maddede** özet ver: ne kuruldu, canlı
-adres, sıradaki roadmap adımı, senden beklenen (varsa hesap/ayar).
+Sonra kullanıcıya **Türkçe** özet ver: ne kuruldu, canlı adres, sıradaki
+roadmap adımı, senden beklenen (varsa hesap/ayar). ⛔ Madde sayısı sınırı yok;
+kurulumda ne yapıldıysa hepsi yazılır.
 
 ---
 

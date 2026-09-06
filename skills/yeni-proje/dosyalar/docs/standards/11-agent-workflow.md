@@ -354,8 +354,8 @@ Bir karar ikinci kez karşına çıktığında kite **tablo olarak** yazılır:
 | Yalnızca üslup/zevk | ⛔ Hayır — tabloya değmez |
 
 ⚠️ **Tablo bir kez yazılınca dondurulmaz.** Yeni bir senaryo çıkarsa satır
-eklenir; ölçüm eskiyorsa `00-stack.md` → *"Üç ayda bir periyodik tarama"*
-kuralı işler.
+eklenir; ölçüm eskiyorsa `00-stack.md` → *"TARAMA NE ZAMAN TEKRARLANIR"*
+kuralı işler (ölçüm tazeleme **altı ayda bir**, dört olayda anında).
 
 ## ⛔ GEREKSİNİM DOĞRU VARSAYILMAZ — DENETLENİR
 
@@ -529,8 +529,15 @@ node "$CLAUDE_PLUGIN_ROOT/skills/kit-senkron/bin/denetim.mjs" [klasör]
 | Ne kontrol eder | Nasıl |
 |---|---|
 | **Kırık dosya referansı** | Anılan `.md` gerçekten var mı |
-| **Kırık bölüm atfı** | *"BÖLÜM H"*, *"E.4"* denen yer hedefte var mı |
-| **Bayat türetilmiş dosya** | `md/` yeni, `pdf/` eski mi |
+| **Kırık bölüm atfı** | `<dosya>.md` → *"Başlık"* denen **başlık hedefte var mı** |
+| **Bayat türetilmiş dosya** | Aynı adı taşıyan `.pdf`, `.md`'den eski mi |
+
+⚠️ **2026-09-06'da ölçüldü: üç kontrolün ikisi hiç çalışmıyordu.** Bölüm atfı
+kontrolü var olmayan bir dosya adı arıyor, PDF kontrolü var olmayan bir klasör
+yapısı arıyordu; *"✓ temiz"* çıktısı hiçbir şey kanıtlamıyordu. ⛔ **Bir
+kontrolün var olması, çalıştığının kanıtı değildir** — bilerek bir hata üretip
+yakalandığını görmeden ona güvenme (`06-testing.md` → *"ÖNCE ARACIN O İŞİ
+ÖLÇEBİLDİĞİNİ DOĞRULA"*).
 
 ⭐ **İleriye dönük referanslar elenir** — kurulumdan sonra oluşacak dosyalar
 (`CLAUDE.md`, `PRD.md`, `docs/*`) yanlış alarm üretmez.
@@ -554,7 +561,7 @@ o elle yapılır (aşağıdaki tablo).
 
 | Neyi değiştirdin | Nereleri tara |
 |---|---|
-| `docs/standards/` içinde bir kural | Diğer 17 standart · `CLAUDE.md` · **kullanıcı kılavuzu** |
+| `docs/standards/` içinde bir kural | Diğer **18** standart (toplam 19) · `CLAUDE.md` · **kullanıcı kılavuzu** |
 | Kullanıcıya bakan bir belge | Aynı konuyu anlatan diğer belgeler |
 | Bir dosyayı yeniden adlandırdın/sildin | ⛔ **Tüm** depo — referanslar |
 | Bir sayı/ölçüm yazdın | Aynı sayının geçtiği her yer |
@@ -787,7 +794,7 @@ satırlar açılır.
 `/yeni-proje` yeni projeyi kurarken önceki projenin defterini **kopyalar**
 (Adım 2). Kullanıcı altıncı projede birinci projenin diliyle konuşulmaz.
 
-## Dışarıya giden doküman — anlatım standardı## Dışarıya giden doküman — anlatım standardı
+## Dışarıya giden doküman — anlatım standardı
 
 Bir doküman kullanıcıdan **başkasına** gidiyorsa (sunum, teslim dosyası,
 devir notu, README), aşağıdaki kurallar geçerlidir. Oturum içi anlatım için

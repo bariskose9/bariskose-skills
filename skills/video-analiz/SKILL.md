@@ -151,7 +151,10 @@ doğru olan 2026'da bayat olabilir. Eski bir videonun "best practice"i, bugünk�
 ### ⭐ Kapsam haritası — kitin hiç dosyası olmayan alan var mı
 
 İddia karşılaştırmasından **ayrı** bir iş: videonun konu başlıklarını çıkar ve
-kitin 17 standart dosyasının başlıklarıyla yan yana koy.
+kitin **19** standart dosyasının (`00`–`18`) başlıklarıyla yan yana koy.
+⛔ Sayıyı ezberden yazma, `ls docs/standards/*.md | wc -l` ile say — eksik
+sayılan dosya, o alandaki boşluğun hiç görünmemesi demektir (`18-seo.md`
+tam olarak bu yüzden yıllarca taramanın dışında kalmıştı).
 
 Aranan şey: **kitte hiç karşılığı olmayan bir alan.** Örnek türler —
 erişilebilirlik · performans bütçesi · olay günlüğü tasarımı · özellik bayrakları ·

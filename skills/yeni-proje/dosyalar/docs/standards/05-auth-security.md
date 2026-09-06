@@ -76,7 +76,7 @@ kendisi için değil.
 - [ ] Yetki + sahiplik kontrolü var mı?
 - [ ] Hata mesajı iç detay sızdırıyor mu?
 - [ ] Yeni secret eklendi mi, `.env`'de mi, `.env.example` güncellendi mi?
-- [ ] Yeni bağımlılık: `npm audit` temiz mi?
+- [ ] Yeni bağımlılık: `pnpm audit` temiz mi?
 - [ ] Kişisel veri log'a yazılıyor mu?
 
 ## Secret yönetimi

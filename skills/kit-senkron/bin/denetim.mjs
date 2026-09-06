@@ -6,34 +6,82 @@
  *    bağlam dolduğunda ilk düşen şey oldu (aynı oturumda iki kez çiğnendi).
  *    Hatırlanması gereken şey, ÇALIŞTIRILAN komuta çevrildi.
  *
+ * ⚠️ 2026-09-06 denetiminde üç kontrolün İKİSİNİN hiç çalışmadığı ölçüldü:
+ *    bölüm atfı kontrolü var olmayan bir dosya adı arıyordu, PDF kontrolü
+ *    var olmayan bir klasör yapısı arıyordu. "✓ temiz" çıktısı hiçbir şey
+ *    kanıtlamıyordu. Üçü de bu depoda fiilen çalışacak biçimde yeniden yazıldı.
+ *
  * Kullanım: node denetim.mjs [klasör]
  */
 import { readFileSync, readdirSync, statSync, existsSync } from "node:fs";
-import { join, extname, basename, dirname } from "node:path";
+import { join, extname, basename, dirname, relative } from "node:path";
 
 const kok = process.argv[2] || process.cwd();
 const bulgular = [];
 
+/** Kural taşımayan klasörler — taranmaz. */
+const ATLA = new Set(["node_modules", ".git", "calisma-dokumanlari"]);
+
 function dosyalar(d, liste = []) {
   for (const ad of readdirSync(d)) {
-    if (ad === "node_modules" || ad === ".git" || ad.startsWith(".next")) continue;
+    if (ATLA.has(ad) || ad.startsWith(".next")) continue;
     const p = join(d, ad);
     const st = statSync(p);
     if (st.isDirectory()) dosyalar(p, liste);
-    else if ([".md", ".txt"].includes(extname(ad))) liste.push(p);
+    else liste.push(p);
   }
   return liste;
 }
 
-const hepsi = dosyalar(kok);
+const tumu = dosyalar(kok);
+const hepsi = tumu.filter((p) => [".md", ".txt"].includes(extname(p)));
 const adlar = new Set(hepsi.map((p) => basename(p)));
 
 /**
  * ⭐ İLERİYE DÖNÜK REFERANSLAR — yanlış alarm üretmesin.
  * Bu dosyalar kurulumdan (/yeni-proje) SONRA oluşacak. Belgelerin onlara
  * atıf yapması doğrudur; "yok" demek yanlış alarm olur.
+ *
+ * ⛔ Standart dosyaları (00-…, 11-… gibi) BU LİSTEDE DEĞİL: onlar kitle
+ * birlikte gelir, kurulumdan sonra da projede durur. Muaf tutulurlarsa
+ * yanlış yazılmış bir standart adı hiç yakalanmaz.
  */
-const gelecek = /^(CLAUDE|REPO-YAPISI|README|CHANGELOG|PRD|roadmap|data-model|altyapi-durumu|integrations|ogrendiklerim|sonraki-adim-prompt|teknoloji-ve-plan|fake-data-guide|vscode-eklentileri|kurumdan-ogrenilecekler|OKUBENI|ADR-\d+.*)\.md$|^\d\d-[\w-]+\.md$/;
+const gelecek = /^(CLAUDE|REPO-YAPISI|README|CHANGELOG|PRD|roadmap|data-model|veri-modeli|altyapi-durumu|integrations|ogrendiklerim|sonraki-adim-prompt|teknoloji-ve-plan|fake-data-guide|vscode-eklentileri|kurumdan-ogrenilecekler|OKUBENI|ADR-\d+.*)\.md$/;
+
+/** Başlık ve atıf metnini karşılaştırılabilir hâle getirir. */
+const norm = (s) =>
+  s
+    .replace(/[*_`"'“”„«»]/g, " ")
+    .replace(/[^\p{L}\p{N}\s]/gu, " ")
+    .toLocaleLowerCase("tr")
+    .replace(/\s+/g, " ")
+    .trim();
+
+/**
+ * Atıfta anılan BÖLÜM adını sınırlı biçimde çıkarır.
+ * Sıra: tırnak → vurgu → §N → çıplak metin (ilk sınırlayıcıya kadar).
+ * ⚠️ Sınırlamazsan satırın kalanını yutar ve her atıf "kırık" görünür.
+ */
+function bolumAdi(kuyruk) {
+  let m = kuyruk.match(/^\s*\*{0,2}[“"«]([^”"»\n]{2,80})[”"»]/u);
+  if (m) return m[1];
+  m = kuyruk.match(/^\s*(\*{1,2})([^*\n]{2,80})\1/u);
+  if (m) return m[2];
+  m = kuyruk.match(/^\s*(§\s*\d+[a-zçğıöşü]*)/u);
+  if (m) return m[1];
+  m = kuyruk.match(/^\s*([^\n,;:|)(*'’]{2,60}?)(?=\s*[,;:|)(*'’]|\s+—|\s+–|$)/mu);
+  return m ? m[1] : null;
+}
+
+/** basename → o adı taşıyan HER dosyanın başlık listesi. */
+const basliklar = new Map();
+for (const p of hepsi) {
+  const h = [];
+  for (const m of readFileSync(p, "utf8").matchAll(/^#{1,6}\s+(.+)$/gm)) h.push(norm(m[1]));
+  const b = basename(p);
+  if (!basliklar.has(b)) basliklar.set(b, []);
+  basliklar.get(b).push(h);
+}
 
 for (const p of hepsi) {
   const metin = readFileSync(p, "utf8");
@@ -51,32 +99,41 @@ for (const p of hepsi) {
     }
   }
 
-  // 2) KIRIK BÖLÜM ATFI — "BÖLÜM X" / "E.N" anılıyor ama hedefte yok
-  const hedefDosya = hepsi.find((h) => basename(h) === "proje-teknoloji-ve-plan.md");
-  if (hedefDosya && p !== hedefDosya) {
-    const plan = readFileSync(hedefDosya, "utf8");
-    for (const m of metin.matchAll(/\*\*(BÖLÜM [0-9A-H]|[A-E]\.\d{1,2})\*\*/g)) {
-      const ref = m[1];
-      // ⚠️ Belge kendi bölümünden söz ediyor olabilir — o zaman kontrol etme
-      if (new RegExp(`^#{1,2} ${ref.replace(".", "\\.")}`, "m").test(metin)) continue;
-      const kalip = ref.startsWith("BÖLÜM")
-        ? new RegExp(`^# ${ref}`, "m")
-        : new RegExp(`^## ${ref.replace(".", "\\.")}[ .]`, "m");
-      if (!kalip.test(plan)) bulgular.push(["KIRIK BÖLÜM", yerel, `${ref} planda yok`]);
-    }
+  // 2) KIRIK BÖLÜM ATFI — `dosya.md` → "Başlık" deniyor ama o başlık hedefte yok
+  //    Kural: 11-agent-workflow.md → "Aynı bilgi iki yerde yazılmaz"
+  //    (*"Sadece dosya adı vermek yetmez; hangi başlık olduğu yazılır"*)
+  for (const m of metin.matchAll(/`([\w./-]+\.md)`(?:['’][a-zçğıöşü]+)?\s*(?:→|->)/gu)) {
+    const hedef = basename(m[1]);
+    const ham = bolumAdi(metin.slice(m.index + m[0].length));
+    if (!ham) continue;
+    const bol = norm(ham);
+    if (bol.length < 3) continue;
+    const gruplar = basliklar.get(hedef);
+    if (!gruplar) continue;                          // dosya yok → 1. kontrolün işi
+    const sayi = ham.match(/^§\s*(\d+)/);
+    const bulundu = gruplar.some((hs) =>
+      hs.some((h) =>
+        sayi
+          ? h.startsWith(`${sayi[1]} `) || h.startsWith(`${sayi[1]}.`)
+          : h.includes(bol) || bol.includes(h),
+      ),
+    );
+    if (!bulundu) bulgular.push(["KIRIK BÖLÜM", yerel, `${hedef} → "${ham.trim()}" başlığı yok`]);
   }
 }
 
-// 3) BAYAT TÜRETİLMİŞ DOSYA — md yeni, pdf eski
-const mdKlasor = join(kok, "_devir", "md");
-const pdfKlasor = join(kok, "_devir", "pdf");
-if (existsSync(mdKlasor) && existsSync(pdfKlasor)) {
-  for (const ad of readdirSync(mdKlasor).filter((a) => a.endsWith(".md"))) {
-    const pdf = join(pdfKlasor, ad.replace(/\.md$/, ".pdf"));
-    if (!existsSync(pdf)) { bulgular.push(["PDF YOK", ad, "eşleşen pdf üretilmemiş"]); continue; }
-    if (statSync(join(mdKlasor, ad)).mtimeMs > statSync(pdf).mtimeMs + 1000)
-      bulgular.push(["BAYAT PDF", ad, "md daha yeni — yeniden üret"]);
-  }
+// 3) BAYAT TÜRETİLMİŞ DOSYA — aynı adı taşıyan .md'den eski .pdf
+//    ⚠️ Eski sürüm yalnızca _devir/md + _devir/pdf yapısına bakıyordu; bu depoda
+//    o klasörler yok ve kontrol hiç çalışmıyordu. Artık türetilmiş dosya
+//    NEREDE olursa olsun eşleştirilir.
+const pdfler = new Map();
+for (const p of tumu) if (extname(p) === ".pdf") pdfler.set(basename(p, ".pdf"), p);
+for (const p of hepsi) {
+  if (extname(p) !== ".md") continue;
+  const pdf = pdfler.get(basename(p, ".md"));
+  if (!pdf) continue;
+  if (statSync(p).mtimeMs > statSync(pdf).mtimeMs + 1000)
+    bulgular.push(["BAYAT PDF", relative(kok, pdf) || basename(pdf), "md daha yeni — yeniden üret"]);
 }
 
 // ── Rapor ───────────────────────────────────────────────────────────────────

@@ -104,7 +104,7 @@ imkânsızlaşır. İki araç kurulur ve **kullanıcıya nasıl açacağı öğr
 ### 1. Prisma Studio — tabloları gezmek
 
 ```bash
-npx prisma studio          # tarayıcıda localhost:5555
+pnpm prisma studio         # tarayıcıda localhost:5555
 ```
 
 Excel tablosu gibi açılır: kayıtları görürsün, ilişki alanına tıklayınca bağlı
@@ -123,7 +123,7 @@ tıklıktır. Yalnızca local ve gerekiyorsa preview.
 Prisma'da hazır gelmez; üreteciyle şemadan **otomatik** çıkarılır:
 
 ```bash
-npm i -D prisma-erd-generator @mermaid-js/mermaid-cli
+pnpm add -D prisma-erd-generator @mermaid-js/mermaid-cli
 ```
 
 `schema.prisma` içine üretici eklenir; `prisma generate` her çalıştığında

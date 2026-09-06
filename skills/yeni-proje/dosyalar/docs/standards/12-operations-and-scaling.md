@@ -139,7 +139,7 @@ sürücüsü girer. Veritabanın tek bölgedeyse Edge'e taşımak her sorguyu
 
 ⛔ **Asıl sorun genellikle "10 API isteği"nin kendisidir.** Açılışta on ayrı
 istek atılıyorsa çözüm bölge değiştirmek değil, **sunucu bileşeninde tek seferde
-veri çekmektir** (`01-architecture.md` → katman sırası). Bölge eşleşmesi bunun
+veri çekmektir** (`01-architecture.md` → *"Katmanlar"*). Bölge eşleşmesi bunun
 yerine geçmez, ikisi ayrı iştir.
 
 ## ⛔ ANİ YÜK (spike) — tarihi belli kalabalık BAŞTAN planlanır
@@ -208,7 +208,7 @@ sona kullan. Oturum düşüyorsa, sayaç sıfırlanıyorsa veya bildirim iki kez
 geliyorsa durumsuzluk kuralı çiğnenmiş demektir.
 
 ## Bakım
-- Haftalık: hata panosu gözden geçirilir, `npm audit` çalıştırılır.
+- Haftalık: hata panosu gözden geçirilir, `pnpm audit` çalıştırılır.
 - Aylık: bağımlılık güncellemeleri ayrı PR ile; major yükseltmeler tek tek.
 - Sürekli: teknik borç `docs/project/roadmap.md` içinde açıkça listelenir, gizlenmez.
 - Kullanılmayan özellik, tablo ve bağımlılık silinir (bkz. deprecation süreci).

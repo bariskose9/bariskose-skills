@@ -41,6 +41,46 @@
 
 ## Yorumlar
 
+### ⛔ KOD İNGİLİZCE, YORUM TÜRKÇE — ikisi karıştırılmaz
+
+Bu kitte iki ayrı dil, iki ayrı iş yapar. Karıştırmak ikisini de bozar.
+
+| Ne | Dil | Neden |
+|---|---|---|
+| Değişken · fonksiyon · tip · dosya · klasör | **İngilizce** | Sektörün ortak dili; kodu okuyan herkes (ekip, denetçi, sonraki geliştirici) bu adları tanır |
+| Tablo · kolon · enum · API yolu | **İngilizce** | Şema ve sözleşme dışarı açılır; Türkçe karakter ve çekim ekleri araç zincirinde bozulur |
+| Commit mesajı | **İngilizce** | `08-git-workflow.md` |
+| ⭐ **Yorumlar** | **Türkçe** | Yorumun okuyucusu koddan farklıdır: kararı veren, denetleyen, kodu okumayan kişi |
+| ⭐ **Kod örneklerinin açıklamaları** | **Türkçe** | Örnek öğretmek içindir; öğretilen kişi Türkçe okur |
+| Kullanıcıya görünen metin | **Türkçe** | Son kullanıcı Türk |
+
+⛔ **Kod adı Türkçe yazılmaz.** `olustur()`, `girdi`, `LokasyonPasifHatasi`,
+`sla_bitis_zamani` gibi adlar bu kitte **hatadır** — örnekte bile.
+*Gerekçe:* ajan kuralı değil **örneği** taklit eder; Türkçe adlı bir örnek,
+sonraki projede Türkçe adlı bir kod tabanı üretir.
+
+### ⭐ TÜRKÇE KARŞILIK YORUMDA, PARANTEZ İÇİNDE VERİLİR
+
+Kod İngilizce olduğu için okuyan kişi bir adı ilk gördüğünde ne olduğunu
+bilmeyebilir. Çözüm adı Türkçeleştirmek değil, **yorumda karşılığını yazmaktır.**
+
+```ts
+// ⭐ workOrder (iş emri) — bir talebin sistemdeki kaydı.
+//    slaDueAt (SLA bitiş zamanı): bu tarihten sonra iş gecikmiş sayılır.
+const workOrder = await this.workOrders.create({ ...dto, slaDueAt: plan.dueAt });
+```
+
+| Kural | Ayrıntı |
+|---|---|
+| Ne zaman | Bir kod adı o dosyada **ilk kez** geçtiğinde |
+| Nerede | Yorumun içinde, parantezde: `workOrder (iş emri)` |
+| Kaç kez | **Bir kez** — aynı dosyada tekrar yazılmaz (`11-agent-workflow.md` → *"AYNI BİLGİ İKİ YERDE YAZILMAZ"*) |
+| ⛔ Ne değil | Adı Türkçeleştirmek. `isEmri` yazılmaz, `workOrder` yazılır ve karşılığı yorumda durur |
+
+⭐ **Kazanç aranabilirliktir:** kullanıcı `grep "iş emri"` de yazsa
+`grep "workOrder"` de yazsa aynı yeri bulur. Türkçe okuyan ile İngilizce
+arayan aynı kod tabanında buluşur.
+
 ### ⛔ KOD, OKUYAMAYAN BİRİ İÇİN DE ANLAŞILIR OLUR
 
 Bu projelerin kodunu yalnızca kıdemli yazılımcılar okumuyor:
@@ -80,8 +120,8 @@ Yorumlar **üç** şeyi birden anlatır:
 //    kaldırılırsa iyimser kilit TAMAMEN devre dışı kalır — testler yine
 //    yeşil yanar, sorun yalnızca canlıda iki kullanıcıyla görünür.
 const sonuc = await prisma.workOrder.updateMany({
-  where: { id: girdi.id, version: girdi.version },
-  data:  { durum: girdi.durum, version: { increment: 1 } },
+  where: { id: input.id, version: input.version },
+  data:  { status: input.status, version: { increment: 1 } },
 });
 ```
 
@@ -128,31 +168,33 @@ Her önemli yorumda **dört halka** bulunur:
  *           Gövde, packages/contracts/work-order.ts şemasından GEÇMİŞ durumda
  *           (geçmeseydi bu metot hiç çağrılmazdı, 400 dönerdi).
  *
- * NE      : Üç kural sırayla uygulanıyor — lokasyon aktif mi, varlık kullanımda
- *           mı, SLA süresi ne. Kurallar packages/domain içinde, burada değil.
+ * NE      : Üç kural sırayla uygulanıyor — location (lokasyon) aktif mi,
+ *           asset (varlık) kullanımda mı, SLA süresi ne. Kurallar
+ *           packages/domain içinde, burada değil.
  *
  * NEREYE  : prisma → PostgreSQL "WorkOrder" ve "WorkOrderHistory" tabloları
  *           (tek transaction) · BullMQ kuyruğuna gecikmeli hatırlatma işi
  *
  * SONUÇ   : Veritabanında IE-2026-000148 numaralı YENİ BİR SATIR oluşur,
- *           durumu "ACIK", sla_bitis_zamani dolu. Kullanıcının ekranında iş
+ *           status (durum) alanı "OPEN", sla_due_at (SLA bitiş zamanı) dolu.
+ *           Kullanıcının ekranında iş
  *           emri listesi tazelenir ve kayıt en üstte görünür. SLA süresinin
  *           yarısında atanan kişiye bildirim düşer.
  */
-async olustur(girdi: TalepOlusturDto) {
+async create(input: CreateWorkOrderDto) {
 
-  // NEREDEN: girdi.lokasyonId, formdaki açılır listeden geldi.
-  // NE     : Lokasyon pasifse iş emri açılamaz (ödev §5.2).
+  // NEREDEN: input.locationId (lokasyon kimliği), formdaki açılır listeden geldi.
+  // NE     : location (lokasyon) pasifse iş emri açılamaz — şartname kuralı.
   // ETKİ   : Bu kontrol kaldırılırsa kapatılmış binalara iş emri açılır ve
   //          hiç kimseye atanamaz — kayıt sistemde asılı kalır.
-  const lokasyon = await this.lokasyonlar.aktifBul(girdi.lokasyonId);
-  if (!lokasyon) throw new LokasyonPasifHatasi(girdi.lokasyonId);
+  const location = await this.locations.findActive(input.locationId);
+  if (!location) throw new LocationInactiveError(input.locationId);
 
   // NE   : SLA hesabı — hangi politikanın uygulanacağını Factory seçiyor.
-  //        Seçim önceliğe + varlık kritikliğine + iş emri türüne bakıyor (E.4).
-  // NEREYE: Çıkan tarih aşağıda sla_bitis_zamani kolonuna yazılacak.
-  const politika = this.slaFabrikasi.sec(girdi);
-  const plan = politika.hesapla(girdi);
+  //        Seçim önceliğe + varlık kritikliğine + iş emri türüne bakıyor.
+  // NEREYE: Çıkan tarih aşağıda sla_due_at (SLA bitiş zamanı) kolonuna yazılacak.
+  const policy = this.slaFactory.resolve(input);
+  const plan = policy.calculate(input);
 
   // ⭐ NE   : Kayıt ve ilk geçmiş satırı TEK transaction içinde yazılıyor.
   //    ETKİ: Ayrılırsa, ikincisi hata verdiğinde geçmişi olmayan bir iş emri
@@ -290,11 +332,13 @@ yalnızca karar satırları yorumlanır:
  * İş emrini kapatır.
  *
  * AKIŞ  : istek → kural kontrolü → durum güncelleme → geçmiş kaydı → bildirim
- * KURAL : yalnızca ATANMIŞ veya DEVAM durumundan kapatılabilir (E.5)
+ * KURAL : yalnızca ASSIGNED (atanmış) veya IN_PROGRESS (devam ediyor)
+ *         durumundan kapatılabilir — şartname kuralı, ADR'ye yazılır
  * ETKİ  : kapanan iş emri normal güncellemeyle DEĞİŞTİRİLEMEZ; SLA sayacı durur
  *         ve bekleyen hatırlatma işi iptal edilir
  */
-async kapat(id: string, cozum: string) { … }
+// close (kapat) · resolution (çözüm açıklaması)
+async close(id: string, resolution: string) { … }
 ```
 
 ⛔ **Yorum uzunluğundan tasarruf edilmez** (`CLAUDE.md` → *"Eksiksizlik,
@@ -305,7 +349,7 @@ kafasında soru bırakmak pahalıdır.
 // Kullanıcının formda doldurduğu bilgiler buraya geliyor
 async create(dto: CreateWorkOrderDto) {
 
-  // Önce kural kontrolü: kapalı bir lokasyona iş emri açılamaz
+  // Önce kural kontrolü: kapalı bir location'a (lokasyon) iş emri açılamaz
   const location = await this.locations.findActive(dto.locationId);
   if (!location) throw new LocationInactiveError(dto.locationId);
 

@@ -94,11 +94,22 @@ Ajan kurulumda **proje tipini biliyor** (`CLAUDE.md` §0). Mevcut git kimliği
 ona uymuyorsa **söyler**:
 
 > *"Bu bir işyeri projesi ama git kimliği kişisel görünüyor
-> (`kilicarslan45@gmail.com`). Commit'ler bu adresle imzalanacak. Kurumun
+> (`ornek@gmail.com`). Commit'ler bu adresle imzalanacak. Kurumun
 > verdiği adresi bu depoya özel ayarlayayım mı?"*
 
 ⚠️ **Sorup geçmez, ayarlar.** Kullanıcı *"evet"* derse `--local` ile yazar ve
 `altyapi-durumu.md`'ye not düşer.
+
+⛔ **İşyeri projesinde kişisel adres taşınmaz — SORULUR.** Makinede kayıtlı
+kişisel adresi işyeri deposuna kopyalamak bir kolaylık gibi görünür; değildir.
+Kurum projesinde geçerli adres **kurumun verdiği adrestir** ve onu yalnızca
+kullanıcı bilir. Ajan kişisel adresi varsayılan olarak kullanmaz, kurumsal
+adresi ister.
+
+| Proje tipi | Adres nereden gelir |
+|---|---|
+| **Kendi projem** | Makinedeki mevcut `git config` — zaten doğrudur, sorulmaz |
+| **İşyeri projesi** | ⛔ Kurumun verdiği adres — **sorulur**, `--local` ile yazılır |
 
 ⛔ **İlk commit'ten önce yapılır.** Sonra fark edilirse geçmişteki commit'ler
 yanlış kimlikle kalır.

@@ -120,8 +120,8 @@ biliyor olurdu.
 ⚠️ **Ayırt edici test:** Oturum bittiğinde kullanıcı *"bunu bana neden
 söylemedin?"* diyebiliyorsa kural çiğnenmiştir.
 
-⛔ Bu, `11-agent-workflow.md` → *"Öneri enflasyona uğratılmaz"* ile
-çelişmiyor — ikisi **farklı şeyler**:
+⛔ Bu, `11-agent-workflow.md` → *"Ne zaman söylenir, ne zaman susulur"*
+kuralıyla çelişmiyor — ikisi **farklı şeyler**:
 
 | | Sınırı ne | Neden |
 |---|---|---|
@@ -388,7 +388,7 @@ Detay: `docs/standards/15-oturum-devri.md`.
 - Dosya yüklemede: tip, boyut, uzantı doğrulanır; dosya adı sanitize edilir.
 - Login ve yazma endpoint'lerinde rate limit.
 - Güvenlik başlıkları (CSP, HSTS, X-Frame-Options) yapılandırılır.
-- Bağımlılıklar düzenli denetlenir (`npm audit`).
+- Bağımlılıklar düzenli denetlenir (`pnpm audit`).
 
 ### 5.6 Test
 - Piramit: **çok unit / orta entegrasyon / az E2E**.
@@ -445,7 +445,7 @@ Sıra: `1) sorgu + index → 2) önbellek → 3) CDN/görsel optimizasyonu →
   Detay: `14-privacy-and-compliance.md`
 
 ### 5.12 Bakım
-- Haftalık: hata panosu + `npm audit`. Aylık: bağımlılık güncellemeleri ayrı PR ile.
+- Haftalık: hata panosu + `pnpm audit`. Aylık: bağımlılık güncellemeleri ayrı PR ile.
 - Teknik borç `docs/project/roadmap.md` içinde açıkça listelenir, gizlenmez.
 - Kullanılmayan özellik, tablo ve bağımlılık silinir.
 - Olay (incident) sonrası kısa not yazılır: ne oldu, neden, tekrarı nasıl önlenir.
@@ -479,7 +479,7 @@ Feature bitince şu sırayı izle:
    - Sorgular parametreli mi? XSS'e açık render var mı?
    - Yeni secret/env eklendi mi, `.env`'de mi, `.env.example` güncellendi mi?
    - Hata mesajları iç detay (stack, SQL, dosya yolu) sızdırıyor mu?
-   - Yeni bağımlılık eklendiyse `npm audit` sonucu ne?
+   - Yeni bağımlılık eklendiyse `pnpm audit` sonucu ne?
 
    **1c. Ekranlar gerçekten çalışıyor mu** — `browser-testing-with-devtools`
    Uygulamayı ayağa kaldır, tarayıcıda **fiilen tıklayarak** doğrula.

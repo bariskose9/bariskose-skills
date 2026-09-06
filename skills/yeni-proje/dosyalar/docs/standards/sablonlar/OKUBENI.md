@@ -22,7 +22,7 @@ Adım adım kurulum: `docs/standards/16-yeni-proje-kurulumu.md`.
 
 ## Kopyalanmayacaklar
 
-`docs/standards/00–17` projeye göre **değişmez**. Bir kural projeye özel hale
+`docs/standards/00–18` (19 dosya) projeye göre **değişmez**. Bir kural projeye özel hale
 geliyorsa o kural yanlış yazılmıştır — kuralı düzelt, dallandırma.
 Tek istisna: `00-stack.md` sürüm tablosu, **fiilen kurulan** sürümlerle eşitlenir.
 

@@ -163,6 +163,28 @@ Boş bırakılan alan seviye 0 sayılır.
 
 ---
 
+## ⭐ Artık biliyorum
+
+<!--
+Seviye 3'e (sahipleniyor) çıkmış terimlerin DÜZ LİSTESİ. Yukarıdaki tablolar
+"hangi konu kaç seviyede" der; bu liste onun ajana bakan çıktısıdır:
+⛔ buradaki bir terim bir daha BAŞTAN AÇIKLANMAZ, doğrudan kullanılır.
+
+Biçim:  - `terim` — tek cümlelik karşılığı (seviye 3'e çıktığı tarih)
+-->
+
+- <terim> — <karşılığı>
+
+⚠️ **Ajan buraya kendiliğinden yazmaz, teklif eder.** Seviye yükseltme kuralı
+yukarıda: iki ayrı oturumda kanıt + kullanıcı onayı.
+
+⭐ **Bu bölüm projeler arasında TAŞINIR.** Yeni proje kurulurken
+(`/yeni-proje` Adım 2) yalnızca bu liste kopyalanır; defterin geri kalanı
+(zor gelen kararlar, tekrar eden hatalar) o projeye aittir ve taşınmaz.
+Kullanıcı altıncı projesinde birinci projenin diliyle konuşulmaz.
+
+---
+
 ## Kelime defteri
 
 <!--

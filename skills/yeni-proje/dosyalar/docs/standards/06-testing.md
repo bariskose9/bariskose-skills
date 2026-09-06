@@ -31,9 +31,12 @@ Prisma'nın kendisi · sabit metinler.
 - Her test kendi verisini kurar ve temizler. Paylaşılan global veri yok.
 - Dış API'ler test ortamında mock'lanır; gerçek istek atılmaz.
 - Rastgelelik ve tarih sabitlenir (`vi.setSystemTime`).
-- **Süreye bağlı her kural için süre dolumu testi zorunludur** (koltuk kilidi, OTP,
-  oturum, hız sınırı penceresi). Doğruluk okuma anındaki zaman koşuluna bağlı
-  olduğu için (ADR-007), o koşul unutulursa test yakalamalıdır.
+- **Süreye bağlı her kural için süre dolumu testi zorunludur** (rezervasyon
+  kilidi, OTP, oturum, hız sınırı penceresi). *Gerekçe:* süresi dolan kayıt
+  tablodan **kendiliğinden silinmez**; satır yerinde durur ve geçerliliği her
+  okumada zaman karşılaştırmasıyla hesaplanır. O karşılaştırma tek bir sorguda
+  unutulursa süresi dolmuş kayıt geçerli gibi döner — hata vermez, sessizdir.
+  Testin yakalaması gereken tam olarak budur.
 
 ## Kararsız (flaky) test — testi gevşetme, doğru bekle
 

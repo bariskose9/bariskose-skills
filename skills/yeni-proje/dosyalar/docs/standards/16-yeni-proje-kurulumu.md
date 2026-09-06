@@ -156,7 +156,7 @@ gerekçe, kararı verirken en net hatırlanır.
 |---|---|---|
 | `CLAUDE.md` | repo kökü | **Olduğu gibi kopyala**, sonra yalnızca §0 "Proje Değişkenleri" bloğunu doldur |
 | `CALISMA-KILAVUZU.md` | Kullanıcının kılavuzu: nasıl başlanır, ne sorulur, hangi dosya ne işe yarar | Olduğu gibi kopyalanır |
-| `docs/standards/**` (00–17) | `docs/standards/` | **Olduğu gibi kopyala, İÇİNİ DEĞİŞTİRME.** Stack farklıysa yalnızca `00-stack.md` tablosu güncellenir |
+| `docs/standards/**` (00–18, **19 dosya**) | `docs/standards/` | **Olduğu gibi kopyala, İÇİNİ DEĞİŞTİRME.** Stack farklıysa yalnızca `00-stack.md` tablosu güncellenir |
 | `docs/standards/sablonlar/**` | `docs/project/` | Kopyala ve **içini doldur** — her şablonun başında ne yazılacağı anlatılıyor |
 | `REPO-YAPISI.md` | repo kökü | Kopyala, projeye özel klasör adlarını değiştir |
 
@@ -174,10 +174,20 @@ Klasörün kendi indeksi: `docs/standards/sablonlar/OKUBENI.md`.
 | `altyapi-durumu.md` | `docs/project/altyapi-durumu.md` | **Evet** |
 | `CHANGELOG.md` | `docs/project/CHANGELOG.md` | **Evet** |
 | `sonraki-adim-prompt.md` | `docs/project/sonraki-adim-prompt.md` | **Evet** |
+| `teknoloji-ve-plan.md` | `docs/project/teknoloji-ve-plan.md` | **Evet** — projenin öğretici belgesi, her adımda büyür |
+| `ogrendiklerim.md` | `docs/project/ogrendiklerim.md` | **Evet** — seviye defteri, anlatım düzeyi buradan okunur |
 | `decisions/ADR-000-sablon.md` | `docs/project/decisions/` | **Evet** (doldurulmaz, çoğaltılır) |
+| `vscode-eklentileri.md` | `docs/project/vscode-eklentileri.md` | **Evet** — hangi eklenti neden önerildi |
 | `data-model.md` | `docs/project/data-model.md` | Veritabanı varsa |
 | `integrations.md` | `docs/project/integrations.md` | Dış servis varsa |
 | `fake-data-guide.md` | `docs/project/fake-data-guide.md` | Sahte veri gerekiyorsa |
+| `kurumdan-ogrenilecekler.md` | `docs/project/kurumdan-ogrenilecekler.md` | ⛔ **Yalnızca işyeri projesinde** — kendi projende soracak kurum yok |
+
+⛔ **Bu tablo `sablonlar/` klasörüyle birebir aynı olmalıdır.** Sayıyı ezberden
+yazma: `ls docs/standards/sablonlar/` ile bak. Tabloda olmayan bir şablon
+**hiç açılmaz** — 2026-09-06 denetiminde dört şablon tam bu yüzden tablonun
+dışında kalmıştı (`teknoloji-ve-plan` · `ogrendiklerim` · `vscode-eklentileri` ·
+`kurumdan-ogrenilecekler`).
 
 Şablonlar **kaynak projeden silinmez** — bir sonraki projeye yine lazım.
 
@@ -271,7 +281,7 @@ kuralı görmezden gelmek değil, **kimin sorumlu olduğunu bulup istemektir**.
 | Dosya | Değişir mi | Ne değişir |
 |---|---|---|
 | `docs/standards/00-stack.md` | **Bazen** | Yalnızca sürüm tablosu, o da fiilen kurulanla eşitlenerek |
-| `docs/standards/01–17` | **Hayır** | Mühendislik kuralları projeden bağımsızdır |
+| `docs/standards/01–18` | **Hayır** | Mühendislik kuralları projeden bağımsızdır |
 | `CLAUDE.md` | **Sadece §0** | Geri kalanı çalışma protokolü, sabit |
 | `docs/project/PRD.md` | **Tamamen** | Her projenin işi başkadır |
 | `docs/project/roadmap.md` | **Tamamen** | Adımlar işe göre |

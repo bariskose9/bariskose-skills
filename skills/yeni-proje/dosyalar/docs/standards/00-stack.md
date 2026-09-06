@@ -17,6 +17,29 @@ alternatifi varsa **gerekçesiyle sunar**, kararı **geliştirici** verir.
 
 ⛔ Ajan **tek başına** stack değiştirmez; bulguyu sunar, onayı bekler.
 
+### ⛔ DAYATILAN SEÇİM, KİTİN VARSAYILANINI YENER
+
+Bu dosyadaki her seçim bir **varsayılandır**, bir dayatma değil. Sıra şudur ve
+tartışmasızdır:
+
+| # | Kaynak | Ne zaman geçerli |
+|---|---|---|
+| 1 | **Analiz dokümanı / şartname** | Yazılıysa **o uygulanır** — tartışma kapanır |
+| 2 | **Kurumun zorunlu tuttuğu araç** | DevOps'un desteklediği neyse o |
+| 3 | **Kitin varsayılanı** (bu dosya) | Yukarıdaki ikisi sessizse |
+
+⛔ Kapsam yalnızca kütüphane seçimi değildir: **paket yöneticisi, dosya
+isimlendirme biçimi, dizin düzeni ve CI platformu da bu sıraya tabidir.**
+Kurum `npm` kullanıyorsa kitin `pnpm` tercihi geçmez; kurum `PascalCase`
+dosya adı istiyorsa kitin `kebab-case` tercihi geçmez.
+
+⭐ Sapma **ADR'ye yazılır** — *"kit şunu diyor, biz şunu yapıyoruz, çünkü
+şartname §N şöyle diyor"*. Yazılmayan sapma, sonraki oturuma "burada doğru olan
+buymuş" diye görünür (`11-agent-workflow.md` → *"Sapma nasıl yazılır"*).
+
+⚠️ **Dayatma olup olmadığı TAHMİN EDİLMEZ, SORULUR** — `SKILL.md` Adım 1,
+*"STACK'İ HEMEN KURMA"*.
+
 Sürüm sütunu **fiilen kurulu** olanı gösterir; `package.json` ile birebir aynıdır.
 
 ⭐ **Bu projede gerekmeyen satır SİLİNMEZ, DURUMU YAZILIR.** Silinirse altı ay
@@ -38,7 +61,7 @@ sonra *"bunu neden kurmadık"* sorusu yeniden araştırılır. Üç durum:
 | ORM | Prisma | 7 | Ham SQL sadece performans gerekçesiyle, ADR ile |
 | Veritabanı | PostgreSQL | 18 | Local Docker imajı Neon'daki yama sürümüyle eşitlenir |
 | Auth | Auth.js (NextAuth v5) | 5 (beta) | Web: httpOnly cookie · Mobil: Bearer JWT · aşağıya bak |
-| Şifre özetleme | `argon2` (argon2id) | 0.45.1 | Parametreler `src/config/constants.ts` içinde · ADR-011 |
+| Şifre özetleme | `argon2` (argon2id) | 0.45.1 | argon2id **bellek-zor**: kırmak için işlemci değil RAM gerekir, bu yüzden GPU/ASIC ile paralel denemeyi pahalılaştırır. bcrypt yalnızca işlemci-zordur. Parametreler `src/config/constants.ts` içinde, ADR'ye yazılır |
 | Bot koruması | Cloudflare Turnstile | — | Giriş gerektirmeyen formlarda zorunlu · ADR ile kabul edildi |
 | Validasyon | Zod | 4 | Her API girişinde zorunlu |
 | Form | React Hook Form + Zod resolver | 7.83 / 5.5 | |
@@ -261,7 +284,7 @@ madde sessizce çiğnenmez.
   transaction ister. Postgres bunları veritabanı seviyesinde zorlar; Mongo'da
   yabancı anahtar ve bildirimsel bütünlük yoktur, aynı garantiler uygulama
   koduna taşınır ve ilk eşzamanlı istekte kaybedilir (`04-database.md` →
-  benzersiz index + transaction).
+  *"Eşzamanlılık"*: benzersiz index + transaction).
   ⭐ **Meşru istisna:** şeması gerçekten belirsiz, ilişkisiz ve yüksek hacimli
   veri (ham log, olay akışı, sensör kaydı). Böyle bir modül çıkarsa bu bir yasak
   değil **ADR konusudur** — Postgres `jsonb` ile karşılaştırılır, ölçülür, karar
@@ -311,7 +334,21 @@ yükseltmeye çalışır ve aynı duvara toslar.
 
 ## Sürüm politikası
 - Node.js LTS (>=20). Sürüm `.nvmrc` ile sabitlenir.
-- Bağımlılıklar `package-lock.json` ile kilitlenir; `^` ile geniş aralık bırakılmaz.
+- **Paket yöneticisi `pnpm`'dir** ve bağımlılıklar `pnpm-lock.yaml` ile
+  kilitlenir; `^` ile geniş aralık bırakılmaz.
+
+  ⭐ *Gerekçe:* monorepo kararı zaten `pnpm workspaces` üzerine kurulu
+  ("Backend kurgusu" tablosu) ve CI `pnpm install --frozen-lockfile` ile koşuyor
+  (`09-ci-cd-deploy.md`). Tek repoda da aynı araç kullanılır — iki farklı paket
+  yöneticisi iki farklı kilit dosyası demektir ve hangisinin doğru olduğu
+  ayrışır. `pnpm` ayrıca bağımlılıkları içerik-adresli tek bir depoda tutar,
+  disk ve kurulum süresi kazandırır.
+
+  ⛔ **`package-lock.json` aranmaz** — `pnpm` onu hiç üretmez. Kilit dosyası
+  `pnpm-lock.yaml`'dır ve **commit edilir**.
+
+  ⚠️ Kurum `npm` veya `yarn` dayatıyorsa yukarıdaki *"DAYATILAN SEÇİM"* kuralı
+  işler: onlarınki uygulanır, sapma ADR'ye yazılır.
   `package.json` içinde sürümler **tam** yazılır (`16.2.12`, `^16.2.12` değil).
 - Major sürüm yükseltmesi ayrı PR olur, feature PR'ına karıştırılmaz.
 - Bir bağımlılıkta yamalanmış sürüm varsa ama bağımlılık ağacı eskisini çekiyorsa,
@@ -394,7 +431,7 @@ uyarıdır. Kuralın değeri yazılı olmasında değil, **uygulanmasında**.
 Bu dosyadaki **herhangi bir ölçüm tarihi 6 aydan eskiyse** — ya da yukarıdaki
 dört andan biri geldiyse — ajan işe başlamadan önce tarar ve bulguyu bildirir:
 
-> *"`00-stack.md`'deki ölçümler <tarih> tarihli, 3 aydan eski. Taradım:
+> *"`00-stack.md`'deki ölçümler <tarih> tarihli, 6 aydan eski. Taradım:
 > `<paket>` için durum değişmiş — <eski rakam> → <yeni rakam>. Diğerleri aynı.
 > Değiştirelim mi?"*
 

@@ -18,6 +18,10 @@ Bir iş, aşağıdaki maddelerin **tamamı** işaretlenmeden "bitti" sayılmaz.
 - [ ] Zorunlu bir susturma varsa **gerekçesi yazıldı ve commit raporunda
       bildirildi** — sessizce bırakılmadı
 - [ ] Katman ihlali yok (bileşen içinden DB çağrısı yok)
+- [ ] ⛔ **İlgili yorumlar güncellendi** (`02-coding-standards.md`): değişen
+      kodun `NEREDEN` / `NE` / `NEREYE` / `SONUÇ` başlık bloğu ve satır içi
+      gerekçeleri hâlâ doğru mu. *Bayat bir yorum, yorumsuz bırakmaktan kötüdür* —
+      okuyan yanlış bilgilenir ve etki taraması onu yanlış dosyaya götürür
 
 ## Test
 - [ ] Yeni davranış için test yazıldı ve geçiyor
@@ -29,7 +33,7 @@ Bir iş, aşağıdaki maddelerin **tamamı** işaretlenmeden "bitti" sayılmaz.
 - [ ] Yetki + sahiplik kontrolü var
 - [ ] Hata mesajı iç detay sızdırmıyor
 - [ ] Yeni secret varsa `.env.example` güncellendi, `.env` commit edilmedi
-- [ ] `npm audit` yeni kritik uyarı üretmiyor
+- [ ] `pnpm audit` yeni kritik uyarı üretmiyor
 
 ## Arayüz
 - [ ] Tarayıcıda 375px ve masaüstünde düzgün

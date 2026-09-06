@@ -232,9 +232,12 @@ her zaman yetkilendirmeden gelir, belgenin kapalı olmasından değil.
 Production'da açılması istenirse: ortam değişkeniyle açılır (varsayılan kapalı),
 `noindex` verilir ve karar ADR'ye yazılır.
 
-**Tek belgeleme istisnası:** taklit edilen dış servis uçları (`/api/mock-kps/*`)
-belgelenmez — gerekçe ADR-009. Bu istisna yalnızca dış kurum taklidi için
-geçerlidir; uygulamanın kendi uçlarına genişletilemez.
+**Tek belgeleme istisnası:** taklit edilen dış servis uçları (`/api/mock-*`)
+belgelenmez. *Gerekçe:* o uçların sözleşmesi **bizim değil**, taklit edilen
+kurumundur; belgelemek başkasının API'sini kendi sözleşmemiz gibi ilan etmek
+olur. Ayrıca gerçek servise bağlanıldığı gün o uçlar silinir — belgesi de
+onlarla gider. Bu istisna yalnızca dış kurum taklidi için geçerlidir;
+uygulamanın kendi uçlarına genişletilemez ve karar ADR'ye yazılır.
 
 ### Yanıt gövdesi de belgelenir — ve şema TELDEN doğrulanır
 

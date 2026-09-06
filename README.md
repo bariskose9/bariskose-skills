@@ -114,7 +114,7 @@ skills/
 │       ├── CLAUDE.md          ← çalışma protokolü (§0 projede doldurulur)
 │       ├── REPO-YAPISI.md
 │       └── docs/standards/
-│           ├── 00–17          ← mühendislik kuralları (projeden bağımsız)
+│           ├── 00–18          ← 19 mühendislik kuralı (projeden bağımsız)
 │           └── sablonlar/     ← doldurulacak proje dokümanları
 ├── kit-senkron/
 │   └── SKILL.md

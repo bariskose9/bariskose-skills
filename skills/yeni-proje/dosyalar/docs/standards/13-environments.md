@@ -9,7 +9,7 @@ benim-belediyem-canli) yaygın bir yeni başlayan hatasıdır: kod iki yerde ayr
 
 | Ortam | Nerede çalışır | Veritabanı | Ne zaman oluşur | Kim görür |
 |---|---|---|---|---|
-| **local** | Kendi bilgisayarın (Docker) | Docker Postgres | `npm run dev` | Sadece sen |
+| **local** | Kendi bilgisayarın (Docker) | Docker Postgres | `pnpm dev` | Sadece sen |
 | **preview** | Vercel Preview | Neon `preview` dalı | Her PR'da OTOMATİK | Link'i olan |
 | **production** | Vercel Production | Neon `main` dalı | `main`'e merge'de | Herkes |
 
@@ -24,7 +24,7 @@ Dockerfile yine de repoda durur: başka bir sunucuya taşıma ihtiyacı doğarsa
 ve konteynerleştirmeyi öğrenmiş ol diye.
 
 ```
-local:      docker compose up -d  →  Postgres :5432  →  npm run dev  →  localhost:3000
+local:      docker compose up -d  →  Postgres :5432  →  pnpm dev     →  localhost:3000
 preview:    git push  →  PR  →  Vercel build  →  xxx-git-feature.vercel.app  →  Neon preview
 production: merge main  →  Vercel build  →  benimbelediyem.vercel.app  →  Neon main
 ```
@@ -34,9 +34,9 @@ production: merge main  →  Vercel build  →  benimbelediyem.vercel.app  →  
 ```
 1. git checkout -b feature/hastane-randevu
 2. docker compose up -d            → local Postgres ayağa kalkar
-3. npx prisma migrate dev          → şema değişikliği LOCAL'de uygulanır
-4. npm run dev                     → localhost:3000'de geliştir
-5. npm run lint && npm run test    → local kapı
+3. pnpm prisma migrate dev         → şema değişikliği LOCAL'de uygulanır
+4. pnpm dev                        → localhost:3000'de geliştir
+5. pnpm lint && pnpm test          → local kapı
 6. git push -u origin feature/...  → PR aç
 7. GitHub Actions çalışır          → lint, typecheck, test, build, e2e
 8. Vercel otomatik PREVIEW üretir  → preview DB'ye migrate eder

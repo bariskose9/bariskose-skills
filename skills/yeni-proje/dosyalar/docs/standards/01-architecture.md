@@ -31,7 +31,7 @@ mobil                                     (kurulur,
 ```
 
 ⛔ **Repository ile ORM aynı şey DEĞİLDİR.** Repository senin yazdığın bir
-dosyadır (`randevu.repository.ts`); ORM onun **kullandığı** pakettir. Şemada
+dosyadır (`appointment.repository.ts`); ORM onun **kullandığı** pakettir. Şemada
 *"Repository (Prisma)"* biçiminde birleştirilmesi yaygın bir hatadır ve katman
 sınırını görünmez kılar.
 
@@ -39,10 +39,10 @@ sınırını görünmez kılar.
 
 | # | Durak | Ne yapar | Ne YAPMAZ |
 |---|---|---|---|
-| 1 | **İstemci** | `POST /api/randevular` ile gövdeyi gönderir | İş kuralı bilmez |
+| 1 | **İstemci** | `POST /api/appointments` ile gövdeyi gönderir | İş kuralı bilmez |
 | 2 | **API katmanı**<br>`*.controller.ts` / `route.ts` | Zod ile gövdeyi doğrular · kimliği çözer · servisi çağırır · sonucu HTTP'ye çevirir (201/422) | ⛔ İş kuralı **yazılmaz** |
 | 3 | **Servis katmanı**<br>`*.service.ts` | Kuralları uygular: çalışma saati içinde mi · aynı gün ikinci randevu var mı · slot dolu mu | ⛔ `req`/`res` **tanımaz**, HTTP kodu döndürmez |
-| 4 | **Repository katmanı**<br>`*.repository.ts` | ORM'e ne isteneceğini söyler: `prisma.randevu.create({ data })` | ⛔ Tek bir `if` bile **bulunmaz** |
+| 4 | **Repository katmanı**<br>`*.repository.ts` | ORM'e ne isteneceğini söyler: `prisma.appointment.create({ data })` | ⛔ Tek bir `if` bile **bulunmaz** |
 | 5 | **ORM (Prisma)** | Çağrıyı SQL'e, dönen satırı nesneye çevirir — **iki yönlü eşleme** | Karar vermez, kural bilmez |
 | 6 | **PostgreSQL** | SQL'i çalıştırır, satırı döndürür | — |
 
@@ -56,13 +56,14 @@ ile veritabanı tabloları arasında çeviri yapan kütüphane. Repository'de ş
 yazarsın:
 
 ```ts
-prisma.randevu.create({ data: { doktorId: "d-42", tarih: "2026-09-10" } })
+// appointment (randevu) · doctorId (doktor kimliği) · scheduledAt (randevu zamanı)
+prisma.appointment.create({ data: { doctorId: "d-42", scheduledAt: "2026-09-10" } })
 ```
 
 Prisma bunu şuna çevirir ve veritabanına o gider:
 
 ```sql
-INSERT INTO "Randevu" ("doktorId","tarih") VALUES ('d-42','2026-09-10') RETURNING *;
+INSERT INTO "appointments" ("doctor_id","scheduled_at") VALUES ('d-42','2026-09-10') RETURNING *;
 ```
 
 Dönen satırı da geri çevirip TypeScript nesnesi olarak verir. Adındaki
@@ -123,7 +124,7 @@ Servis        → Çalışma saati içinde mi?  ← karar
                 Yoksa hata fırlat; varsa repository'yi çağır
                 (⛔ burada `res.status(400)` YAZILMAZ — servis HTTP bilmez)
 
-Repository    → prisma.randevu.create({ data })
+Repository    → prisma.appointment.create({ data })
                 (⛔ burada tek bir if bile OLMAZ)
 ```
 
@@ -233,10 +234,45 @@ her istek kendi izole bağlamında yaşar, ikisi de test edilebilir.
 Arka plan işlerinde HTTP bağlamı **yoktur**; iş kendi bağlamını kurar.
 
 ## İsimlendirme
-- Klasör ve dosya: `kebab-case` (`appointment-service.ts`)
-- React bileşen dosyası: `PascalCase.tsx`
-- Değişken/fonksiyon: `camelCase` · Tip/Interface: `PascalCase` · Sabit: `UPPER_SNAKE`
-- Tüm kod isimleri **İngilizce**. Kullanıcıya görünen metinler Türkçe.
+
+⚠️ **Önce dayatmaya bak.** Analiz dokümanı, şartname veya kurumun standardı bir
+isimlendirme kuralı veriyorsa **o geçerlidir**; aşağısı yalnızca sessiz
+kaldıklarında uygulanır (`00-stack.md` → *"DAYATILAN SEÇİM"*).
+
+| Ne | Biçim | Örnek |
+|---|---|---|
+| Klasör ve dosya | `kebab-case` | `work-orders/` |
+| Rol soneki | **nokta ile** | `work-order.service.ts` · `work-order.repository.ts` · `work-order.controller.ts` |
+| ⭐ React bileşen **dosyası** | `kebab-case` | `user-card.tsx` |
+| ⭐ React bileşenin **kendisi** | `PascalCase` | `export function UserCard()` |
+| Değişken · fonksiyon | `camelCase` | `getUserAppointments()` |
+| Tip · Interface | `PascalCase` | `WorkOrder` |
+| Sabit | `UPPER_SNAKE` | `MAX_UPLOAD_BYTES` |
+
+⛔ **Bileşen dosyası da `kebab-case`'dir** — dosya adı ile bileşen adının
+farklı biçimde olması bilerek seçilmiştir, kaza değil. Üç gerekçe:
+
+1. **shadcn/ui zaten böyle üretiyor.** `components/ui/alert-dialog.tsx`
+   dosyalarını CLI yazar; bileşen dosyalarını `PascalCase` yapmak aynı klasörde
+   **iki ayrı biçim** doğurur.
+2. **Next.js App Router'ın özel dosyaları küçük harflidir** (`page.tsx`,
+   `layout.tsx`, `route.ts`). Tek biçim, istisnasız okunur.
+3. ⛔ **Büyük/küçük harf tuzağını kapatır.** macOS ve Windows dosya adında
+   harf büyüklüğüne duyarsızdır, Linux konteyneri ve CI duyarlıdır; tek biçim
+   kuralı bu sessiz kırılmayı baştan imkânsız kılar
+   (`13-environments.md` → *"DOSYA ADI BÜYÜK/KÜÇÜK HARF"*).
+
+⛔ **`import` yolu dosya adıyla birebir aynı yazılır.**
+
+### Dil — kod İngilizce, anlatım Türkçe
+
+- **Tüm kod isimleri İngilizce:** değişken, fonksiyon, tip, dosya, klasör,
+  tablo, kolon, enum, API yolu, commit mesajı.
+- **Yorumlar, açıklamalar ve kullanıcıya görünen metinler Türkçe.**
+- ⭐ Bir kod adı ilk geçtiğinde **Türkçesi yorumda parantez içinde** verilir
+  (`workOrder` → *iş emri*), ki hem İngilizce adı hem Türkçe karşılığı
+  aranabilir olsun. Kuralın tamamı ve örnekleri:
+  `02-coding-standards.md` → *"KOD İNGİLİZCE, YORUM TÜRKÇE"*.
 
 ## Boyut sınırları
 Dosya > 300 satır → böl. Fonksiyon > 50 satır → böl. İç içe if > 3 seviye → erken return.

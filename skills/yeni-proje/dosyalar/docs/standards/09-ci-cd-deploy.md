@@ -20,7 +20,7 @@ Ortamlar **veri paylaşmaz**. Production verisiyle test yapılmaz.
 ## CI pipeline (GitHub Actions — her PR'da)
 ```
 install → lint → typecheck → unit test → build → bundle-size →
-e2e test (+ axe) → lighthouse → npm audit
+e2e test (+ axe) → lighthouse → pnpm audit
 ```
 Herhangi biri kırmızıysa merge kapalıdır. Kural devre dışı bırakılmaz.
 
@@ -130,7 +130,7 @@ yazılır.
 **tek komutla kurulum** · ortam değişkenleri listesi · sık kullanılan komutlar ·
 klasör yapısı özeti · canlı ve preview bağlantıları.
 Hedef: projeyi ilk kez klonlayan biri 10 dakikada çalıştırabilmeli.
-`npm run setup` komutu: bağımlılık kurar, Docker'ı ayağa kaldırır, migrate eder, seed eder.
+`pnpm run setup` komutu: bağımlılık kurar, Docker'ı ayağa kaldırır, migrate eder, seed eder.
 
 ## Tedarik zinciri güvenliği (CI'nın kendisi bir saldırı yüzeyidir)
 
@@ -209,7 +209,7 @@ Platform dosyaları yalnızca **onu çağırır**:
 ⭐ **İki dosya da baştan yazılır**, kurum hangisini kullanırsa kullansın.
 Kullanılmayan dosya zararsızdır; taşınma günü **ek iş çıkmaz.**
 
-⚠️ **Yalnızca isimler farklıdır** (`03-api-guidelines.md` → PR/MR ayrımı):
+⚠️ **Yalnızca isimler farklıdır** (`08-git-workflow.md` → *"Pull Request"*):
 
 | | GitHub | GitLab |
 |---|---|---|
@@ -267,7 +267,7 @@ tartışılır.
 
 ⚠️ Ajan, kullanıcı kendi projesinde bir aracı bir süre kullandıysa **kuruma
 taşımayı teklif eder** — kullanıcının hatırlaması beklenmez
-(`11-agent-workflow.md` → *"Öğretmek gönüllüdür"*).
+(`11-agent-workflow.md` → *"ÖĞRETME YÜKÜMLÜLÜĞÜ"*).
 
 > **ℹ️ Renovate'in maliyeti — sık sorulan**
 >
@@ -365,7 +365,7 @@ bir bulgu varsa gerekçesi PR açıklamasına yazılır, sessizce geçilmez.
   sessizce geri alınmış olur. Kurulum sonrası refleks: farkı oku, istenmeyeni
   kaldır, kaldırdıktan sonra üretilen kodu o pakete bağlı kalmayacak şekilde
   düzelt.
-- **Her paket ekleme/çıkarmadan sonra güvenlik denetimi (`npm audit`) koşulur.**
+- **Her paket ekleme/çıkarmadan sonra güvenlik denetimi (`pnpm audit`) koşulur.**
   Sonuç, eklenen paketle ilgisiz olsa bile o an temiz olmalıdır: denetimi
   kırmızı bırakıp "benim eklediğim değil" demek, bir sonraki kişiye kırmızı
   bir kapı devretmektir.

@@ -3,7 +3,9 @@
 > **Yeni bir oturum bu dosyayı ilk okur.** Nerede kaldığımızı, hangi kararların
 > verildiğini ve hangilerinin **yeniden tartışılmayacağını** anlatır.
 
-**Son güncelleme:** 2026-09-05 · **Kit sürümü:** 1.80.0
+**Son güncelleme:** 2026-09-06 · **Kit sürümü:** `.claude-plugin/plugin.json`'a bak
+(bu satır yazılırken 1.85.0). ⛔ Sürümü buraya elle yazma — iki yerde yaşayan sayı
+ayrışır; tek doğru kaynak `plugin.json`'dır.
 
 ---
 
@@ -77,7 +79,7 @@ denetimi…).
 
 | Skill | Durum |
 |---|---|
-| `constraint-driven-development` | ⛔ **GERÇEK BOŞLUKTU** — "kalite çıtası sessizce düşürülmez" kuralı kite alındı (v1.82.0). Skill yine de çağrılmıyor; kural artık kitte |
+| `constraint-driven-development` | ⛔ **GERÇEK BOŞLUKTU** — "kalite çıtası sessizce düşürülmez" kuralı kite alındı. Skill yine de çağrılmıyor; kural artık kitte |
 | `code-simplification` | ⚠️ Kısmi — kitte boyut sınırları var (300/50 satır), sadeleştirme turu yok. İzlenecek |
 | `deprecation-and-migration` | ⚠️ Karşılığı yok ama **şimdi gerekmiyor** — kit yeni proje kuruyor, eski sistem emekliye ayırmıyor. Eski sistem taşıma işi çıkarsa yeniden bakılır |
 | `observability-and-instrumentation` | ✅ Kitin `12-operations` bölümü bu ölçekte **daha iyi** (Sentry'ye özgü, KVKK süzgeci, "gözlem katmanı uygulamayı düşüremez" kuralı). RED metrik/kardinalite yok ama o ölçekte değiliz |
@@ -116,8 +118,8 @@ geçmişin temizlenmesine gerek olmadığını söyledi.)
 5. `claude plugin marketplace update bariskose-skills` → `claude plugin update proje-kiti@bariskose-skills`
 6. Kullanıcıya **Reload Window** gerektiğini söyle — oturum plugin'i açılışta bir kez yükler
 
-⚠️ **Kurulu kopya ile depo ayrı şeylerdir.** Depoda 1.80.0 olması, çalışan
-oturumun 1.80.0'ı yüklediği anlamına gelmez.
+⚠️ **Kurulu kopya ile depo ayrı şeylerdir.** Deponun sürümü ile çalışan
+oturumun yüklediği sürüm aynı olmak zorunda değildir; ikisi ayrı ayrı ölçülür.
 
 ---
 
@@ -142,5 +144,9 @@ anlatır gibi.**
 - [ ] Kullanıcı `KIT-REHBER.md` ve `KIT-NE-YAPIYOR.md`'yi okuyup dönüş yapacak
 - [ ] Özellikle **`06-testing.md` → beş gözle doğrulama** listesi kalibre
       edilecek: fazla mı, eksik mi — ancak kullanan söyleyebilir
-- [ ] `11-agent-workflow.md` **805+ satır** ve kitin en büyük dosyası (ikinci
-      büyüğün iki katı). Büyümeye devam ederse bölünmesi önerilecek
+- [ ] `11-agent-workflow.md` **888 satır** (2026-09-06 ölçümü). ⚠️ Kitin en
+      büyük dosyası **değil** — `CALISMA-KILAVUZU.md` 1209 satırla ondan büyük,
+      `SKILL.md` 877 ile hemen arkasında. Doğru olan dar iddia şudur:
+      `docs/standards/` **içinde** en büyük dosya ve ikinci büyüğün
+      (`00-stack.md`, 421 satır) iki katı. Büyümeye devam ederse bölünmesi
+      önerilecek; `CALISMA-KILAVUZU.md` de aynı ölçüye girer
