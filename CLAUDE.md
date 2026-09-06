@@ -57,12 +57,29 @@ kullanıcı *"bunu teknoloji planıma ekle"*, *"şu notu güncelle"* dediğinde
 | Kite kural yazarken *"bu nereden geldi"* gerekiyor | ✅ Oku, ama **yalnızca ilgili bölümü** |
 | Denetim betiği | ✅ Her zaman tarar — *"okunmaz"* ile *"denetlenmez"* ayrı şeylerdir |
 
-⛔ **Kite yeni bir dosya eklediysen `ICINDEKILER.md`'ye satır ekle.** O belge
-kullanıcının haritasıdır ve ajan onu okumaz — ama **güncellemek ajanın işidir.**
-Denetim betiği bunu zorlar: haritada görünmeyen dosya commit'i durdurur.
+⛔ **Kite yeni bir dosya eklediysen `ICINDEKILER.md`'ye satır ekle.** Denetim
+betiği bunu zorlar: haritada görünmeyen dosya commit'i durdurur.
 
-*Gerekçe:* harita elle güncellenmeye bırakılırsa ilk eklemede bayatlar ve kimse
-fark etmez. Kullanıcı olmayan bir dosyayı arar, olan bir dosyayı hiç bilmez.
+### ⛔ TAZELEME KULLANICININ İŞİ DEĞİL — commit kapısıdır
+
+⛔ **Kullanıcıdan *"şunu da güncelle"* demesi BEKLENMEZ.** Bir kuralı değiştiren
+oturum, o kuralı anlatan **her belgeyi aynı oturumda** günceller. Ayrıntılı
+yayılma tablosu: `docs/standards/11-agent-workflow.md` → *"YAYILMA TABLOSU"*.
+
+| Değiştirdiysen | Güncellenecekler |
+|---|---|
+| `docs/standards/` içinde bir kural | Diğer standartlar · `dosyalar/CLAUDE.md` · `CALISMA-KILAVUZU.md` · `ICINDEKILER.md` · `docs/KIT-REHBER.md` · `docs/KIT-NE-YAPIYOR.md` |
+| `SKILL.md` akışında bir adım | `ICINDEKILER.md` + `CALISMA-KILAVUZU.md` adım tabloları · iki rehber |
+| Yeni dosya ekledin | `ICINDEKILER.md` — denetim zorlar |
+| Minor sürüm artırdın | İki rehberin `**Sürüm:**` damgası — denetim zorlar |
+
+⭐ **Betik neyi zorlayabiliyorsa onu zorlar** (harita · damga · kırık atıf);
+*"anlatım hâlâ doğru mu"* sorusunu **ölçemez** — o senin işin. Kapı bu yüzden
+hem mekanik hem insani.
+
+*Gerekçe:* harita ve rehberler elle güncellenmeye bırakılırsa ilk değişiklikte
+bayatlar ve kimse fark etmez. Kullanıcı olmayan bir dosyayı arar, olan bir
+dosyayı hiç bilmez — ve **yanlış bir rehber, rehbersizlikten kötüdür.**
 
 Sonra: `.claude-plugin/plugin.json` içindeki sürümü artır (yama `1.0.1`,
 yeni kural `1.1.0`), commit, push.
