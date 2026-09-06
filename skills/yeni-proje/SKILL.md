@@ -296,6 +296,85 @@ Tek tek sor, varsayım yapma:
 3. **Backend kurgusu:** aşağıdaki dört soruyu **sen sor, sen karara bağla**
 4. **Proje adı** ve **hedef kullanıcı kitlesi** (bir cümle)
 
+### ⛔ ELİMİZDE NE HAZIR — envanteri ÇIKAR, sonra karar ver
+
+⚠️ **"Ne yapacağız" sorusundan önce "ne verilmiş" sorusu gelir.** Bu cevap
+Prisma'nın gerekip gerekmediğini bile değiştirir; sonradan öğrenmek yeniden
+yazmak demektir.
+
+```
+Ne verilmiş?
+│
+├─ 1. HİÇBİR ŞEY (kendi projem)
+│     → hepsi bizde: veritabanı seç → şema yaz → migrate → API → arayüz
+│
+├─ 2. Sadece veritabanında YER (boş şema)
+│     → tabloları BİZ açarız: `schema.prisma` → `prisma migrate dev`
+│
+├─ 3. Veritabanı + TABLOLAR hazır
+│     → `prisma db pull` ile şema koda çekilir → API + arayüz bizde
+│     ⛔ Tablo/kolon adları KURUMUN kuralına uyar; kitin isimlendirme kuralı geçmez
+│
+├─ 4. Veritabanı + API hazır
+│     → yalnızca arayüz. ⛔ Prisma GEREKMEZ, repository katmanı bizde YOK
+│     → istenecek şey: **API sözleşmesi** (`03-api-guidelines.md`)
+│
+├─ 5. Kimlik kurumdan geliyor (LDAP · Active Directory · kurum SSO)
+│     → giriş ekranı yazılmaz, kurumun sistemine bağlanılır
+│     → oturum ve roller kurumdan gelir; `05-auth-security.md` buna göre uyarlanır
+│
+├─ 6. Mevcut sistemle ENTEGRASYON (eski ERP · e-Devlet · başka birim)
+│     → kendi veritabanımızın YANINDA dış API de tüketilir
+│     → dış çağrı sunucu tarafında yapılır ve önbelleklenir (`01-architecture.md`)
+│
+├─ 7. Çalışan projeye EKLEME (brownfield)
+│     → kurulum yok, uyum var. ⛔ Önce oku ve haritasını çıkar, sonra dokun
+│     → `REPO-YAPISI.md` mevcut yapıya göre doldurulur
+│
+└─ 8. Veri var ama BAŞKA BİÇİMDE (Excel · Access · eski sistem dökümü)
+      → önce taşıma/aktarım işi planlanır, roadmap'te AYRI adım olur
+```
+
+⚠️ **Senaryolar birleşir.** Kurum projesinde en sık görülen bileşim **2 + 5 + 6**:
+boş şema verilir, kimlik kurumdan gelir, bir de eski sistemle konuşulur.
+
+⛔ **Tahmin etme, sor.** *"Veritabanını siz mi vereceksiniz, tablolar hazır mı,
+hazır bir API var mı, giriş sizin sisteminizden mi gelecek?"*
+
+### ⛔ BU BİR KAPIDIR — envanter kapanmadan Adım 3'e (PRD) GEÇİLMEZ
+
+Sekiz senaryodan **hangisi ya da hangileri** geçerli, yazılı olarak
+kararlaştırılmadan PRD sorularına başlanmaz.
+
+*Gerekçe:* envanter cevabı PRD'nin içeriğini değiştirir. Senaryo 4'te (API
+hazır) veri modeli soruları anlamsızdır; senaryo 5'te (kimlik kurumdan) rol ve
+yetki soruları kuruma sorulur, kullanıcıya değil; senaryo 7'de (brownfield)
+kapsam sorusu *"ne yapılacak"* değil *"neye dokunulacak"*tır.
+
+| Ne | Nereye yazılır |
+|---|---|
+| Hangi senaryo(lar) geçerli, tek cümleyle gerekçesi | `altyapi-durumu.md` — **ilk satır** |
+| Kuruma sorulacak açık kalanlar | `kurumdan-ogrenilecekler.md` |
+| Sapma veya belirsizlik varsa | `PRD.md` §2b Varsayımlar |
+
+⚠️ **Cevap alınamıyorsa senaryo TAHMİN edilmez** — *"varsayım: senaryo 2"*
+biçiminde yazılır ve doğrulanana kadar geri alınabilir kararlar verilir.
+
+### ⛔ ANALİZ DOKÜMANI VE STACK VERİLDİYSE — ÖNCE DENETLE
+
+Kullanıcı şartname, analiz dokümanı veya hazır bir teknoloji listesi verirse
+**okumadan PRD'ye geçme.** Sırayla:
+
+1. **Oku ve özetle** — kullanıcıya *"ben bunu şöyle anladım"* diye geri ver
+2. **Denetle** (`11-agent-workflow.md` → *"Gereksinim doğru varsayılmaz"*):
+   çelişki · eksik · ölçülemeyen ifade · gizli varsayım ara
+3. **Stack'i değerlendir:** dayatılan teknolojiyle istenen iş uyuşuyor mu?
+   Uyuşmuyorsa **bir kez**, gerekçesiyle söyle — sonra kullanıcının kararına uy
+4. Bulguları yaz, **sonra** PRD sorularına geç (Adım 3)
+
+⭐ Dayatılan stack'ten sapma kararı alınırsa **ADR'ye gerekçesiyle yazılır.**
+Sonradan *"neden .NET değil de bu"* diye soran birine cevap orada durur.
+
 ### ⛔ STACK'İ HEMEN KURMA — önce dayatılan bir şey var mı diye SOR
 
 ⚠️ **Kurum/işyeri projesinde stack çoğu zaman kurumdan gelir**: şartname,
