@@ -150,7 +150,7 @@ geride kalırsa kırık atıf olarak çıkar. *"Kendiliğinden okunmaz"* ile
 | ↳ `veri-modeli-ve-sahte-veri-plani.md` | Veri modeli ve sahte veri planı |
 | ↳ `KURUMDAN-OGRENECEKLERIM.md` | Kuruma sorulacaklar |
 | ↳ `YENI-OTURUM.md` | Yeni oturuma verilecek devir notu |
-| ↳ `sunum-anlatim-plani.md` | Sunum ve anlatım planı |
+| ↳ `sunum-anlatim-plani.md` | ⭐ Teknoloji-ve-plan belgesinin **içindekiler bölümü** — hangi konu nerede anlatılıyor |
 
 ---
 
