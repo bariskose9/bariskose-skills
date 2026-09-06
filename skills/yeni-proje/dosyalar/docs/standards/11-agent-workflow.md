@@ -510,6 +510,49 @@ pratikse, iş bitiminde sorulur:
 ⛔ **Onaysız yazılmaz** ve **ölçülmeden yazılmaz** — `00-stack.md` → *"Stack
 kurulurken her teknolojinin güncel alternatifi taranır"*.
 
+## ⛔ KULLANICININ SORUSU BİR BOŞLUK SİNYALİDİR
+
+⛔ **Kullanıcı bir şey sorduğunda iki iş yapılır: cevap verilir VE sorunun
+neden sorulduğu düşünülür.** Cevabı verip geçmek, sorunun taşıdığı bilgiyi
+çöpe atmaktır.
+
+⚠️ **Kullanıcı kitte eksik olanı sana söyleyemez** — bilmediği bir şeyin eksik
+olduğunu bilemez. Ama **sorusu** onu ele verir. Boşluğu fark edecek taraf
+sensin (`CLAUDE.md` → *"ÖĞRETMEK GÖNÜLLÜDÜR"*).
+
+### Hangi soru neyi ele verir
+
+| Soru şu türdense | Muhtemel boşluk | Nereye yazılır |
+|---|---|---|
+| *"Bu nereye yazılıyor?"* · *"Hangi dosyada?"* | Yönlendirme yazılı değil ya da bulunamıyor | İlgili standart + `ICINDEKILER.md` |
+| *"Bunu neden böyle yapıyoruz?"* | Gerekçe yazılmamış — kural gerekçesiz duruyor | Kuralın yanına, gerekçe olarak |
+| *"Şu durumda ne olacak?"* | Senaryo hiç düşünülmemiş | Kurala yeni satır / karar tablosu |
+| *"Bu ikisi çelişmiyor mu?"* | ⛔ **Gerçek çelişki** — hemen çözülür | İki dosyada birden |
+| Aynı soruyu **ikinci kez** sorduysa | Cevap yazılı değil, sohbette kalmış | Kalıcı bir dosyaya |
+
+### Ne yapılır — sırayla
+
+1. **Cevabı ver.** Soru bekletilmez.
+2. **Kaynağı ara:** bu cevap kitte yazılı mı? `grep` ile bak, hafızandan karar
+   verme.
+3. Yazılı **değilse** ya da **bulunamayacak yerdeyse** kullanıcıya söyle:
+   > *"Bunun cevabı kitte yazılı değildi. `<dosya>` içine şöyle bir kural
+   > eklemeyi öneriyorum: `<kural>`. Ekleyeyim mi?"*
+4. Onay gelirse yaz — ve **bağlantılı her yeri** güncelle (aşağıdaki yayılma
+   tablosu).
+
+⛔ **Kullanıcının *"bunu kite ekle"* demesi beklenmez.** O soruyu sorarken
+öğrenmekle meşgul; kural yazmayı hatırlaması beklenemez. Aynı ilke
+`15-oturum-devri.md` → *"ÖĞRENİLEN ŞEYİ KULLANICIYA HATIRLATMA — SOR"*.
+
+⚠️ **Ama her soru kural üretmez.** Ölçüt: *"bu cevabı bir sonraki oturum da
+arayacak mı?"* Hayırsa yazılmaz — kural enflasyonu, kuralsızlık kadar zararlıdır.
+
+### ⭐ ANI GEÇİRME — soruyu cevaplarken teklif et, oturum sonunda değil
+
+Oturum sonuna bırakılan teklif, bağlam dolduğunda **ilk düşen şeydir.** Boşluğu
+fark ettiğin an söyle; kullanıcı *"sonra"* derse o zaman bekletirsin.
+
 ## ⛔ YAZDIKTAN SONRA DENETLE — dört kontrol, her seferinde
 
 Bir kural, bölüm veya dosya yazmak **işin yarısıdır.** Diğer yarısı: *"şimdi
@@ -561,14 +604,28 @@ o elle yapılır (aşağıdaki tablo).
 | 3 | **Kırık referans** | *"Şu bölüme bak"* dediğin **her yerin var olduğunu** doğrula | PRD'de olmayan bir bölüme atıf yapmak |
 | 4 | **Bayatlama** | Değişen şeyin **anıldığı yerleri** tara: sürüm, sayı, dosya adı, komut | Kite komut ekleyip kılavuzu güncellememek |
 
-### Kontrolün kapsamı — nereye bakılır
+### ⛔ YAYILMA TABLOSU — bir kural değişince nereler güncellenir
 
-| Neyi değiştirdin | Nereleri tara |
+⛔ **Kuralı yazmak işin yarısıdır.** Kural bir yerde değişip onu anlatan
+belgeler eskide kalırsa, kit **kendi içinde yalan söyleyen** bir belge takımına
+dönüşür — ve okuyan genellikle **önce rastladığına** inanır.
+
+| Neyi değiştirdin | ⛔ Nereleri tara ve güncelle |
 |---|---|
-| `docs/standards/` içinde bir kural | Diğer **18** standart (toplam 19) · `CLAUDE.md` · **kullanıcı kılavuzu** |
-| Kullanıcıya bakan bir belge | Aynı konuyu anlatan diğer belgeler |
+| `docs/standards/` içinde bir kural | Diğer **18** standart · `CLAUDE.md` (ajan) · `CALISMA-KILAVUZU.md` (kullanıcı) · kit deposunda `ICINDEKILER.md` + `docs/KIT-REHBER.md` + `docs/KIT-NE-YAPIYOR.md` |
+| `SKILL.md` akışında bir adım | `ICINDEKILER.md` adım tablosu · `CALISMA-KILAVUZU.md` adım tablosu · iki kullanıcı rehberi |
+| Bir komut veya araç | Komutun geçtiği **her** dosya (`grep` ile bul) |
 | Bir dosyayı yeniden adlandırdın/sildin | ⛔ **Tüm** depo — referanslar |
-| Bir sayı/ölçüm yazdın | Aynı sayının geçtiği her yer |
+| Bir sayı/ölçüm yazdın | Aynı sayının geçtiği her yer. ⛔ **Ezberden değil, ölçerek** |
+| Kullanıcıya bakan bir belge | Aynı konuyu anlatan diğer belgeler |
+
+⭐ **Üç kullanıcı belgesi üç ayrı derinliktir ve üçü de aynı kuralı anlatır:**
+`ICINDEKILER.md` *nerede*, `KIT-NE-YAPIYOR.md` *nasıl işliyor*,
+`KIT-REHBER.md` *terimler ne demek*. Biri güncellenip öbürü kalırsa kullanıcı
+hangisine inanacağını bilemez.
+
+⚠️ **Bunu hatırlamaya bırakma:** `denetim.mjs` sürüm damgasını ve haritayı
+zorlar, ama *"anlatım hâlâ doğru mu"* sorusunu ölçemez. O senin işin.
 
 ⛔ **"Bu küçük bir ekleme" diye atlanmaz.** Terim çakışması ve kırık referans
 tam olarak küçük eklemelerden doğar.

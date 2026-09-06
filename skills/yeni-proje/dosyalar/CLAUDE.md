@@ -331,10 +331,33 @@ Mühendislik kuralları **iki ayrı yerde** yaşıyor ve biri diğerini güncell
 Yalnızca kite yazmak, **bu projeyi güncellemez** — yeni oturum kuralı görmez.
 Yalnızca projeye yazmak, **sonraki projeye taşınmaz** — aynı hataya yeniden düşülür.
 
+### ⛔ KİT NEREDE — kurulu kopyaya YAZILMAZ
+
+Bu kapıyı geçmek için kitin **kaynak deposunu** bulman gerekir. Sırayla dene:
+
+```bash
+# 1) Kaynak depo — tek doğru hedef
+ls ~/baris_projects/bariskose-skills/skills/yeni-proje/dosyalar/docs/standards 2>/dev/null
+# 2) Yoksa GitHub'dan klonla
+git clone https://github.com/bariskose9/bariskose-skills /tmp/kit && cd /tmp/kit
+```
+
+⛔ **`~/.claude/plugins/cache/` altına YAZMA.** Orası kurulu kopyadır; bir
+sonraki `/plugin update` onu **siler ve üzerine yazar**, yazdığın kural
+kaybolur. Kural yalnızca **kaynak depoya** yazılır ve oradan push edilir.
+
+⚠️ **Kaynak depo bulunamıyorsa DUR ve kullanıcıya söyle.** Kuralı yalnızca
+projeye yazıp kapıyı geçmiş sayma — sonraki proje dersi almadan başlar.
+
 **Sıra ve kanıt:**
 1. Projenin `docs/standards/` dosyasına yaz
-2. Kitin `skills/yeni-proje/dosyalar/docs/standards/` kopyasına yaz
-3. ⛔ **KANIT:** `diff` ile ikisinin aynı olduğunu göster. Bu adım olmadan kapı geçilmiş sayılmaz
+2. Kitin **kaynak deposundaki** `skills/yeni-proje/dosyalar/docs/standards/`
+   kopyasına yaz
+3. ⛔ **KANIT:** `diff` ile ikisinin aynı olduğunu göster. Bu adım olmadan kapı
+   geçilmiş sayılmaz
+4. ⛔ **Kit tarafında iş bitmez:** `node skills/kit-senkron/bin/denetim.mjs .`
+   koştur (bağlantılı belgeleri de günceller), sürümü artır, commit + push.
+   Push edilmemiş kural **hiçbir makinede yok** demektir
 
 ⚠️ **Kurulu plugin sürümünü güncellemek bu kapının parçası DEĞİLDİR.** Kurulu
 sürüm yalnızca `/yeni-proje` ve `/kit-senkron` çalıştırılırken önemlidir;
