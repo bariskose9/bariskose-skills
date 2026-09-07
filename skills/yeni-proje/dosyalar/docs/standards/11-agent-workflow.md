@@ -849,11 +849,25 @@ Kullanıcı bir kelimeyi sorduğunda: kelimeyi açıkla, `ogrendiklerim.md` →
 ⚠️ Bu kayan bir eşiktir, bitiş çizgisi değil. Yeni teknoloji girdikçe yeni
 satırlar açılır.
 
-### Defter projeler arasında taşınır
+### ⭐ Defter TEK'tir ve kitle birlikte gelir
 
-⚠️ Kite yazılmaz — kite **kural** gider, bu **kişisel durum**. Ama
-`/yeni-proje` yeni projeyi kurarken önceki projenin defterini **kopyalar**
-(Adım 2). Kullanıcı altıncı projede birinci projenin diliyle konuşulmaz.
+⚠️ **Bu karar 2026-09-08'de değişti.** Önceden defter "kişisel durum" sayılıp
+kite yazılmıyordu; her projenin ayrı defteri oluyordu ve B projesinde öğrenilen
+A projesine hiç ulaşmıyordu.
+
+Şimdi: **tek defter var**, kitle birlikte her projeye gelir, her projede aynıdır.
+
+| Nasıl akar | Ne olur |
+|---|---|
+| Projede yeni bir şey öğrenildi | Deftere yazılır (ajan **sorar**, kendiliğinden yazmaz) |
+| Oturum kapanırken | `/kit-senkron` ile kite döner |
+| Yeni proje kurulurken | Kitten gelir — ⛔ **üzerine yazılmaz, birleştirilir** |
+
+⛔ **Hiçbir satır silinmez.** Bir madde yalnızca kullanıcı *"bunu sil"* dediğinde
+çıkar. Seviye çakışırsa yüksek olan kalır.
+
+⚠️ **Kit deposu herkese açıktır.** Deftere şifre, anahtar, kurum içi bilgi ve
+müşteri adı yazılmaz — bilgi yazılır, veri yazılmaz.
 
 ## Dışarıya giden doküman — anlatım standardı
 

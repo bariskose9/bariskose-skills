@@ -2,8 +2,6 @@
 # ⚠️ "docs/" değil "docs/*" yazılır: klasörün kendisi dışlanırsa git içine
 #    HİÇ bakmaz ve aşağıdaki "!" satırları çalışmaz.
 docs/*
-# Seviye defteri açık — her oturumda görünsün diye
-!docs/ogrendiklerim.md
 !docs/TARTISILMIS-KARARLAR.md
 # ⭐ Kullanıcı rehberleri açık — plugin'i kuran kişi kitin döngüsünü görmeli.
 #    ICINDEKILER.md "nerede ne var" der; bu ikisi "nasıl işliyor" ve

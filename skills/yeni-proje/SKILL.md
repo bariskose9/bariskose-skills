@@ -536,18 +536,20 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    ⛔ **Gerekçesiz yasak yazılmaz.** Sonraki oturum gerekçesiz maddeyi anlamaz
    ve delmeye çalışır. Bir yasağın gerekçesi bu projede geçerli değilse yasak da
    geçerli değildir — ADR yazılır, madde sessizce çiğnenmez.
-5. ⭐ **Önceki projenin *"Artık biliyorum"* listesini taşı.** Kullanıcının
-   seviyesi projeler arasında sıfırlanmaz.
+5. ⭐ **Seviye defteri — ÜZERİNE YAZMA, BİRLEŞTİR.**
 
-   - Kullanıcıya sor: *"Bir önceki projen hangi klasördeydi? Oradaki
-     `ogrendiklerim.md` içindeki 'Artık biliyorum' listesini buraya taşıyayım —
-     böylece zaten bildiğin terimleri baştan anlatmam."*
-   - Yol verilirse o dosyanın **yalnızca o bölümünü** kopyala; diğer bölümler
-     (tekrar eden hatalar, zor gelen kararlar) o projeye aittir, taşınmaz.
-   - İlk projeyse liste boş başlar — bu normaldir.
+   `ogrendiklerim.md` kitle birlikte gelir ve **her projede aynıdır**. Klasörde
+   zaten bir defter varsa:
 
-   ⛔ Bu liste **kite yazılmaz** (kural değil, kişisel durum) ama her projede
-   ajanın anlatım düzeyini belirler → `11-agent-workflow.md`.
+   - Kitteki satırlardan **projede olmayanları ekle**
+   - Var olan bir satırı **ikinci kez ekleme**
+   - ⛔ **Hiçbir satırı silme.** Bir madde yalnızca kullanıcı *"bunu sil"*
+     dediğinde çıkar
+   - Seviye çakışırsa **yüksek olan** kalır (öğrenilen unutulmuş sayılmaz;
+     düşürme kuralı ayrıdır → `11-agent-workflow.md`)
+
+   ⭐ Defter tek yerde yaşar ve `/kit-senkron` ile kite geri döner; bir sonraki
+   proje onu **zaten öğrenilmiş** olarak alır.
 
 ## Adım 3 — PRD (en kritik adım)
 

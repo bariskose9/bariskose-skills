@@ -43,8 +43,14 @@ yazmayı teklif eder.**
 | Aynı hata **üçüncü** kez | Artık kişisel değil → `/kit-senkron` ile **kite** |
 | *"Her projede böyle yapılmalı"* | Doğrudan **kite** (`/kit-senkron`) |
 
-⚠️ **Ayrım:** Kite **kural** gider ("şu durumda şu yapılır"). Deftere **deneyim**
-girer ("ben şunu atlamıştım"). Deneyim üç kez tekrarlanırsa kurala dönüşür.
+⚠️ **Ayrım:** Kite **kural** gider (*"şu durumda şu yapılır"* → `docs/standards/`).
+Deftere **deneyim** girer (*"ben şunu atlamıştım"* → `ogrendiklerim.md`).
+Deneyim üç kez tekrarlanırsa kurala dönüşür.
+
+⭐ **Ama defter de kite gider.** İkisi ayrı dosyalara gider, ikisi de
+`/kit-senkron` ile taşınır: kural standarda, deftere yazılan öğrenme ise
+defterin kendisine. Böylece bir sonraki proje **hem kuralı hem öğrenilmişi**
+alır. ⛔ Defter **birleştirilir, üzerine yazılmaz** — hiçbir satır silinmez.
 
 ⛔ **Aynı anda `teknoloji-ve-plan.md` da güncellenir.** O adımda alınan kararlar
 — hangi teknoloji neden seçildi, hangi alternatif neden elendi — oraya yazılır.

@@ -11,8 +11,12 @@ tartışılmayacak** konular orada. Reddedilmiş yaygın tavsiyelerin tablosu da
 — yazılı olarak reddedilmiş bir şeyi yeniden önermek, aynı tartışmayı baştan
 açmak demektir.
 
-`docs/ogrendiklerim.md` → **Seviye defteri**: kullanıcıya hangi konuyu ne
-düzeyde anlatacağın oradan okunur, senin izleniminden değil.
+`skills/yeni-proje/dosyalar/docs/standards/sablonlar/ogrendiklerim.md` →
+**Seviye defteri**: kullanıcıya hangi konuyu ne düzeyde anlatacağın oradan
+okunur, senin izleniminden değil.
+
+⭐ **Tek defter var ve kitle birlikte her projeye gider.** Kit deposunda da,
+projelerde de aynı dosya okunur; öğrenilen `/kit-senkron` ile buraya döner.
 
 ## Klasörler
 
@@ -90,6 +94,6 @@ Depo **herkese açıktır.** Push edilen: `skills/` · `ICINDEKILER.md` ·
 `README.md` · `KURULUM.md` · `CLAUDE.md`.
 
 ⚠️ **`docs/` klasörü `.gitignore` ile KAPALIDIR** — yalnızca iki dosya açıktır:
-`docs/TARTISILMIS-KARARLAR.md` ve `docs/ogrendiklerim.md`. Geri kalan üretilen belgeler
+`docs/TARTISILMIS-KARARLAR.md`. Geri kalan üretilen belgeler
 (rehberler, PDF'ler, oturum notları) diskte kalır; yayınlanacaksa **önce
 kullanıcıya sorulur.**

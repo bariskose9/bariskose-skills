@@ -1,12 +1,22 @@
 # Öğrendiklerim
 
-> **Bu defter kişiseldir.** Kite yazılacak kadar genel olmayan, ama unutulursa
-> tekrar bedeli ödenecek notlar buraya girer.
+> **Bu defter kitle birlikte gelir ve HER PROJEDE AYNIDIR.** Ajan her oturum
+> başında okur ve sana nasıl anlatacağını buradan ayarlar — kendi izleniminden
+> değil.
 >
-> ⚠️ Kite giden şey **kural**dır ("her projede şöyle yapılır"). Buraya giren şey
-> **deneyim**dir ("ben şunu atlamıştım", "şu bana zor geldi").
+> ⭐ **Amacı zamanla senin best practice'ine dönüşmek.** Bir projede öğrenilen
+> burada birikir, `/kit-senkron` ile kite döner ve **bir sonraki projeye zaten
+> öğrenilmiş olarak** gelir.
 
-**Son güncelleme:** <!-- TARİH -->
+⛔ **KURULUMDA ÜZERİNE YAZILMAZ, BİRLEŞTİRİLİR.** Projede zaten bir defter
+varsa kitteki satırlar **eklenir**; var olan satır ikinci kez eklenmez, hiçbir
+satır silinmez. Bir maddeyi yalnızca **sen** *"bunu sil"* dediğinde çıkar.
+
+⚠️ **Bu depo herkese açıktır.** Buraya yazılan her satırı kiti kuran herkes
+okuyabilir. Bu bilinçli bir karardır (`TARTISILMIS-KARARLAR.md`); yine de
+buraya **şifre, anahtar, kurum içi bilgi ve müşteri adı yazılmaz.**
+
+**Kapsam:** tüm projeler + kit geliştirme oturumları — tek defter
 
 ---
 
@@ -88,7 +98,7 @@ Boş bırakılan alan seviye 0 sayılır.
 
 | Konu | Sv | Son kanıt | Tarih |
 |---|:--:|---|---|
-| Katmanlı mimari · bağımlılık yönü | 0 | | |
+| Katmanlı mimari · bağımlılık yönü | 1 | "Repository ne demek" diye sordu; katman testi eklenince kabul etti | 2026-09 |
 | SOLID | 0 | | |
 | Tasarım desenleri (Factory, Strategy…) | 0 | | |
 | Durum makinesi | 0 | | |
@@ -97,10 +107,10 @@ Boş bırakılan alan seviye 0 sayılır.
 
 | Konu | Sv | Son kanıt | Tarih |
 |---|:--:|---|---|
-| API sözleşmesi · sürümleme | 0 | | |
+| API sözleşmesi · sürümleme | 1 | "Contract da ne" diye sordu, açıklandı | 2026-09 |
 | Kimlik doğrulama · yetki | 0 | | |
 | Transaction · eşzamanlılık | 0 | | |
-| Arka plan işleri · kuyruk | 0 | | |
+| Arka plan işleri · kuyruk | 1 | BullMQ'nun sunucusuzda çalışmadığını kendi getirdi, maliyeti sordu | 2026-09 |
 | Hata yönetimi | 0 | | |
 
 ### Frontend (UI)
@@ -116,8 +126,8 @@ Boş bırakılan alan seviye 0 sayılır.
 
 | Konu | Sv | Son kanıt | Tarih |
 |---|:--:|---|---|
-| Modelleme · ilişkiler | 0 | | |
-| Index · sorgu performansı | 0 | | |
+| Modelleme · ilişkiler | 1 | ER diyagramı ve Prisma Studio'yu kendi araştırıp sordu | 2026-09 |
+| Index · sorgu performansı | 1 | Kit metinlerinde geçiyor, henüz kendi cümlesinde kullanmadı | 2026-09 |
 | Migration | 0 | | |
 | Sayfalama (offset / cursor) | 0 | | |
 
@@ -125,7 +135,7 @@ Boş bırakılan alan seviye 0 sayılır.
 
 | Konu | Sv | Son kanıt | Tarih |
 |---|:--:|---|---|
-| Test piramidi | 0 | | |
+| Test piramidi | 1 | TestSprite sorusuyla katman farkını sordu | 2026-09 |
 | Birim · entegrasyon · uçtan uca | 0 | | |
 | Koruma testi (bozup görme) | 0 | | |
 
@@ -133,8 +143,8 @@ Boş bırakılan alan seviye 0 sayılır.
 
 | Konu | Sv | Son kanıt | Tarih |
 |---|:--:|---|---|
-| Docker · konteyner | 0 | | |
-| CI/CD hattı | 0 | | |
+| Docker · konteyner | 2 | Docker'daki Postgres'e nasıl bakılacağını sordu — kurulu olduğunu biliyor | 2026-09 |
+| CI/CD hattı | 1 | Kitte yazılı, henüz üzerine konuşmadık | 2026-09 |
 | Ortamlar · gizli değerler | 0 | | |
 | İzleme · günlük · uyarı | 0 | | |
 
@@ -156,10 +166,10 @@ Boş bırakılan alan seviye 0 sayılır.
 
 | Konu | Sv | Son kanıt | Tarih |
 |---|:--:|---|---|
-| İyi istem (prompt) yazma | 0 | | |
-| Bağlam yönetimi · `/clear` | 0 | | |
-| Ajanın çıktısını denetleme | 0 | | |
-| Kite kural yazma | 0 | | |
+| İyi istem (prompt) yazma | 3 | ⭐ Kendi plugin'ini ve dört skill'ini yazdı | 2026-09 |
+| Bağlam yönetimi · `/clear` | 3 | ⭐ "Senin context window mu doldu" diye sordu; oturum-bellek farkını kavradı | 2026-09 |
+| Ajanın çıktısını denetleme | 3 | ⭐ EN GÜÇLÜ: beni defalarca düzeltti — Adım 0 sıralaması, GitHub'a push, bayat belge, küçük proje istisnası | 2026-09 |
+| Kite kural yazma | 3 | ⭐ Kural/araç ayrımını kendisi kurdu; hangi istisnanın reddedileceğine karar verdi | 2026-09 |
 
 ---
 
@@ -173,15 +183,13 @@ Seviye 3'e (sahipleniyor) çıkmış terimlerin DÜZ LİSTESİ. Yukarıdaki tabl
 Biçim:  - `terim` — tek cümlelik karşılığı (seviye 3'e çıktığı tarih)
 -->
 
-- <terim> — <karşılığı>
+- `ajanın çıktısını denetleme` — üretileni doğrulamadan kabul etmemek (2026-09)
+- `kite kural yazma` — projede öğrenileni kalıcı standarda çevirmek (2026-09)
+- `prompt yazma` — modele ne isteneceğini eksiksiz tarif etmek (2026-09)
+- `bağlam yönetimi` — oturuma neyin girip neyin girmeyeceğini seçmek (2026-09)
 
 ⚠️ **Ajan buraya kendiliğinden yazmaz, teklif eder.** Seviye yükseltme kuralı
 yukarıda: iki ayrı oturumda kanıt + kullanıcı onayı.
-
-⭐ **Bu bölüm projeler arasında TAŞINIR.** Yeni proje kurulurken
-(`/yeni-proje` Adım 2) yalnızca bu liste kopyalanır; defterin geri kalanı
-(zor gelen kararlar, tekrar eden hatalar) o projeye aittir ve taşınmaz.
-Kullanıcı altıncı projesinde birinci projenin diliyle konuşulmaz.
 
 ---
 
@@ -192,7 +200,11 @@ Kavramı anladığı hâlde takıldığı TEK KELİMELER. Kavram seviyesinden ay
 Biçim:  - `kelime` — kısa karşılığı (tarih)
 -->
 
-- <kelime> — <karşılığı>
+- `repository` — veritabanı sorgularının yazıldığı tek kod katmanı (2026-09-04)
+- `contract` — API'nin ne alıp ne döneceği anlaşması, Zod şeması olarak (2026-09-04)
+- `CRUD` — Create-Read-Update-Delete: oluştur, oku, güncelle, sil (2026-09-05)
+- `spike traffic` — ani trafik patlaması (2026-09-03)
+- `serverless` — sunucuyu sürekli açık tutmadan, istek geldikçe çalışan yapı (2026-09-03)
 
 ---
 
@@ -224,6 +236,7 @@ Bir sonraki projede kontrol listesi olarak kullanılır.
 
 | Tarih | Ne sormayı unuttum | Sonucu ne oldu |
 |---|---|---|
+| 2026-09-04 | Belgelerin GitHub'a gidip gitmeyeceğini sormadım | Kişisel notlar public depoya gitti; geri alındı ama geçmişte kaldı |
 
 ---
 

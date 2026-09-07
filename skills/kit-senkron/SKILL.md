@@ -97,6 +97,25 @@ ayrışmadır**, hata değil. Genel kural kitte kalır, uygulanmış hâli proje
 Kullanıcıya sor: uygulanmış anlatının içinde **genelleştirilebilir** yeni bir
 bulgu var mı? Varsa yalnızca o bulgu kite taşınır.
 
+### ⭐ Seviye defteri de senkronlanır — ama BİRLEŞTİRİLEREK
+
+`ogrendiklerim.md` kitle birlikte gelir ve her projede aynıdır. Standart
+dosyalarından **farklı** biçimde senkronlanır:
+
+| | Standart dosyaları | `ogrendiklerim.md` |
+|---|---|---|
+| Yön | İki yönlü, fark fark sorulur | İki yönlü, ama **birleşim** |
+| Çakışma | Kullanıcıya sorulur | ⛔ Sorulmaz — **ikisinde olan her satır kalır** |
+| Silme | Karar gerektirir | ⛔ **Hiçbir satır silinmez** |
+| Seviye çakışırsa | — | **Yüksek olan** kalır |
+
+⛔ **Bu dosyada "hangisi doğru" diye sorulmaz.** İki taraftaki satırların
+birleşimi alınır; aynı satır ikinci kez eklenmez. Bir madde yalnızca kullanıcı
+*"bunu sil"* dediğinde çıkar.
+
+⚠️ **Depo herkese açık:** deftere şifre, anahtar, kurum içi bilgi veya müşteri
+adı yazılmaz. Bilgi yazılır, veri yazılmaz (aşağıdaki *"Ayırt edici test"*).
+
 ## Adım 3 — Farkları sınıflandır ve sor
 
 Her farkı üç kutudan birine koy ve kullanıcıya **tek tek** sor:

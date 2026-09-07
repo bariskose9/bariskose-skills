@@ -98,6 +98,28 @@ defteri ve rehberler her oturumda görünmeli, o yüzden açık.
 ⛔ **Belge üretildiğinde depoya push edilmez.** Kit push edilir; belgeler diskte
 kalır. Yayınlanacaksa **önce sorulur.**
 
+### ⭐ Seviye defteri TEK'tir ve kitle birlikte gelir *(2026-09-08)*
+
+**Önceki karar tersine çevrildi.** Defter "kişisel durum" sayılıp kite
+yazılmıyordu; her projenin ayrı defteri oluyor, yalnızca *"Artık biliyorum"*
+listesi kurulumda bir kez kopyalanıyordu.
+
+*Sorun:* B projesinde öğrenilen A projesine **hiç ulaşmıyordu**; üç projede
+dört ayrı defter oluyor ve hangisinin güncel olduğu bilinmiyordu.
+
+**Yeni karar:** tek defter, kitte durur, her projeye gelir, her projede aynıdır.
+Projede büyür, `/kit-senkron` ile kite döner, sonraki proje **zaten öğrenilmiş**
+alır.
+
+⛔ **Kurulumda üzerine yazılmaz, BİRLEŞTİRİLİR** — var olan satır ikinci kez
+eklenmez, hiçbir satır silinmez. Bir madde yalnızca kullanıcı *"bunu sil"*
+dediğinde çıkar. Seviye çakışırsa yüksek olan kalır.
+
+⚠️ **Bedeli bilinerek kabul edildi:** depo public olduğu için defterin tamamı
+— seviye tabloları, tekrar eden hatalar, sormayı unuttuğu sorular dahil —
+herkese açık. Kullanıcıya bilgi/durum ayrımı sunuldu, **tamamının yayınlanması**
+seçildi. Deftere yine de şifre, anahtar, kurum içi bilgi ve müşteri adı yazılmaz.
+
 ### Reddedilen yaygın tavsiyeler
 
 | Tavsiye | Neden reddedildi |
@@ -125,8 +147,9 @@ oturumun yüklediği sürüm aynı olmak zorunda değildir; ikisi ayrı ayrı ö
 
 ## Anlatım düzeni — kullanıcıya nasıl yazılır
 
-`docs/ogrendiklerim.md` → **Seviye defteri** okunur; anlatım düzeyi oradan
-ayarlanır, ajanın izleniminden değil.
+`skills/yeni-proje/dosyalar/docs/standards/sablonlar/ogrendiklerim.md` →
+**Seviye defteri** okunur; anlatım düzeyi oradan ayarlanır, ajanın
+izleniminden değil.
 
 Şu an **seviye 3** (açıklamasız kullanılır): ajanın çıktısını denetleme · kite
 kural yazma · prompt yazma · bağlam yönetimi.

@@ -41,7 +41,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `KURULUM.md` | ✅ | ⚠️ | Sesli bildirim kurulumu, gerekçeleriyle |
 | `CLAUDE.md` (kökte) | ⚠️ | ✅ | Bu **depoda** çalışan ajanın kuralları |
 | `docs/TARTISILMIS-KARARLAR.md` | ✅ | ✅ | Kesinleşmiş kararlar — yeniden tartışılmaz |
-| `docs/ogrendiklerim.md` | ✅ | ✅ | Senin seviye defterin; anlatım düzeyi buradan |
+| `sablonlar/ogrendiklerim.md` | ✅ | ✅ | ⭐ **Tek seviye defteri** — kitle gelir, her projede aynı, anlatım düzeyi buradan |
 | `calisma-dokumanlari/` | ✅ | ⛔ | Senin çalışma notların — ajan okumaz, bağlamı şişirir |
 
 ---
@@ -106,7 +106,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `CHANGELOG.md` | ✅ | Ne yayınlandı |
 | `sonraki-adim-prompt.md` | ✅ | Yeni oturuma verilecek tek metin |
 | `teknoloji-ve-plan.md` | ✅ | **Projenin öğretici belgesi** — neyi neden kullanıyoruz |
-| `ogrendiklerim.md` | ✅ | Seviye defterin + *"Artık biliyorum"* listesi |
+| `ogrendiklerim.md` | ✅ | ⭐ **Tek defter** — kitten gelir, üzerine **yazılmaz birleştirilir**, `/kit-senkron` ile kite döner |
 | `decisions/ADR-000-sablon.md` | ✅ | Her mimari karar bunu çoğaltır |
 | `vscode-eklentileri.md` | ✅ | Hangi eklenti neden önerildi |
 | `data-model.md` | Veritabanı varsa | Tablolar, ilişkiler, saklama süreleri |
@@ -124,7 +124,7 @@ plugin'i kuran herkes görür.
 | `KIT-REHBER.md` | **Sen** | ⭐ **Terim terim anlatım** — Claude Code nedir, hangi teknoloji ne işe yarar, sekiz adım, kurulumdan sonraki döngü, 19 kural dosyası, sözlük ve ⭐ **Ek: kitin nerede durduğu / projene ne geldiği**. Hiç bilmeyen biri buradan başlar |
 | `KIT-NE-YAPIYOR.md` | **Sen** | ⭐ **Döngü ve kapılar** — dış bağımlılıklar, sekiz adım, özellik sonrası beş göz, sekiz ajan kapısı, kitin nasıl büyüdüğü |
 | `TARTISILMIS-KARARLAR.md` | İkisi | Kesinleşmiş kararlar ve **yeniden tartışılmayacak** konular. ⚠️ `15-oturum-devri.md` **kuraldır**, bu **sonuçtur** |
-| `ogrendiklerim.md` | İkisi | Senin seviye defterin — anlatım düzeyi buradan okunur |
+| *(defter artık `skills/.../sablonlar/ogrendiklerim.md` içinde)* | — | Tek defter kitle birlikte gelir; `docs/` altında ayrı kopya yok |
 
 ⭐ **Üçü birlikte üç ayrı derinlik:** `ICINDEKILER.md` *nerede ne var* der,
 `KIT-NE-YAPIYOR.md` *nasıl işliyor* der, `KIT-REHBER.md` *terimler ne demek*
@@ -221,7 +221,7 @@ yönlendirme tablosu `00-stack.md` → *"KARAR NEREYE YAZILIR"* içinde.
 | `teknoloji-ve-plan.md` | Kararın **anlatımı** — gerekçeyi kopyalamaz, ADR'ye işaret eder |
 | `altyapi-durumu.md` | Dış dünya: hangi hesap açık, hangi anahtar hangi ortamda |
 | `roadmap.md` | Nerede kalındı, sırada ne var, hangi borç kabul edildi |
-| `ogrendiklerim.md` | Senin öğrendiklerin — ajan anlatım düzeyini buradan ayarlar |
+| `ogrendiklerim.md` | Senin öğrendiklerin — tek defter, her projede aynı, kite geri döner |
 
 ⚠️ Bunların hepsi **projenin deposunda** durur, kitte değil. Projeyi devralan
 biri depoyu klonladığında kararları da almış olur.

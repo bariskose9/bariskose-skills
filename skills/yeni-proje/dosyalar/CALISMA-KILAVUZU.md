@@ -1140,10 +1140,13 @@ yanlış düzeltmenin dört adımı, öğretmenin ne zaman biteceği. Burada
 tekrarlanmıyor: aynı bilgi iki yerde yazılırsa biri güncellenir, öbürü bayatlar
 ve hangisinin doğru olduğu anlaşılmaz.
 
-⭐ **Defter projeler arasında taşınır.** Yeni proje kurulurken *"Artık
-biliyorum"* listesi kopyalanır; altıncı projende birinci projenin diliyle
-konuşulmaz. Defterin geri kalanı (zor gelen kararlar, tekrar eden hatalar)
-o projeye aittir ve taşınmaz.
+⭐ **Tek defter var ve her projede aynısı.** Kitle birlikte gelir, projede
+büyür, `/kit-senkron` ile kite döner ve bir sonraki projeye **zaten öğrenilmiş**
+olarak gelir. Altıncı projende birinci projenin diliyle konuşulmaz.
+
+⛔ **Kurulumda üzerine yazılmaz, birleştirilir** — var olan satır ikinci kez
+eklenmez, hiçbir satır silinmez. Bir maddeyi yalnızca **sen** *"bunu sil"*
+diyerek çıkarabilirsin.
 
 
 # BÖLÜM 9 — Bu kılavuz nasıl kısaltılır
