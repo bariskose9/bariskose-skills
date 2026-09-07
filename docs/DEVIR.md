@@ -82,11 +82,13 @@ denetimi…).
 
 ### `docs/` kapalı, seviye defteri açık
 
-`.gitignore` `docs/`'u kapatır, `!docs/ogrendiklerim.md` ile defteri açar.
+`.gitignore` `docs/`'u kapatır; seviye defteri, devir belgesi ve iki kullanıcı
+rehberi `!` ile açılır.
 
-*Gerekçe:* `DONUTLER-2026-09-04.md` içinde kullanıcının iş yeriyle ilgili bir
-alıntı var; depo **public** olduğu için orada durmamalı. Seviye defteri ise her
-oturumda görünmeli.
+*Gerekçe:* `docs/` altında **üretilen** belgeler durur ve bunlar iş yerine,
+müşteriye veya kişisel duruma ait alıntı taşıyabilir. Depo **public** olduğu
+için varsayılan **kapalıdır**; bir belge yayınlanacaksa tek tek açılır. Seviye
+defteri ve rehberler her oturumda görünmeli, o yüzden açık.
 
 ⛔ **Belge üretildiğinde depoya push edilmez.** Kit push edilir; belgeler diskte
 kalır. Yayınlanacaksa **önce sorulur.**

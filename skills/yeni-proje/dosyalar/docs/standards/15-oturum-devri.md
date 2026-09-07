@@ -221,10 +221,30 @@ Hayırsa satır oraya ait değildir.
 | Yanlış bir iddianın **düzeltmesi** | ⛔ Girmez — ⭐ **doğrusunu yaz, yanlışı anlatma** | ⛔ Girmez |
 | Nerede kalındı, sırada ne var | ✅ Girer | ⛔ Girmez |
 
-⭐ **Aynı olay iki dosyada iki farklı işe yarar.** Bir standartta *"2026-08-11'de
+⭐ **Aynı olay iki dosyada iki farklı işe yarar.** Bir standartta *"bir projede
 yaşandı"* cümlesi kuralı **çiviler** — onu gereksiz bulup silmek isteyen biri
 önce bu cümleyi okur. Devir belgesinde ise aynı cümle yalnızca yer kaplar,
 çünkü orada zaten kural değil **durum** aranır.
+
+#### ⛔ OLAY ANLATILIRKEN ANONİMLEŞTİRİLİR
+
+Kit **herkese açık** bir depodur ve onu kuran herkes bu satırları okur. Bir
+olay, kuralı gerekçelendirdiği kadar yazılır; kimin başına geldiği yazılmaz.
+
+| ⛔ Yazma | ✅ Yaz |
+|---|---|
+| *"Kullanıcının kişisel notları public depoya gitti"* | *"Üretilen belge kişisel alıntı taşıyabilir"* |
+| Özel bir dosyanın adı ve içeriği | Belgenin **türü** (*"iş yerine ait alıntı"*) |
+| *"Kullanıcı temizlemeye gerek olmadığını söyledi"* | — (karar zaten kuralın kendisinde) |
+| *"Bir projede yaşandı: sıra ters çevrildi, testler yeşil kaldı"* | ✅ Bu zaten doğru biçim |
+
+⚠️ **Ölçüt:** *"Bu satırı hiç tanımadığım biri okusa, yazarı veya kurumu
+hakkında bir şey öğrenir mi?"* Öğreniyorsa o cümle **kural değil veri**dir —
+kural evrenseldir ve okunması zarar vermez, veri özeldir ve projede kalır.
+
+⭐ Anonim örnek güveni **artırır** — kuralın ölçümden geldiğini gösterir.
+Adı geçen özel bir olay ise okuyanı *"burada ne olmuş"* diye düşündürür ve
+kuralın kendisinden uzaklaştırır.
 
 ⛔ **Düzeltme yazma tuzağı:** bir iddia yanlış çıktığında *"şöyle yazıyordu ama
 yanlıştı, doğrusu şu"* diye yazmak iki katı yer kaplar ve okuyanı yanlış
