@@ -4,7 +4,7 @@
 docs/*
 # Seviye defteri açık — her oturumda görünsün diye
 !docs/ogrendiklerim.md
-!docs/DEVIR.md
+!docs/TARTISILMIS-KARARLAR.md
 # ⭐ Kullanıcı rehberleri açık — plugin'i kuran kişi kitin döngüsünü görmeli.
 #    ICINDEKILER.md "nerede ne var" der; bu ikisi "nasıl işliyor" ve
 #    "terimler ne demek" der. Üçü üç ayrı derinlik.

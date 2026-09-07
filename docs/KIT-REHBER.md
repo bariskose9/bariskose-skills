@@ -1,6 +1,6 @@
 # `proje-kiti` — Ne Yapıyor, Nasıl Yapıyor
 
-**Sürüm:** 1.95.0 · **Tarih:** 2026-09-06
+**Sürüm:** 1.96.0 · **Tarih:** 2026-09-06
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Terimler ilk geçtikleri yerde açıklanır. Sonda toplu bir sözlük vardır.
@@ -33,6 +33,28 @@ bir yol haritası.
 
 **Vaat etmiyor:** "tek cümleyle bitmiş uygulama". Kurulum biter, sonra özellikler
 adım adım yazılır ve **her adımda plan sunulup onay beklenir.**
+
+### Peki neden Bolt veya Lovable gibi tek tıkla bitirmiyor
+
+Bu araçlarla karşılaştırıldığında kitin bazı güçlü yanları ortak, biri
+bilinçli olarak farklı:
+
+| Onlarda güçlü olan | Kitte durumu |
+|---|---|
+| Anında çalışan şeyi görmek | ✅ Var — iskelet biter bitmez ekran görüntüsü alınır, **hesap açtırmadan önce** |
+| Varsayılan olarak iyi görünen çıktı | ✅ Var — tasarım yönü kararı + "yapay zekâ işi" yasak listesi |
+| Kapalı hata döngüsü | ✅ Var — hata ayıklama yöntemi + üç başarısız denemede durma kuralı |
+| Sıfır kurulum sürtünmesi | ⚠️ Kısmen — kit **bilerek** soru sorar (PRD adımı) |
+| Tek tıkla yayın | ❌ Mümkün değil — hesap açmak kimlik doğrulaması ister, ajan giremez |
+
+⭐ **Asıl fark bir gerilimde:** o araçlar **öğretmez, gizler.** Otomasyon
+arttıkça öğrenme azalır; bu doğal bir gerilimdir ve kaçınılamaz.
+
+Kit bu gerilimde bilinçli bir taraf seçer. Bir araç *"işte siteniz"* der; kit
+*"şunu şu yüzden şöyle yaptık, bak"* der. Buradaki değer üretilen kod değil,
+**kodu anlıyor olmandır** — teknik incelemede, toplantıda ve altı ay sonra
+savunacak olan sensin. Bu yüzden öğretme tarafı hiçbir hızlanma için feda
+edilmez.
 
 ---
 
@@ -219,6 +241,44 @@ paketi** hazırlanır ve kendi bilgisayarında denenir.
 Yirmi iki maddelik liste. Şablonlar dolduruldu mu, tasarım kararı yazıldı mı,
 ekran görüntülerine **bakıldı** mı, arama motoru ayarları kuruldu mu, bölgeler
 eşleşti mi.
+
+---
+
+## Bölüm 4b — Kurulumdan sonra: her özellikte ne oluyor
+
+Kurulum bitince kit devreden çıkmaz. Her özellik bittiğinde şunlar işler:
+
+### Beş gözle doğrulama (`06-testing.md`)
+
+Testlerin yeşil olması "bitti" demek değil. Otomatik test **kodun yaptığını**
+doğrular, **doğru şeyi yaptığını** değil. Sırayla beş göz:
+
+| # | Göz | Bakılan | Kim bakar |
+|---|---|---|---|
+| 1 | **Backend** | Mutlu yol, hata yolları, yetkisiz erişim, sınır değerler, eşzamanlılık | Ajan kanıt sunar |
+| 2 | **Veri** | Kayıt gerçekten yazıldı mı — Prisma Studio ile bakılır | ⭐ **Sen görürsün** |
+| 3 | **Frontend** | 375/768/1440px, açık + koyu tema, konsol hatası, dört ekran durumu | Ekran görüntüleri |
+| 4 | **Tasarım / UX** | Tasarım kararına uygun mu, "yapay zekâ işi" kalıbı var mı | ⭐ **Asıl senin katmanın** |
+| 5 | **Güvenlik + işletme** | Yetki, girdi doğrulama, N+1 sorgu, performans bütçesi | Ajan kanıt sunar |
+
+### Etki alanı
+
+Her özellikte üç soru **yazılı** cevaplanır: hangi başka ekranlar · hangi başka
+API uçları · hangi eski kayıtlar etkilendi. ⛔ *"Sadece şu dosyaya dokundum"*
+cevap değildir; etkilenenlerden **en az biri fiilen açılıp** kontrol edilir.
+
+### Öğretme zorunluluğu
+
+Ajan ne kontrol ettiğini **ve neden o kontrolü yaptığını** anlatır. ⛔ *"Test
+geçti"* tek başına rapor değildir — neyin test edildiği söylenmezse neyin test
+**edilmediği** bilinemez. Öğrenilen yeni terimler seviye defterine eklenir.
+
+### Dış QA aracı (TestSprite gibi)
+
+Tek kişilik ekipte **gerekmez** — tarayıcı doğrulaması, önce-test yöntemi,
+erişilebilirlik denetimi ve performans ölçümü zaten var; ek araç ek bakımdır.
+Bağımsız QA yükümlülüğü (kurum şartnamesi) veya ekip büyümesi varsa
+gerekçesiyle yeniden değerlendirilir.
 
 ---
 
@@ -459,3 +519,73 @@ olduğu bilinmez.
 | **TypeScript** | JavaScript'in tip denetimli hâli |
 | **UX** | Kullanıcı deneyimi |
 | **Erişilebilirlik (a11y)** | Engelli kullanıcıların da kullanabilmesi |
+
+---
+
+## Ek — Kit nerede durur, projene ne zaman gelir
+
+### ⭐ İKİ AYRI ŞEY — en çok karışan yer
+
+Kiti kurduğunda **iki şey** geliyor ama **aynı anda değil**:
+
+| | **Komutlar (skill'ler)** | **Dosyalar** |
+|---|---|---|
+| Ne zaman gelir | ⭐ **Kurulur kurulmaz** | ⛔ Yalnızca `/yeni-proje` çalışınca |
+| Nerede durur | Claude'un eklenti klasöründe | **Senin proje klasöründe** |
+| `/yeni-proje` gerekir mi | ⛔ Hayır | ✅ Evet |
+
+⭐ Yani `/kit-senkron`, `/video-analiz` ve `/pdf-uret` kurulumdan hemen sonra
+çalışır; bir proje kurmuş olman gerekmiyor.
+
+### ⛔ Kitin KENDİ belgeleri projene KOPYALANMAZ
+
+Bunlar kitin durduğu depoda kalır ve **kitin kendisini** anlatır. Yeni bir
+projede bunları aramana gerek yok, orada olmayacaklar:
+
+| Dosya | Ne anlatır |
+|---|---|
+| `README.md` | Kit ne yapar, nasıl kurulur |
+| `KURULUM.md` | Sesli bildirim kurulumu ve gerekçeleri |
+| `ICINDEKILER.md` | Hangi dosya kimin işi — haritanın kendisi |
+| `KIT-REHBER.md` (bu belge) | Terim terim anlatım |
+| `KIT-NE-YAPIYOR.md` | Döngü ve kapılar |
+| `TARTISILMIS-KARARLAR.md` | Kit geliştirmede kesinleşmiş kararlar |
+| Kökteki `CLAUDE.md` | **Kit deposunda** çalışan ajanın kuralları |
+
+### ✅ `/yeni-proje` çalışınca projene YERLEŞEN dosyalar
+
+| Grup | Ne gelir |
+|---|---|
+| **Ajanın kuralları** | `CLAUDE.md` (projeye özel olan) + `docs/standards/` — **19 dosya** |
+| **Senin belgelerin** | `CALISMA-KILAVUZU.md` · `REPO-YAPISI.md` · `README.md` |
+| **Projeye özel** | `docs/project/` altında PRD, roadmap, ADR, altyapı durumu ve diğerleri |
+| **Ayarlar** | `.env.example` · `.vscode/extensions.json` |
+| **İzinler** | `.claude/settings.json` |
+
+⭐ **`.claude/settings.json` ne işe yarıyor:** ajanın **izin listesi**. `test`,
+`lint`, `typecheck` gibi zararsız komutları her seferinde sana sormadan
+çalıştırmasını sağlıyor. Olmasaydı her testte onay isterdi.
+
+⚠️ **`CALISMA-KILAVUZU.md` kitten kopyalanır ve her projede aynıdır.** Kit
+güncellenince yenisi gelir; oradan düzeltmek kalıcı olmaz, düzeltme kite
+yazılır.
+
+### Kodun kendisi nereye gelir
+
+Bu, Adım 3b'de verilen **backend kararına** göre değişir:
+
+| Karar | Klasör yapısı |
+|---|---|
+| **Next.js tek başına** (varsayılan) | `src/app/` · `src/features/<özellik>/` · `src/components/ui/` · `src/lib/` |
+| **Next + NestJS** (ayrı backend) | `apps/web/` (arayüz) · `apps/api/` (iş kuralları) · `apps/worker/` (arka plan) · `packages/contracts/` (paylaşılan şemalar) · `packages/domain/` (saf iş kuralları) |
+
+### Üretilen dosyalar — elle düzenlenmez
+
+| Dosya | Ne işe yarıyor | Elle düzenlenir mi |
+|---|---|:---:|
+| `.env.example` | Hangi ayarların gerektiğinin **listesi** — değerler boş | ✔ |
+| `.env` | Gerçek değerler — ⛔ **asla commit edilmez** | ✔ |
+| `docker-compose.yml` | Servisleri tek komutla ayağa kaldırır | ✔ |
+| `prisma/schema.prisma` | Veri modelinin **tanımı** | ✔ |
+| `prisma/migrations/` | Veritabanı değişiklik geçmişi | ⛔ Üretilir |
+| `node_modules/` | İndirilen paketler | ⛔ Asla |

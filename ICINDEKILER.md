@@ -40,7 +40,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `README.md` | ✅ | ⛔ | Kurulum ve tanıtım |
 | `KURULUM.md` | ✅ | ⚠️ | Sesli bildirim kurulumu, gerekçeleriyle |
 | `CLAUDE.md` (kökte) | ⚠️ | ✅ | Bu **depoda** çalışan ajanın kuralları |
-| `docs/DEVIR.md` | ✅ | ✅ | Kesinleşmiş kararlar — yeniden tartışılmaz |
+| `docs/TARTISILMIS-KARARLAR.md` | ✅ | ✅ | Kesinleşmiş kararlar — yeniden tartışılmaz |
 | `docs/ogrendiklerim.md` | ✅ | ✅ | Senin seviye defterin; anlatım düzeyi buradan |
 | `calisma-dokumanlari/` | ✅ | ⛔ | Senin çalışma notların — ajan okumaz, bağlamı şişirir |
 
@@ -121,9 +121,9 @@ plugin'i kuran herkes görür.
 
 | Dosya | Kim okur | Ne |
 |---|:--:|---|
-| `KIT-REHBER.md` | **Sen** | ⭐ **Terim terim anlatım** — Claude Code nedir, hangi teknoloji ne işe yarar, sekiz adım, 19 kural dosyası, sonda sözlük. Hiç bilmeyen biri buradan başlar |
+| `KIT-REHBER.md` | **Sen** | ⭐ **Terim terim anlatım** — Claude Code nedir, hangi teknoloji ne işe yarar, sekiz adım, kurulumdan sonraki döngü, 19 kural dosyası, sözlük ve ⭐ **Ek: kitin nerede durduğu / projene ne geldiği**. Hiç bilmeyen biri buradan başlar |
 | `KIT-NE-YAPIYOR.md` | **Sen** | ⭐ **Döngü ve kapılar** — dış bağımlılıklar, sekiz adım, özellik sonrası beş göz, sekiz ajan kapısı, kitin nasıl büyüdüğü |
-| `DEVIR.md` | İkisi | Kesinleşmiş kararlar ve **yeniden tartışılmayacak** konular |
+| `TARTISILMIS-KARARLAR.md` | İkisi | Kesinleşmiş kararlar ve **yeniden tartışılmayacak** konular. ⚠️ `15-oturum-devri.md` **kuraldır**, bu **sonuçtur** |
 | `ogrendiklerim.md` | İkisi | Senin seviye defterin — anlatım düzeyi buradan okunur |
 
 ⭐ **Üçü birlikte üç ayrı derinlik:** `ICINDEKILER.md` *nerede ne var* der,
@@ -141,7 +141,6 @@ geride kalırsa kırık atıf olarak çıkar. *"Kendiliğinden okunmaz"* ile
 | Dosya | Ne |
 |---|---|
 | `OKUBENI.md` | Klasörün kendi indeksi |
-| `1-kit-rehberi.md` | Kit üzerine çalışma notun |
 | `2-teknoloji-kartlari.md` | Teknoloji kartları çalışması |
 | `ornek-proje-bakim-is-emri/` | ⭐ Uçtan uca örnek proje — bakım/iş emri |
 | ↳ `odev.md` | Şartname / ödev metni |

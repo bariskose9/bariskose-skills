@@ -1105,120 +1105,46 @@ yenilenmez, ajan eski kuralla çalışmaya devam eder.
 
 # BÖLÜM 8 — Öğrendiklerim defteri
 
-`docs/project/ogrendiklerim.md` senin kişisel defterin. Kite yazılacak kadar
-genel olmayan ama unutulursa bedeli tekrar ödenecek notlar buraya girer.
+`docs/project/ogrendiklerim.md` senin defterin. Ajan her oturum başında onu
+okur ve **sana nasıl anlatacağını** oradan ayarlar — kendi izleniminden değil.
+
+## Neden var
+
+Altı ay boyunca aynı terimi baştan açıklamak da, hiç açıklamadan geçmek de
+yanlış. Defter bu ikisi arasındaki ayarı tutar: hangi konuyu artık biliyorsun,
+hangisi hâlâ yeni.
+
+⭐ **Amacı sonunda kendini gereksiz kılmak.** Bir konu seviye 3'e çıkıp orada
+kalırsa ajan o konuda anlatmayı **bırakır** ve yalnızca kararı sunar.
 
 ## Kim yazar
 
-**Ajan sorar, sen onaylarsın.** Oturum kapanırken şuna benzer bir soru gelir:
+⛔ **Sen yazmak zorunda değilsin.** Ajan bir gözlem yaptığında sana **sorar**:
+*"Bu oturumda şunu fark ettim, deftere yazayım mı?"* Sen *"evet"* dersen yazar.
+Kendiliğinden yazmaz, senden de hatırlamanı beklemez.
 
-> *"Bu oturumda bağımlılığın tersine çevrilmesi konusunu üçüncü örnekte
-> oturttuğunu fark ettim. Deftere yazayım mı?"*
+## İçinde ne var
 
-⛔ Senin *"bunu deftere yaz"* demen beklenmiyor. O sırada zaten öğrenmekle
-meşgulsün; not almayı hatırlaman beklenemez. **Fark eden taraf teklif eder.**
-
-## Ne nereye gider
-
-| Gözlem | Nereye |
+| Bölüm | Ne tutar |
 |---|---|
-| *"Bu terimi ilk kez anladım"* | Defter → zor gelen kararlar |
-| *"Şunu sormayı unutmuşuz"* | Defter → sormayı unuttuğum sorular |
-| Aynı hata **ikinci** kez | Defter → tekrar eden hatalar |
-| Aynı hata **üçüncü** kez | Artık kişisel değil → **kite** taşınır |
-| *"Her projede böyle yapılmalı"* | Doğrudan **kite** |
+| **Seviye defteri** | Dört seviyenin ne demek olduğu, seviye nasıl yükselir ve düşer |
+| **Konu alanları** | Mimari, backend, frontend, veritabanı, test, güvenlik… her konu ve seviyesi |
+| ⭐ **Artık biliyorum** | Sahiplendiğin terimler — ⛔ buradakiler bir daha açıklanmaz |
+| **Kelime defteri** | Kavramı anladığın ama kelimesini bilmediğin terimler |
+| **Sormayı unuttuğum sorular** · **Zor gelen kararlar** · **Tekrar eden hatalar** | Deneyim kaydı |
+| **Kite taşınacaklar** | Aynı şey üçüncü kez olduysa artık kişisel değil, **kural** |
 
-⭐ **Ayrım basit:** Kite **kural** gider — *"şu durumda şu yapılır."*
-Deftere **deneyim** girer — *"ben şunu atlamıştım."* Bir deneyim üç kez
-tekrarlanırsa kurala dönüşür ve kite taşınır.
+⛔ **Kuralların tamamı defterin kendi içinde yazılı** — dört seviye tablosu,
+neyin kanıt sayıldığı (*"tamam"* demek sayılmaz), seviyenin nasıl düştüğü,
+yanlış düzeltmenin dört adımı, öğretmenin ne zaman biteceği. Burada
+tekrarlanmıyor: aynı bilgi iki yerde yazılırsa biri güncellenir, öbürü bayatlar
+ve hangisinin doğru olduğu anlaşılmaz.
 
-## Ne işe yarıyor
+⭐ **Defter projeler arasında taşınır.** Yeni proje kurulurken *"Artık
+biliyorum"* listesi kopyalanır; altıncı projende birinci projenin diliyle
+konuşulmaz. Defterin geri kalanı (zor gelen kararlar, tekrar eden hatalar)
+o projeye aittir ve taşınmaz.
 
-İki şey:
-
-1. **Bir sonraki projenin kontrol listesi.** *"Geçen sefer eş zamanlı kullanıcı
-   sayısını sormayı unutmuşum"* notu, bu sefer sorulmasını sağlar
-2. **İlerlemenin ölçüsü.** *"Zor gelen kararlar"* listesi zamanla kısalır.
-   Kısalması öğrendiğinin kanıtıdır
-
-## ⭐ Ajan seviyeni takip eder — dört seviyeli defter
-
-`docs/project/ogrendiklerim.md` içinde bir **seviye defteri** var. On konu
-alanı (mimari · backend · frontend · veritabanı · test · DevOps · güvenlik ·
-mobil · AI ile çalışma), her biri 0–3 arası ölçülüyor.
-
-| Sv | Ne demek | Ajan ne yapıyor |
-|---|---|---|
-| **0** | İlk kez geçiyor | Üç adımda **tam** açar |
-| **1** | Gördün, soru sordun | Kısa hatırlatma |
-| **2** | Soru sormadan izledin | Terimi kullanır, **tek cümle** hatırlatır |
-| **3** | ⭐ Sahipleniyorsun | Doğrudan kullanır, açıklamaz |
-
-### ⛔ "Tamam" demek seviye yükseltmez
-
-En önemli kural bu. Seviye yalnızca **senin ürettiğin** bir şeyle yükselir:
-
-| Sen ne yaptın | Sayılır mı |
-|---|---|
-| ⭐ Ajanı o konuda **düzelttin** | **En güçlü kanıt** — anlamadan düzeltemezsin |
-| ⭐ Terimi **kendi cümlende** kullandın | Güçlü |
-| Sonucunu sordun (*"o zaman şu olmaz mı?"*) | Güçlü |
-| Okudun, soru sormadın | ⚠️ Zayıf — tek başına yetmez |
-| *"Tamam"* dedin | ⛔ **Sayılmaz** |
-
-⛔ **Tek gözlemle de yükselmez** — en az **iki ayrı oturumda** kanıt gerekir.
-Sonra ajan sana **sorar**, kendiliğinden yazmaz.
-
-### ⚠️ Seviye düşer de — bu normal
-
-| Durum | Etki |
-|---|---|
-| Konu **8 haftadır** geçmedi | Bir seviye düşer |
-| *"Bunu tekrar açıkla"* dersen | ⭐ Doğrudan **0** |
-| O konuda yanlış bir şey söylersen | Bir seviye düşer |
-
-⛔ Düşme başarısızlık değil. Full-stack + mobil + DevOps + test + veritabanı
-hepsinin oturması **3–6 ay** sürer; bu sürede unutmak kaçınılmazdır.
-
-### ⭐ Kavram ile kelime ayrı ölçülür
-
-Bir kavramı anlamış olabilirsin ama anlatımda geçen bir kelimeyi
-bilmiyorsundur. Bu **ayrı bir eksik** — kavramın seviyesini düşürmez.
-Kelimeyi sorduğunda ajan onu **Kelime defteri**'ne yazar, seviyene dokunmaz.
-
-### Bir yanlışın olursa nasıl düzeltilir
-
-Ajan **kişiselleştirmez** ama ⭐ **hatanın yerini mutlaka gösterir** — yoksa
-aynı yanlışı tekrar yaparsın:
-
-| # | Ne söyler |
-|---|---|
-| 1 | Ne söyledin — alıntılar |
-| 2 | Doğrusu ne |
-| 3 | ⭐ **Ayrım tam olarak nerede** |
-| 4 | Varsa neden karıştırıldığı |
-
-⭐ Üçüncüsü en önemlisi: tekrarı önleyen şey doğru cevap değil, **ayrım
-noktası.**
-
-### Öğretmeyi ne zaman bırakıyor
-
-| Durum | Ajan |
-|---|---|
-| Konu seviye 3, 8 haftadır düşmedi | O konuda **anlatım durur** |
-| Bir alanın tamamı seviye 3 | Yalnızca **yeni** şeyler anlatılır |
-| Tüm alanlar seviye 3 | ⭐ Yalnızca **karar ve gerekçe** sunulur |
-
-⭐ **Neden gerekli:** Bu kılavuzun ve rehberlerin her terimi açması, başlarken
-doğru — ama altıncı projede her `transaction` kelimesinde kurabiye kalıbı
-benzetmesi okumak zaman kaybı olur. Liste, anlatımın **seninle birlikte
-büyümesini** sağlıyor.
-
-⚠️ **Bu liste kite gitmez, projede kalır** — ama `/yeni-proje` yeni projeye
-başlarken bir öncekinden **kopyalar.** Böylece seviyen projeler arasında
-taşınır, her seferinde sıfırdan başlamaz.
-
----
 
 # BÖLÜM 9 — Bu kılavuz nasıl kısaltılır
 

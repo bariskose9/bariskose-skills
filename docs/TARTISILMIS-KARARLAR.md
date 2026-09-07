@@ -1,7 +1,12 @@
-# Devir — `bariskose-skills` kit geliştirme
+# Tartışılmış kararlar — `bariskose-skills` kit geliştirme
 
-> **Yeni bir oturum bu dosyayı ilk okur.** Nerede kaldığımızı, hangi kararların
-> verildiğini ve hangilerinin **yeniden tartışılmayacağını** anlatır.
+> **Bu depoda açılan yeni bir oturum bu dosyayı ilk okur.** Hangi kararların
+> verildiğini, gerekçelerini ve hangilerinin **yeniden tartışılmayacağını**
+> anlatır; sonunda nerede kalındığı yazar.
+>
+> ⚠️ Bu, `15-oturum-devri.md` ile karıştırılmamalı: **o kural**, devrin nasıl
+> yapılacağını söyler ve her projeye kopyalanır. **Bu dosya sonuç** — kitin
+> kendi kararları.
 
 **Kit sürümü:** `grep -m1 version .claude-plugin/plugin.json`
 ⛔ Sürümü buraya elle yazma — iki yerde yaşayan sayı ayrışır.

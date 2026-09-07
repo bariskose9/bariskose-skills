@@ -6,7 +6,7 @@ standardıdır.
 
 ## ⛔ Çalışmaya başlamadan önce
 
-**`docs/DEVIR.md` oku.** Kesinleşmiş kararlar, gerekçeleri ve **yeniden
+**`docs/TARTISILMIS-KARARLAR.md` oku.** Kesinleşmiş kararlar, gerekçeleri ve **yeniden
 tartışılmayacak** konular orada. Reddedilmiş yaygın tavsiyelerin tablosu da var
 — yazılı olarak reddedilmiş bir şeyi yeniden önermek, aynı tartışmayı baştan
 açmak demektir.
@@ -90,6 +90,6 @@ Depo **herkese açıktır.** Push edilen: `skills/` · `ICINDEKILER.md` ·
 `README.md` · `KURULUM.md` · `CLAUDE.md`.
 
 ⚠️ **`docs/` klasörü `.gitignore` ile KAPALIDIR** — yalnızca iki dosya açıktır:
-`docs/DEVIR.md` ve `docs/ogrendiklerim.md`. Geri kalan üretilen belgeler
+`docs/TARTISILMIS-KARARLAR.md` ve `docs/ogrendiklerim.md`. Geri kalan üretilen belgeler
 (rehberler, PDF'ler, oturum notları) diskte kalır; yayınlanacaksa **önce
 kullanıcıya sorulur.**
