@@ -123,7 +123,44 @@ Bir oturumu kapatmadan önce ajan şunları yapar:
 5. **Öğrenilen kalıcı kuralı İKİ kopyaya da yaz ve diff ile kanıtla**
    (CLAUDE.md kapı 8 — aşağıdaki bölüm)
 6. **Değişen durumu, o durumu yazan HER satırda güncelle** — aşağıdaki bölüm
-7. Kullanıcıya **"yeni oturuma şunu ver"** diye tek bir cümle söyle
+7. ⛔ **Uzak depoya GÖNDER** — aşağıdaki bölüm
+8. Kullanıcıya **"yeni oturuma şunu ver"** diye tek bir cümle söyle
+
+### ⛔ OTURUM, PUSH EDİLMEDEN KAPANMAZ
+
+Diskte duran bir devir notu **hiçbir makinede yok** demektir. Yeni oturum başka
+bir bilgisayarda, başka bir hesapta açılabilir; gördüğü tek şey **uzak depodaki**
+hâldir.
+
+⭐ **Hedef platform proje tipine göre değişir** (`CLAUDE.md` §0 → proje tipi):
+
+| Proje tipi | Uzak depo | İnceleme |
+|---|---|---|
+| **Kendi projem** | GitHub | Pull Request |
+| **İşyeri projesi** | ⛔ **Kurumun GitLab'ı** — kişisel GitHub'a **gönderilmez** | Merge Request |
+
+⛔ **İşyeri projesinde kod kişisel hesaba gönderilmez.** Kurum kodu kurumun
+deposunda durur; kişisel hesaba push etmek, çoğu kurumda sözleşme ihlalidir ve
+geri alınması git geçmişini temizlemeyi gerektirir.
+
+⚠️ **Onaysız push yok** (`CLAUDE.md` §6.3). Rapor sunulur, onay alınır, sonra
+gönderilir.
+
+#### Hangi dil nerede — karıştırılmaz
+
+Bu ayrım sık karışır ve yanlış "düzeltilir":
+
+| Ne | Dil | Neden |
+|---|---|---|
+| **Commit özeti** (`feat(x): add …`) | **İngilizce** | Conventional Commits; kod dilinin parçası (`08-git-workflow.md`) |
+| **Değişiklik raporu** (sana sunulan) | **Türkçe** | Okuyan sensin (`CLAUDE.md` §6.3) |
+| **`CHANGELOG.md`** | **Türkçe**, tam cümle | Okuyan kullanıcı ve devralan |
+| **Devir notu** (`sonraki-adim-prompt.md`) | **Türkçe** | Sonraki oturuma ve sana |
+| Kod, değişken, tablo, kolon | **İngilizce** | `02-coding-standards.md` |
+
+⭐ **Yani "ne yapıldı" iki kez yazılır ve ikisi farklı dildedir:** commit
+başlığında İngilizce ve kısa, `CHANGELOG.md` ile devir notunda Türkçe ve
+anlatan. Bu tekrar değil — iki ayrı okuyucu içindir.
 
 ### ⛔ Bir durum değiştiğinde tek bir yeri düzeltmek YETMEZ
 
