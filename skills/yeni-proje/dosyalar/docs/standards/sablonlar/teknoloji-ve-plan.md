@@ -14,6 +14,18 @@
 gerçek üretim pratiği olması · devralınabilir olması. Her ölçütün altına
 somut bir örnek konur, soyut bırakılmaz.>
 
+### ⛔ Bu belge ile ADR'nin iş bölümü
+
+| | `decisions/ADR-*.md` | **Bu belge** |
+|---|---|---|
+| Ne tutar | Kararın **bağlayıcı kaydı**: bağlam, elenen alternatifler, kabul edilen bedel | Kararın **anlatımı**: bu teknoloji nedir, neden burada, hangi kutuda |
+| Kim için | Sonraki oturum · başka geliştirici · denetçi | Öğrenen ve devralan kişi |
+| Gerekçe nerede | ⭐ **Orada yaşar** | ⛔ Kopyalanmaz — *"neden bu seçildi — ADR-004"* denir |
+
+⛔ **Aynı gerekçeyi iki yere yazma.** Yazılırsa biri güncellenir, öbürü bayatlar
+ve okuyan hangisinin doğru olduğunu bilemez. Hangi kararın ADR gerektirdiği:
+`docs/standards/00-stack.md` → *"KARAR NEREYE YAZILIR"*.
+
 ### Kararların dört kutusu
 
 Her karar anlatılırken hangi kutuda olduğu söylenir:
