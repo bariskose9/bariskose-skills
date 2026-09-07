@@ -15,10 +15,6 @@ Kit **canlı ve aktif geliştiriliyor**. Marketplace `bariskose-skills`, plugin
 `proje-kiti`, dört skill: `/yeni-proje` · `/kit-senkron` · `/video-analiz` ·
 `/pdf-uret`.
 
-⛔ **`~/baris_projects/bariskose-skills-DEVIR.md` BAYATTIR.** *"Tek dosya
-yazılmadı, GitHub deposu yok"* diyor; ikisi de yanlış. O dosyaya güvenme,
-`git log`'a ve bu belgeye bak.
-
 Durumu öğrenmenin doğru yolu:
 
 ```bash

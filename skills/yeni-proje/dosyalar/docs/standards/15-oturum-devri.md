@@ -186,6 +186,24 @@ diyordu, oysa aynı dosyanın 20 satır altında "doğrulandı" yazıyordu.
 **Arşiv satırı SİLİNMEZ** — geçmişteki fotoğraf, kararın nedenini açıklar. Ama
 başlığı tarih taşımak ve "güncel durum değildir" demek zorundadır.
 
+### ⭐ Ama ÖLÜ UYARI arşiv değildir — o silinir
+
+İki şey karıştırılıyor ve karıştırılınca belge şişer:
+
+| | Ne yapar | Kaderi |
+|---|---|---|
+| **Arşiv satırı** | *"O tarihte durum şuydu"* — bugünkü kararın **nedenini** açıklar | ⛔ Silinmez, tarihlenir |
+| **Ölü uyarı** | *"Şu dosyaya güvenme, bayat"* — işaret ettiği şey **artık yok** | ✅ **Silinir** |
+
+⛔ **Ayırt edici soru:** *"Bu satırı okuyan biri bugün bir şey yapabilir mi?"*
+Arşiv satırı *"demek bu yüzden böyle seçmişiz"* dedirtir — işe yarar. Ölü uyarı
+ise var olmayan bir dosyayı aratır; okuyan onu **arar, bulamaz ve kendi
+hatası sanır.**
+
+⚠️ **Uyarı, konusu ortadan kalktığında uyarı olmaktan çıkar** — gürültü olur.
+Bir dosyayı sildiğinde ona işaret eden uyarıları da `grep` ile bul ve kaldır
+(`11-agent-workflow.md` → *"YAYILMA TABLOSU"*).
+
 ### ⛔ "Belgede öyle yazıyor" ile "ölçtüm" aynı şey değildir
 
 Bir durumu kullanıcıya raporlarken **kanıtın kaynağını söyle:** canlıdan mı
