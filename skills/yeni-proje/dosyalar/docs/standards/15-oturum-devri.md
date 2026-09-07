@@ -204,6 +204,33 @@ hatası sanır.**
 Bir dosyayı sildiğinde ona işaret eden uyarıları da `grep` ile bul ve kaldır
 (`11-agent-workflow.md` → *"YAYILMA TABLOSU"*).
 
+### ⛔ DEVİR BELGESİ KARARI TUTAR, KARARIN BİYOGRAFİSİNİ DEĞİL
+
+Devir belgesini **her oturum ilk okur.** Oradaki her satır, henüz işe
+başlamamış bir oturumun dikkatinden yer alır. Bu yüzden ölçüt sert:
+
+> **Bu satır olmasaydı bir sonraki oturum yanlış bir iş yapar mıydı?**
+
+Hayırsa satır oraya ait değildir.
+
+| Ne | Devir belgesine | Standart dosyasına |
+|---|---|---|
+| **Karar** + gerekçesi | ✅ Girer | ✅ Girer |
+| *"Şu tarihte şu hata yapıldı"* | ⛔ **Girmez** | ✅ Girer — kuralı ayakta tutar |
+| *"Kullanıcı şuna gerek olmadığını söyledi"* | ⛔ Girmez — karar zaten yazılı | ⛔ Girmez |
+| Yanlış bir iddianın **düzeltmesi** | ⛔ Girmez — ⭐ **doğrusunu yaz, yanlışı anlatma** | ⛔ Girmez |
+| Nerede kalındı, sırada ne var | ✅ Girer | ⛔ Girmez |
+
+⭐ **Aynı olay iki dosyada iki farklı işe yarar.** Bir standartta *"2026-08-11'de
+yaşandı"* cümlesi kuralı **çiviler** — onu gereksiz bulup silmek isteyen biri
+önce bu cümleyi okur. Devir belgesinde ise aynı cümle yalnızca yer kaplar,
+çünkü orada zaten kural değil **durum** aranır.
+
+⛔ **Düzeltme yazma tuzağı:** bir iddia yanlış çıktığında *"şöyle yazıyordu ama
+yanlıştı, doğrusu şu"* diye yazmak iki katı yer kaplar ve okuyanı yanlış
+iddiadan da haberdar eder. **Yanlışı sil, doğrusunu yaz.** Yanlışın kendisi
+gerekiyorsa yeri `git log`'dur.
+
 ### ⛔ "Belgede öyle yazıyor" ile "ölçtüm" aynı şey değildir
 
 Bir durumu kullanıcıya raporlarken **kanıtın kaynağını söyle:** canlıdan mı

@@ -3,9 +3,8 @@
 > **Yeni bir oturum bu dosyayı ilk okur.** Nerede kaldığımızı, hangi kararların
 > verildiğini ve hangilerinin **yeniden tartışılmayacağını** anlatır.
 
-**Son güncelleme:** 2026-09-06 · **Kit sürümü:** `.claude-plugin/plugin.json`'a bak
-(bu satır yazılırken 1.85.0). ⛔ Sürümü buraya elle yazma — iki yerde yaşayan sayı
-ayrışır; tek doğru kaynak `plugin.json`'dır.
+**Kit sürümü:** `grep -m1 version .claude-plugin/plugin.json`
+⛔ Sürümü buraya elle yazma — iki yerde yaşayan sayı ayrışır.
 
 ---
 
@@ -39,8 +38,8 @@ kütüphane) + `chrome-devtools` MCP.
 Geri alma ve kalıcı silme komutları o klasördeki geri-alma notunda yazılı
 (depo dışıdır, bu depoda aranmaz).
 
-*Gerekçe:* dördü açıkken ~99 skill açıklaması her oturuma yükleniyor ve model
-120 seçenek arasından 30 seçenek arasından seçtiğinden **daha kötü** seçiyor.
+*Gerekçe:* dördü açıkken ~99 skill açıklaması her oturuma yükleniyor; model
+120 seçenek arasından, 30 seçenek arasından seçtiğinden **daha kötü** seçiyor.
 Ayrıca superpowers'ın *"Do not pause to check in with your human partner"*
 kuralı, `CLAUDE.md` kapı 2 (*"plan sun, onayımı bekle"*) ile **doğrudan
 çelişiyor.**
@@ -90,9 +89,7 @@ alıntı var; depo **public** olduğu için orada durmamalı. Seviye defteri ise
 oturumda görünmeli.
 
 ⛔ **Belge üretildiğinde depoya push edilmez.** Kit push edilir; belgeler diskte
-kalır. Yayınlanacaksa **önce sorulur.** (2026-09-04'te bu hata yapıldı; kişisel
-notlar public depoya gitti, geri alındı ama git geçmişinde kaldı — kullanıcı
-geçmişin temizlenmesine gerek olmadığını söyledi.)
+kalır. Yayınlanacaksa **önce sorulur.**
 
 ### Reddedilen yaygın tavsiyeler
 
@@ -140,9 +137,6 @@ anlatır gibi.**
 - [ ] Kullanıcı `KIT-REHBER.md` ve `KIT-NE-YAPIYOR.md`'yi okuyup dönüş yapacak
 - [ ] Özellikle **`06-testing.md` → beş gözle doğrulama** listesi kalibre
       edilecek: fazla mı, eksik mi — ancak kullanan söyleyebilir
-- [ ] `11-agent-workflow.md` **888 satır** (2026-09-06 ölçümü). ⚠️ Kitin en
-      büyük dosyası **değil** — `CALISMA-KILAVUZU.md` 1209 satırla ondan büyük,
-      `SKILL.md` 877 ile hemen arkasında. Doğru olan dar iddia şudur:
-      `docs/standards/` **içinde** en büyük dosya ve ikinci büyüğün
-      (`00-stack.md`, 421 satır) iki katı. Büyümeye devam ederse bölünmesi
-      önerilecek; `CALISMA-KILAVUZU.md` de aynı ölçüye girer
+- [ ] İki dosya bölünme eşiğine yaklaşıyor: `CALISMA-KILAVUZU.md` (1209 satır)
+      ve `11-agent-workflow.md` (888). Büyümeye devam ederlerse bölünmeleri
+      önerilecek. Ölçüm: `wc -l`
