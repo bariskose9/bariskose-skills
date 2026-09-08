@@ -45,7 +45,8 @@ projelerde de aynı dosya okunur; öğrenilen `/kit-senkron` ile buraya döner.
 | `skills/yeni-proje/SKILL.md` | Kurulum akışı — sekiz adım | ✅ |
 | `skills/yeni-proje/dosyalar/CLAUDE.md` | Projelere kopyalanan ajan kuralları | ✅ |
 | `skills/yeni-proje/dosyalar/docs/standards/` | **19 standart — kuralın kaynağı** | ✅ |
-| `docs/` | Devir belgesi + seviye defteri | ✅ |
+| `docs/` | Kararlar (`TARTISILMIS-KARARLAR.md`) + iki kullanıcı rehberi | ✅ kararlar · ⚠️ rehberler yalnızca güncellemek için |
+| `…/sablonlar/ogrendiklerim.md` | **Seviye defteri** — tek defter, kitle her projeye gider | ✅ |
 | `ICINDEKILER.md` | **Kullanıcının haritası** — kit ne yapar, hangi dosya kimin işi | ⚠️ Yalnızca güncellemek için |
 | `calisma-dokumanlari/` | Kullanıcının çalışma notları ve uçtan uca örnek proje | ⚠️ **Kendiliğinden okuma** — istenince oku |
 
@@ -55,9 +56,10 @@ projelerde de aynı dosya okunur; öğrenilen `/kit-senkron` ile buraya döner.
 node skills/kit-senkron/bin/denetim.mjs .
 ```
 
-Dört şeyi yakalar: kırık dosya referansı · **kırık bölüm atfı** (`<dosya>.md` →
-*"Başlık"* denen başlık hedefte var mı) · bayat PDF · **haritada görünmeyen
-dosya**. **Çıktısını oku** — çalıştırıp kırpmak, atlamakla aynı şeydir.
+**Beş** şeyi yakalar: kırık dosya referansı · **kırık bölüm atfı** (`<dosya>.md`
+→ *"Başlık"* denen başlık hedefte var mı) · bayat PDF · **haritada görünmeyen
+dosya** · **bayat sürüm damgası** (rehberdeki `Sürüm:` ile `plugin.json` aynı
+MAJOR.MINOR mu). **Çıktısını oku** — çalıştırıp kırpmak, atlamakla aynı şeydir.
 
 ⛔ **Kural değiştirdiysen kullanıcı rehberlerini de gözden geçir:**
 `docs/KIT-REHBER.md` (terim terim anlatım) ve `docs/KIT-NE-YAPIYOR.md` (döngü ve
@@ -113,7 +115,14 @@ yeni kural `1.1.0`), commit, push.
 Depo **herkese açıktır.** Push edilen: `skills/` · `ICINDEKILER.md` ·
 `README.md` · `KURULUM.md` · `CLAUDE.md`.
 
-⚠️ **`docs/` klasörü `.gitignore` ile KAPALIDIR** — yalnızca iki dosya açıktır:
-`docs/TARTISILMIS-KARARLAR.md`. Geri kalan üretilen belgeler
-(rehberler, PDF'ler, oturum notları) diskte kalır; yayınlanacaksa **önce
-kullanıcıya sorulur.**
+⚠️ **`docs/` klasörü `.gitignore` ile KAPALIDIR** — içinden **üç dosya** tek tek
+açılmıştır:
+
+| Açık | Neden |
+|---|---|
+| `docs/TARTISILMIS-KARARLAR.md` | Yeni oturum kararları görmeli |
+| `docs/KIT-REHBER.md` | Plugin'i kuran kişi kiti anlamalı |
+| `docs/KIT-NE-YAPIYOR.md` | Aynı — döngü ve kapılar |
+
+Geri kalan her şey (PDF'ler, oturum notları, yazışmalar) diskte kalır;
+yayınlanacaksa **önce kullanıcıya sorulur.**

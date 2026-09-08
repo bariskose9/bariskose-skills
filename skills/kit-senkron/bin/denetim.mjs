@@ -233,7 +233,12 @@ if (existsSync(pluginYolu)) {
 
 // ── Rapor ───────────────────────────────────────────────────────────────────
 if (!bulgular.length) {
-  console.log("✓ Denetim temiz — kırık referans, kırık bölüm atfı ve bayat PDF yok.");
+  // ⛔ Mesaj, FİİLEN koşan kontrolleri sayar. Kontrol eklenip bu satır
+  //    güncellenmezse çıktı yaptığından azını söyler ve okuyan yanlış güvenir.
+  console.log(
+    "✓ Denetim temiz — beş kontrol geçti: kırık referans · kırık bölüm atfı ·\n" +
+      "  bayat PDF · haritada görünmeyen dosya · bayat sürüm damgası.",
+  );
   process.exit(0);
 }
 console.log(`⚠️ ${bulgular.length} bulgu:\n`);

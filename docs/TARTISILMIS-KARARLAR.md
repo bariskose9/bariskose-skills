@@ -167,6 +167,32 @@ anlatır gibi.**
 - [ ] Kullanıcı `KIT-REHBER.md` ve `KIT-NE-YAPIYOR.md`'yi okuyup dönüş yapacak
 - [ ] Özellikle **`06-testing.md` → beş gözle doğrulama** listesi kalibre
       edilecek: fazla mı, eksik mi — ancak kullanan söyleyebilir
-- [ ] İki dosya bölünme eşiğine yaklaşıyor: `CALISMA-KILAVUZU.md` (1209 satır)
-      ve `11-agent-workflow.md` (888). Büyümeye devam ederlerse bölünmeleri
+- [ ] İki dosya bölünme eşiğine yaklaşıyor: `CALISMA-KILAVUZU.md` (1161 satır)
+      ve `11-agent-workflow.md` (970). Büyümeye devam ederlerse bölünmeleri
       önerilecek. Ölçüm: `wc -l`
+
+### ⏳ Konuşuldu, karar verilmedi — yeni oturum bunları açabilir
+
+- [ ] **Payload dosyasının adı.** `skills/yeni-proje/dosyalar/CLAUDE.md` şu an
+      `CLAUDE.md` adını taşıyor ama orada **çalışmıyor**; kopyalanınca projede
+      çalışıyor. Öneri: adı **PROJE-CLAUDE-SABLONU.md** olsun (henüz yok),
+      Adım 2 kopyalarken `CLAUDE.md`'ye çevirsin.
+      *Artısı:* ad içeriği anlatır (kullanıcının ilkesi) ve kit üzerinde
+      çalışırken yanlışlıkla bağlama yüklenmesi ihtimali biter.
+      *Eksisi:* kopyalamada bir yeniden adlandırma adımı; unutulursa proje
+      hiçbir kural görmez. **Kullanıcı karar vermedi.**
+- [ ] **`CLAUDE.md` başına yönlendirme tablosu.** 608 satırın içinde *"hangi
+      soru → hangi dosya"* bilgisi üç ayrı bölüme dağılmış (§1 hiyerarşi, rol
+      tablosu, §5.1–5.12). Üstte 20 satırlık düz bir tablo önerildi
+      (*"mimari → 01, ödeme → 05, ani yük → 12"*). **Kullanıcı karar vermedi.**
+- [ ] **`~/.claude/CLAUDE.md` boş.** Her klasörde geçerli olacak birkaç satır
+      (Türkçe konuş · kod okuyamıyorum · kanıtsız "bitti" deme) oraya konabilir.
+      Kit projelerinde gerekmiyor; kit dışı klasörlerde hiçbir kural yok.
+      **Kullanıcı karar vermedi.**
+
+### ⚠️ Bilinen ve kabul edilmiş açık
+
+- [ ] **`calisma-dokumanlari/` depoda açık.** On dosya public; altısında kurum
+      adı ve ödev metni geçiyor. Kullanıcıya bildirildi, *"şimdilik kalsın"*
+      dedi. Kapatılmak istenirse `.gitignore` + takipten çıkarma yeterli;
+      **git geçmişini temizlemek ayrı bir iştir.**
