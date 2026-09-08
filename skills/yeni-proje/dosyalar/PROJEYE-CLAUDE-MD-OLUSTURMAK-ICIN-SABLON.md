@@ -1,8 +1,18 @@
-# CLAUDE.md — Çalışma Protokolü ve Mühendislik Standartları
+# Projeye `CLAUDE.md` oluşturmak için ŞABLON
 
-> Bu dosya her projede aynıdır. Projeye özel hiçbir bilgi (amaç, sayfa, iş kuralı)
-> BURAYA yazılmaz — onlar `docs/project/PRD.md` içindedir.
-> Yeni projede: bu dosyayı ve `docs/standards/` klasörünü kopyala, `docs/project/` içini değiştir.
+> ⛔ **BU DOSYA BURADA ÇALIŞMAZ.** Kitin içinde dururken hiçbir şey yapmaz;
+> yalnızca kopyalanacağı içeriği taşır. Adı bunu söylesin diye böyle.
+>
+> ⭐ **Kurulumda ne olur:** bu dosya projenin **köküne** kopyalanır ve adı
+> **`CLAUDE.md`** olarak değiştirilir. Ancak o zaman Claude Code onu
+> otomatik yükler ve kurallar yürürlüğe girer.
+>
+> ⛔ **Adı değiştirilmezse proje kuralsız kalır** — Claude Code yalnızca
+> `CLAUDE.md` adını arar, bu adı aramaz. Hata da vermez, sessizce kuralsız
+> çalışır. `SKILL.md` Adım 7 kontrol listesi bunu doğrular.
+>
+> Aşağısı projeye gidecek içeriktir. Projeye özel hiçbir bilgi (amaç, sayfa,
+> iş kuralı) buraya yazılmaz — onlar `docs/project/PRD.md` içindedir.
 
 ---
 

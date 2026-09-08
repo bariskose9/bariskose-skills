@@ -173,14 +173,13 @@ anlatır gibi.**
 
 ### ⏳ Konuşuldu, karar verilmedi — yeni oturum bunları açabilir
 
-- [ ] **Payload dosyasının adı.** `skills/yeni-proje/dosyalar/CLAUDE.md` şu an
-      `CLAUDE.md` adını taşıyor ama orada **çalışmıyor**; kopyalanınca projede
-      çalışıyor. Öneri: adı **PROJE-CLAUDE-SABLONU.md** olsun (henüz yok),
-      Adım 2 kopyalarken `CLAUDE.md`'ye çevirsin.
-      *Artısı:* ad içeriği anlatır (kullanıcının ilkesi) ve kit üzerinde
-      çalışırken yanlışlıkla bağlama yüklenmesi ihtimali biter.
-      *Eksisi:* kopyalamada bir yeniden adlandırma adımı; unutulursa proje
-      hiçbir kural görmez. **Kullanıcı karar vermedi.**
+- [x] ~~Payload dosyasının adı~~ — **yapıldı (2026-09-09).**
+      `dosyalar/CLAUDE.md` → `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md`.
+      Kullanıcı `.md`'yi ad ortasında istemişti; çift uzantı bazı araçları ve
+      denetim betiğinin dosya-adı desenini yanıltacağı için `-MD-` yazıldı.
+      Adım 2 kopyalarken adı `CLAUDE.md` yapıyor, Adım 7 kontrol listesi
+      `ls <proje>/CLAUDE.md` ile doğruluyor — sessiz kırılma kapatıldı.
+
 - [x] ~~`CLAUDE.md` başına yönlendirme tablosu~~ — **yapıldı (2026-09-09).**
       *"Hangi soru → hangi dosya"* tablosu dosyanın başına kondu: 19 standart
       artı `docs/project/` belgeleri. Çakışma sırası da yazılı.

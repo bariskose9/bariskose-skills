@@ -94,6 +94,36 @@ ile çakışmaz, onu tamamlar — **çakışma olursa `07` üstündür** (Türk�
 **Sormadan kurma.** Kullanıcının makinesine izinsiz paket eklemek bu kitin
 kendi kuralının ihlalidir.
 
+### ⛔ Adım 0 öncesi — KURULU SÜRÜM GÜNCEL Mİ
+
+⚠️ **Bu kontrol yazılıydı ama onu çalıştıran adım yoktu.**
+`15-oturum-devri-kurallari.md` → *"Kurulu plugin sürümü ne zaman güncellenir"*
+şöyle diyor: kurulu sürüm yalnızca `/yeni-proje` ve `/kit-senkron`'dan **hemen
+önce** önemlidir. Ama `/yeni-proje` bunu hiç kontrol etmiyordu — bayat bir
+şablonla proje kurulabiliyordu. Bölge eşleşmesinin ve stack taramasının başına
+gelenin aynısı; akışa bağlandı.
+
+```bash
+# Kurulu sürüm
+find ~/.claude/plugins/cache -name plugin.json -path '*proje-kiti*' \
+  | xargs grep -h '"version"' | tr -d ' ",' | sed 's/version://' | sort -V | tail -1
+# GitHub'daki sürüm
+curl -s https://raw.githubusercontent.com/bariskose9/bariskose-skills/main/.claude-plugin/plugin.json \
+  | grep -m1 version
+```
+
+| Sonuç | Ne yapılır |
+|---|---|
+| Aynı | Sessizce devam |
+| ⛔ Kurulu **geride** | **DUR.** Kullanıcıya söyle, güncellemesini iste, yeniden başlatmasını hatırlat |
+| Ağ yok / karşılaştırılamadı | Bildir ve devam et — engelleme |
+
+⛔ **Sessizce devam etme.** Bayat şablonla kurulan proje, düzeltilen kuralları
+hiç görmez ve bu ancak aylar sonra fark edilir.
+
+⚠️ **Güncelleme kendiliğinden inmez, kullanıcı çeker:**
+`/plugin marketplace update` → `/plugin update proje-kiti` → **yeniden başlat**.
+
 ### Adım 0a — Platformu TESPİT ET (sorma)
 
 ⛔ **Kullanıcıya "Windows mu Mac mi?" diye sorma.** Tek komutla öğrenebileceğin
@@ -494,7 +524,11 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
 
 ## Adım 2 — Kit dosyalarını yerleştir
 
-1. `dosyalar/` içeriğini projeye kopyala: `CLAUDE.md`, `CALISMA-KILAVUZU.md`,
+1. ⛔ **`PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` dosyasını projenin
+   köküne kopyala ve adını `CLAUDE.md` YAP.** Ad değişmezse Claude Code onu
+   hiç yüklemez ve proje **sessizce kuralsız** kalır — hata vermez.
+   Doğrula: `ls <proje>/CLAUDE.md`
+2. `dosyalar/` içeriğinin geri kalanını projeye kopyala: `CALISMA-KILAVUZU.md`,
    `REPO-YAPISI.md`, `docs/standards/**`, **`.vscode/extensions.json`**
 
    ⭐ `.vscode/extensions.json` sayesinde kullanıcı projeyi VS Code'da açtığında
@@ -509,10 +543,10 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
 
    ⚠️ `CALISMA-KILAVUZU.md` **kullanıcı için**; `CLAUDE.md` ajan için. Kurulum
    bitince kullanıcıya *"nasıl devam edeceğin bu dosyada"* diye söylenir.
-2. `CLAUDE.md` §0 bloğunu Adım 1'deki cevaplarla **doldur** — proje adı, tip,
+3. `CLAUDE.md` §0 bloğunu Adım 1'deki cevaplarla **doldur** — proje adı, tip,
    ana dal, diller. ⚠️ **`STACK` ve `DEPLOY` satırları şimdilik boş kalır**
    (`<Adım 3b'de doldurulacak>` yazılır); o karar PRD'den sonra verilir.
-3. `docs/standards/sablonlar/` içindeki şablonları `docs/project/` altına aç:
+4. `docs/standards/sablonlar/` içindeki şablonları `docs/project/` altına aç:
    `PRD.md` · `roadmap.md` · `altyapi-durumu.md` · `CHANGELOG.md` ·
    `yeni-oturuma-verilecek-sonraki-adim-promptu.md` · `teknoloji-ve-plan.md` · `ogrendiklerim.md` ·
    `decisions/ADR-000-sablon.md` ·
@@ -524,7 +558,7 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    Kendi projende soracak bir kurum yok. İçindeki üç DevOps sorusu
    (`CALISMA-KILAVUZU.md` → *"DevOps sınırı"*) **işe başlamadan** sorulur —
    cevapları hem oraya hem `altyapi-durumu.md`'ye işlenir.
-4. **`docs/standards/` içini değiştirme** — istisna **bölüm** seviyesindedir,
+5. **`docs/standards/` içini değiştirme** — istisna **bölüm** seviyesindedir,
    dosya seviyesinde değil. `00-stack.md`'de iki yer projeye aittir:
 
    | Nerede | Ne yazılır |
@@ -540,7 +574,7 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    ⛔ **Gerekçesiz yasak yazılmaz.** Sonraki oturum gerekçesiz maddeyi anlamaz
    ve delmeye çalışır. Bir yasağın gerekçesi bu projede geçerli değilse yasak da
    geçerli değildir — ADR yazılır, madde sessizce çiğnenmez.
-5. ⭐ **Seviye defteri — ÜZERİNE YAZMA, BİRLEŞTİR.**
+6. ⭐ **Seviye defteri — ÜZERİNE YAZMA, BİRLEŞTİR.**
 
    `ogrendiklerim.md` kitle birlikte gelir ve **her projede aynıdır**. Klasörde
    zaten bir defter varsa:
@@ -917,6 +951,9 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 - [ ] **Kitin varsayılanından sapılan her karar** ADR'ye yazıldı mı ve
       `teknoloji-ve-plan.md`'de hangi kutuda olduğu belirtildi mi
       (`00-stack.md` → *"KARAR NEREYE YAZILIR"*)
+- [ ] ⛔ **Projenin kökünde `CLAUDE.md` VAR MI** — `ls <proje>/CLAUDE.md`.
+      Şablon kopyalanıp adı değiştirilmediyse Claude Code hiçbir kural
+      yüklemez ve bunu **hata olarak bildirmez**; sessizce kuralsız çalışır
 - [ ] `00-stack.md` sürümleri `package.json` ile birebir aynı mı
 - [ ] **Stack taraması fiilen koşturuldu mu** (Adım 3b.3): her satır için
       `npm view` + haftalık indirme ölçüldü, bulgular **ölçüm tarihiyle**

@@ -154,7 +154,7 @@ gerekçe, kararı verirken en net hatırlanır.
 
 | Ne | Nereye | Nasıl |
 |---|---|---|
-| `CLAUDE.md` | repo kökü | **Olduğu gibi kopyala**, sonra yalnızca §0 "Proje Değişkenleri" bloğunu doldur |
+| `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` | repo kökü, ⛔ **adı `CLAUDE.md` olarak** | Olduğu gibi kopyala + **yeniden adlandır**, sonra yalnızca §0 "Proje Değişkenleri" bloğunu doldur. Ad değişmezse Claude Code yüklemez |
 | `CALISMA-KILAVUZU.md` | Kullanıcının kılavuzu: nasıl başlanır, ne sorulur, hangi dosya ne işe yarar | Olduğu gibi kopyalanır |
 | `docs/standards/**` (00–18, **19 dosya**) | `docs/standards/` | **Olduğu gibi kopyala, İÇİNİ DEĞİŞTİRME.** Stack farklıysa yalnızca `00-stack.md` tablosu güncellenir |
 | `docs/standards/sablonlar/**` | `docs/project/` | Kopyala ve **içini doldur** — her şablonun başında ne yazılacağı anlatılıyor |

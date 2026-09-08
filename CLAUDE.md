@@ -11,7 +11,7 @@ projeye giden dosyada yazılı ve **buraya kopyalanmaz** — aynı gerekçe iki
 yerde yaşarsa biri bayatlar (`docs/standards/11-agent-workflow.md` →
 *"AYNI BİLGİ İKİ YERDE YAZILMAZ"*).
 
-Kural yazmaya başlamadan önce `skills/yeni-proje/dosyalar/CLAUDE.md` içinden
+Kural yazmaya başlamadan önce `skills/yeni-proje/dosyalar/PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` içinden
 şu dört bölümü oku:
 
 | Bölüm | Ne söyler |
@@ -43,7 +43,7 @@ projelerde de aynı dosya okunur; öğrenilen `/kit-senkron` ile buraya döner.
 | Yer | Ne | Ajan okur mu |
 |---|---|---|
 | `skills/yeni-proje/SKILL.md` | Kurulum akışı — sekiz adım | ✅ |
-| `skills/yeni-proje/dosyalar/CLAUDE.md` | Projelere kopyalanan ajan kuralları | ✅ |
+| `skills/yeni-proje/dosyalar/PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` | Projelere kopyalanan ajan kuralları | ✅ |
 | `skills/yeni-proje/dosyalar/docs/standards/` | **19 standart — kuralın kaynağı** | ✅ |
 | `docs/` | Kararlar (`TARTISILMIS-KARARLAR.md`) + iki kullanıcı rehberi | ✅ kararlar · ⚠️ rehberler yalnızca güncellemek için |
 | `…/sablonlar/ogrendiklerim.md` | **Seviye defteri** — tek defter, kitle her projeye gider | ✅ |
@@ -94,7 +94,7 @@ yayılma tablosu: `docs/standards/11-agent-workflow.md` → *"YAYILMA TABLOSU"*.
 
 | Değiştirdiysen | Güncellenecekler |
 |---|---|
-| `docs/standards/` içinde bir kural | Diğer standartlar · `dosyalar/CLAUDE.md` · `CALISMA-KILAVUZU.md` · `ICINDEKILER.md` · `docs/KIT-REHBER.md` · `docs/KIT-NE-YAPIYOR.md` |
+| `docs/standards/` içinde bir kural | Diğer standartlar · `dosyalar/PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` · `CALISMA-KILAVUZU.md` · `ICINDEKILER.md` · `docs/KIT-REHBER.md` · `docs/KIT-NE-YAPIYOR.md` |
 | `SKILL.md` akışında bir adım | `ICINDEKILER.md` + `CALISMA-KILAVUZU.md` adım tabloları · iki rehber |
 | Yeni dosya ekledin | `ICINDEKILER.md` — denetim zorlar |
 | Minor sürüm artırdın | İki rehberin `**Sürüm:**` damgası — denetim zorlar |

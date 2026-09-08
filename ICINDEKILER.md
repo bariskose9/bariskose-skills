@@ -65,7 +65,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 
 | Dosya | Kim okur | Ne |
 |---|:--:|---|
-| `CLAUDE.md` | Ajan | **Çalışma protokolü ve sekiz zorunlu kapı.** §0'ı kurulum doldurur |
+| `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` | Ajan | **Çalışma protokolü ve sekiz zorunlu kapı.** ⛔ Projeye kopyalanırken adı `CLAUDE.md` olur — ancak o zaman yüklenir. §0'ı kurulum doldurur |
 | `CALISMA-KILAVUZU.md` | **Sen** | Projeyi nasıl yürüteceğin — terimler, oturum ritmi, dosya açıklamaları. ⚠️ Ajan bunu da kendiliğinden okumaz; senin kılavuzun, ama **güncel tutmak onun işi** |
 | `REPO-YAPISI.md` | İkisi | Hangi iş hangi klasörde — kurulumdan sonra doldurulur |
 | `.vscode/extensions.json` | — | VS Code eklenti önerileri |
