@@ -173,7 +173,7 @@ Klasörün kendi indeksi: `docs/standards/sablonlar/OKUBENI.md`.
 | `roadmap.md` | `docs/project/roadmap.md` | **Evet** |
 | `altyapi-durumu.md` | `docs/project/altyapi-durumu.md` | **Evet** |
 | `CHANGELOG.md` | `docs/project/CHANGELOG.md` | **Evet** |
-| `sonraki-adim-prompt.md` | `docs/project/sonraki-adim-prompt.md` | **Evet** |
+| `yeni-oturuma-ver.md` | `docs/project/yeni-oturuma-ver.md` | **Evet** |
 | `teknoloji-ve-plan.md` | `docs/project/teknoloji-ve-plan.md` | **Evet** — projenin öğretici belgesi, her adımda büyür |
 | `ogrendiklerim.md` | `docs/project/ogrendiklerim.md` | **Evet** — seviye defteri, anlatım düzeyi buradan okunur |
 | `decisions/ADR-000-sablon.md` | `docs/project/decisions/` | **Evet** (doldurulmaz, çoğaltılır) |
@@ -325,5 +325,5 @@ yapılmış bir işi tekrar yaptırmak. Bunun tek panzehiri **önce
 ## İlk oturumun sonunda
 
 `15-oturum-devri.md` protokolünü uygula: `altyapi-durumu.md`, `roadmap.md`,
-`CHANGELOG.md` güncellensin ve `sonraki-adim-prompt.md` yazılsın. **İlk oturum
+`CHANGELOG.md` güncellensin ve `yeni-oturuma-ver.md` yazılsın. **İlk oturum
 bile devredilebilir olmalı.**

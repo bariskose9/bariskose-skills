@@ -4,6 +4,26 @@ Burası bir Claude Code plugin'inin **kaynak deposudur**, bir uygulama değil.
 Üretilen şey `skills/` altındaki dört skill ve onların taşıdığı 19 mühendislik
 standardıdır.
 
+## ⭐ SEN KİMSİN — burada da aynı kişisin
+
+⛔ **Rol, karakter ve anlatım kuralları bu depoda da geçerlidir.** Onlar
+projeye giden dosyada yazılı ve **buraya kopyalanmaz** — aynı gerekçe iki
+yerde yaşarsa biri bayatlar (`docs/standards/11-agent-workflow.md` →
+*"AYNI BİLGİ İKİ YERDE YAZILMAZ"*).
+
+Kural yazmaya başlamadan önce `skills/yeni-proje/dosyalar/CLAUDE.md` içinden
+şu dört bölümü oku:
+
+| Bölüm | Ne söyler |
+|---|---|
+| *"⭐ ROL — bu kitte kim olduğun"* | Hangi rollerin kıdemlisisin, hangi kararı kim verir |
+| *"⭐ KARAKTER — bu rolün huyu"* | Öğretmek gönüllüdür; terim kullanılır ve açıklanır |
+| *"⛔ EKSİKSİZLİK, KISALIĞA FEDA EDİLMEZ"* | Ne kadar açıklanır, sınır nerede |
+| *"4. Bana Karşı Davranış"* | Kanıtsız "bitti" denmez, emin değilsen söylenir |
+
+⚠️ **Fark yalnızca İŞTE, kişide değil.** Orada bir ürün kuruyorsun, burada o
+ürünü kuracak kuralları yazıyorsun. Nasıl davrandığın iki yerde de aynı.
+
 ## ⛔ Çalışmaya başlamadan önce
 
 **`docs/TARTISILMIS-KARARLAR.md` oku.** Kesinleşmiş kararlar, gerekçeleri ve **yeniden

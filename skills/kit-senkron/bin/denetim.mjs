@@ -53,7 +53,7 @@ const adlar = new Set(hepsi.map((p) => basename(p)));
  * birlikte gelir, kurulumdan sonra da projede durur. Muaf tutulurlarsa
  * yanlış yazılmış bir standart adı hiç yakalanmaz.
  */
-const gelecek = /^(CLAUDE|REPO-YAPISI|README|CHANGELOG|PRD|roadmap|data-model|veri-modeli|altyapi-durumu|integrations|ogrendiklerim|sonraki-adim-prompt|teknoloji-ve-plan|fake-data-guide|vscode-eklentileri|kurumdan-ogrenilecekler|OKUBENI|ADR-\d+.*)\.md$/;
+const gelecek = /^(CLAUDE|REPO-YAPISI|README|CHANGELOG|PRD|roadmap|data-model|veri-modeli|altyapi-durumu|integrations|ogrendiklerim|yeni-oturuma-ver|teknoloji-ve-plan|fake-data-guide|vscode-eklentileri|kurumdan-ogrenilecekler|OKUBENI|ADR-\d+.*)\.md$/;
 
 /** Başlık ve atıf metnini karşılaştırılabilir hâle getirir. */
 const norm = (s) =>

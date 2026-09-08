@@ -510,7 +510,7 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    (`<Adım 3b'de doldurulacak>` yazılır); o karar PRD'den sonra verilir.
 3. `docs/standards/sablonlar/` içindeki şablonları `docs/project/` altına aç:
    `PRD.md` · `roadmap.md` · `altyapi-durumu.md` · `CHANGELOG.md` ·
-   `sonraki-adim-prompt.md` · `teknoloji-ve-plan.md` · `ogrendiklerim.md` ·
+   `yeni-oturuma-ver.md` · `teknoloji-ve-plan.md` · `ogrendiklerim.md` ·
    `decisions/ADR-000-sablon.md` ·
    (veritabanı varsa) `data-model.md` · (dış servis varsa) `integrations.md` ·
    (sahte veri gerekiyorsa) `fake-data-guide.md` ·
@@ -776,7 +776,7 @@ kullanıcı kararında ısrar ederse tartışmayı kapat ve yap.
    Roadmap adımları bu belgenin "Yapım planı" bölümünden okunur, iki yere
    kopyalanmaz.
 
-5. `sonraki-adim-prompt.md`: şu notla oluştur —
+5. `yeni-oturuma-ver.md`: şu notla oluştur —
    *"Henüz doldurulmadı. İlk roadmap adımı bitince `15-oturum-devri.md`
    protokolüne göre baştan yazılacak."*
 
@@ -923,7 +923,7 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 - [ ] **6b ise:** `docker compose up --build` temiz makinede ayağa kalkıyor mu,
       `.env.example` eksiksiz mi, sağlık uçları yeşil mi
 - [ ] `.env` commit edilmemiş, `.env.example` commit edilmiş mi
-- [ ] `sonraki-adim-prompt.md` bir sonraki adımı tarif ediyor mu
+- [ ] `yeni-oturuma-ver.md` bir sonraki adımı tarif ediyor mu
 - [ ] `teknoloji-ve-plan.md` açıldı mı ve kurulumda alınan kararlar işlendi mi
 - [ ] `CALISMA-KILAVUZU.md` kopyalandı mı ve kullanıcıya yeri söylendi mi
 - [ ] **Arayüz varsa:** tasarım yönü ADR'si yazıldı mı (yazı ailesi, palet,

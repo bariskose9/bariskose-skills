@@ -1,7 +1,11 @@
-# Sonraki oturum için hazır prompt — adım <X>
+# Yeni oturuma ver — adım <X>
+
+> ⚠️ **Adı ne anlatıyor:** bu dosya *"yeni oturuma verilecek metin"*dir.
+> Karıştırma: `docs/standards/15-oturum-devri.md` **kuraldır** (devir nasıl
+> yapılır); bu dosya o kuralın **ürünüdür** (fiilen verilecek metin).
 
 <!--
-ŞABLON — `docs/project/sonraki-adim-prompt.md` olarak kopyalanır.
+ŞABLON — `docs/project/yeni-oturuma-ver.md` olarak kopyalanır.
 Bu yorum bloğu doldurduktan sonra silinir.
 
 BU DOSYA NEDEN VAR

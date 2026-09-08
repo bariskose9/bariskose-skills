@@ -536,7 +536,7 @@ gözden geçirmek. İkisi de tek sayfa, karar başına tek satır.
 | 1 | §4-A'daki dört soruyu sor | Ajan |
 | 2 | ⭐ `/yeni-proje` çalıştır — **Adım 1 cevapları §3'teki tablodan.** Sorma, *"şöyle alıyorum, yanlışsa söyle"* deyip geç | Ajan |
 | 3 | Adım 3 (PRD) → §4-B'deki açık konular | İkisi |
-| 4 | `/clear`, sonraki oturuma `docs/project/sonraki-adim-prompt.md` ile devret | Ajan |
+| 4 | `/clear`, sonraki oturuma `docs/project/yeni-oturuma-ver.md` ile devret | Ajan |
 
 ⚠️ **Eklentiler bu adımlardan ÖNCE kurulu olmalı** — kurulum `KURULUM.md`
 BÖLÜM A'da. Kurulu değilse `/yeni-proje` komutu zaten görünmez.

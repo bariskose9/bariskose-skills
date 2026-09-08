@@ -104,7 +104,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `roadmap.md` | ✅ | Adımlar, bağımlılık sırasıyla + teknik borç |
 | `altyapi-durumu.md` | ✅ | **Dış dünyanın durumu** — hangi hesap açık, hangi anahtar nerede |
 | `CHANGELOG.md` | ✅ | Ne yayınlandı |
-| `sonraki-adim-prompt.md` | ✅ | Yeni oturuma verilecek tek metin |
+| `yeni-oturuma-ver.md` | ✅ | Yeni oturuma verilecek tek metin |
 | `teknoloji-ve-plan.md` | ✅ | **Projenin öğretici belgesi** — neyi neden kullanıyoruz |
 | `ogrendiklerim.md` | ✅ | ⭐ **Tek defter** — kitten gelir, üzerine **yazılmaz birleştirilir**, `/kit-senkron` ile kite döner |
 | `decisions/ADR-000-sablon.md` | ✅ | Her mimari karar bunu çoğaltır |
