@@ -117,7 +117,31 @@ kendi paneli vardır.
 
 ## Oturum sonu protokolü
 
-Bir oturumu kapatmadan önce ajan şunları yapar:
+### ⛔ "OTURUM SONU" BİR AN DEĞİL — YAZMA ANINDA OLUR
+
+⚠️ **Kullanıcı "bitiriyorum" demeyebilir.** Doğrudan `/clear` yazabilir,
+pencereyi kapatabilir, bilgisayarı uyutabilir. Her şeyi sona bırakan bir
+protokol, o an gelmediğinde **hiçbir şey yazmamış** olur.
+
+⛔ **Kural: bir şey olduğu anda yazılır, sonraya bırakılmaz.**
+
+| Ne olduğunda | O anda yazılır |
+|---|---|
+| Roadmap adımı bitti | ⛔ Hemen kutucuk işaretlenir |
+| Hesap açıldı, anahtar girildi | ⛔ Hemen `altyapi-durumu.md` |
+| Yeni terim öğrenildi / seviye değişti | ⛔ Hemen deftere (**sorularak**) |
+| Karar verildi | ⛔ Hemen ADR |
+| Özellik bitti | ⛔ Hemen `CHANGELOG.md` |
+
+⭐ **Aşağıdaki protokol bir TARAMA'dır, ilk yazma değil.** Kapanışta yapılan
+iş *"unutulan var mı"* diye bakmaktır; her şey zaten yazılmış olmalıdır.
+
+⚠️ **Ölçüt:** *"Kullanıcı şu an haber vermeden `/clear` yapsa, ne kaybederiz?"*
+Cevap *"hiçbir şey"* değilse, yazılmamış bir şey var demektir.
+
+---
+
+Bir oturumu kapatmadan önce ajan şu **taramayı** yapar:
 
 1. **`altyapi-durumu.md`'yi güncelle** — bu oturumda hesap açıldı mı, panel
    ayarı değişti mi, yeni ortam değişkeni girildi mi
@@ -157,6 +181,27 @@ doğrudan düzenliyorsun, kopya yok.
 
 ⭐ *Neden hatırlatma, otomatik değil:* `/kit-senkron` kite yazar ve kit **herkese
 açık** bir depodur. Kullanıcının haberi olmadan oraya satır eklenmez.
+
+### ⛔ İKİ MAKİNE — defter yalnızca PUSH edilirse ötekine geçer
+
+Kullanıcı işte bir makinede, evde başka bir makinede çalışıyorsa defterin
+**tek doğru kopyası GitHub'daki kit deposudur.** Yerelde commit etmek yetmez;
+commit edilip **push edilmeyen** satır öteki makinede **yoktur.**
+
+| Adım | Nerede |
+|---|---|
+| 1. Defter projede doldu | Proje klasörü |
+| 2. `/kit-senkron` → kit deposuna birleştirildi | Kit deposunun **klonu** |
+| 3. ⛔ **`git push`** | GitHub |
+| 4. Öteki makinede `git pull` | O makinedeki klon |
+| 5. `/plugin update` → yeni projeler bunu alır | Önbellek |
+
+⛔ **Kurulu kopyaya (`~/.claude/plugins/cache/`) yazılmaz.** Orası salt
+okunurdur ve `/plugin update` onu silip üzerine yazar. Yazılabilir kopya
+**`git clone` ile alınan depodur** — her iki makinede de bir klon bulunmalıdır.
+
+⚠️ **Adım 3 atlanırsa defter o makinede hapsolur.** Kullanıcı öteki makinede
+*"bunu öğrenmiştim"* der, ajan bilmez, baştan anlatır.
 
 ### ⛔ OTURUM, PUSH EDİLMEDEN KAPANMAZ
 

@@ -138,6 +138,10 @@ Kuralı düzelt, projeye göre dallandırma.
 
 1. Kit deposunu bul veya klonla: `github.com/bariskose9/bariskose-skills`
 2. `skills/yeni-proje/dosyalar/docs/standards/` altındaki ilgili dosyayı güncelle
+   ⭐ **Defterler de buraya girer** (`sablonlar/calisilacak-konular.md` ve
+   `sablonlar/ogrendigim-konular.md`) — ama **birleştirilerek**: projedeki
+   satırlardan kitte olmayanlar eklenir, var olan tekrar edilmez, hiçbir satır
+   silinmez, seviye çakışırsa yüksek olan kalır
 3. `plugin.json` içindeki `version` alanını artır (yama: 1.0.**1**, yeni kural: 1.**1**.0)
 4. `claude plugin validate .` çalıştır
 5. Değişikliği **anlat ve onay al**, sonra commit + push

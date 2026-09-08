@@ -32,6 +32,9 @@ o bilgi buraya (veya tablodaki doğru dosyaya) yazılır — `15-oturum-devri-ku
   Kullanıcıya "şunu aç" demeden önce burayı oku; zaten yapılmış olabilir
 - `docs/project/roadmap.md` — nerede kalındı + teknik borç listesi
 - `docs/standards/15-oturum-devri-kurallari.md` — oturum kapanmadan ne yazacağın
+- ⭐ `docs/project/calisilacak-konular.md` ve `docs/project/ogrendigim-konular.md`
+  — **bana neyi ne kadar açıklayacağın buradan okunur.** İkincisindeki bir
+  terimi baştan açıklama, doğrudan kullan
 
 ## DURUM
 
