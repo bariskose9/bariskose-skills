@@ -4,7 +4,7 @@
 > verildiğini, gerekçelerini ve hangilerinin **yeniden tartışılmayacağını**
 > anlatır; sonunda nerede kalındığı yazar.
 >
-> ⚠️ Bu, `15-oturum-devri.md` ile karıştırılmamalı: **o kural**, devrin nasıl
+> ⚠️ Bu, `15-oturum-devri-kurallari.md` ile karıştırılmamalı: **o kural**, devrin nasıl
 > yapılacağını söyler ve her projeye kopyalanır. **Bu dosya sonuç** — kitin
 > kendi kararları.
 

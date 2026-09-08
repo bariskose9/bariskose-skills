@@ -1,4 +1,4 @@
-# 15 — Oturum Devri ve Kurumsal Hafıza
+# 15 — Oturum Devri KURALLARI ve Kurumsal Hafıza
 
 > Bu dosya **her projede aynıdır** ve `docs/standards/` ile birlikte kopyalanır.
 > Projeye özel hiçbir bilgi buraya yazılmaz.
@@ -11,7 +11,7 @@ Bir adım tamamlandığında `docs/project/roadmap.md` içindeki kutucuk
 | | Ne söyler |
 |---|---|
 | `roadmap.md` kutucukları | **Nerede kalındı** — bir bakışta, hafta sonra dönüldüğünde |
-| `yeni-oturuma-ver.md` | **Sırada ne var** — ayrıntısıyla, yeni oturuma verilmek üzere |
+| `yeni-oturuma-verilecek-sonraki-adim-promptu.md` | **Sırada ne var** — ayrıntısıyla, yeni oturuma verilmek üzere |
 | `teknoloji-ve-plan.md` | **Neden öyle yapıldı** — kararın gerekçesi ve teknolojinin ne olduğu |
 
 ⚠️ Kutucuk **adım gerçekten bittiğinde** işaretlenir: testler yeşil, kararlar
@@ -83,7 +83,7 @@ Cevap "yanlış iş yapar" ise aşağıdaki tabloya göre yaz.
 | **Nerede kaldık, sırada ne var** | `docs/project/roadmap.md` | Adım tablosu + teknik borç listesi |
 | **Bilinen eksik, kabul edilmiş bedel** | `docs/project/roadmap.md` teknik borç | "Telefon doğrulaması simüle ediliyor" |
 | **DIŞ DÜNYANIN DURUMU** | `docs/project/altyapi-durumu.md` | "Cloudflare hesabı açık, widget kurulu, 2 hostname tanımlı" |
-| **Bir sonraki oturuma talimat** | `docs/project/yeni-oturuma-ver.md` | "Şu adıma geç, şunlara dikkat et" |
+| **Bir sonraki oturuma talimat** | `docs/project/yeni-oturuma-verilecek-sonraki-adim-promptu.md` | "Şu adıma geç, şunlara dikkat et" |
 | **Veri modeli** | `docs/project/data-model.md` | Tablolar, alanlar, saklama süreleri |
 | **Kullanıcının kişisel tercihi / çalışma tarzı** | Ajanın kalıcı hafızası | "Kod okuyamıyor, Türkçe anlat" |
 
@@ -124,7 +124,7 @@ Bir oturumu kapatmadan önce ajan şunları yapar:
 2. **`roadmap.md`'yi güncelle** — biten adımı işaretle, ödenen teknik borcu
    üstü çizili yap, yeni doğan borcu ekle
 3. **`CHANGELOG.md`'ye yaz** — ne eklendi, ne değişti, ne düzeltildi
-4. **`yeni-oturuma-ver.md`'yi yeniden yaz** — bir sonraki oturum bunu
+4. **`yeni-oturuma-verilecek-sonraki-adim-promptu.md`'yi yeniden yaz** — bir sonraki oturum bunu
    kopyalayıp yapıştıracak; içinde ne olması gerektiği aşağıda
 5. **Öğrenilen kalıcı kuralı İKİ kopyaya da yaz ve diff ile kanıtla**
    (CLAUDE.md kapı 8 — aşağıdaki bölüm)
@@ -161,7 +161,7 @@ Bu ayrım sık karışır ve yanlış "düzeltilir":
 | **Commit özeti** (`feat(x): add …`) | **İngilizce** | Conventional Commits; kod dilinin parçası (`08-git-workflow.md`) |
 | **Değişiklik raporu** (sana sunulan) | **Türkçe** | Okuyan sensin (`CLAUDE.md` §6.3) |
 | **`CHANGELOG.md`** | **Türkçe**, tam cümle | Okuyan kullanıcı ve devralan |
-| **Devir notu** (`yeni-oturuma-ver.md`) | **Türkçe** | Sonraki oturuma ve sana |
+| **Devir notu** (`yeni-oturuma-verilecek-sonraki-adim-promptu.md`) | **Türkçe** | Sonraki oturuma ve sana |
 | Kod, değişken, tablo, kolon | **İngilizce** | `02-coding-standards.md` |
 
 ⭐ **Yani "ne yapıldı" iki kez yazılır ve ikisi farklı dildedir:** commit
@@ -171,7 +171,7 @@ anlatan. Bu tekrar değil — iki ayrı okuyucu içindir.
 ### ⛔ Bir durum değiştiğinde tek bir yeri düzeltmek YETMEZ
 
 Aynı gerçek birden çok yerde yazılıdır: `altyapi-durumu.md`'nin özet satırı,
-ortam değişkeni matrisi, adım bölümleri ve `yeni-oturuma-ver.md`'nin DURUM
+ortam değişkeni matrisi, adım bölümleri ve `yeni-oturuma-verilecek-sonraki-adim-promptu.md`'nin DURUM
 başlığı. Biri güncellenip öteki unutulduğunda dosya **kendi içinde çelişir** ve
 sonraki oturum ilk okuduğu satıra inanır.
 
@@ -179,7 +179,7 @@ sonraki oturum ilk okuduğu satıra inanır.
 yapıldı, ilgili bölümler güncellendi — ama **ortam değişkeni matrisi hâlâ
 "girilmeli" diyordu.** O tablo, "kullanıcıya panel işi vermeden önce oku" denen
 tablodur; sonraki oturum proje sahibine **zaten yaptığı işi tekrar yaptıracaktı.**
-Aynı gün `yeni-oturuma-ver.md`'nin ilk maddesi de "hata takibi hâlâ sessiz"
+Aynı gün `yeni-oturuma-verilecek-sonraki-adim-promptu.md`'nin ilk maddesi de "hata takibi hâlâ sessiz"
 diyordu, oysa aynı dosyanın 20 satır altında "doğrulandı" yazıyordu.
 
 **Kural — bir dış dünya durumu değiştiğinde:**
@@ -346,7 +346,7 @@ Güncelleme kullanıcı tarafından çekilir, kendiliğinden inmez:
 ```
 ve Claude yeniden başlatılır.
 
-## `yeni-oturuma-ver.md` — ne içerir
+## `yeni-oturuma-verilecek-sonraki-adim-promptu.md` — ne içerir
 
 Yeni bir oturum bunu okuyup **soru sormadan** çalışmaya başlayabilmeli:
 

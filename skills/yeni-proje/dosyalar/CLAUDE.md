@@ -313,7 +313,7 @@ Hiçbir skill uygun değilse `[SKILL: yok]` yaz. Birden fazla kullandıysan heps
 | 4 | Test yaz, çalıştır, yeşil olduğunu göster | Her davranış değişikliğinde. Testsiz "bitti" deme |
 | 5 | `code-review-and-quality` çalıştır | Her commit öncesi |
 | 6 | `docs/standards/10-definition-of-done.md` kapılarını geç | "Tamamlandı" demeden önce |
-| 7 | `docs/standards/15-oturum-devri.md` protokolünü uygula | Her adım bitiminde, oturum kapanmadan |
+| 7 | `docs/standards/15-oturum-devri-kurallari.md` protokolünü uygula | Her adım bitiminde, oturum kapanmadan |
 | 8 | Öğrenilen kalıcı kuralı **İKİ kopyaya da** yaz ve **diff ile kanıtla** | Bir ders, tuzak veya kural öğrenildiğinde — oturum kapanmadan |
 
 Bu kapılardan birini atlamak için gerekçe üretme. Zaman baskısı, "küçük değişiklik",
@@ -362,7 +362,7 @@ projeye yazıp kapıyı geçmiş sayma — sonraki proje dersi almadan başlar.
 ⚠️ **Kurulu plugin sürümünü güncellemek bu kapının parçası DEĞİLDİR.** Kurulu
 sürüm yalnızca `/yeni-proje` ve `/kit-senkron` çalıştırılırken önemlidir;
 o ikisinden hemen **önce** güncellenir, kural yazıldıktan sonra değil.
-Detay: `docs/standards/15-oturum-devri.md`.
+Detay: `docs/standards/15-oturum-devri-kurallari.md`.
 
 ---
 

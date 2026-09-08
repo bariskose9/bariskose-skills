@@ -90,7 +90,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | 12 | `12-operations-and-scaling.md` | Log, izleme, bölge eşleşmesi, ani yük, SLO |
 | 13 | `13-environments.md` | local / preview / production, port, dosya adı tuzağı |
 | 14 | `14-privacy-and-compliance.md` | KVKK, hesap silme, rıza, denetim kaydı |
-| 15 | `15-oturum-devri.md` | **Oturum kapanırken ne yazılır** — hafızasızlığın panzehiri |
+| 15 | `15-oturum-devri-kurallari.md` | **Oturum kapanırken ne yazılır** — hafızasızlığın panzehiri |
 | 16 | `16-yeni-proje-kurulumu.md` | Kurulum listesi, plan sıralaması, depo hijyeni |
 | 17 | `17-mobile.md` | Expo, jeton saklama, mağaza süreci |
 | 18 | `18-seo.md` | Render stratejisi, URL, site haritası, indekslenme |
@@ -104,7 +104,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `roadmap.md` | ✅ | Adımlar, bağımlılık sırasıyla + teknik borç |
 | `altyapi-durumu.md` | ✅ | **Dış dünyanın durumu** — hangi hesap açık, hangi anahtar nerede |
 | `CHANGELOG.md` | ✅ | Ne yayınlandı |
-| `yeni-oturuma-ver.md` | ✅ | Yeni oturuma verilecek tek metin |
+| `yeni-oturuma-verilecek-sonraki-adim-promptu.md` | ✅ | Yeni oturuma verilecek tek metin |
 | `teknoloji-ve-plan.md` | ✅ | **Projenin öğretici belgesi** — neyi neden kullanıyoruz |
 | `ogrendiklerim.md` | ✅ | ⭐ **Tek defter** — kitten gelir, üzerine **yazılmaz birleştirilir**, `/kit-senkron` ile kite döner |
 | `decisions/ADR-000-sablon.md` | ✅ | Her mimari karar bunu çoğaltır |
@@ -123,7 +123,7 @@ plugin'i kuran herkes görür.
 |---|:--:|---|
 | `KIT-REHBER.md` | **Sen** | ⭐ **Terim terim anlatım** — Claude Code nedir, hangi teknoloji ne işe yarar, sekiz adım, kurulumdan sonraki döngü, 19 kural dosyası, sözlük ve ⭐ **Ek: kitin nerede durduğu / projene ne geldiği**. Hiç bilmeyen biri buradan başlar |
 | `KIT-NE-YAPIYOR.md` | **Sen** | ⭐ **Döngü ve kapılar** — dış bağımlılıklar, sekiz adım, özellik sonrası beş göz, sekiz ajan kapısı, kitin nasıl büyüdüğü |
-| `TARTISILMIS-KARARLAR.md` | İkisi | Kesinleşmiş kararlar ve **yeniden tartışılmayacak** konular. ⚠️ `15-oturum-devri.md` **kuraldır**, bu **sonuçtur** |
+| `TARTISILMIS-KARARLAR.md` | İkisi | Kesinleşmiş kararlar ve **yeniden tartışılmayacak** konular. ⚠️ `15-oturum-devri-kurallari.md` **kuraldır**, bu **sonuçtur** |
 | *(defter artık `skills/.../sablonlar/ogrendiklerim.md` içinde)* | — | Tek defter kitle birlikte gelir; `docs/` altında ayrı kopya yok |
 
 ⭐ **Üçü birlikte üç ayrı derinlik:** `ICINDEKILER.md` *nerede ne var* der,

@@ -1,6 +1,6 @@
 # `proje-kiti` — Kit Ne Yapıyor
 
-**Sürüm:** 2.1.0 · **Tarih:** 2026-09-06
+**Sürüm:** 2.2.0 · **Tarih:** 2026-09-06
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Bu belge, kitin **kurulumdan canlıya çıkışa kadar** ne yaptığını anlatır.
@@ -220,7 +220,7 @@ Kitin en belirleyici parçası. Ajanın **neyi yapamayacağını** söyler:
 | 4 | Test yaz, çalıştır, yeşil olduğunu göster |
 | 5 | `code-review-and-quality` çalıştır — her commit öncesi |
 | 6 | `10-definition-of-done.md` kapılarını geç |
-| 7 | `15-oturum-devri.md` protokolünü uygula — her adım bitiminde |
+| 7 | `15-oturum-devri-kurallari.md` protokolünü uygula — her adım bitiminde |
 | 8 | Öğrenilen kuralı **iki kopyaya da** yaz ve `diff` ile kanıtla |
 
 ⚠️ Ayrıca `CLAUDE.md` §6.3: commit öncesi **üç aşamalı doğrulama** —
@@ -258,5 +258,5 @@ dallanmadır: üç proje sonra elinde birbirinden sapmış üç kopya olur.
 
 ---
 
-*Bu belge `proje-kiti` v2.1.0 için üretilmiştir. Kit değiştikçe güncellenir —
+*Bu belge `proje-kiti` v2.2.0 için üretilmiştir. Kit değiştikçe güncellenir —
 sürüm satırı `plugin.json` ile eşleşmezse `denetim.mjs` commit'i durdurur.*

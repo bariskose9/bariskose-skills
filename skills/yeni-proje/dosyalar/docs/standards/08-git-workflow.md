@@ -36,7 +36,7 @@ git commit && git push
 PR anında `MERGEABLE` olur ve iş akışları saniyeler içinde başlar.
 
 **Neden düzenli olarak başımıza gelir:** her adım sonunda bir devir/belge PR'ı
-açılıyor (`15-oturum-devri.md`) ve sonraki adım o PR merge edilmeden `main`'den
+açılıyor (`15-oturum-devri-kurallari.md`) ve sonraki adım o PR merge edilmeden `main`'den
 dallanıyor. İki adım da aynı devir belgelerine dokunduğu için çakışma
 kaçınılmaz. **Kural bu yüzden "açık PR varken dal açma".**
 

@@ -14,7 +14,7 @@ Adım adım kurulum: `docs/standards/16-yeni-proje-kurulumu.md`.
 | `roadmap.md` | `docs/project/roadmap.md` | **Evet** | PRD bitince |
 | `altyapi-durumu.md` | `docs/project/altyapi-durumu.md` | **Evet** | İlk gün boş açılır, ilk hesapla dolmaya başlar |
 | `CHANGELOG.md` | `docs/project/CHANGELOG.md` | **Evet** | İlk adım bitince |
-| `yeni-oturuma-ver.md` | `docs/project/yeni-oturuma-ver.md` | **Evet** | Her oturum sonunda **yeniden yazılır** |
+| `yeni-oturuma-verilecek-sonraki-adim-promptu.md` | `docs/project/yeni-oturuma-verilecek-sonraki-adim-promptu.md` | **Evet** | Her oturum sonunda **yeniden yazılır** |
 | `data-model.md` | `docs/project/data-model.md` | Veritabanı varsa | Veri modeli adımında |
 | `integrations.md` | `docs/project/integrations.md` | Dış servis varsa | İlk dış servisten önce |
 | `fake-data-guide.md` | `docs/project/fake-data-guide.md` | Sahte veri gerekiyorsa | Tohumlama adımından önce |

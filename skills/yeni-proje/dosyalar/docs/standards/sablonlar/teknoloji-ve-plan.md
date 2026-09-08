@@ -130,7 +130,7 @@ Bağımlılık zinciri şema olarak, evreler tablo olarak verilir.>
 <Her adım `roadmap.md` biçiminde: kutucuk, amaç, teknoloji, nereye,
 neye bağlanıyor, bitti sayılır, ayrıntısı nerede.>
 
-⛔ Kutucuk işaretlenmeden oturum kapatılmaz (`15-oturum-devri.md`).
+⛔ Kutucuk işaretlenmeden oturum kapatılmaz (`15-oturum-devri-kurallari.md`).
 
 ---
 

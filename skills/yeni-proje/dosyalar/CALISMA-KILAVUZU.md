@@ -239,7 +239,7 @@ geçerlidir. İlerleme **roadmap adımlarıyla** olur.
 ## Bir oturumun ritmi
 
 ```
-1. Aç ve devral      → "docs/project/yeni-oturuma-ver.md oku, devam edelim"
+1. Aç ve devral      → "docs/project/yeni-oturuma-verilecek-sonraki-adim-promptu.md oku, devam edelim"
 2. Plan sun          → ajan ne yapacağını anlatır
 3. Onayla            → gerekiyorsa düzelt
 4. Kod + test        → ajan yazar, testler yeşil olur
@@ -712,7 +712,7 @@ değiştiremezsin — merkeze bildirirsin, oradan herkese dağıtılır.*
 | `12-operations-and-scaling.md` | Loglama, izleme, ölçekleme |
 | `13-environments.md` | Local / test / canlı ayrımı |
 | `14-privacy-and-compliance.md` | KVKK ve kişisel veri |
-| `15-oturum-devri.md` | Oturum kapanış protokolü |
+| `15-oturum-devri-kurallari.md` | Oturum kapanış protokolü |
 | *(diğerleri)* | Tanım listesi `docs/standards/` içinde |
 
 ## `docs/project/` — her projede var, içeriği projeye özel
@@ -741,7 +741,7 @@ projeden projeye değişir.
 | `data-model.md` | Kendi veri modelin | Veri modeli adımında |
 | `integrations.md` | **Dış** sistemlerle nasıl konuşuluyor | Entegrasyon eklendikçe |
 | `altyapi-durumu.md` | **Kod dışında** ne yapıldı: hangi hesap açıldı, hangi panelde ne seçildi | Dış işlem yapıldıkça |
-| `yeni-oturuma-ver.md` | **Sırada ne var** — yeni oturuma verilir | Her oturum sonunda |
+| `yeni-oturuma-verilecek-sonraki-adim-promptu.md` | **Sırada ne var** — yeni oturuma verilir | Her oturum sonunda |
 | `ogrendiklerim.md` | **Senin kişisel defterin**: sormayı unuttuğun sorular, zor gelen konular | Ajan sorar, sen onaylarsın |
 | `CHANGELOG.md` | Sürüm geçmişi | Yayın yapıldıkça |
 
@@ -1098,7 +1098,7 @@ yenilenmez, ajan eski kuralla çalışmaya devam eder.
 | `/yeni-proje` beklenmedik davranıyor | Klasör boş değil | Fazla dosyaları taşı veya sil |
 | Ajan cevabını bilmediğim şey soruyor | Terim açıklanmamış | *"Bu terimi açıkla"* de — kitin kuralı bunu zorunlu tutuyor |
 | Ajan kararı bana bırakıyor | Mühendislik seçimini devretmiş | *"Sen karar ver, gerekçesini söyle"* de |
-| Nerede kaldığımı hatırlamıyorum | Kutucuk işaretlenmemiş | `roadmap.md` ve `yeni-oturuma-ver.md`'ye bak |
+| Nerede kaldığımı hatırlamıyorum | Kutucuk işaretlenmemiş | `roadmap.md` ve `yeni-oturuma-verilecek-sonraki-adim-promptu.md`'ye bak |
 | Cevaplar yüzeyselleşti | Bağlam dolmuş | `/clear` yap, devir notuyla devam et |
 
 ---

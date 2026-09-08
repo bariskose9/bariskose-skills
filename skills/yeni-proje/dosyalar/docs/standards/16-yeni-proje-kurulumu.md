@@ -173,7 +173,7 @@ Klasörün kendi indeksi: `docs/standards/sablonlar/OKUBENI.md`.
 | `roadmap.md` | `docs/project/roadmap.md` | **Evet** |
 | `altyapi-durumu.md` | `docs/project/altyapi-durumu.md` | **Evet** |
 | `CHANGELOG.md` | `docs/project/CHANGELOG.md` | **Evet** |
-| `yeni-oturuma-ver.md` | `docs/project/yeni-oturuma-ver.md` | **Evet** |
+| `yeni-oturuma-verilecek-sonraki-adim-promptu.md` | `docs/project/yeni-oturuma-verilecek-sonraki-adim-promptu.md` | **Evet** |
 | `teknoloji-ve-plan.md` | `docs/project/teknoloji-ve-plan.md` | **Evet** — projenin öğretici belgesi, her adımda büyür |
 | `ogrendiklerim.md` | `docs/project/ogrendiklerim.md` | **Evet** — seviye defteri, anlatım düzeyi buradan okunur |
 | `decisions/ADR-000-sablon.md` | `docs/project/decisions/` | **Evet** (doldurulmaz, çoğaltılır) |
@@ -216,7 +216,7 @@ Adımlar **bağımlılık sırasına** göre: her adım bir öncekinin üzerine 
 ### 5. `altyapi-durumu.md`'yi ilk günden aç
 Boş bile olsa oluştur. **İlk hesap açıldığı anda yazılmaya başlar.**
 Sonradan hatırlamaya çalışmak işe yaramaz — bu dosya tam olarak bu yüzden var
-(`15-oturum-devri.md`).
+(`15-oturum-devri-kurallari.md`).
 
 ### 6. İlk ADR'yi yaz
 Genellikle "neden bu stack / neden tek repo". `ADR-000-sablon.md` biçimi kullanılır.
@@ -324,6 +324,6 @@ yapılmış bir işi tekrar yaptırmak. Bunun tek panzehiri **önce
 
 ## İlk oturumun sonunda
 
-`15-oturum-devri.md` protokolünü uygula: `altyapi-durumu.md`, `roadmap.md`,
-`CHANGELOG.md` güncellensin ve `yeni-oturuma-ver.md` yazılsın. **İlk oturum
+`15-oturum-devri-kurallari.md` protokolünü uygula: `altyapi-durumu.md`, `roadmap.md`,
+`CHANGELOG.md` güncellensin ve `yeni-oturuma-verilecek-sonraki-adim-promptu.md` yazılsın. **İlk oturum
 bile devredilebilir olmalı.**

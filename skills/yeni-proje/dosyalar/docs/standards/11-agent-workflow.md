@@ -501,7 +501,7 @@ pratikse, iş bitiminde sorulur:
 
 > *"Bunu öğrendik: `<kural>`. Kite yazalım mı? `<hangi dosyaya>` uyar."*
 
-⛔ Kullanıcının *"bunu kite yaz"* demesi beklenmez — `15-oturum-devri.md`
+⛔ Kullanıcının *"bunu kite yaz"* demesi beklenmez — `15-oturum-devri-kurallari.md`
 → *"Öğrenilen şeyi kullanıcıya hatırlatma — sor"* kuralının aynısı.
 
 **Ayrım:** Kite yalnızca **projeden bağımsız** olan girer. Bu projeye özel bir
@@ -543,7 +543,7 @@ sensin (`CLAUDE.md` → *"ÖĞRETMEK GÖNÜLLÜDÜR"*).
 
 ⛔ **Kullanıcının *"bunu kite ekle"* demesi beklenmez.** O soruyu sorarken
 öğrenmekle meşgul; kural yazmayı hatırlaması beklenemez. Aynı ilke
-`15-oturum-devri.md` → *"ÖĞRENİLEN ŞEYİ KULLANICIYA HATIRLATMA — SOR"*.
+`15-oturum-devri-kurallari.md` → *"ÖĞRENİLEN ŞEYİ KULLANICIYA HATIRLATMA — SOR"*.
 
 ⚠️ **Ama her soru kural üretmez.** Ölçüt: *"bu cevabı bir sonraki oturum da
 arayacak mı?"* Hayırsa yazılmaz — kural enflasyonu, kuralsızlık kadar zararlıdır.
