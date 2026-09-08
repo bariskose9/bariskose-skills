@@ -181,14 +181,12 @@ anlatır gibi.**
       çalışırken yanlışlıkla bağlama yüklenmesi ihtimali biter.
       *Eksisi:* kopyalamada bir yeniden adlandırma adımı; unutulursa proje
       hiçbir kural görmez. **Kullanıcı karar vermedi.**
-- [ ] **`CLAUDE.md` başına yönlendirme tablosu.** 608 satırın içinde *"hangi
-      soru → hangi dosya"* bilgisi üç ayrı bölüme dağılmış (§1 hiyerarşi, rol
-      tablosu, §5.1–5.12). Üstte 20 satırlık düz bir tablo önerildi
-      (*"mimari → 01, ödeme → 05, ani yük → 12"*). **Kullanıcı karar vermedi.**
-- [ ] **`~/.claude/CLAUDE.md` boş.** Her klasörde geçerli olacak birkaç satır
-      (Türkçe konuş · kod okuyamıyorum · kanıtsız "bitti" deme) oraya konabilir.
-      Kit projelerinde gerekmiyor; kit dışı klasörlerde hiçbir kural yok.
-      **Kullanıcı karar vermedi.**
+- [x] ~~`CLAUDE.md` başına yönlendirme tablosu~~ — **yapıldı (2026-09-09).**
+      *"Hangi soru → hangi dosya"* tablosu dosyanın başına kondu: 19 standart
+      artı `docs/project/` belgeleri. Çakışma sırası da yazılı.
+- [x] ~~`~/.claude/CLAUDE.md`~~ — **gerekmiyor (2026-09-09).** Kullanıcı kiti
+      her yerde kullanıyor; kit projeleri zaten kendi `CLAUDE.md`'siyle geliyor.
+      Boş kalması bilinçli.
 
 ### ⚠️ Bilinen ve kabul edilmiş açık
 

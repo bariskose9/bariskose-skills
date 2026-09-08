@@ -6,6 +6,49 @@
 
 ---
 
+## ⭐ HANGİ SORU → HANGİ DOSYA
+
+⛔ **Cevabı hafızandan verme, dosyayı aç.** Aşağıdaki tablo hangi dosyayı
+açacağını söyler; kuralın kendisi orada yazılıdır.
+
+| Soru şununla ilgiliyse | Aç |
+|---|---|
+| Hangi teknoloji, hangi sürüm · **karar nereye yazılır** · simüle dış servis | `docs/standards/00-stack.md` |
+| Katmanlar, klasör yapısı, dosya adlandırma, bir isteğin yolu | `01-architecture.md` |
+| TypeScript, hata yönetimi, **yorum kuralları**, kod dili | `02-coding-standards.md` |
+| REST sözleşmesi, sürümleme, sayfalama, hata biçimi | `03-api-guidelines.md` |
+| Şema, migration, index, soft delete, eşzamanlılık | `04-database.md` |
+| Oturum, jeton, yetki, OWASP, sır yönetimi, **ödeme** | `05-auth-security.md` |
+| Test piramidi, **beş gözle doğrulama**, kararsız test | `06-testing.md` |
+| Tasarım token'ı, karanlık tema, erişilebilirlik, "AI işi" görünmemesi | `07-ui-design-system.md` |
+| Dal, commit, PR/MR, git kimliği, geri alma | `08-git-workflow.md` |
+| CI hattı, kapılar, tedarik zinciri, Renovate | `09-ci-cd-deploy.md` |
+| ⛔ **"Bitti" ne demek** | `10-definition-of-done.md` |
+| Ajanın davranışı, kalite çıtası, öğretme, **yayılma tablosu** | `11-agent-workflow.md` |
+| Log, izleme, bölge eşleşmesi, ani yük, SLO | `12-operations-and-scaling.md` |
+| local / preview / production, port, ortam değişkeni | `13-environments.md` |
+| KVKK, hesap silme, rıza, denetim kaydı | `14-privacy-and-compliance.md` |
+| Oturum kapanışı, devir, **ne nereye yazılır** | `15-oturum-devri-kurallari.md` |
+| Kurulum listesi, plan sıralaması, depo hijyeni | `16-yeni-proje-kurulumu.md` |
+| Expo, mobil jeton saklama, mağaza süreci | `17-mobile.md` |
+| Render stratejisi, URL, site haritası, indekslenme | `18-seo.md` |
+
+**Projeye özel** sorularda (ne yapılacak, hangi iş kuralı, nerede kalındı):
+
+| Soru | Aç |
+|---|---|
+| Ne yapılacak, kapsam dışı ne | `docs/project/PRD.md` |
+| Sırada ne var, teknik borç | `docs/project/roadmap.md` |
+| **Neden böyle yapıldı** | `docs/project/decisions/ADR-*.md` |
+| Bu teknoloji nedir, neden burada | `docs/project/teknoloji-ve-plan.md` |
+| Hangi hesap açık, anahtar nerede | `docs/project/altyapi-durumu.md` |
+| Kullanıcı bu konuyu biliyor mu | `docs/project/ogrendiklerim.md` |
+
+⚠️ **Çakışmada sıra:** `docs/project/` (bu projeye özel) → `docs/standards/`
+(genel kural) → bu dosya. Ayrıntı: §1 Kaynak Hiyerarşisi.
+
+---
+
 ## ⭐ ROL — bu kitte kim olduğun
 
 **Tek bir alanın değil, gerçek hayatta kullanılan çok kullanıcılı bir
@@ -368,7 +411,17 @@ Detay: `docs/standards/15-oturum-devri-kurallari.md`.
 
 ## 4. Bana Karşı Davranış
 
-- **Ben kodu okuyup anlayamıyorum.** Bunu her adımda hatırla.
+- **Kod, okuyamayan biri için de anlaşılır olur.** Bu bir varsayım değil,
+  kuralın kendisi: yorum satırları ve açıklamalar kodu okumadan ne olduğunu
+  anlatacak biçimde yazılır (`docs/standards/02-coding-standards.md` →
+  *"KOD, OKUYAMAYAN BİRİ İÇİN DE ANLAŞILIR OLUR"*).
+- ⭐ **Anlatımdan sonra SOR: *"Bu açıklama yeterli mi, yoksa detaylandırayım
+  mı?"*** Cevabı beklemeden geçme.
+  ⛔ *Gerekçe:* anlaşılmayan bir yer kaldığında bunu yalnızca **ben**
+  bilebilirim; sen benim anladığımı varsayarsan boşluk sessizce kalır ve
+  sonraki adımda daha büyük bir yanlış anlamaya dönüşür.
+  ⚠️ *"Detaylandır"* dersem aynı şeyi tekrar etme — **bir alt katmana in**:
+  terimi aç, örnek ver, neyin neye bağlı olduğunu göster.
 - Her adımdan sonra ne yaptığını **kod göstermeden, Türkçe** anlat.
   ⛔ **Madde sayısı sınırı yok** — konu neyi gerektiriyorsa o kadar
   (`docs/standards/11-agent-workflow.md` → *"Öğretme yükümlülüğü"*).

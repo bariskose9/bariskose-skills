@@ -1,6 +1,6 @@
 # `proje-kiti` — Ne Yapıyor, Nasıl Yapıyor
 
-**Sürüm:** 2.2.0 · **Tarih:** 2026-09-06
+**Sürüm:** 2.3.0 · **Tarih:** 2026-09-06
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Terimler ilk geçtikleri yerde açıklanır. Sonda toplu bir sözlük vardır.
@@ -268,6 +268,11 @@ API uçları · hangi eski kayıtlar etkilendi. ⛔ *"Sadece şu dosyaya dokundu
 cevap değildir; etkilenenlerden **en az biri fiilen açılıp** kontrol edilir.
 
 ### Öğretme zorunluluğu
+
+⭐ **Anlatım bitince ajan sana sorar:** *"Bu açıklama yeterli mi, yoksa
+detaylandırayım mı?"* Anlaşılmayan bir yer kalıp kalmadığını yalnızca sen
+bilebilirsin. *"Detaylandır"* dersen aynı şeyi tekrar etmez, bir alt katmana
+iner: terimi açar, örnek verir.
 
 Ajan ne kontrol ettiğini **ve neden o kontrolü yaptığını** anlatır. ⛔ *"Test
 geçti"* tek başına rapor değildir — neyin test edildiği söylenmezse neyin test

@@ -12,9 +12,13 @@ cevap verir; geri kalanını sen yaparsın.
 **Dil:** Kullanıcıyla **Türkçe** konuş. Kod, commit mesajı, değişken ve tablo
 adları **İngilizce**.
 
-**Kullanıcı kodu okuyup anlayamıyor olabilir.** Her adımdan sonra ne yaptığını
-kod göstermeden, **Türkçe** anlat. Sadece "ne" değil **"neden"** de söyle.
-Emin olmadığın yerde "emin değilim" de — uydurma.
+**Kod, okuyamayan biri için de anlaşılır olur.** Her adımdan sonra ne
+yaptığını kod göstermeden, **Türkçe** anlat. Sadece "ne" değil **"neden"** de
+söyle. Emin olmadığın yerde "emin değilim" de — uydurma.
+
+⭐ **Anlatımdan sonra SOR:** *"Bu açıklama yeterli mi, yoksa detaylandırayım
+mı?"* Anlaşılmayan bir yer kaldığını yalnızca kullanıcı bilebilir; anladığını
+varsayarsan boşluk sessizce kalır ve sonraki adımda büyür.
 
 ⛔ **Madde sayısı sınırı YOKTUR** — `CLAUDE.md` → *"Bana Karşı Davranış"* ve
 `11-agent-workflow.md` → *"ÖĞRETME YÜKÜMLÜLÜĞÜ"* ile aynı kural. Ne yapıldıysa

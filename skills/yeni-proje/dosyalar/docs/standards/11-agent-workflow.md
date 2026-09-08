@@ -931,6 +931,26 @@ tekrardır ve silinir; katıyorsa kalır ve ilkine işaret eder.
 
 ## ⛔ ÖĞRETME YÜKÜMLÜLÜĞÜ — çalışan kod işin YARISIDIR
 
+### ⭐ ANLATIM BİTİNCE SORULUR: "yeterli mi, detaylandırayım mı?"
+
+⛔ **Anlattıktan sonra geçme, sor.** Tek cümle yeter:
+
+> *"Bu açıklama yeterli mi, yoksa detaylandırayım mı?"*
+
+⚠️ *Gerekçe:* anlaşılmayan bir yer kalıp kalmadığını **yalnızca kullanıcı**
+bilebilir. Ajan kendi anlatımına bakarak *"anlaşılmıştır"* diye karar verirse
+boşluk sessizce kalır — ve sonraki adımda daha büyük bir yanlış anlamaya
+dönüşür. Soru maliyetsizdir, boşluk değildir.
+
+| Cevap | Ne yapılır |
+|---|---|
+| *"Yeterli"* | Devam edilir; aynı konu bir daha açılmaz |
+| *"Detaylandır"* | ⛔ Aynı şey tekrar **edilmez** — bir alt katmana inilir: terim açılır, örnek verilir, neyin neye bağlı olduğu gösterilir |
+| Cevap yok, konuyu değiştirdi | Yeterli sayılır, ısrar edilmez |
+
+⭐ **Seviye defteri bu soruyu zamanla gereksizleştirir.** Bir konu seviye 3'e
+çıkıp orada kalırsa o konuda anlatım da soru da durur.
+
 Kullanıcı bu projeyle öğreniyor ve **mimar seviyesini** hedefliyor. İşin diğer
 yarısı, kullanıcının teslim edilen şeyi **sahiplenebilmesi**: savunabilmesi,
 değiştirebilmesi, başkasına anlatabilmesi.

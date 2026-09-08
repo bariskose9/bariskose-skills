@@ -1,6 +1,6 @@
 # `proje-kiti` — Kit Ne Yapıyor
 
-**Sürüm:** 2.2.0 · **Tarih:** 2026-09-06
+**Sürüm:** 2.3.0 · **Tarih:** 2026-09-06
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Bu belge, kitin **kurulumdan canlıya çıkışa kadar** ne yaptığını anlatır.
@@ -171,6 +171,11 @@ API uçları · hangi eski kayıtlar etkilendi. ⛔ *"Sadece şu dosyaya dokundu
 cevap değildir; etkilenenlerden en az biri fiilen açılır.
 
 ### Öğretme zorunluluğu
+
+⭐ **Anlatım bitince ajan sana sorar:** *"Bu açıklama yeterli mi, yoksa
+detaylandırayım mı?"* Anlaşılmayan bir yer kalıp kalmadığını yalnızca sen
+bilebilirsin. *"Detaylandır"* dersen aynı şeyi tekrar etmez, bir alt katmana
+iner: terimi açar, örnek verir.
 Ajan ne kontrol ettiğini **ve neden o kontrolü yaptığını** anlatır. ⛔ *"Test
 geçti"* tek başına rapor değildir — neyin test edildiği söylenmezse neyin test
 **edilmediği** bilinemez. Yeni terimler `ogrendiklerim.md`'ye eklenir.
@@ -258,5 +263,5 @@ dallanmadır: üç proje sonra elinde birbirinden sapmış üç kopya olur.
 
 ---
 
-*Bu belge `proje-kiti` v2.2.0 için üretilmiştir. Kit değiştikçe güncellenir —
+*Bu belge `proje-kiti` v2.3.0 için üretilmiştir. Kit değiştikçe güncellenir —
 sürüm satırı `plugin.json` ile eşleşmezse `denetim.mjs` commit'i durdurur.*

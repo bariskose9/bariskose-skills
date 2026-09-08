@@ -240,7 +240,7 @@ geçerlidir. İlerleme **roadmap adımlarıyla** olur.
 
 ```
 1. Aç ve devral      → "docs/project/yeni-oturuma-verilecek-sonraki-adim-promptu.md oku, devam edelim"
-2. Plan sun          → ajan ne yapacağını anlatır
+2. Plan sun          → ajan ne yapacağını anlatır, sonra "yeterli mi?" diye sorar
 3. Onayla            → gerekiyorsa düzelt
 4. Kod + test        → ajan yazar, testler yeşil olur
 5. Gözle doğrula     → ekran varsa tarayıcıda görülür
