@@ -129,7 +129,7 @@ kaçar, sonucu ağır · `⭐` tasarımın kalbi · *(işaretsiz)* sıradan aç�
 ### Kullanıcının seviyesi
 
 Kodu **kabaca** biliyor, hedefi **mimar seviyesinde uçtan uca hakimiyet**.
-Seviyesi sabit değil, büyüyor: `docs/project/ogrendiklerim.md` içindeki
+Seviyesi sabit değil, büyüyor: `docs/project/calisilacak-konular.md` içindeki
 *"Artık biliyorum"* listesini oku — listedeki terim doğrudan kullanılır, tekrar
 açıklanmaz. Listeye eklemeyi **sen teklif edersin**, kullanıcının hatırlaması
 beklenmez.

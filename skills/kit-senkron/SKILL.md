@@ -99,10 +99,10 @@ bulgu var mı? Varsa yalnızca o bulgu kite taşınır.
 
 ### ⭐ Seviye defteri de senkronlanır — ama BİRLEŞTİRİLEREK
 
-`ogrendiklerim.md` kitle birlikte gelir ve her projede aynıdır. Standart
+`calisilacak-konular.md` kitle birlikte gelir ve her projede aynıdır. Standart
 dosyalarından **farklı** biçimde senkronlanır:
 
-| | Standart dosyaları | `ogrendiklerim.md` |
+| | Standart dosyaları | `calisilacak-konular.md` |
 |---|---|---|
 | Yön | İki yönlü, fark fark sorulur | İki yönlü, ama **birleşim** |
 | Çakışma | Kullanıcıya sorulur | ⛔ Sorulmaz — **ikisinde olan her satır kalır** |

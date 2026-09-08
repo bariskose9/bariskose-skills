@@ -65,7 +65,7 @@ Bir iş, aşağıdaki maddelerin **tamamı** işaretlenmeden "bitti" sayılmaz.
 - [ ] **Etki alanı** yazıldı: hangi ekranlar, hangi API uçları, hangi eski kayıtlar
 - [ ] Etkilenen yerlerden **en az biri fiilen açılıp** kontrol edildi
 - [ ] Kullanıcıya *ne kontrol edildi ve neden* anlatıldı; yeni terimler
-      `ogrendiklerim.md`'ye eklendi
+      `calisilacak-konular.md`'ye eklendi
 
 ## Teslim
 - [ ] Commit raporu sunuldu ve onaylandı

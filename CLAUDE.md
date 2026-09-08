@@ -31,7 +31,7 @@ tartışılmayacak** konular orada. Reddedilmiş yaygın tavsiyelerin tablosu da
 — yazılı olarak reddedilmiş bir şeyi yeniden önermek, aynı tartışmayı baştan
 açmak demektir.
 
-`skills/yeni-proje/dosyalar/docs/standards/sablonlar/ogrendiklerim.md` →
+`skills/yeni-proje/dosyalar/docs/standards/sablonlar/calisilacak-konular.md` →
 **Seviye defteri**: kullanıcıya hangi konuyu ne düzeyde anlatacağın oradan
 okunur, senin izleniminden değil.
 
@@ -46,7 +46,7 @@ projelerde de aynı dosya okunur; öğrenilen `/kit-senkron` ile buraya döner.
 | `skills/yeni-proje/dosyalar/PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` | Projelere kopyalanan ajan kuralları | ✅ |
 | `skills/yeni-proje/dosyalar/docs/standards/` | **19 standart — kuralın kaynağı** | ✅ |
 | `docs/` | Kararlar (`TARTISILMIS-KARARLAR.md`) + iki kullanıcı rehberi | ✅ kararlar · ⚠️ rehberler yalnızca güncellemek için |
-| `…/sablonlar/ogrendiklerim.md` | **Seviye defteri** — tek defter, kitle her projeye gider | ✅ |
+| `…/sablonlar/calisilacak-konular.md` | **Seviye defteri** — tek defter, kitle her projeye gider | ✅ |
 | `ICINDEKILER.md` | **Kullanıcının haritası** — kit ne yapar, hangi dosya kimin işi | ⚠️ Yalnızca güncellemek için |
 | `calisma-dokumanlari/` | Kullanıcının çalışma notları ve uçtan uca örnek proje | ⚠️ **Kendiliğinden okuma** — istenince oku |
 

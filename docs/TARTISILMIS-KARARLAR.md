@@ -147,7 +147,7 @@ oturumun yüklediği sürüm aynı olmak zorunda değildir; ikisi ayrı ayrı ö
 
 ## Anlatım düzeni — kullanıcıya nasıl yazılır
 
-`skills/yeni-proje/dosyalar/docs/standards/sablonlar/ogrendiklerim.md` →
+`skills/yeni-proje/dosyalar/docs/standards/sablonlar/calisilacak-konular.md` →
 **Seviye defteri** okunur; anlatım düzeyi oradan ayarlanır, ajanın
 izleniminden değil.
 

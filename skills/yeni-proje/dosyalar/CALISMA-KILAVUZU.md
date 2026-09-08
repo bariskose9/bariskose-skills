@@ -742,7 +742,7 @@ projeden projeye değişir.
 | `integrations.md` | **Dış** sistemlerle nasıl konuşuluyor | Entegrasyon eklendikçe |
 | `altyapi-durumu.md` | **Kod dışında** ne yapıldı: hangi hesap açıldı, hangi panelde ne seçildi | Dış işlem yapıldıkça |
 | `yeni-oturuma-verilecek-sonraki-adim-promptu.md` | **Sırada ne var** — yeni oturuma verilir | Her oturum sonunda |
-| `ogrendiklerim.md` | **Senin kişisel defterin**: sormayı unuttuğun sorular, zor gelen konular | Ajan sorar, sen onaylarsın |
+| `calisilacak-konular.md` | **Senin kişisel defterin**: sormayı unuttuğun sorular, zor gelen konular | Ajan sorar, sen onaylarsın |
 | `CHANGELOG.md` | Sürüm geçmişi | Yayın yapıldıkça |
 
 ⭐ **Dört dosya dört ayrı soruya cevap verir, karıştırılmaz:**
@@ -1105,7 +1105,7 @@ yenilenmez, ajan eski kuralla çalışmaya devam eder.
 
 # BÖLÜM 8 — Öğrendiklerim defteri
 
-`docs/project/ogrendiklerim.md` senin defterin. Ajan her oturum başında onu
+`docs/project/calisilacak-konular.md` senin defterin. Ajan her oturum başında onu
 okur ve **sana nasıl anlatacağını** oradan ayarlar — kendi izleniminden değil.
 
 ## Neden var

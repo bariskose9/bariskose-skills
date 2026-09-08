@@ -80,7 +80,7 @@ görünür kılar.**
 
 ⛔ **Onay hızlandırmak için açıklama kısaltılmaz.** Kısalmanın tek meşru
 sebebi, kullanıcının o konuyu **artık biliyor olmasıdır** — ve bu
-`ogrendiklerim.md` → *"Artık biliyorum"* listesiyle **kayda geçer**, ajanın
+`calisilacak-konular.md` → *"Artık biliyorum"* listesiyle **kayda geçer**, ajanın
 tahminiyle değil.
 
 ## Yapım planı nasıl sıralanır — dört kural
@@ -175,7 +175,8 @@ Klasörün kendi indeksi: `docs/standards/sablonlar/OKUBENI.md`.
 | `CHANGELOG.md` | `docs/project/CHANGELOG.md` | **Evet** |
 | `yeni-oturuma-verilecek-sonraki-adim-promptu.md` | `docs/project/yeni-oturuma-verilecek-sonraki-adim-promptu.md` | **Evet** |
 | `teknoloji-ve-plan.md` | `docs/project/teknoloji-ve-plan.md` | **Evet** — projenin öğretici belgesi, her adımda büyür |
-| `ogrendiklerim.md` | `docs/project/ogrendiklerim.md` | **Evet** — seviye defteri, anlatım düzeyi buradan okunur |
+| `calisilacak-konular.md` | `docs/project/calisilacak-konular.md` | **Evet** — seviye defteri, anlatım düzeyi buradan okunur |
+| `ogrendigim-konular.md` | `docs/project/ogrendigim-konular.md` | **Evet** — ikizi; kapanmış konular buraya taşınır |
 | `decisions/ADR-000-sablon.md` | `docs/project/decisions/` | **Evet** (doldurulmaz, çoğaltılır) |
 | `vscode-eklentileri.md` | `docs/project/vscode-eklentileri.md` | **Evet** — hangi eklenti neden önerildi |
 | `data-model.md` | `docs/project/data-model.md` | Veritabanı varsa |
@@ -186,7 +187,7 @@ Klasörün kendi indeksi: `docs/standards/sablonlar/OKUBENI.md`.
 ⛔ **Bu tablo `sablonlar/` klasörüyle birebir aynı olmalıdır.** Sayıyı ezberden
 yazma: `ls docs/standards/sablonlar/` ile bak. Tabloda olmayan bir şablon
 **hiç açılmaz** — 2026-09-06 denetiminde dört şablon tam bu yüzden tablonun
-dışında kalmıştı (`teknoloji-ve-plan` · `ogrendiklerim` · `vscode-eklentileri` ·
+dışında kalmıştı (`teknoloji-ve-plan` · `calisilacak-konular` · `vscode-eklentileri` ·
 `kurumdan-ogrenilecekler`).
 
 Şablonlar **kaynak projeden silinmez** — bir sonraki projeye yine lazım.

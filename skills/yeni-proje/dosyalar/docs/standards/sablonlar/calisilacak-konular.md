@@ -1,4 +1,4 @@
-# Öğrendiklerim
+# Çalışılacak konular
 
 > **Bu defter kitle birlikte gelir ve HER PROJEDE AYNIDIR.** Ajan her oturum
 > başında okur ve sana nasıl anlatacağını buradan ayarlar — kendi izleniminden
@@ -17,6 +17,10 @@ okuyabilir. Bu bilinçli bir karardır (`TARTISILMIS-KARARLAR.md`); yine de
 buraya **şifre, anahtar, kurum içi bilgi ve müşteri adı yazılmaz.**
 
 **Kapsam:** tüm projeler + kit geliştirme oturumları — tek defter
+
+⭐ **İkiz dosyası var:** bir konu tam oturduğunda `ogrendigim-konular.md`'ye
+taşınır. Bu dosya *"üzerinde çalışılan"*, o dosya *"artık bilinen"* demektir.
+⛔ Taşımayı ajan tek başına yapmaz — **kullanıcı söyler ya da ajan teklif eder.**
 
 ---
 

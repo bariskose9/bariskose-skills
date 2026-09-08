@@ -727,7 +727,7 @@ gördüğün sorunu **bildir**, ayrı iş olarak planla.
 Ajanın görevi yalnızca işi yapmak değil; **kullanıcının gelişimini ölçüp
 anlatımını ona göre ayarlamak.**
 
-**Tek doğru kaynak:** `docs/project/ogrendiklerim.md` → *Seviye defteri*.
+**Tek doğru kaynak:** `docs/project/calisilacak-konular.md` → *Seviye defteri*.
 ⛔ Ajanın kendi izlenimi değil — **deftere yazılmış kanıt.**
 
 | Seviye | Ajan ne yapar |
@@ -835,7 +835,7 @@ ajanın kendi hatası da aynı netlikte söylenir.
 Kullanıcı kavramı anlamış ama anlatımda geçen bir kelimeyi bilmiyor olabilir.
 Bu **ayrı bir eksiktir** ve kavramın seviyesini düşürmez.
 
-Kullanıcı bir kelimeyi sorduğunda: kelimeyi açıkla, `ogrendiklerim.md` →
+Kullanıcı bir kelimeyi sorduğunda: kelimeyi açıkla, `calisilacak-konular.md` →
 *Kelime defteri*'ne ekle, **kavram seviyesine dokunma.**
 
 ### Öğretmeyi bırakma eşiği
@@ -849,7 +849,28 @@ Kullanıcı bir kelimeyi sorduğunda: kelimeyi açıkla, `ogrendiklerim.md` →
 ⚠️ Bu kayan bir eşiktir, bitiş çizgisi değil. Yeni teknoloji girdikçe yeni
 satırlar açılır.
 
-### ⭐ Defter TEK'tir ve kitle birlikte gelir
+### ⭐ İKİ DEFTER: çalışılacak → öğrendiğim
+
+| Dosya | Ne tutar | Ajan ne yapar |
+|---|---|---|
+| `calisilacak-konular.md` | Üzerinde çalışılan konular + seviyeleri (0–3) | **Okur** ve anlatım düzeyini buradan ayarlar |
+| `ogrendigim-konular.md` | Kapanmış konular | **Okur** — buradaki hiçbir terimi baştan açıklamaz |
+
+⛔ **Taşımayı ajan tek başına YAPMAZ.** İki yoldan biriyle olur:
+
+1. Kullanıcı söyler: *"Şu konuyu öğrendim, taşı"*
+2. ⭐ **Ajan teklif eder** — kanıt biriktiğinde:
+   > *"Bu konuda üç oturumdur açıklama istemedin ve bir kez beni düzelttin.
+   > `ogrendigim-konular.md`'ye taşıyayım mı?"*
+
+⚠️ **Teklif kanıta dayanır, izlenime değil.** Ölçüt `calisilacak-konular.md` →
+*"NEYİ KANIT SAYARIZ"*: *"tamam"* demek sayılmaz, **ajanı o konuda düzeltmek**
+en güçlü kanıttır.
+
+⭐ **Geri taşıma da vardır.** Kullanıcı *"bunu tekrar açıkla"* derse konu
+`calisilacak-konular.md`'ye döner. Unutmak normaldir.
+
+### ⭐ Defterler kitle birlikte gelir
 
 ⚠️ **Bu karar 2026-09-08'de değişti.** Önceden defter "kişisel durum" sayılıp
 kite yazılmıyordu; her projenin ayrı defteri oluyordu ve B projesinde öğrenilen

@@ -26,7 +26,7 @@ bitmiş sayar ve üstüne kurar.
 Oturumda kullanıcı bir şeyi ilk kez anladıysa, bir soruyu sormayı unuttuysa veya
 aynı hatayı ikinci kez yaptıysa, oturum kapanırken **ajan sorar**:
 
-> *"Bu oturumda şunu fark ettim: <gözlem>. `ogrendiklerim.md` defterine
+> *"Bu oturumda şunu fark ettim: <gözlem>. `calisilacak-konular.md` defterine
 > yazayım mı?"*
 
 ⛔ Kullanıcının *"bunu deftere yaz"* demesi beklenmez. Kullanıcı zaten o anda
@@ -37,14 +37,14 @@ yazmayı teklif eder.**
 
 | Gözlem | Nereye |
 |---|---|
-| *"Bu terimi ilk kez anladım"* | `ogrendiklerim.md` → zor gelen kararlar |
-| *"Şunu sormayı unutmuşuz"* | `ogrendiklerim.md` → sormayı unuttuğum sorular |
-| Aynı hata **ikinci** kez | `ogrendiklerim.md` → tekrar eden hatalar |
+| *"Bu terimi ilk kez anladım"* | `calisilacak-konular.md` → zor gelen kararlar |
+| *"Şunu sormayı unutmuşuz"* | `calisilacak-konular.md` → sormayı unuttuğum sorular |
+| Aynı hata **ikinci** kez | `calisilacak-konular.md` → tekrar eden hatalar |
 | Aynı hata **üçüncü** kez | Artık kişisel değil → `/kit-senkron` ile **kite** |
 | *"Her projede böyle yapılmalı"* | Doğrudan **kite** (`/kit-senkron`) |
 
 ⚠️ **Ayrım:** Kite **kural** gider (*"şu durumda şu yapılır"* → `docs/standards/`).
-Deftere **deneyim** girer (*"ben şunu atlamıştım"* → `ogrendiklerim.md`).
+Deftere **deneyim** girer (*"ben şunu atlamıştım"* → `calisilacak-konular.md`).
 Deneyim üç kez tekrarlanırsa kurala dönüşür.
 
 ⭐ **Ama defter de kite gider.** İkisi ayrı dosyalara gider, ikisi de

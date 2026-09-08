@@ -548,7 +548,8 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    (`<Adım 3b'de doldurulacak>` yazılır); o karar PRD'den sonra verilir.
 4. `docs/standards/sablonlar/` içindeki şablonları `docs/project/` altına aç:
    `PRD.md` · `roadmap.md` · `altyapi-durumu.md` · `CHANGELOG.md` ·
-   `yeni-oturuma-verilecek-sonraki-adim-promptu.md` · `teknoloji-ve-plan.md` · `ogrendiklerim.md` ·
+   `yeni-oturuma-verilecek-sonraki-adim-promptu.md` · `teknoloji-ve-plan.md` ·
+   `calisilacak-konular.md` · `ogrendigim-konular.md` ·
    `decisions/ADR-000-sablon.md` ·
    (veritabanı varsa) `data-model.md` · (dış servis varsa) `integrations.md` ·
    (sahte veri gerekiyorsa) `fake-data-guide.md` ·
@@ -576,7 +577,7 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    geçerli değildir — ADR yazılır, madde sessizce çiğnenmez.
 6. ⭐ **Seviye defteri — ÜZERİNE YAZMA, BİRLEŞTİR.**
 
-   `ogrendiklerim.md` kitle birlikte gelir ve **her projede aynıdır**. Klasörde
+   `calisilacak-konular.md` kitle birlikte gelir ve **her projede aynıdır**. Klasörde
    zaten bir defter varsa:
 
    - Kitteki satırlardan **projede olmayanları ekle**
