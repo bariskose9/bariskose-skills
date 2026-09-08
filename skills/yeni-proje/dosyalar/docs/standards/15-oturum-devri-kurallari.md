@@ -128,9 +128,35 @@ Bir oturumu kapatmadan önce ajan şunları yapar:
    kopyalayıp yapıştıracak; içinde ne olması gerektiği aşağıda
 5. **Öğrenilen kalıcı kuralı İKİ kopyaya da yaz ve diff ile kanıtla**
    (CLAUDE.md kapı 8 — aşağıdaki bölüm)
+5b. ⛔ **Defterler değiştiyse kite GERİ TAŞINMASINI hatırlat** — aşağıdaki bölüm
 6. **Değişen durumu, o durumu yazan HER satırda güncelle** — aşağıdaki bölüm
 7. ⛔ **Uzak depoya GÖNDER** — aşağıdaki bölüm
 8. Kullanıcıya **"yeni oturuma şunu ver"** diye tek bir cümle söyle
+
+### ⛔ DEFTER KİTE DÖNMEZSE SONRAKİ PROJE GERİDE BAŞLAR
+
+Bu oturumda `calisilacak-konular.md` veya `ogrendigim-konular.md` değiştiyse,
+o değişiklik **yalnızca bu projede** duruyor demektir. Kit kopyası eski kalır
+ve **bir sonraki proje geride başlar** — kullanıcı o konuyu öğrenmiş olduğu
+hâlde ajan onu baştan anlatır.
+
+⛔ **Oturumu kapatmadan hatırlat:**
+
+> *"Bu oturumda defterlere şu satırlar eklendi: `<liste>`. Bunların kite
+> dönmesi için `/kit-senkron` çalıştırılmalı — yoksa bir sonraki proje bu
+> konuları öğrenilmemiş sayar. Şimdi çalıştıralım mı?"*
+
+| Durum | Ne yapılır |
+|---|---|
+| Defterlerde değişiklik **yok** | Sessizce geç, hatırlatma yapma |
+| Değişiklik var, kullanıcı *"evet"* der | `/kit-senkron` çalıştırılır |
+| Değişiklik var, kullanıcı *"sonra"* der | ⛔ Devir notuna **açık madde** olarak yazılır, kaybolmaz |
+
+⚠️ **Kit deposunda çalışıyorsan bu adım gerekmez** — orada defterin kendisini
+doğrudan düzenliyorsun, kopya yok.
+
+⭐ *Neden hatırlatma, otomatik değil:* `/kit-senkron` kite yazar ve kit **herkese
+açık** bir depodur. Kullanıcının haberi olmadan oraya satır eklenmez.
 
 ### ⛔ OTURUM, PUSH EDİLMEDEN KAPANMAZ
 

@@ -945,6 +945,9 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
 - [ ] Yol haritası **denetlendi** mi (ürün · risk · geri alınabilirlik ·
       dış bağımlılık · mühendislik · kullanım)
 - [ ] Her şablon dolduruldu mu (boş şablon bırakmak hiç açmamaktan kötüdür)
+- [ ] **Defterler değiştiyse** `/kit-senkron` hatırlatıldı mı — yoksa
+      öğrenilenler bu projede kalır, sonraki proje geride başlar
+      (`15-oturum-devri-kurallari.md` → *"DEFTER KİTE DÖNMEZSE"*)
 - [ ] `altyapi-durumu.md` bu oturumda yapılan **her** dış işlemi içeriyor mu
 - [ ] **Simüle edilen bir dış servis varsa** ADR'si yazıldı mı, gerçeğine geçiş
       roadmap'te **ayrı adım** olarak duruyor mu, ekranda test uyarısı var mı
