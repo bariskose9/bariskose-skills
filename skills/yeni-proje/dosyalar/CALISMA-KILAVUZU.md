@@ -1095,6 +1095,39 @@ yenilenmez, ajan eski kuralla çalışmaya devam eder.
 
 ---
 
+# BÖLÜM 6B — Kit nerede, içinde ne var
+
+⚠️ **Kitin kendisi bu projede değil.** Buraya yalnızca **kuralları ve
+şablonları** kopyalandı. Kitin gövdesi ayrı bir klasörde duruyor:
+
+```
+~/baris_projects/bariskose-skills/
+```
+
+Orada olup **burada olmayanlar** — kite bakman gerektiğinde:
+
+| Dosya | Ne anlatır | Ne zaman açarsın |
+|---|---|---|
+| `ICINDEKILER.md` | ⭐ **Harita** — hangi dosya kimin işi, sekiz adımda ne olur | *"Nerede ne vardı"* dediğinde |
+| `kit-hakkinda/KIT-REHBER.md` | Terim terim anlatım + sözlük | Bir kavram hiç oturmadığında |
+| `kit-hakkinda/KIT-NE-YAPIYOR.md` | Döngü ve ajan kapıları | *"Kit tam olarak ne yapıyordu"* |
+| `TARTISILMIS-KARARLAR.md` | Kesinleşmiş kararlar, reddedilmiş tavsiyeler | *"Bunu neden böyle yapmıştık"* |
+
+⛔ **Bu dosyalar projeye kopyalanmaz** ve bu bilinçlidir: kit güncellendiğinde
+tek bir yerde güncellenir. Projeye kopyalansalardı her projede ayrı bir kopya
+bayatlardı.
+
+⭐ **Bu projede kit bilgisi arıyorsan** önce şuraya bak — hepsi burada:
+
+| Soru | Bu projede nerede |
+|---|---|
+| Hangi kural neyi söylüyor | `docs/standards/00`–`18` |
+| Hangi konu hangi dosyada | `CLAUDE.md` başındaki yönlendirme tablosu |
+| Hangi dosya ne işe yarıyor | Bu kılavuz → **BÖLÜM 5** |
+| Nerede kaldık | `docs/project/roadmap.md` |
+
+---
+
 # BÖLÜM 7 — Takıldığında
 
 | Belirti | Muhtemel sebep | Ne yapılır |
@@ -1154,13 +1187,19 @@ eklenmez, hiçbir satır silinmez. Bir maddeyi yalnızca **sen** *"bunu sil"*
 diyerek çıkarabilirsin.
 
 
-# BÖLÜM 9 — Bu kılavuz nasıl kısaltılır
+# BÖLÜM 9 — Öğrendiklerin buradan NEREYE taşınır
 
-Amaç bu dosyaya bağımlı kalmak değil.
+Amaç bu dosyaya bağımlı kalmak değil. Ama ⛔ **hiçbir bölüm SİLİNMEZ** —
+öğrenilen bir şey unutulabilir ve o zaman bakacak bir yer olmalı.
 
-- **Terimler oturduğunda** → Bölüm 1'i sil
-- **Akış ezberlendiğinde** → Bölüm 3'ü kısalt, yalnızca komut kalsın
-- **Dosya haritası aklında kaldığında** → Bölüm 5'i sil
+| Ne oturduğunda | Nereye taşınır |
+|---|---|
+| Bir terim | `docs/kullanici/ogrendigim-konular.md` |
+| Bir akış (kurulum adımları, oturum ritmi) | Aynı yere, *"kapanmış olarak sayılan alanlar"* bölümüne |
+| Dosya haritası | Aynı yere |
 
-Kalması gereken tek bölüm: **Bölüm 4 — oturum ritmi.** O, ezberlenmesi değil
-her seferinde uygulanması gereken bir kontrol listesidir.
+⭐ **Taşımayı ajan teklif eder**, sen onaylarsın. Ölçüt
+`docs/kullanici/calisilacak-konular.md` → *"NEYİ KANIT SAYARIZ"* içinde.
+
+⚠️ **Bölüm 4 (oturum ritmi) taşınmaz.** O ezberlenecek bir bilgi değil, her
+seferinde uygulanacak bir kontrol listesidir.
