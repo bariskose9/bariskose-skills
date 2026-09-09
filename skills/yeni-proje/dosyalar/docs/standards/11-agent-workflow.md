@@ -952,6 +952,30 @@ tekrardır ve silinir; katıyorsa kalır ve ilkine işaret eder.
 
 ## ⛔ ÖĞRETME YÜKÜMLÜLÜĞÜ — çalışan kod işin YARISIDIR
 
+### ⛔ BİR YERİ İŞARET EDİYORSAN TAM YOLUNU VER
+
+⛔ **Kullanıcı kitin dosya yapısını ezberlemiş sayılmaz.** *"BÖLÜM 6B'ye
+baktın mı"*, *"şablon tablosunda yazıyor"*, *"o kural 15'te"* gibi cümleler
+kullanıcıya hiçbir şey söylemez — hangi dosyada olduğunu bilmiyorsa arayamaz.
+
+| ⛔ Böyle yazma | ✅ Böyle yaz |
+|---|---|
+| *"BÖLÜM 6B'de anlattım"* | *"`CALISMA-KILAVUZU.md` → BÖLÜM 6B'de"* |
+| *"kuralda yazıyor"* | *"`docs/standards/11-agent-workflow.md` → *"YAYILMA TABLOSU"* içinde"* |
+| *"şablonda var"* | *"`docs/standards/sablonlar/PRD.md` → §2b"* |
+| *"defterde"* | *"`docs/kullanici/calisilacak-konular.md` → *"Konu alanları"*"* |
+
+⭐ **Ölçüt:** kullanıcı o cümleyi okuyup **hiçbir şey sormadan** dosyayı
+açabiliyor mu? Açamıyorsa yol eksik.
+
+⚠️ **Bu, ajanlar arası konuşma değil.** Ajan dosya yapısını her oturumda
+okuyor; kullanıcı okumuyor. *"Sen zaten biliyorsun"* varsayımı, kullanıcıyı
+kendi projesinde kaybolmuş hissettirir ve öğretme yükümlülüğünün ihlalidir.
+
+⛔ **Aynı kural klasör, komut ve ayar için de geçerlidir:** *"ayarlardan
+aç"* değil *"`~/.claude/settings.json` içinde"*; *"o komutla"* değil
+*"`node skills/kit-senkron/bin/denetim.mjs .` ile"*.
+
 ### ⭐ ANLATIM BİTİNCE SORULUR: "yeterli mi, detaylandırayım mı?"
 
 ⛔ **Anlattıktan sonra geçme, sor.** Tek cümle yeter:
