@@ -52,7 +52,7 @@ açacağını söyler; kuralın kendisi orada yazılıdır.
 | **Neden böyle yapıldı** | `docs/project/decisions/ADR-*.md` |
 | Bu teknoloji nedir, neden burada | `docs/project/teknoloji-ve-plan.md` |
 | Hangi hesap açık, anahtar nerede | `docs/project/altyapi-durumu.md` |
-| Kullanıcı bu konuyu biliyor mu | `docs/project/calisilacak-konular.md` |
+| Kullanıcı bu konuyu biliyor mu | `docs/kullanici/calisilacak-konular.md` |
 
 ⚠️ **Çakışmada sıra:** `docs/project/` (bu projeye özel) → `docs/standards/`
 (genel kural) → bu dosya. Ayrıntı: §1 Kaynak Hiyerarşisi.

@@ -106,8 +106,8 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `CHANGELOG.md` | ✅ | Ne yayınlandı |
 | `yeni-oturuma-verilecek-sonraki-adim-promptu.md` | ✅ | Yeni oturuma verilecek tek metin |
 | `teknoloji-ve-plan.md` | ✅ | **Projenin öğretici belgesi** — neyi neden kullanıyoruz |
-| `calisilacak-konular.md` | ✅ | ⭐ **Üzerinde çalışılan konular** + seviyeler. Kitten gelir, üzerine **yazılmaz birleştirilir** |
-| `ogrendigim-konular.md` | ✅ | ⭐ **Artık bilinen konular.** Buraya girenler bir daha baştan açıklanmaz |
+| `calisilacak-konular.md` | ✅ | ⭐ → `docs/kullanici/` · üzerinde çalışılan konular + seviyeler. **Birleştirilerek** gelir, sıfırlanmaz |
+| `ogrendigim-konular.md` | ✅ | ⭐ → `docs/kullanici/` · artık bilinen konular. Buraya girenler bir daha baştan açıklanmaz |
 | `decisions/ADR-000-sablon.md` | ✅ | Her mimari karar bunu çoğaltır |
 | `vscode-eklentileri.md` | ✅ | Hangi eklenti neden önerildi |
 | `data-model.md` | Veritabanı varsa | Tablolar, ilişkiler, saklama süreleri |

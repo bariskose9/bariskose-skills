@@ -727,7 +727,7 @@ gördüğün sorunu **bildir**, ayrı iş olarak planla.
 Ajanın görevi yalnızca işi yapmak değil; **kullanıcının gelişimini ölçüp
 anlatımını ona göre ayarlamak.**
 
-**Tek doğru kaynak:** `docs/project/calisilacak-konular.md` → *Seviye defteri*.
+**Tek doğru kaynak:** `docs/kullanici/calisilacak-konular.md` → *Seviye defteri*.
 ⛔ Ajanın kendi izlenimi değil — **deftere yazılmış kanıt.**
 
 | Seviye | Ajan ne yapar |

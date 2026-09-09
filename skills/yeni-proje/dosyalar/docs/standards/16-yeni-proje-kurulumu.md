@@ -175,8 +175,20 @@ Klasörün kendi indeksi: `docs/standards/sablonlar/OKUBENI.md`.
 | `CHANGELOG.md` | `docs/project/CHANGELOG.md` | **Evet** |
 | `yeni-oturuma-verilecek-sonraki-adim-promptu.md` | `docs/project/yeni-oturuma-verilecek-sonraki-adim-promptu.md` | **Evet** |
 | `teknoloji-ve-plan.md` | `docs/project/teknoloji-ve-plan.md` | **Evet** — projenin öğretici belgesi, her adımda büyür |
-| `calisilacak-konular.md` | `docs/project/calisilacak-konular.md` | **Evet** — seviye defteri, anlatım düzeyi buradan okunur |
-| `ogrendigim-konular.md` | `docs/project/ogrendigim-konular.md` | **Evet** — ikizi; kapanmış konular buraya taşınır |
+| `calisilacak-konular.md` | ⭐ `docs/kullanici/calisilacak-konular.md` | **Evet** — seviye defteri, anlatım düzeyi buradan okunur |
+| `ogrendigim-konular.md` | ⭐ `docs/kullanici/ogrendigim-konular.md` | **Evet** — ikizi; kapanmış konular buraya taşınır |
+
+⭐ **`docs/kullanici/` ayrı bir klasördür ve bilerek böyledir.** Projede üç
+bölge vardır ve sınır klasör adından okunur:
+
+| Klasör | İçinde ne var | Yeni projede |
+|---|---|---|
+| `docs/standards/` | Kitin 19 kuralı + şablonlar | Aynen gelir |
+| ⭐ `docs/kullanici/` | Kullanıcının iki defteri | **Birleştirilerek** gelir, sıfırlanmaz |
+| `docs/project/` | PRD · roadmap · ADR · veri modeli · altyapı durumu | ⛔ **Boş/şablon** başlar |
+
+⛔ `docs/project/` içindekiler **her projede sıfırdan dolar** — bir projenin
+PRD'si başka projeye taşınmaz.
 | `decisions/ADR-000-sablon.md` | `docs/project/decisions/` | **Evet** (doldurulmaz, çoğaltılır) |
 | `vscode-eklentileri.md` | `docs/project/vscode-eklentileri.md` | **Evet** — hangi eklenti neden önerildi |
 | `data-model.md` | `docs/project/data-model.md` | Veritabanı varsa |

@@ -223,7 +223,7 @@ Ajan doğrulamayı bitirince kullanıcıya şunu **Türkçe, kod göstermeden** 
 ⛔ **"Test geçti" tek başına rapor değildir.** Neyin test edildiği söylenmezse
 kullanıcı neyin test edilmediğini bilemez.
 
-⭐ Öğrenilen her yeni terim `docs/project/calisilacak-konular.md` → *"Artık biliyorum"*
+⭐ Öğrenilen her yeni terim `docs/kullanici/calisilacak-konular.md` → *"Artık biliyorum"*
 listesine eklenir; ajan sonraki oturumda o terimi baştan açıklamaz.
 
 ### Ne zaman dış QA aracı gerekir

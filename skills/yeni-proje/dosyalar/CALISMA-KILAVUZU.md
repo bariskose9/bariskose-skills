@@ -1105,7 +1105,7 @@ yenilenmez, ajan eski kuralla çalışmaya devam eder.
 
 # BÖLÜM 8 — Öğrendiklerim defteri
 
-`docs/project/calisilacak-konular.md` senin defterin. Ajan her oturum başında onu
+`docs/kullanici/calisilacak-konular.md` senin defterin. Ajan her oturum başında onu
 okur ve **sana nasıl anlatacağını** oradan ayarlar — kendi izleniminden değil.
 
 ## Neden var

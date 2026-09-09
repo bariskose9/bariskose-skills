@@ -62,19 +62,22 @@ Proje bir kit projesi değilse (`docs/standards/` yoksa) dur ve söyle.
 ⚠️ **Bu sınır yanlış çizilirse bir projenin içeriği kite sızar** ve sonraki
 proje başkasının PRD'siyle, başkasının yol haritasıyla başlar.
 
-| Klasör | Karşılaştırılır mı | Neden |
-|---|:--:|---|
-| `docs/standards/**` | ✅ **Evet** | Kural — her projede aynı olmalı |
-| ⭐ `docs/project/calisilacak-konular.md` | ✅ **Evet, BİRLEŞTİREREK** | Kullanıcının seviyesi projeye ait değil, **kişiye** ait |
-| ⭐ `docs/project/ogrendigim-konular.md` | ✅ **Evet, BİRLEŞTİREREK** | Aynı |
-| `docs/project/` geri kalanı | ⛔ **ASLA** | PRD · roadmap · ADR · veri modeli · altyapı durumu — hepsi **bu projeye** ait |
-| `CLAUDE.md` §0 bloğu | ⛔ **ASLA** | Proje adı, stack, deploy — projeye ait |
-| `00-stack.md` içindeki **Stack tablosu** | ⛔ **ASLA** | Fiilen kurulu sürümler — projeye ait |
-| Kod, `.env`, `package.json` | ⛔ **ASLA** | Kural değil |
+⭐ **Üç ayrı bölge var ve sınır klasör adından okunur** — istisna yok:
 
-⭐ **İki defter tek istisnadır** ve `docs/project/` altında olmalarına rağmen
-kite döner. Sebebi: onlar projenin durumunu değil **kullanıcının neyi bildiğini**
-tutar. Kullanıcı projeler arasında değişmez.
+| Klasör | Kime ait | Kite döner mi |
+|---|---|:--:|
+| `docs/standards/**` | **Kite** — her projede aynı kural | ✅ Evet |
+| `docs/kullanici/**` | **Kullanıcıya** — neyi bildiği | ✅ Evet, **birleştirerek** |
+| `docs/project/**` | **Bu projeye** — PRD, roadmap, ADR, veri modeli, altyapı | ⛔ **Asla** |
+
+⛔ Ayrıca hiçbir koşulda dönmeyenler: `CLAUDE.md` §0 bloğu (proje adı, stack,
+deploy) · `00-stack.md` içindeki **Stack tablosu** (fiilen kurulu sürümler) ·
+kod, `.env`, `package.json`.
+
+⭐ **`docs/kullanici/` neden ayrı bir klasör:** içindekiler projenin durumunu
+değil **kullanıcının neyi bildiğini** tutar. Kullanıcı projeler arasında
+değişmez, proje değişir. Aynı klasörde dursalardı sınır bir *"istisna"* olurdu
+ve istisnalar unutulur — klasör adı ise unutulmaz.
 
 ⛔ **Defterlerde "hangisi doğru" diye SORULMAZ.** Birleşim alınır:
 
