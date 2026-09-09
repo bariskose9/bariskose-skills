@@ -26,7 +26,7 @@ Kural yazmaya başlamadan önce `skills/yeni-proje/dosyalar/PROJEYE-CLAUDE-MD-OL
 
 ## ⛔ Çalışmaya başlamadan önce
 
-**`kit-hakkinda/TARTISILMIS-KARARLAR.md` oku.** Kesinleşmiş kararlar, gerekçeleri ve **yeniden
+**`TARTISILMIS-KARARLAR.md` oku.** Kesinleşmiş kararlar, gerekçeleri ve **yeniden
 tartışılmayacak** konular orada. Reddedilmiş yaygın tavsiyelerin tablosu da var
 — yazılı olarak reddedilmiş bir şeyi yeniden önermek, aynı tartışmayı baştan
 açmak demektir.
@@ -120,7 +120,7 @@ açılmıştır:
 
 | Açık | Neden |
 |---|---|
-| `kit-hakkinda/TARTISILMIS-KARARLAR.md` | Yeni oturum kararları görmeli |
+| `TARTISILMIS-KARARLAR.md` | Yeni oturum kararları görmeli |
 | `kit-hakkinda/KIT-REHBER.md` | Plugin'i kuran kişi kiti anlamalı |
 | `kit-hakkinda/KIT-NE-YAPIYOR.md` | Aynı — döngü ve kapılar |
 

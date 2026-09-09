@@ -40,7 +40,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `README.md` | ✅ | ⛔ | Kurulum ve tanıtım |
 | `KURULUM.md` | ✅ | ⚠️ | Sesli bildirim kurulumu, gerekçeleriyle |
 | `CLAUDE.md` (kökte) | ⚠️ | ✅ | Bu **depoda** çalışan ajanın kuralları |
-| `kit-hakkinda/TARTISILMIS-KARARLAR.md` | ✅ | ✅ | Kesinleşmiş kararlar — yeniden tartışılmaz |
+| `TARTISILMIS-KARARLAR.md` | ✅ | ✅ | Kesinleşmiş kararlar — yeniden tartışılmaz |
 | `sablonlar/calisilacak-konular.md` | ✅ | ✅ | ⭐ **Tek seviye defteri** — kitle gelir, her projede aynı, anlatım düzeyi buradan |
 | `calisma-dokumanlari/` | ✅ | ⛔ | Senin çalışma notların — ajan okumaz, bağlamı şişirir |
 

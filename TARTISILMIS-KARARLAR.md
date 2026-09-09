@@ -174,7 +174,8 @@ anlatır gibi.**
 ### ⏳ Konuşuldu, karar verilmedi — yeni oturum bunları açabilir
 
 - [x] ~~Payload dosyasının adı~~ — **yapıldı (2026-09-09).**
-      `dosyalar/CLAUDE.md` → `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md`.
+      Eski ad: `dosyalar/CLAUDE.md` · yeni ad:
+      `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md`.
       Kullanıcı `.md`'yi ad ortasında istemişti; çift uzantı bazı araçları ve
       denetim betiğinin dosya-adı desenini yanıltacağı için `-MD-` yazıldı.
       Adım 2 kopyalarken adı `CLAUDE.md` yapıyor, Adım 7 kontrol listesi
