@@ -57,7 +57,39 @@ Proje bir kit projesi değilse (`docs/standards/` yoksa) dur ve söyle.
 
 ## Adım 2 — Karşılaştır
 
-Tüm dosyaları karşılaştır. `00-stack.md` dahil — ama **bölüm bazında.**
+### ⛔ ÖNCE SINIRI ÇİZ — neyin karşılaştırılacağı, neyin ASLA karşılaştırılmayacağı
+
+⚠️ **Bu sınır yanlış çizilirse bir projenin içeriği kite sızar** ve sonraki
+proje başkasının PRD'siyle, başkasının yol haritasıyla başlar.
+
+| Klasör | Karşılaştırılır mı | Neden |
+|---|:--:|---|
+| `docs/standards/**` | ✅ **Evet** | Kural — her projede aynı olmalı |
+| ⭐ `docs/project/calisilacak-konular.md` | ✅ **Evet, BİRLEŞTİREREK** | Kullanıcının seviyesi projeye ait değil, **kişiye** ait |
+| ⭐ `docs/project/ogrendigim-konular.md` | ✅ **Evet, BİRLEŞTİREREK** | Aynı |
+| `docs/project/` geri kalanı | ⛔ **ASLA** | PRD · roadmap · ADR · veri modeli · altyapı durumu — hepsi **bu projeye** ait |
+| `CLAUDE.md` §0 bloğu | ⛔ **ASLA** | Proje adı, stack, deploy — projeye ait |
+| `00-stack.md` içindeki **Stack tablosu** | ⛔ **ASLA** | Fiilen kurulu sürümler — projeye ait |
+| Kod, `.env`, `package.json` | ⛔ **ASLA** | Kural değil |
+
+⭐ **İki defter tek istisnadır** ve `docs/project/` altında olmalarına rağmen
+kite döner. Sebebi: onlar projenin durumunu değil **kullanıcının neyi bildiğini**
+tutar. Kullanıcı projeler arasında değişmez.
+
+⛔ **Defterlerde "hangisi doğru" diye SORULMAZ.** Birleşim alınır:
+
+| Durum | Ne olur |
+|---|---|
+| Satır projede var, kitte yok | ✅ Kite **eklenir** |
+| Satır kitte var, projede yok | ✅ Projeye **eklenir** |
+| İkisinde de var | Tekrar edilmez |
+| Seviye çakışıyor | ⭐ **Yüksek olan** kalır |
+| Satır bir tarafta silinmiş | ⛔ **Silinmez** — yalnızca kullanıcı *"bunu sil"* derse çıkar |
+
+---
+
+Sınır çizildikten sonra: `docs/standards/` altındaki tüm dosyaları karşılaştır.
+`00-stack.md` dahil — ama **bölüm bazında.**
 
 ### `00-stack.md` — istisna DOSYA değil BÖLÜM seviyesindedir
 
