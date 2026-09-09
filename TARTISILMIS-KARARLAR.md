@@ -162,16 +162,42 @@ anlatır gibi.**
 
 ---
 
+## 2026-09-09 oturumunda yapılanlar
+
+| Ne | Sonuç |
+|---|---|
+| Payload şablonunun adı | `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md`; Adım 2 kopyalarken `CLAUDE.md` yapıyor, Adım 7 doğruluyor |
+| `CLAUDE.md` başına yönlendirme tablosu | *"Hangi soru → hangi dosya"* — 19 standart + `docs/project/` |
+| Anlatım kuralı | *"Kod okuyamayan biri için de anlaşılır"* + ⭐ **"açıklama yeterli mi?"** sorusu |
+| İki defter | `calisilacak-konular.md` + `ogrendigim-konular.md` (yeni) |
+| Defterlerin yeri | ⭐ `docs/kullanici/` — üçüncü bölge, istisna kaldırıldı |
+| Kurulu sürüm kontrolü | `/yeni-proje` Adım 0'a eklendi — hiç yoktu |
+| Oturum sonu | *"Bir an değil"* — her şey olduğu anda yazılır |
+| İki makine senkronu | Push edilmeyen defter öteki makinede yok |
+| `docs/` → `kit-hakkinda/` | İki ayrı "docs" karışıyordu |
+| `TARTISILMIS-KARARLAR.md` | Köke alındı — rehber değil, karar kaydı |
+| *"Öğrenince sil"* | Kaldırıldı → **taşınır**, silinmez |
+
+Sürüm: `1.85.0` → `3.1.0`. Kurulu kopya da güncellendi.
+
+---
+
 ## Sırada ne var
 
+- [ ] ⭐ **Kullanıcı yarın devam edecek.** Bu oturumda karar bekleyen madde
+      kalmadı; üçü de kapatıldı (aşağıdaki arşiv).
 - [ ] Kullanıcı `KIT-REHBER.md` ve `KIT-NE-YAPIYOR.md`'yi okuyup dönüş yapacak
 - [ ] Özellikle **`06-testing.md` → beş gözle doğrulama** listesi kalibre
       edilecek: fazla mı, eksik mi — ancak kullanan söyleyebilir
 - [ ] İki dosya bölünme eşiğine yaklaşıyor: `CALISMA-KILAVUZU.md` (1161 satır)
       ve `11-agent-workflow.md` (970). Büyümeye devam ederlerse bölünmeleri
       önerilecek. Ölçüm: `wc -l`
+- [ ] ⚠️ **Kit hiç kullanılmadı.** Tüm bu kurallar `/yeni-proje` fiilen
+      çalıştırılarak **sınanmadı**. İlk gerçek kurulumda çıkacak sorunlar
+      buraya yazılacak.
 
-### ⏳ Konuşuldu, karar verilmedi — yeni oturum bunları açabilir
+### 📦 Kapatılan kararlar — arşiv
+
 
 - [x] ~~Payload dosyasının adı~~ — **yapıldı (2026-09-09).**
       Eski ad: `dosyalar/CLAUDE.md` · yeni ad:
