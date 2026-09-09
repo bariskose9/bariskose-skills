@@ -49,7 +49,8 @@ açacağını söyler; kuralın kendisi orada yazılıdır.
 |---|---|
 | Ne yapılacak, kapsam dışı ne | `docs/project/PRD.md` |
 | Sırada ne var, teknik borç | `docs/project/roadmap.md` |
-| **Neden böyle yapıldı** | `docs/project/decisions/ADR-*.md` |
+| **Neden böyle yapıldı** (bu projede) | `docs/project/decisions/ADR-*.md` |
+| ⭐ **Neyin neden REDDEDİLDİĞİ** (kit genelinde) | `TARTISILMIS-KARARLAR.md` (kökte) |
 | Bu teknoloji nedir, neden burada | `docs/project/teknoloji-ve-plan.md` |
 | Hangi hesap açık, anahtar nerede | `docs/project/altyapi-durumu.md` |
 | Kullanıcı bu konuyu biliyor mu | ⭐ `docs/kullanici/calisilacak-konular.md` + `ogrendigim-konular.md` |

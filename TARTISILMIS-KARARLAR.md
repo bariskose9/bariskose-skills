@@ -184,6 +184,10 @@ Sürüm: `1.85.0` → `3.1.0`. Kurulu kopya da güncellendi.
 
 ## Sırada ne var
 
+- [ ] ⭐ **Kit hâlâ hiç kullanılmadı.** `/yeni-proje` fiilen çalıştırılmadı;
+      bugünkü kuralların hiçbiri sınanmadı. İlk kurulumda çıkacak sorunlar
+      buraya yazılacak. **Şu an bilinen en büyük belirsizlik bu.**
+
 - [ ] ⭐ **Kullanıcı yarın devam edecek.** Bu oturumda karar bekleyen madde
       kalmadı; üçü de kapatıldı (aşağıdaki arşiv).
 - [ ] Kullanıcı `KIT-REHBER.md` ve `KIT-NE-YAPIYOR.md`'yi okuyup dönüş yapacak

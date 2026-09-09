@@ -68,6 +68,7 @@ proje başkasının PRD'siyle, başkasının yol haritasıyla başlar.
 |---|---|:--:|
 | `docs/standards/**` | **Kite** — her projede aynı kural | ✅ Evet |
 | `docs/kullanici/**` | **Kullanıcıya** — neyi bildiği | ✅ Evet, **birleştirerek** |
+| `TARTISILMIS-KARARLAR.md` (kökte) | **Kite** — kesinleşmiş kararlar | ✅ Evet |
 | `docs/project/**` | **Bu projeye** — PRD, roadmap, ADR, veri modeli, altyapı | ⛔ **Asla** |
 
 ⛔ Ayrıca hiçbir koşulda dönmeyenler: `CLAUDE.md` §0 bloğu (proje adı, stack,

@@ -1,6 +1,6 @@
 # `proje-kiti` — Kit Ne Yapıyor
 
-**Sürüm:** 3.4.0 · **Tarih:** 2026-09-06
+**Sürüm:** 3.5.0 · **Tarih:** 2026-09-06
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Bu belge, kitin **kurulumdan canlıya çıkışa kadar** ne yaptığını anlatır.
@@ -263,5 +263,5 @@ dallanmadır: üç proje sonra elinde birbirinden sapmış üç kopya olur.
 
 ---
 
-*Bu belge `proje-kiti` v3.4.0 için üretilmiştir. Kit değiştikçe güncellenir —
+*Bu belge `proje-kiti` v3.5.0 için üretilmiştir. Kit değiştikçe güncellenir —
 sürüm satırı `plugin.json` ile eşleşmezse `denetim.mjs` commit'i durdurur.*

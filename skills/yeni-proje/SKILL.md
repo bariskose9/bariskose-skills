@@ -532,10 +532,23 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
 2. `dosyalar/` içeriğinin geri kalanını projeye kopyala: `CALISMA-KILAVUZU.md`,
    `REPO-YAPISI.md`, `docs/standards/**`, **`.vscode/extensions.json`**
 
-   ⭐ **Ayrıca `calisma-dokumanlari/` klasörünü de kopyala.** Kit deposunun
-   kökündedir (`<kit>/calisma-dokumanlari/`) ve içinde kullanıcının uçtan uca
-   açıklamalı örnek projesi vardır — hangi teknoloji nerede, neden kullanılmış.
-   Kullanıcı ona referans olarak bakıyor.
+   ⭐ **Kitin KÖKÜNDEN de iki şey kopyalanır.** `$KIT` değişkeni
+   `.../yeni-proje/dosyalar` klasörünü gösteriyor; kitin kökü onun üç üstü:
+
+   ```bash
+   KOK="$KIT/../../.."
+   cp "$KOK/TARTISILMIS-KARARLAR.md" <proje>/
+   cp -R "$KOK/calisma-dokumanlari" <proje>/
+   ```
+
+   | Ne | Neden projede lazım |
+   |---|---|
+   | `TARTISILMIS-KARARLAR.md` | Hangi araç/skill neden kullanılıyor, **neyin neden reddedildiği**. Ajan bunu okumazsa elenmiş bir şeyi yeniden önerir ve ikinizin de vakti gider |
+   | `calisma-dokumanlari/` | Kullanıcının uçtan uca açıklamalı örnek projesi — hangi teknoloji nerede, neden kullanılmış |
+
+   ⛔ **Bu ikisinin `dosyalar/` altında KOPYASI YOKTUR ve olmamalıdır.**
+   Kaynak tektir: kitin kökü. İki kopya tutulsaydı biri güncellenir, öbürü
+   bayatlardı — kurulum her seferinde **güncel olanı** alıyor.
 
    ⛔ **Bu klasör KENDİLİĞİNDEN OKUNMAZ** — projeye giden `CLAUDE.md` içindeki
    *"Kendiliğinden OKUNMAYAN dosyalar"* tablosuna girer.
