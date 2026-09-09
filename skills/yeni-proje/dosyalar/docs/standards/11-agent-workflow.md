@@ -612,7 +612,7 @@ dönüşür — ve okuyan genellikle **önce rastladığına** inanır.
 
 | Neyi değiştirdin | ⛔ Nereleri tara ve güncelle |
 |---|---|
-| `docs/standards/` içinde bir kural | Diğer **18** standart · `CLAUDE.md` (ajan) · `CALISMA-KILAVUZU.md` (kullanıcı) · kit deposunda `ICINDEKILER.md` + `docs/KIT-REHBER.md` + `docs/KIT-NE-YAPIYOR.md` |
+| `docs/standards/` içinde bir kural | Diğer **18** standart · `CLAUDE.md` (ajan) · `CALISMA-KILAVUZU.md` (kullanıcı) · kit deposunda `ICINDEKILER.md` + `kit-hakkinda/KIT-REHBER.md` + `kit-hakkinda/KIT-NE-YAPIYOR.md` |
 | `SKILL.md` akışında bir adım | `ICINDEKILER.md` adım tablosu · `CALISMA-KILAVUZU.md` adım tablosu · iki kullanıcı rehberi |
 | Bir komut veya araç | Komutun geçtiği **her** dosya (`grep` ile bul) |
 | Bir dosyayı yeniden adlandırdın/sildin | ⛔ **Tüm** depo — referanslar |

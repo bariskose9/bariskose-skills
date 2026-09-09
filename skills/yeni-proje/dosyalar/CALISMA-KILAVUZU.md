@@ -3,8 +3,13 @@
 > **Bu dosya kullanıcı içindir.** Ajanın uyacağı kurallar `CLAUDE.md` ve
 > `docs/standards/` içinde; burada **projenin nasıl yürütüleceği** anlatılıyor.
 >
-> ⭐ **Bölüm 1 (terimler) zamanla silinebilir.** Terimler oturduğunda o bölümü
-> kaldır, kılavuz kısalsın. Diğer bölümler kalıcıdır.
+> ⛔ **Hiçbir bölüm SİLİNMEZ.** Bir terim oturduğunda bu kılavuzdan
+> kaldırılmaz — `docs/kullanici/ogrendigim-konular.md` dosyasına **taşınır**
+> (kopyalanmaz, taşınır: burada kalması gereksiz tekrar olur).
+>
+> ⭐ *Neden silinmiyor:* öğrendiğin bir şeyi unutabilirsin ve o zaman bakacak
+> bir yerin olmalı. Silinen bilgi geri gelmez; taşınan bilgi yerini bulur.
+> Öğrenilmemişler `calisilacak-konular.md` tarafında kalır.
 
 ---
 

@@ -4,7 +4,7 @@
 >
 > ⚠️ **2026-09-06 — bu belge kite taşındı.** Metinde geçen çalışma kılavuzu
 > artık kitin içinde (`CALISMA-KILAVUZU.md`), dosya rehberinin kit bölümü ise
-> `docs/KIT-REHBER.md` → *Ek* içine alındı. Belgenin geri kalanı **tarihî
+> `kit-hakkinda/KIT-REHBER.md` → *Ek* içine alındı. Belgenin geri kalanı **tarihî
 > kayıttır**, olduğu gibi bırakılmıştır.
 >
 > ---
@@ -218,7 +218,7 @@ kendi çalışma ve öğrenme belgeleri.**
 | `CALISMA-KILAVUZU.md` | **Kullanıcı** | Kitle nasıl çalışılacağını anlatıyor; sen kuralları `docs/standards/`'tan alıyorsun |
 | `KURULUM.md` | **Kullanıcı** | Windows'ta program kurma talimatları |
 | `sunum-anlatim-plani.md` | **Kullanıcı** | Sunumu **o** yapacak; içinde bilgi yok, hepsi rehbere işaret |
-| `docs/KIT-REHBER.md` (kit deposunda) | **Kullanıcı** | Kit ne yapar, hangi dosya nereye gelir — *Ek* bölümü |
+| `kit-hakkinda/KIT-REHBER.md` (kit deposunda) | **Kullanıcı** | Kit ne yapar, hangi dosya nereye gelir — *Ek* bölümü |
 | `pdf/*.pdf` | **Kullanıcı** | Telefonda okumak için; `md/` karşılıkları zaten var |
 
 ⛔ **Bunları kullanıcı açıkça istemedikçe okuma.** Toplam ~90 KB; okumak

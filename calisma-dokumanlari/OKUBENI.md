@@ -15,13 +15,13 @@
 
 | Dosya | Ne anlatır | Ne zaman açılır |
 |---|---|---|
-| **`docs/KIT-REHBER.md`** (kit deposunda) | Kit ne yapıyor, sekiz adımlık akış, 19 standardın kapsamı, ajan kapıları, terim sözlüğü, kitin nerede durduğu | *"Kit tam olarak ne yapıyordu"* dediğinde |
+| **`kit-hakkinda/KIT-REHBER.md`** (kit deposunda) | Kit ne yapıyor, sekiz adımlık akış, 19 standardın kapsamı, ajan kapıları, terim sözlüğü, kitin nerede durduğu | *"Kit tam olarak ne yapıyordu"* dediğinde |
 | **`2-teknoloji-kartlari.md`** | Her teknoloji ne işe yarar, gerçek hayat örnekleriyle. Hangi durumda ne kullanılır. Bir isteğin uçtan uca yolu | Bir teknolojiyi anlamadığında · yeni projeye başlarken |
 | **`ornek-proje-bakim-is-emri/`** | Uçtan uca yapılmış bir projenin bütün belgeleri | *"Bu gerçekte nasıl yazılıyordu"* dediğinde |
 
 ## Nereden başlamalı
 
-**Kiti hatırlamak istiyorsan** → `docs/KIT-REHBER.md` (bu klasörde değil, kit deposunda)
+**Kiti hatırlamak istiyorsan** → `kit-hakkinda/KIT-REHBER.md` (bu klasörde değil, kit deposunda)
 
 **Bir teknolojiyi öğrenmek istiyorsan** → `2-teknoloji-kartlari.md`
 Sırası önemli değil, kart kart okunur. Ama ilk kez okuyorsan **BÖLÜM Ö** ile

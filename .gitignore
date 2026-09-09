@@ -1,10 +1,9 @@
-# Kişisel çalışma notları ve üretilen belgeler — depoya girmez
-# ⚠️ "docs/" değil "docs/*" yazılır: klasörün kendisi dışlanırsa git içine
-#    HİÇ bakmaz ve aşağıdaki "!" satırları çalışmaz.
-docs/*
-!docs/TARTISILMIS-KARARLAR.md
-# ⭐ Kullanıcı rehberleri açık — plugin'i kuran kişi kitin döngüsünü görmeli.
-#    ICINDEKILER.md "nerede ne var" der; bu ikisi "nasıl işliyor" ve
-#    "terimler ne demek" der. Üçü üç ayrı derinlik.
-!docs/KIT-REHBER.md
-!docs/KIT-NE-YAPIYOR.md
+# ⛔ Üretilen ve kişisel dosyalar — depoya girmez
+*.pdf
+node_modules/
+.DS_Store
+
+# ⚠️ Kit HAKKINDAKİ belgeler kit-hakkinda/ altındadır ve DEPOYA GİRER.
+#    Kitin İÇİNDEKİ kurallar ise skills/yeni-proje/dosyalar/docs/standards/
+#    altındadır. İkisi ayrı şeydir; klasör adları da ayrı olsun diye
+#    depo kökündeki "docs/" adı "kit-hakkinda/" yapıldı (2026-09-09).

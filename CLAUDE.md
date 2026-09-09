@@ -26,7 +26,7 @@ Kural yazmaya başlamadan önce `skills/yeni-proje/dosyalar/PROJEYE-CLAUDE-MD-OL
 
 ## ⛔ Çalışmaya başlamadan önce
 
-**`docs/TARTISILMIS-KARARLAR.md` oku.** Kesinleşmiş kararlar, gerekçeleri ve **yeniden
+**`kit-hakkinda/TARTISILMIS-KARARLAR.md` oku.** Kesinleşmiş kararlar, gerekçeleri ve **yeniden
 tartışılmayacak** konular orada. Reddedilmiş yaygın tavsiyelerin tablosu da var
 — yazılı olarak reddedilmiş bir şeyi yeniden önermek, aynı tartışmayı baştan
 açmak demektir.
@@ -62,7 +62,7 @@ dosya** · **bayat sürüm damgası** (rehberdeki `Sürüm:` ile `plugin.json` a
 MAJOR.MINOR mu). **Çıktısını oku** — çalıştırıp kırpmak, atlamakla aynı şeydir.
 
 ⛔ **Kural değiştirdiysen kullanıcı rehberlerini de gözden geçir:**
-`docs/KIT-REHBER.md` (terim terim anlatım) ve `docs/KIT-NE-YAPIYOR.md` (döngü ve
+`kit-hakkinda/KIT-REHBER.md` (terim terim anlatım) ve `kit-hakkinda/KIT-NE-YAPIYOR.md` (döngü ve
 kapılar). İkisi de **depoya girer** — plugin'i kuran kişi kitin nasıl işlediğini
 oradan öğrenir. Sürüm damgaları `plugin.json` ile aynı MAJOR.MINOR olmalı;
 denetim betiği bunu zorlar.
@@ -94,7 +94,7 @@ yayılma tablosu: `docs/standards/11-agent-workflow.md` → *"YAYILMA TABLOSU"*.
 
 | Değiştirdiysen | Güncellenecekler |
 |---|---|
-| `docs/standards/` içinde bir kural | Diğer standartlar · `dosyalar/PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` · `CALISMA-KILAVUZU.md` · `ICINDEKILER.md` · `docs/KIT-REHBER.md` · `docs/KIT-NE-YAPIYOR.md` |
+| `docs/standards/` içinde bir kural | Diğer standartlar · `dosyalar/PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` · `CALISMA-KILAVUZU.md` · `ICINDEKILER.md` · `kit-hakkinda/KIT-REHBER.md` · `kit-hakkinda/KIT-NE-YAPIYOR.md` |
 | `SKILL.md` akışında bir adım | `ICINDEKILER.md` + `CALISMA-KILAVUZU.md` adım tabloları · iki rehber |
 | Yeni dosya ekledin | `ICINDEKILER.md` — denetim zorlar |
 | Minor sürüm artırdın | İki rehberin `**Sürüm:**` damgası — denetim zorlar |
@@ -120,9 +120,9 @@ açılmıştır:
 
 | Açık | Neden |
 |---|---|
-| `docs/TARTISILMIS-KARARLAR.md` | Yeni oturum kararları görmeli |
-| `docs/KIT-REHBER.md` | Plugin'i kuran kişi kiti anlamalı |
-| `docs/KIT-NE-YAPIYOR.md` | Aynı — döngü ve kapılar |
+| `kit-hakkinda/TARTISILMIS-KARARLAR.md` | Yeni oturum kararları görmeli |
+| `kit-hakkinda/KIT-REHBER.md` | Plugin'i kuran kişi kiti anlamalı |
+| `kit-hakkinda/KIT-NE-YAPIYOR.md` | Aynı — döngü ve kapılar |
 
 Geri kalan her şey (PDF'ler, oturum notları, yazışmalar) diskte kalır;
 yayınlanacaksa **önce kullanıcıya sorulur.**

@@ -3,7 +3,7 @@
 > 🗺️ **Kiti kullanacaksan başlangıç noktan [`ICINDEKILER.md`](ICINDEKILER.md)** —
 > hangi dosya kimin işi, sekiz adımda ne oluyor, sen ne zaman devreye giriyorsun.
 >
-> 🧭 **Bu depo üzerinde geliştirme yapacaksan önce [`docs/TARTISILMIS-KARARLAR.md`](docs/TARTISILMIS-KARARLAR.md) oku** —
+> 🧭 **Bu depo üzerinde geliştirme yapacaksan önce [`kit-hakkinda/TARTISILMIS-KARARLAR.md`](kit-hakkinda/TARTISILMIS-KARARLAR.md) oku** —
 > nerede kalındığı, kesinleşmiş kararlar ve yeniden tartışılmayacak konular orada.
 
 Barış Köse'nin Claude Code kiti. Yeni bir projeye başlarken iskeleti kurmak
