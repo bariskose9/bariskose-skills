@@ -327,6 +327,7 @@ Sürümler `docs/standards/00-stack.md` içinde ve **fiilen kurulanla eşitlenir
 | Dosya | Neden |
 |---|---|
 | `CALISMA-KILAVUZU.md` | **Benim** kılavuzum, senin kuralın değil. Bağlamını şişirir — ama **güncel tutmak senin işin** |
+| ⭐ `calisma-dokumanlari/` | **Benim** çalışma dokümanlarım ve uçtan uca örnek projem. Kural taşımaz, bağlamını şişirir |
 | Çalışma notu klasörlerim (`_devir/`, `notlar/` gibi) | Kural taşımaz |
 
 ⭐ **İstediğimde okursun.** *"Şunu kılavuza ekle"*, *"o notu güncelle"* dediğimde

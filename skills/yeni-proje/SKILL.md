@@ -290,6 +290,7 @@ ayarları konmuş olur. ⛔ Bu durumda durup kullanıcıyı boşuna uğraştırm
 | `.pem`, `.key`, `.p12`, `id_rsa` | ⛔ **`.gitignore`'a ekle** — özel anahtar asla commit edilmez |
 | Kimlik/şifre içeren dosya (`credentials.json`, `secrets.*`) | `.gitignore` + kullanıcıya **söyle** |
 | `.DS_Store`, `Thumbs.db`, `desktop.ini` | `.gitignore`'a ekle — işletim sistemi çöpü |
+| ⭐ `calisma-dokumanlari/` | ⛔ **`.gitignore`'a ekle.** Kullanıcının kişisel çalışma malzemesi ve başka bir kuruma ait örnek proje içerir; bu projenin uzak deposuna **çıkmamalı** |
 | Yedek dosya (`*.zip`, `eski-yedek/`) | Kullanıcıya sor: taşıyalım mı, gitignore mu |
 
 ⛔ **Bu kutu atlanamaz.** Bir gizli anahtar bir kez commit edilirse **git
@@ -530,6 +531,18 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    Doğrula: `ls <proje>/CLAUDE.md`
 2. `dosyalar/` içeriğinin geri kalanını projeye kopyala: `CALISMA-KILAVUZU.md`,
    `REPO-YAPISI.md`, `docs/standards/**`, **`.vscode/extensions.json`**
+
+   ⭐ **Ayrıca `calisma-dokumanlari/` klasörünü de kopyala.** Kit deposunun
+   kökündedir (`<kit>/calisma-dokumanlari/`) ve içinde kullanıcının uçtan uca
+   açıklamalı örnek projesi vardır — hangi teknoloji nerede, neden kullanılmış.
+   Kullanıcı ona referans olarak bakıyor.
+
+   ⛔ **Bu klasör KENDİLİĞİNDEN OKUNMAZ** — projeye giden `CLAUDE.md` içindeki
+   *"Kendiliğinden OKUNMAYAN dosyalar"* tablosuna girer.
+
+   ⚠️ **`.gitignore`'a eklenir** (Adım 5). İçinde bir kurumun adı ve ödev metni
+   geçiyor; başka bir kurumun deposuna gitmemeli. Kullanıcının diskinde kalır,
+   uzak depoya çıkmaz.
 
    ⭐ `.vscode/extensions.json` sayesinde kullanıcı projeyi VS Code'da açtığında
    *"önerilen eklentiler var"* uyarısı çıkar ve **Install All** ile hepsi
