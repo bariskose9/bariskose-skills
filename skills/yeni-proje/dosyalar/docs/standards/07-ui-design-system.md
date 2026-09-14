@@ -62,6 +62,33 @@ Her ekran **iki modda da** kontrol edilir. Sabit `#fff`/`#000` yazılmaz.
 Her veri gösteren bileşende dördü de tanımlıdır:
 **yükleniyor** (skeleton) · **boş** (açıklama + eylem) · **hata** (mesaj + tekrar dene) · **dolu**
 
+### ⭐ Yazma sırasında da durum vardır — ve iyimser güncelleme kararı
+
+Okuma tarafının dört durumu gibi, **yazma** (kaydet, sil, gönder) tarafının da
+üç durumu vardır; hiçbiri atlanmaz:
+
+| Durum | Ne görünür | Nasıl |
+|---|---|---|
+| **Gönderiliyor** (pending) | Düğme devre dışı + "Kaydediliyor…"; **çift tıklama** engellenir | Server Action: `useActionState` → `pending`; TanStack: `mutation.isPending` |
+| **Başarılı** | Kısa onay (toast) + ekran yeni veriyi gösterir | Etiket düşürme / `invalidateQueries` — `01-architecture.md` → *"Önbellek ve tazelik"* |
+| **Başarısız** | Alan bazlı hata (Zod'dan) form içinde; genel hata toast'ta; **girilen veri kaybolmaz** | `fieldErrors` alana bağlanır; form sıfırlanmaz |
+
+**İyimser güncelleme / optimistic UI**: sunucu cevabını beklemeden ekranı
+**sanki olmuş gibi** güncellemek, cevap olumsuz gelirse geri almak. *Gerçek
+hayat:* garson siparişi mutfağa iletmeden "tamam" der; mutfakta malzeme yoksa
+geri gelip söyler. Hızlı hissettirir, ama geri alma karmaşıklık ve **yalan**
+riski taşır.
+
+| Kullan | Kullanma |
+|---|---|
+| Geri alması kolay ve zararsız: beğeni, "okundu" işareti, sıralama sürükle-bırak, tamamlandı kutusu | Para, başvuru gönderimi, silme, yetki değişikliği — "gönderildi" yazıp sonra "aslında gönderilemedi" demek kamu hizmetinde kabul edilemez |
+| Kullanıcı aynı ekranda kalıyor | Sonuç başka ekranda / e-postada görünecek |
+
+`useOptimistic` (React) yalnızca sol sütundakiler için; sağ sütunda **gönderiliyor
+durumu** gösterilir ve cevap beklenir. Kararı veren soru: *"Sunucu 'hayır'
+derse kullanıcıya ne söyleyeceğim ve o an nerede olacak?"* — cevap rahatsız
+ediyorsa iyimser değil.
+
 ## Formlar
 - Etiket her zaman görünür (placeholder etiket yerine geçmez).
 - **Örnek değer alanın ALTINA yazılır, İÇİNE değil** — `Örnek: 2030` biçiminde

@@ -406,6 +406,7 @@ Adım 3b, 4 ve 5'te sorulur. Muhatap: DBA / veritabanı birimi.
 | 6.2 | API'yi başkası tüketecek mi | 3 | *(doldurulacak)* |
 | 6.3 | Kendiliğinden çalışan iş | 3 | *(doldurulacak)* |
 | 6.4 | Kişisel veri ve arama alanı | 3 | *(doldurulacak)* |
+| 6.5 | Çok dillilik: İngilizce (veya başka dil) sürüm isteniyor mu; arayüz mü, içerik de mi | 3 | *(doldurulacak)* |
 
 ## 6.1 Tarayıcı tabanı
 
@@ -456,6 +457,20 @@ Adım 3b, 4 ve 5'te sorulur. Muhatap: DBA / veritabanı birimi.
 | **Neden soruyorum** | Şifreli alanda kısmi arama yapılamaz; "ad-soyadla arasınlar" isteniyorsa ad-soyad şifrelenemez ve KVKK gerekçesi ADR'ye yazılır. Özel nitelikli veri (sağlık) varsa kapsam ve saklama süresi baştan belirlenir (`14-privacy-and-compliance.md`) |
 | **Ne değişir** | Şifrelenen kolon listesi, hash kolonları, arama ekranı tasarımı |
 | **Cevap gelmezse** | Arama TCKN + başvuru no ile (tam eşleşme); ad-soyad şifreli |
+| **Cevap** | *(doldurulacak)* |
+
+
+## 6.5 Çok dillilik
+
+> *"Sitenin İngilizce (ya da başka dilde) sürümü isteniyor mu? İsteniyorsa
+> yalnızca menü ve düğmeler mi, yoksa haber/duyuru gibi içerikler de mi
+> çevrilecek — içeriği kim çevirecek?"*
+
+| | |
+|---|---|
+| **Neden soruyorum** | Çok dillilik sonradan eklenemez: URL yapısı, sözlük dosyaları ve içerik tabloları baştan ona göre kurulur (`02-coding-standards.md` → *"Çok dillilik"*). İçerik çevirisi ayrı bir iş yükü ve panel ekranı demektir |
+| **Ne değişir** | `next-intl` kurulumu, `/en` URL'leri, çeviri tabloları, panelde dil sekmesi |
+| **Cevap gelmezse** | Tek dil (Türkçe); metinler yine tek yerden — yapı hazır |
 | **Cevap** | *(doldurulacak)* |
 
 ---

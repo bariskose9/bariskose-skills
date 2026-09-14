@@ -334,4 +334,55 @@ Dosya > 300 satır → böl. Fonksiyon > 50 satır → böl. İç içe if > 3 se
 ## Veri akışı kuralları
 - Sunucu bileşeni varsayılandır; `"use client"` sadece etkileşim gerekiyorsa.
 - Gizli anahtar veya iş kuralı istemciye gönderilmez.
-- Dış API çağrıları **sunucu tarafında** yapılır ve cache'lenir.
+- Dış API çağrıları **sunucu tarafında** yapılır ve önbelleklenir (aşağıda).
+
+### ⭐ Önbellek ve tazelik — "her istekte veritabanı" varsayılan DEĞİLDİR
+
+**Önbellek / cache**: pahalı bir sonucu (veritabanı sorgusu, dış API cevabı,
+üretilmiş sayfa) bir süre saklayıp aynı isteğe **yeniden hesaplamadan** vermek.
+*Gerçek hayat:* fırının vitrini — her müşteri için sıfırdan ekmek pişirilmez,
+raftaki verilir; raf boşalınca ya da ekmek bayatlayınca yenisi pişer. Sorun
+şu: **ne zaman bayatladığını** kim söyleyecek?
+
+Next.js'te üç katman vardır ve hepsinin varsayılanı farklıdır:
+
+| Katman | Ne saklar | Ne zaman bayatlar | Nasıl yenilenir |
+|---|---|---|---|
+| **Tam sayfa / route cache** | Sunucu bileşeninin ürettiği HTML | Statik sayfa hiç; `revalidate = 60` ile 60 sn | Yönetici kaydedince `revalidatePath("/haberler")` |
+| **Veri önbelleği** (`fetch` / `unstable_cache`) | Tek bir sorgu/çağrı sonucu, **etiketle** (`tags: ["news"]`) | Süre dolunca ya da etiket geçersiz kılınınca | ⭐ `revalidateTag("news")` — yazma işleminden sonra, Server Action / servis içinde |
+| **İstemci** (TanStack Query) | Tarayıcıdaki liste/detay | `staleTime` (varsayılan 0 = hemen bayat) | Yazma sonrası `invalidateQueries`; odak dönüşünde yeniden çekme |
+
+**Kural — etiketle ve yazarken geçersiz kıl:**
+
+```ts
+// Okuma: sorgu etiketlenir — "bu veri 'news' etiketine bağlı"
+const getNews = unstable_cache(() => newsRepository.findPublished(), ["news"], { tags: ["news"] });
+
+// Yazma: servis kaydettikten sonra YALNIZCA o etiket düşer — site geneli değil
+await newsService.publish(input);
+revalidateTag("news");   // haberler listesi ve detayları sonraki istekte taze
+```
+
+⛔ **Her rotaya `export const dynamic = "force-dynamic"` yazılmaz.** Bu,
+"vitrini kaldır, her müşteriye sıfırdan pişir" demektir: yönetici panelden
+kaydettiği anda görsün diye **tüm** ziyaretçi sayfaları her istekte veritabanına
+iner — yük, önbelleksiz sunucunun yüküdür. Tazeliği **yazma anında etiketle**
+sağlarsın; okuma tarafı önbellekli kalır. `force-dynamic` yalnızca gerçekten
+kişiye özel (oturum, sepet) sayfalarda.
+
+| Veri | Yaklaşım |
+|---|---|
+| Herkese aynı, seyrek değişen (haber, duyuru, doktor listesi, menü) | Etiketli veri önbelleği + yazarken `revalidateTag` |
+| Herkese aynı, zamanla değişen (döviz, hava) | `revalidate = <saniye>` |
+| Kişiye özel (panel, sepet, "randevularım") | Önbellek yok — `dynamic`, çerezle |
+| Dış API cevabı | Sunucuda çağır + süreli önbellek; dış servis çökerse **son iyi** cevap gösterilir (`integrations.md`) |
+
+⭐ **Kararı veren soru:** *"Bu veriyi kim değiştiriyor ve değiştiği anda kim
+görmek zorunda?"* Değiştiren belliyse (yönetici, servis) → yazma anında
+etiket düşür; kimse görmek zorunda değilse → süre; herkes anında görmek
+zorundaysa → önbellek yok, ama önce *"gerçekten anında mı"* diye sor — çoğu
+"anında" 60 saniyeye razıdır.
+
+Sunucu tarafı önbellek (Redis) yalnızca ölçüm gösterirse ve sıra geldiğinde
+(`12-operations-and-scaling.md` → *"Performans ve büyütme sırası"*).
+

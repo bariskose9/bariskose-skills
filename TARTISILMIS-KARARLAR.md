@@ -333,3 +333,14 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 | Hata takibi ne yakalar; GlitchTip kurum modu; Sentry bulutu kurumda kullanılmaz | `12-operations-and-scaling.md` |
 | Aşırı mühendislik kapısı: üç soru; `code-simplification` her özellik sonunda | `11-agent-workflow.md` · `SKILL.md` |
 | Session caching: `tokenVersion` için Redis (kurum), aksi DB | `05-auth-security.md` |
+
+### Ek — 2026-09-14, üçüncü tur (kapsam taraması)
+
+| Karar | Ev |
+|---|---|
+| Önbellek ve tazelik: etiketle, yazarken geçersiz kıl; `force-dynamic` her rotaya yazılmaz | `01-architecture.md` → *"Önbellek ve tazelik"* |
+| Anlık veri: odak dönüşü → polling → SSE → WebSocket; sunucusuzda WebSocket yok | `00-stack.md` → *"Anlık veri"* |
+| E-posta: `Mailer` adaptörü, react-email şablon, kuyruktan, düz metin sürümü | `00-stack.md` → *"E-posta"* |
+| Çok dillilik: `next-intl`, çeviri tablosu, makine çevirisi kurumda yok; PRD sorusu 6.5 | `02-coding-standards.md` → *"Çok dillilik"* |
+| Zaman dilimi: `TIMESTAMPTZ` UTC · `DATE` saatsiz gün · hesap İstanbul'da · `TZ=UTC` | `02-coding-standards.md` → *"Zaman dilimi"* |
+| Yazma durumları (pending/başarılı/başarısız) ve iyimser UI kararı | `07-ui-design-system.md` → *"Yazma sırasında da durum vardır"* |

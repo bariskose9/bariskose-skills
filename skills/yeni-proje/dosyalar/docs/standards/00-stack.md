@@ -134,6 +134,8 @@ sonra *"bunu neden kurmadık"* sorusu yeniden araştırılır. Üç durum:
 | E2E test | Playwright | 1.62 | Masaüstü + 375px mobil viewport |
 | Erişilebilirlik denetimi | `@axe-core/playwright` | — | CI'da kritik ihlal = kırmızı |
 | Performans denetimi | Lighthouse CI + `size-limit` | — | Performans bütçesi kapısı (`07-ui-design-system.md`) |
+| E-posta | `Mailer` adaptörü — Resend (kendi proje) / kurum geçidi · şablon **react-email** · gönderim kuyruktan | — | Aşağıda *"E-posta — gönderim ve şablon"* |
+| Anlık veri | Odak dönüşü → polling → SSE → WebSocket, ihtiyaca göre | — | Aşağıda *"Anlık veri"*; sunucusuzda WebSocket yok |
 | Hata takibi | Sentry (`@sentry/nextjs`) | — | Ücretsiz katman |
 | Hız sınırı | Ayrı paket yok — Postgres sayaç tablosu | — | Sunucusuzda bellek sayacı çalışmaz · ADR ile kabul edildi |
 | Lint/Format | ESLint + Prettier | 9 / 3 | ESLint 10 kullanılamıyor, aşağıya bak |
@@ -472,6 +474,62 @@ yazılır.
 ⛔ Bu yüzden **düşük hacimli projede BullMQ seçmek pahalıdır.** Zaten kendi
 sunucun ayakta duruyorsa maliyet zaten ödenmiştir, o zaman BullMQ mantıklıdır.
 Karar ADR'ye yazılır.
+
+## Anlık veri — yenile düğmesi mi, polling mi, SSE mi, WebSocket mi
+
+**Anlık veri / realtime**: sunucuda bir şey değişince kullanıcının ekranının
+**kendisi yenilemeden** güncellenmesi — kuyruk numarası, işlem durumu,
+sohbet. *Gerçek hayat:* bankadaki sıra ekranı: sen bakmasan da numara döner.
+Dört yol var, bedeli artan sırada:
+
+| Yol | Nasıl | Gecikme | Bedel | Ne zaman |
+|---|---|---|---|---|
+| **Yenile / odak dönüşü** | TanStack Query sekmeye dönünce yeniden çeker | Kullanıcı bakınca | Sıfır | ⭐ Çoğu iş uygulaması — "randevum onaylandı mı" |
+| **Polling** (düzenli sorma) | İstemci her N saniyede sorar (`refetchInterval`) | N saniye | Her istemci × N — sunucuya sabit yük | Sonuç 1–2 dk içinde yetiyor (arka plan işi durumu, rapor hazır mı) |
+| **SSE** (Server-Sent Events) | Sunucu tek yönlü akış açar, olay olunca gönderir | Anında | Açık bağlantı başına bellek; **tek yön**; HTTP üstünde, vekil/CDN dostu | Bildirim, ilerleme çubuğu, canlı pano |
+| **WebSocket** | Çift yönlü kalıcı bağlantı | Anında | Sunucusuzda **çalışmaz**; ölçeklemede yapışkan oturum veya Redis pub/sub gerekir | Sohbet, ortak düzenleme, oyun — **iki yön** şart |
+
+⛔ **Sunucusuz (Vercel) kurguda WebSocket yok** — fonksiyon cevap dönünce
+kapanır, bağlantı yaşayamaz; SSE de süre sınırına takılır. Kurgu [B]'de
+anlık ihtiyaç varsa: polling, ya da yönetilen bir kanal (Pusher/Ably) — ADR
+ile. Kurgu [C]'de NestJS **gateway** (`@WebSocketGateway`, socket.io) ya da
+SSE (`@Sse()`); iki kopya varsa olaylar **Redis pub/sub** ile paylaşılır —
+yoksa A sunucusundaki olay B'ye bağlı kullanıcıya ulaşmaz.
+
+⭐ **Kararı veren soru:** *"Kullanıcı ekrana bakmıyorken değişen veriyi
+görmemesi bir zarar mı?"* Hayır → odak dönüşü. Evet ama dakika toleransı
+var → polling. Saniye toleransı, tek yön → SSE. İki yön → WebSocket.
+Kanal seçimi ADR'ye, dayandığı PRD maddesiyle.
+
+## E-posta — gönderim ve şablon
+
+İşlem e-postaları (OTP kodu, "başvurunuz alındı", şifre sıfırlama) üç
+parçadan oluşur ve üçü ayrı yerde yaşar:
+
+| Parça | Ne | Kendi proje | Kurum |
+|---|---|---|---|
+| **Gönderici** (transport) | Postayı fiilen taşıyan servis | Resend (`00-stack` Yol A) | Kurumun mail geçidi / SMTP (`kurumdan-ogrenilecekler.md` → 5.2) |
+| **Şablon** (template) | Postanın görünümü ve metni | **react-email** — şablon bir React bileşeni, `pnpm email dev` ile tarayıcıda önizlenir | Aynı |
+| **Kuyruk** | Gönderim istek döngüsünün dışında | Inngest/QStash | BullMQ + Redis |
+
+*Gerçek hayat:* matbaa (şablon) · postane (gönderici) · posta kutusu (kuyruk)
+— mektubu yazarken postanenin kim olduğunu bilmezsin.
+
+**Kurallar:**
+- Uygulama bir `Mailer` **arayüzüne** konuşur; sürücü ortam değişkeniyle
+  seçilir (`resend` · `smtp` · `fake`). `fake` sürücü postayı konsola/dosyaya
+  yazar — local ve CI'da **her zaman** çalışan yol; OTP testi gerçek posta
+  beklemez (`00-stack.md` → *"SİMÜLE EDİLEN DIŞ SERVİS"*).
+- ⛔ Şablon metni koda gömülmez; `react-email` bileşeninde, kullanıcıya
+  görünen metin kuralıyla (`02-coding-standards.md` → *"Kullanıcıya görünen
+  metin"*). Düz metin (text) sürümü **her zaman** üretilir — HTML'i
+  göstermeyen istemciler ve erişilebilirlik için.
+- Gönderim **kuyruktan**: istek 202 ile döner, başarısızsa yeniden denenir;
+  üçte de olmazsa "dead letter" ve uyarı (`00-stack.md` → *"İş kuyruğu"*).
+- Kişisel veri e-postaya **yazılmaz** (TCKN, tam adres); bağlantı kısa ömürlü
+  ve imzalı (`05-auth-security.md`).
+- Gönderen alan adı için SPF/DKIM/DMARC kayıtları — kendi projede sen, kurumda
+  DevOps; kayıtsız posta spam'e düşer (`altyapi-durumu.md`).
 
 ## API biçimi — REST tek başına mı, yanına GraphQL de mi
 

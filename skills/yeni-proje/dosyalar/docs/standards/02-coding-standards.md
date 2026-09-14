@@ -516,11 +516,8 @@ Sayı ve metin sabitleri koda gömülmez; `src/config/` altında adlandırılır
 
 ## Yerelleştirme, para ve tarih
 - Kullanıcıya görünen metinler koda gömülmez; `src/config/` altında tek yerden gelir.
-  (Şu an tek dil Türkçe, ama ileride dil eklenecekse yapı hazır olur.)
 - Para birimi `Intl.NumberFormat("tr-TR", { currency: "TRY" })` ile biçimlendirilir.
   Hesaplama **kuruş cinsinden tam sayı** veya `Decimal` ile yapılır, float ile asla.
-- Tarih `date-fns` + `tr` yerel ayarıyla biçimlendirilir. Veritabanında **UTC**,
-  ekranda `Europe/Istanbul`. Sunucu saat dilimine güvenilmez.
 - Sıralama ve arama Türkçe karakter duyarlıdır (`localeCompare("tr")`);
   "İ/ı" dönüşümü için `toLocaleLowerCase("tr")`.
   ⛔ **İstisna — URL slug'ında Türkçe küçültme KULLANILMAZ.** Türkçe kuralında
@@ -528,6 +525,52 @@ Sayı ve metin sabitleri koda gömülmez; `src/config/` altında adlandırılır
   üretimi `en-US` kuralıyla yapılır, gerekçesi ve dönüşüm tablosu
   `18-seo.md` → *"URL biçimi"* içinde. İkisi çelişmiyor: **ekranda okunan
   metin** Türkçe kuralla, **adres** İngilizce kuralla küçültülür.
+
+### ⭐ Çok dillilik (i18n) — baştan karar, sonradan eklenmez
+
+**i18n / internationalization / çok dillilik**: arayüzün ve içeriğin birden
+fazla dilde sunulması. *Gerçek hayat:* havalimanı tabelası — Türkçe ve
+İngilizce aynı levhada; levhayı sonradan iki dilli yapmak, bütün tabelaları
+sökmek demektir. Kamu sitesinde "İngilizce sürüm" isteği sık gelir; PRD'de
+sorulur (`kurumdan-ogrenilecekler.md` → *"BÖLÜM 6"* satır 6.5). Cevap "hayır"
+ise tek dil; ama metinler yine `src/config/` altında — yapı hazır, bedel sıfır.
+
+Cevap "evet" ise iki ayrı sorun vardır ve karıştırılmaz:
+
+| Ne çevriliyor | Nerede yaşar | Nasıl |
+|---|---|---|
+| **Arayüz metni** (menü, buton, hata mesajı) | Sözlük dosyaları `messages/tr.json`, `messages/en.json` | `next-intl` — App Router uyumlu, sunucu bileşeninde çalışır; URL `/en/...` |
+| **İçerik** (haber, duyuru, sayfa metni — yöneticinin girdiği) | Veritabanı | ⛔ `baslik_en` gibi kolon başına dil **değil** — üçüncü dilde tablo değişir. **Çeviri tablosu:** `news_translations(news_id, locale, title, body)`; yönetici panelde dil sekmesi |
+| **Makine çevirisi** (Google Translate widget vb.) | Dış servis | ⛔ Kurum sitesinde kullanılmaz: kalitesi denetlenemez, kurum ağından dışarı çıkış ister, kişisel veriyi Google'a gönderir |
+
+- Dil seçimi URL'de (`/en/haberler`) — paylaşılabilir, aranabilir; çerezde
+  değil. `hreflang` ve alternatif adresler `18-seo.md`.
+- Tarih, sayı, para biçimi dille birlikte değişir (`Intl` + `locale`); "12.09.2026"
+  İngilizcede "09/12/2026" olur — biçim koda gömülmez.
+- Çevrilmemiş içerik için **geri düşüş** (fallback) kuralı baştan: Türkçesi
+  gösterilir + "bu içerik yalnızca Türkçe" notu; boş sayfa asla.
+
+### ⭐ Zaman dilimi — sakla UTC, göster İstanbul, hesapla dikkatle
+
+- Veritabanında **`TIMESTAMPTZ`** (saat dilimli zaman); değer **UTC** olarak
+  durur. Ekranda `Europe/Istanbul`. Sunucunun saat dilimine güvenilmez —
+  konteynerde `TZ=UTC` sabitlenir ki "hangi makinede koştu" sonucu değiştirmesin.
+- ⛔ **Saatsiz tarih ayrıdır:** doğum tarihi, randevu günü, son başvuru günü
+  bir **an** değil bir **gün**dür — `DATE` tipinde saklanır, saat dilimine
+  hiç girmez. `TIMESTAMPTZ`'de saklanırsa "31 Aralık 23:30 İstanbul" UTC'de
+  "31 Aralık 20:30" olur, gün doğru; ama "1 Ocak 01:00 İstanbul" UTC'de
+  **31 Aralık 22:00** — gün kayar, doğum günü bir gün erkene gelir.
+- **"Gün sonu", "bu ay", "son başvuru saati 17:00"** gibi kurallar **İstanbul
+  saatinde** hesaplanır, sonra UTC'ye çevrilir — `date-fns-tz` ile
+  `zonedTimeToUtc("2026-09-30T17:00", "Europe/Istanbul")`. UTC'de "gün sonu"
+  almak, İstanbul'da gün sonundan 3 saat sapar.
+- Türkiye yaz saati uygulamıyor (sabit UTC+3) ama kural **yine `Europe/Istanbul`
+  adıyla** yazılır, `+03:00` sabit sayı olarak değil — politika değişirse tek
+  yerden düzelir; geçmiş tarihlerde (2016 öncesi) sapma zaten var.
+- Planlı görevler (`cron`) İstanbul saatiyle tanımlanır ve bu açıkça yazılır
+  (`12-operations-and-scaling.md` → *"Planlı görevler"*).
+- Kullanıcıya gösterilen her zaman damgasında dilim bellidir; "14:00" tek başına
+  yazılmaz, `14:00 (TSİ)` ya da bağlamdan kesinse en azından tek dilim.
 
 ## Kullanıcıya görünen metin (copy) kuralları
 - Sade, kısa, teknik terimsiz Türkçe. "Hata: 500" değil → "Şu an bağlanamıyoruz, biraz sonra tekrar deneyin."

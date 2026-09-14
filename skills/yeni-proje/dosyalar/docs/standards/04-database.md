@@ -299,7 +299,7 @@ proje moduna göre"*): köprünün iki yanı aynı dilde olur, `@map` yalnızca
 > yazılır; zaten model başına birkaç satırdır.
 - Yabancı anahtar: `<tekil_tablo>_id` (`user_id`)
 - Boolean: `is_`/`has_` öneki (`is_active`)
-- Tarih: `created_at`, `updated_at`, `deleted_at` (UTC saklanır, ekranda TR saatine çevrilir)
+- Tarih: `created_at`, `updated_at`, `deleted_at` — `TIMESTAMPTZ`, UTC; saatsiz gün (`DATE`) ayrımı ve hesaplama kuralları `02-coding-standards.md` → *"Zaman dilimi"*
 
 ## ⭐ VERİ MODELİNİ GÖRMEK — tablolar ve ilişkiler gözle izlenir
 

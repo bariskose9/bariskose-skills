@@ -138,7 +138,7 @@ aynı kalır — SDK aynı, yalnızca adres değişir.
 ## Performans ve büyütme sırası
 Büyütme kararı **ölçümle** verilir, tahminle değil. Sıra:
 1. **Sorgu ve index düzeltmesi** (kazancın çoğu burada)
-2. **Önbellek**: dış API yanıtları, nadiren değişen listeler (ISR / route cache)
+2. **Önbellek**: etiketli veri önbelleği + yazarken geçersiz kılma, dış API yanıtları (`01-architecture.md` → *"Önbellek ve tazelik"*)
 3. **CDN**: statik içerik ve görseller (Next.js Image ile otomatik boyutlandırma)
 4. **Bağlantı havuzu**: sunucusuz ortamda Prisma için pooler kullan
 5. **Yatay ölçekleme**: Vercel otomatik; kendi sunucunda kopya sayısı artırılır.
