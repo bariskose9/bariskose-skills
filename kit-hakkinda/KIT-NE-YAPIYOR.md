@@ -1,6 +1,6 @@
 # `proje-kiti` — Kit Ne Yapıyor
 
-**Sürüm:** 3.9.1 · **Tarih:** 2026-09-14
+**Sürüm:** 3.10.0 · **Tarih:** 2026-09-14
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Bu belge, kitin **kurulumdan canlıya çıkışa kadar** ne yaptığını anlatır.
@@ -112,8 +112,11 @@ kurulur; yoksa kurulmaz).
 görünüm sonra).
 
 ### Adım 3b — Stack kararı
-⭐ **Teknoloji şimdi seçilir, PRD bittikten sonra.** Backend kurgusu (4 soru),
-API biçimi (4 soru), iş kuyruğu ve ani yük önlemleri burada karara bağlanır.
+⭐ **Teknoloji şimdi seçilir, PRD bittikten sonra.** Kurgu — yalnızca arayüz mü,
+Next tek başına mı, Next + NestJS mi, yalnızca API mi — iki belirleyici soruyla
+(API'yi başkası tüketecek mi · kendiliğinden çalışan iş var mı; kurum projesinde
+varsayılan Next + NestJS), API biçimi (dört soru), iş kuyruğu ve ani yük
+önlemleri burada karara bağlanır (`00-stack.md` → *"DÖRT KURGU"*).
 
 *Gerekçe:* o sorular aslında **ürün sorusudur** — *"API'yi başkası tüketecek mi",
 "kendiliğinden çalışan iş var mı"*. Cevapları PRD'de çıkar. Önce sorulursa
@@ -168,7 +171,7 @@ Testlerin yeşil olması "bitti" demek değil. Sırayla beş göz:
 ### Etki alanı
 Her özellikte üç soru **yazılı** cevaplanır: hangi başka ekranlar · hangi başka
 API uçları · hangi eski kayıtlar etkilendi. ⛔ *"Sadece şu dosyaya dokundum"*
-cevap değildir; etkilenenlerden en az biri fiilen açılır.
+cevap değildir; etkilenenlerin hepsi fiilen açılıp kontrol edilir.
 
 ### Öğretme zorunluluğu
 

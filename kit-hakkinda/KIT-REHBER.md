@@ -1,6 +1,6 @@
 # `proje-kiti` — Ne Yapıyor, Nasıl Yapıyor
 
-**Sürüm:** 3.9.1 · **Tarih:** 2026-09-14
+**Sürüm:** 3.10.0 · **Tarih:** 2026-09-14
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Terimler ilk geçtikleri yerde açıklanır. Sonda toplu bir sözlük vardır.
@@ -98,9 +98,14 @@ kendi kodunu yazarsın.
 | Ne | Nedir | Neden |
 |---|---|---|
 | **PostgreSQL** | İlişkisel veritabanı. Veriler tablolarda durur, tablolar birbirine bağlanır | Başvuru, kayıt, randevu gibi işler doğası gereği ilişkisel |
-| **Prisma** | ORM — kod ile veritabanı arasındaki çevirmen. SQL yazmak yerine `prisma.user.findMany()` yazarsın (kod adları İngilizce, açıklama Türkçe) | Şema tek dosyada okunur; yazım hatasını derleme anında yakalar |
+| **Prisma** | ORM — kod ile veritabanı arasındaki çevirmen. SQL yazmak yerine `prisma.user.findMany()` yazarsın (kod adı proje moduna göre İngilizce ya da Türkçe, açıklama her zaman Türkçe) | Şema tek dosyada okunur; yazım hatasını derleme anında yakalar |
 | **Zod** | Gelen verinin beklenen biçimde olduğunu kontrol eden kütüphane | Dışarıdan gelen hiçbir veriye güvenilmez |
-| **NestJS** | Ayrı bir sunucu uygulaması yazmak gerektiğinde kullanılan çatı | Yalnızca gerekiyorsa; çoğu projede Next.js tek başına yeter |
+| **NestJS** | Ayrı bir sunucu uygulaması (API) yazmak için çatı. *Gerçek hayat:* dükkân ile depoyu ayrı binaya koymak — depoya başka dükkânlar da sipariş verebilir. Next.js'in içindeki API "kendi vitrinim için"dir; NestJS'inki başkasının da tüketebileceği, belgesi olan bir üründür | İki durumda: API'yi **başkası** da tüketecekse (mobil, başka müdürlük) ya da kimse ekranı açmasa da çalışması gereken iş varsa (gece raporu, SMS kuyruğu). Kurum projesinde **varsayılan budur** — kurum sistemleri birbirine bağlanır. Kendi projede çoğu zaman Next.js tek başına yeter. Dört kurgu ve karar ağacı: `00-stack.md` → *"DÖRT KURGU"* |
+| **Redis** | RAM'de çalışan çok hızlı bir "not defteri" sunucusu; PostgreSQL gibi ayrı bir süreç. *Gerçek hayat:* tezgâhın altındaki hızlı erişilen çekmece — arşiv (PostgreSQL) değil, elinin altındaki şeyler | Kuyruktaki işler burada bekler; sık okunan küçük şeyler (oturum sürüm numarası) burada önbelleklenir; iki sunucu kopyası birbirine olay duyurur |
+| **BullMQ** | "Sonra yap" listesi — iş kuyruğu. Uygulama işi listeye yazar, ayrı bir çalışan (worker) sırayla alır; olmazsa yeniden dener. *Gerçek hayat:* kargo şubesi — paketi bırakırsın, fiş alırsın, teslimatı kurye sonra yapar | SMS, e-posta, PDF, rapor gibi işler kullanıcıyı bekletmez; sunucusuz ortamda çalışmaz (orada Inngest/QStash) |
+| **argon2 + JWT** | argon2: şifreyi geri döndürülemez biçimde saklayan özet algoritması. JWT: kullanıcının "giriş yaptım" belgesi — sunucunun imzaladığı, tarayıcıda çerezde taşınan küçük bir kart | Şifre veritabanında açık durmaz; her istekte veritabanına "bu kim" diye sorulmaz, imza yeter (`05-auth-security.md`) |
+| **FileStorage adaptörü** | Yüklenen dosyanın nerede durduğunu bilen tek katman; arkasında S3-uyumlu depo (Cloudflare R2, kurumda MinIO), Vercel Blob ya da kalıcı disk. *Gerçek hayat:* priz — cihaz arkasında santral mi jeneratör mü bilmez | Dosya konteynerin içine yazılmaz (kutu yeniden açılınca kaybolur); `public/` altına asla (herkes okur). Kural `05-auth-security.md` → *"Dosya yükleme ve depolama"* |
+| **react-email + Mailer adaptörü** | E-posta şablonu bir React bileşeni olarak yazılır, tarayıcıda önizlenir; gönderici (Resend / kurum geçidi / sahte) ortam değişkeniyle seçilir | Şablon metni koda gömülmez; local'de gerçek posta gitmez, konsola yazılır |
 
 **ORM** (Object-Relational Mapping): veritabanı tablolarını koddaki nesnelere
 eşleyen katman.
@@ -113,10 +118,11 @@ bağlandığı yapı. Örnek: `users` (kullanıcılar) tablosu ve `appointments`
 
 | Ne | Nedir |
 |---|---|
-| **Vercel** | Next.js projelerini internette yayınlayan servis |
+| **Vercel** | Next.js projelerini internette yayınlayan servis — kendi projede. Kurum projesinde yayın yeri kurumun sunucusudur; DevOps yayınlar, sen teslim paketi hazırlarsın (`13-environments.md` → *"Yol C"*) |
 | **Docker** | Uygulamayı, çalışması için gereken her şeyle birlikte bir kutuya (container/konteyner) koyan araç. *"Bende çalışıyordu"* sorununu bitirir |
-| **GitHub Actions** | Her kod değişikliğinde testleri otomatik çalıştıran sistem (**CI** — sürekli entegrasyon) |
-| **Sentry** | Canlıdaki hataları yakalayıp sana bildiren servis |
+| **GitHub Actions / GitLab CI** | Her kod değişikliğinde testleri otomatik çalıştıran sistem (**CI** — sürekli entegrasyon). Adımlar tek bir betikte (`ci:verify`) durur, platform dosyası onu çağırır; kurumda hat merkezî depodan gelebilir, o zaman kapı push öncesi kancaya taşınır (`09-ci-cd-deploy.md`) |
+| **husky + lint-staged** | Git kancaları: commit'ten önce biçim/lint, push'tan önce tip denetimi ve testler — kırık kod makineden çıkmaz. *Gerçek hayat:* sevkiyattan önce depoda yapılan kontrol | CI'nın yerine değil önüne; kurumda hat bizim testi koşturmuyorsa tek kapı budur |
+| **Sentry / GlitchTip** | Canlıdaki hataları yakalayıp sana bildiren servis — uçağın kara kutusu: hata nerede, hangi adımlardan sonra, kaç kez. Kurum projesinde veri dışarı çıkamayacağı için kurum içine kurulan **GlitchTip** (aynı SDK, adres değişir) ya da kurumun izleme aracı | Kullanıcı hatayı bildirmez, siteyi terk eder; kara kutu olmadan hata görünmez (`12-operations-and-scaling.md`) |
 
 **Deploy (yayına alma):** kodu, kullanıcıların erişebileceği bir sunucuya
 yükleyip çalıştırmak.
@@ -265,7 +271,7 @@ doğrular, **doğru şeyi yaptığını** değil. Sırayla beş göz:
 
 Her özellikte üç soru **yazılı** cevaplanır: hangi başka ekranlar · hangi başka
 API uçları · hangi eski kayıtlar etkilendi. ⛔ *"Sadece şu dosyaya dokundum"*
-cevap değildir; etkilenenlerden **en az biri fiilen açılıp** kontrol edilir.
+cevap değildir; etkilenenlerin **hepsi fiilen açılıp** kontrol edilir.
 
 ### Öğretme zorunluluğu
 
@@ -277,6 +283,15 @@ iner: terimi açar, örnek verir.
 Ajan ne kontrol ettiğini **ve neden o kontrolü yaptığını** anlatır. ⛔ *"Test
 geçti"* tek başına rapor değildir — neyin test edildiği söylenmezse neyin test
 **edilmediği** bilinemez. Öğrenilen yeni terimler seviye defterine eklenir.
+
+### Sıra ve akış — "önce ne yazılır, uygulama nasıl çalışır"
+
+Bu belge teknolojileri **tek tek** anlatır; hangi kararın hangisinden önce
+geldiği, bir isteğin hangi parçalardan sırayla geçtiği ve uygulamanın ayağa
+kalkarken ne yaptığı ayrı bir belgede: `UCTAN-UCA-YOLCULUK.md`. Orada bir
+belediye başvuru sistemi üstünden yedi gerçek senaryo var — başarılı giriş,
+bağlantı kopması, başvuru oluşturma, memur onayı, gece raporu, ani yük, canlı
+hata — ve sık yapılan mantık hatalarının düzeltilmiş hâli.
 
 ### Dış QA aracı (TestSprite gibi)
 

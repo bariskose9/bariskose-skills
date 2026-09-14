@@ -124,6 +124,7 @@ plugin'i kuran herkes görür.
 | Dosya | Kim okur | Ne |
 |---|:--:|---|
 | `KIT-REHBER.md` | **Sen** | ⭐ **Terim terim anlatım** — Claude Code nedir, hangi teknoloji ne işe yarar, sekiz adım, kurulumdan sonraki döngü, 19 kural dosyası, sözlük ve ⭐ **Ek: kitin nerede durduğu / projene ne geldiği**. Hiç bilmeyen biri buradan başlar |
+| `UCTAN-UCA-YOLCULUK.md` | **Sen** | ⭐ **Sıra ve akış** — dört kurgu belediye örnekleriyle, önce ne yazılır neden, açılış sırası, bir isteğin hattı, yedi gerçek senaryo, yanlış mantıkların düzeltilmişi |
 | `KIT-NE-YAPIYOR.md` | **Sen** | ⭐ **Döngü ve kapılar** — dış bağımlılıklar, sekiz adım, özellik sonrası beş göz, sekiz ajan kapısı, kitin nasıl büyüdüğü |
 | `TARTISILMIS-KARARLAR.md` | İkisi | Kesinleşmiş kararlar ve **yeniden tartışılmayacak** konular. ⚠️ `15-oturum-devri-kurallari.md` **kuraldır**, bu **sonuçtur** |
 | *(defter artık `skills/.../sablonlar/calisilacak-konular.md` içinde)* | — | Tek defter kitle birlikte gelir; `docs/` altında ayrı kopya yok |

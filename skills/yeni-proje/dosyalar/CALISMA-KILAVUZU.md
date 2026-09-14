@@ -207,7 +207,7 @@ Gerisi sohbet. Sırayla şunlar olur:
 | **1** | Kim için · proje tipi · **elimizde ne hazır** · kurum bir şey dayatıyor mu · proje adı | Cevaplar |
 | **2** | Kit dosyaları projeye kopyalanır | — |
 | **3** | ⭐ **PRD görüşmesi** — en uzun adım | Analiz dokümanını verirsin, tek tek soru cevaplarsın |
-| **3b** | ⭐ **Stack kararı** — backend kurgusu (4 soru) · API biçimi (4 soru) · kuyruk | Onay |
+| **3b** | ⭐ **Stack kararı** — kurgu (dört kurgudan biri; iki belirleyici soru) · API biçimi (4 soru) · kuyruk | Onay |
 | **4** | Yol haritası, ilk kararlar, teknoloji-ve-plan iskeleti | Onay |
 | **5** | İskelet kurulur — ilk kod | Onay |
 | **6** | Yayın veya teslim paketi (1. adımdaki cevaba göre) | Duruma göre |
@@ -224,8 +224,8 @@ yayılır.
 ### ⭐ Neden stack kararı PRD'DEN SONRA
 
 Adım 1 teknoloji seçmez; yalnızca **kısıtları** toplar (kim için, elde ne var,
-kurum ne dayatıyor). Asıl karar Adım 3b'dedir. Sebebi şu: backend kurgusunu
-belirleyen dört soru aslında **ürün sorusudur** —
+kurum ne dayatıyor). Asıl karar Adım 3b'dedir. Sebebi şu: kurguyu
+belirleyen iki soru aslında **ürün sorusudur** —
 
 - *"API'yi senin yazmadığın biri tüketecek mi?"*
 - *"Kullanıcı istek atmasa da kendiliğinden çalışması gereken iş var mı?"*
@@ -823,9 +823,9 @@ Sunucuya SSH ile girmiyorsun, işletim sistemi güncellemiyorsun.
 | **Uygulama barındırma** | **Vercel** | Next.js'i çalıştırır; her `git push`'ta kendiliğinden yeni sürümü yayına alır | Kodun çalışacağı bir makine lazım |
 | **Veritabanı** | **Neon** (yönetilen PostgreSQL) | Veriyi saklar, yedekler, ölçekler | Uygulama kapansa da veri kalmalı |
 | **Alan adı + DNS + SSL** | **Cloudflare** | `bakim.izmir.bel.tr` yazınca isteğin doğru makineye gitmesi; `https://` kilidi | İnsanlar IP adresi ezberlemez |
-| **Dosya depolama** | **Vercel Blob** / Cloudflare R2 | Yüklenen görsel ve belgeler | Dosyalar veritabanında ve depoda tutulmaz |
+| **Dosya depolama** | **S3-uyumlu** (Cloudflare R2) — Vercel Blob da kabul | Yüklenen görsel ve belgeler; uygulama `FileStorage` adaptörüne konuşur, depo ortam değişkeniyle seçilir | Dosya konteynerde ve `public/` altında tutulmaz; kurumda MinIO ya da kalıcı disk (`05-auth-security.md` → *"Dosya yükleme ve depolama"*) |
 | **E-posta** | **Resend** | Doğrulama ve bildirim e-postaları | Kendi sunucundan atılan mail spam'e düşer |
-| **Hata takibi** | **Sentry** | Canlıda oluşan hataları yakalar, yığın izini gösterir | Kullanıcı hatayı bildirmez, sadece siteyi terk eder |
+| **Hata takibi** | **Sentry** (kurumda **GlitchTip** — aynı SDK, kurum içinde) | Canlıda oluşan hataları yakalar, yığın izini gösterir | Kullanıcı hatayı bildirmez, sadece siteyi terk eder |
 | **Kuyruk** *(gerekiyorsa)* | **Upstash Redis** | Arka plan işleri | Sunucusuz ortamda sürekli çalışan süreç yok |
 
 **Akış:**

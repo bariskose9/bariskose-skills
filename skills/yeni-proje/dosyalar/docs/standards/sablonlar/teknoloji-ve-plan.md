@@ -91,13 +91,16 @@ tarihi, sürüm kısıtı). *"Bence daha iyi"* yazılmaz.
 
 # BÖLÜM E — Kavramlar, prensipler, desenler
 
-<Kurulan paketler değil, verilen kararlar. Her kavram ÜÇ adımda:>
+<Kurulan paketler değil, verilen kararlar. Her kavram DÖRT adımda — dört adım
+şablon değil kontrol listesi; anlatım akar, ilk geçen her terim yerinde açılır
+(`11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"*):>
 
+0. **Adı ve eş anlamlıları** — Türkçe ve İngilizce, eğik çizgiyle
 1. **Gerçek hayattan karşılığı** — çarpıcı benzetme
-2. **Yazılımdaki tanımı** — sektör terimiyle
+2. **Yazılım dünyasındaki tanımı** — sektör terimiyle ve başka bir teknolojide aynı kavram
 3. **BU projede tam olarak nerede** — hangi ekran, hangi tablo, hangi sorun
 
-⛔ Üçüncü adım atlanamaz. *"Katmanlar ayrılır"* hiçbir şey öğretmez;
+⛔ Üçüncü ve dördüncü adım atlanamaz. *"Katmanlar ayrılır"* hiçbir şey öğretmez;
 *"ORM değişse yalnızca altyapı katmanı etkilenir"* öğretir.
 
 **E.0 olarak temel kelimeler yazılır:** sınıf, nesne, metot, arayüz, katman,

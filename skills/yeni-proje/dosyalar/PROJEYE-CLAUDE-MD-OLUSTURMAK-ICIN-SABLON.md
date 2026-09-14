@@ -317,7 +317,8 @@ STACK          : <fiilen kurulan stack — detayı docs/standards/00-stack.md>
 DEPLOY         : <hosting + veritabanı + CI>
 ANA DAL        : main
 DİL (arayüz)   : Türkçe
-DİL (kod)      : İngilizce (değişken, fonksiyon, tablo, kolon, enum, commit mesajı)
+DİL (kod)      : <kendi projem: İngilizce · işyeri + kurumun Türkçe DB standardı: Türkçe (Türkçe karaktersiz) — 02-coding-standards.md> · commit mesajı her modda İngilizce
+KURGU          : <[A] yalnızca arayüz | [B] Next tek başına | [C] Next + NestJS | [D] yalnızca API — 00-stack.md "DÖRT KURGU">
 ```
 
 **Varsayılan stack** (aksini söylemezsen bu kurulur):
@@ -529,7 +530,7 @@ Detay: `docs/standards/15-oturum-devri-kurallari.md`.
   → `production` (`main`'e merge). Ayrı "test projesi" açılmaz. Detay: `13-environments.md`
 - Her ortamın kendi veritabanı ve kendi anahtarları vardır. Ortamlar veri paylaşmaz;
   production verisiyle test yapılmaz. Canlı anahtar local'de kullanılmaz.
-- `migrate dev` sadece local'de; preview ve production'da `migrate deploy`.
+- Kendi projede `migrate dev` sadece local'de, preview/production'da `migrate deploy`; kurum modunda migration kurum biçiminde SQL (`V__`) + koşucu, Prisma yalnızca istemci (`04-database.md` → *"MIGRATION ARACI"*).
 - Preview ve local ortamlar `noindex` olur ve ekranda ortam etiketi gösterir.
 - Uygulama **12-factor**: yapılandırma ortam değişkeninden gelir, süreç durumsuzdur,
   aynı yapı her ortamda çalışır. Ortam değişkeni koda gömülmez.
@@ -544,7 +545,7 @@ Detay: `docs/standards/15-oturum-devri-kurallari.md`.
 - Sağlık ucu `GET /api/health` (uygulama + veritabanı) her projede bulunur.
 - Loglar yapılandırılmış (JSON); `console.log` ile hata ayıklama çıktısı bırakılmaz.
   Log'a şifre, token, kart numarası, kimlik numarası **yazılmaz**.
-- Üretimdeki her istisna hata takip aracına (Sentry) düşer. Sessiz hata kabul edilmez.
+- Üretimdeki her istisna hata takip aracına (Sentry; kurumda GlitchTip veya kurumun aracı) düşer. Sessiz hata kabul edilmez.
 - Dış servis çökerse uygulama çökmez: ilgili bölüm hata durumu gösterir, sayfa ayakta kalır.
   Dış çağrılarda timeout zorunlu, yeniden deneme en fazla 2 kez ve üstel geri çekilmeli.
 - Yedek otomatik ve **denenmiş** olur; denenmemiş yedek yedek sayılmaz.

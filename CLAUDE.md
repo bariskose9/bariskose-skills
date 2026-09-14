@@ -129,6 +129,7 @@ açılmıştır:
 | `TARTISILMIS-KARARLAR.md` | Yeni oturum kararları görmeli |
 | `kit-hakkinda/KIT-REHBER.md` | Plugin'i kuran kişi kiti anlamalı |
 | `kit-hakkinda/KIT-NE-YAPIYOR.md` | Aynı — döngü ve kapılar |
+| `kit-hakkinda/UCTAN-UCA-YOLCULUK.md` | Sıra ve akış: yazım sırası, açılış sırası, istek hattı, senaryolar — kural değişince senaryolar da |
 
 Geri kalan her şey (PDF'ler, oturum notları, yazışmalar) diskte kalır;
 yayınlanacaksa **önce kullanıcıya sorulur.**
