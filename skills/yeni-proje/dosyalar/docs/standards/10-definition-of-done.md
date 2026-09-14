@@ -88,4 +88,4 @@ gelmeyeceği biliniyorsa **risk olarak yazılır**, sessizce atlanmaz.
 | **Gerçek kullanıcıyla erişilebilirlik** | axe CI'da, klavye ve ekran okuyucu akışı kurulu (`07-ui-design-system.md`) | Otomatik denetim WCAG sorunlarının kabaca **üçte birini** yakalar; "görme engelli vatandaş formu bitirebiliyor mu" ancak o insanın denemesiyle bilinir |
 
 - [ ] Dördü için hazırlık teslim paketinde; sonuç geldiyse `altyapi-durumu.md`'de,
-      gelmediyse `PRD.md` → *Riskler*'de **açıkça** yazılı
+      gelmediyse `PRD.md` → *"Varsayımlar — doğrulanmayı bekleyen kararlar"*'da **açıkça** yazılı
