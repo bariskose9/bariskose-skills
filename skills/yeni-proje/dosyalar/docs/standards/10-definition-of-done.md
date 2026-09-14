@@ -72,3 +72,20 @@ Bir iş, aşağıdaki maddelerin **tamamı** işaretlenmeden "bitti" sayılmaz.
 - [ ] PR açıldı, CI yeşil, preview URL doğrulandı
 - [ ] Mimari karar alındıysa ADR yazıldı
 - [ ] Bilinen eksikler açıkça bildirildi (sessizce bırakılmadı)
+
+### ⭐ Dört dış kanıt — kit hazırlar, sonucu dışarıdan bekler
+
+Bu dördünün **nasıl** yapılacağı bilinir ve hazırlığı ajanındır; ama sonucu
+ajan üretemez, çünkü kanıt gerçek dünyadan gelir: **ölçüm · bağımsızlık ·
+sorumluluk · gerçek insan.** "Canlıya hazır" bunlar gelmeden söylenmez;
+gelmeyeceği biliniyorsa **risk olarak yazılır**, sessizce atlanmaz.
+
+| Kanıt | Ajan ne hazırlar | Sonuç neden dışarıdan gelir |
+|---|---|---|
+| **Yük testi sayıları** | k6 senaryosu (eş zamanlı kullanıcı, %95 gecikme eşiği), CI'a bağlı | Sayı bir **ölçümdür**: kurumun sunucusunda, gerçek ağda, gerçek veri boyutuyla koşulunca çıkar; DevOps koşturur (`12-operations-and-scaling.md` → *"ANİ YÜK"*) |
+| **Sızma testi (pentest)** | İç güvenlik incelemesi (`05-auth-security.md` OWASP listesi, `security-and-hardening`) | Pentest tanım gereği **bağımsızdır** — kodu yazan taraf kendi kodunu "test etti" diyemez; yazılı yetki ister; gerçek sistemde denenir |
+| **KVKK metinlerinin hukuk onayı** | Aydınlatma metni, işleyici listesi, saklama politikası **taslağı** (`14-privacy-and-compliance.md`) | Mesele doğruluk değil **sorumluluk**: imza atan hukukçu cezai sorumluluğu taşır; devredilemez |
+| **Gerçek kullanıcıyla erişilebilirlik** | axe CI'da, klavye ve ekran okuyucu akışı kurulu (`07-ui-design-system.md`) | Otomatik denetim WCAG sorunlarının kabaca **üçte birini** yakalar; "görme engelli vatandaş formu bitirebiliyor mu" ancak o insanın denemesiyle bilinir |
+
+- [ ] Dördü için hazırlık teslim paketinde; sonuç geldiyse `altyapi-durumu.md`'de,
+      gelmediyse `PRD.md` → *Riskler*'de **açıkça** yazılı
