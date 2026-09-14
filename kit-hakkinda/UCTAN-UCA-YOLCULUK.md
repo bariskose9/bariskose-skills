@@ -1,6 +1,6 @@
 # Uçtan Uca Yolculuk — bir proje nasıl yazılır, nasıl çalışır
 
-**Sürüm:** 3.10.0 · **Tarih:** 2026-09-14
+**Sürüm:** 3.11.0 · **Tarih:** 2026-09-14
 
 > Bu belge kitin **sırasını** anlatır: hangi karar hangisinden önce, hangi kod
 > hangisinden sonra, uygulama ayağa kalkarken ve bir istek gelirken parçalar
@@ -264,7 +264,7 @@ Sık yanlış anlaşılan yer burası; adım adım düzeltilmiş hâli:
 | 7 | Sonuç: veritabanında `last_login_at` güncel, `login_events`'te "başarılı" satır var; kullanıcı ekranda "bağlantı hatası" görüyor | İki taraf **tutarsız görünür** ama veri **doğru** |
 | 8 | Kullanıcı tekrar basar → giriş **idempotent** (aynı işi iki kez yapmak zarar vermez): yeni `last_login_at`, yeni `login_events` satırı, yeni JWT. Sorun yok | |
 | 9 | Aynı senaryo **para/başvuru** için: ikinci basış **ikinci başvuru** üretirdi. Bunun için **idempotency anahtarı**: istemci her göndermede aynı rastgele anahtarı yollar; sunucu "bu anahtarı gördüm, işte cevabı" der, ikinci kez yazmaz (`03-api-guidelines.md`) | Kural şu an ödeme/sipariş için; başvuru gönderimi gibi tekrar edilemez her yazmaya genellenmeli — **Bölüm 7, boşluk 3** |
-| 10 | Kuyruk: OTP SMS işi 3. adımda commit'ten **sonra** `queue.add` ile atılmışsa gider; **commit'ten önce** atılmışsa ve transaction 3'te patlasaydı — kayıt yok ama SMS gitmiş olurdu (hayalet iş) | ⛔ Kuyruğa **commit'ten sonra** atılır; bu kural kitte yazılı değil — **Bölüm 7, boşluk 1** |
+| 10 | Kuyruk: OTP SMS işi 3. adımda commit'ten **sonra** `queue.add` ile atılmışsa gider; **commit'ten önce** atılmışsa ve transaction 3'te patlasaydı — kayıt yok ama SMS gitmiş olurdu (hayalet iş) | ⛔ Kuyruğa **commit'ten sonra** atılır; kural `00-stack.md` → *"Kuyruğa ne zaman atılır"* |
 | 11 | BullMQ'da `cancelled` durumu **yoktur**; atılmayan iş hiçbir durumda değildir, atılıp başarısız olan `failed`'dir | |
 | 12 | Arayüz: form sıfırlanmaz, girilen e-posta durur, kırmızı uyarı "Bağlantı hatası — tekrar deneyin" (`07-ui-design-system.md` → yazma durumları) | |
 
@@ -357,12 +357,12 @@ DevOps: MinIO bakımda. Kod hatası değil, altyapı. Geri alma gerekmedi; gerek
 
 ---
 
-## 7. Bu belge yazılırken bulunan boşluklar — öneri
+## 7. Bu belge yazılırken bulunan boşluklar — kapatıldı (3.11.0)
 
-| # | Boşluk | Kitte durum | Öneri (yazılırsa nereye) |
-|---|---|---|---|
-| 1 | **Kuyruğa ne zaman atılır** — commit'ten sonra; ya da transactional outbox (işi `outbox` tablosuna aynı transaction'da yaz, ayrı süreç Redis'e taşır) | Hiç yok (`grep outbox` → 0) | `00-stack.md` → *"İş kuyruğu"* altına kural + outbox'ın ne zaman gerektiği (SMS kaybı kabul edilemezse) |
-| 2 | **İş alanı durum makinesi** — durum geçiş tablosu kodda, yasak geçiş, olay kaydı | Yalnızca bir kod yorumunda; defterde konu olarak var, kural yok | `01-architecture.md` → servis katmanı altına *"Durum makinesi"*: `as const` durumlar + geçiş tablosu + `application_events` |
-| 3 | **İdempotency genelleme** — ödeme dışında tekrar edilemez her yazma (başvuru gönderimi) | Yalnızca ödeme/sipariş için tek satır | `03-api-guidelines.md`: idempotency anahtarı kuralı; istemci tarafı yeniden deneme politikası (TanStack `retry`, zaman aşımı) |
-| 4 | **Açılış sırası** — ne patlarsa kap düşer, ne loglanır devam eder | `/api/health` var; sıra ve karar yok | `12-operations-and-scaling.md` → *"Çalışma zamanı"*: Bölüm 3'teki sıra kural olarak |
-| 5 | Özet belgeler bayattı — "en az biri" | `KIT-REHBER.md`, `KIT-NE-YAPIYOR.md` | ✅ Bu belgeyle birlikte düzeltildi |
+| # | Boşluk | Artık nerede |
+|---|---|---|
+| 1 | Kuyruğa ne zaman atılır — commit'ten sonra; kayıp kabul edilemezse **outbox** | `00-stack.md` → *"Kuyruğa ne zaman atılır"* |
+| 2 | **İş alanı durum makinesi** — durumlar, geçiş tablosu, tek kapı, olay tablosu | `01-architecture.md` → *"Durum makinesi"* |
+| 3 | **İdempotency** genelleme + istemci yeniden deneme politikası | `03-api-guidelines.md` → *"İdempotency"* |
+| 4 | **Açılış sırası** — ne yokken düşer, ne yokken devam eder; kapanış | `12-operations-and-scaling.md` → *"Açılış sırası"* |
+| 5 | Özet belgelerdeki bayat "en az biri" | ✅ düzeltildi |

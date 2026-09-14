@@ -327,6 +327,46 @@ sağlamak zorunda:
 ⛔ Bu üç şart olmadan liste bir kaçış kapısına dönüşür: şema yazmak yerine adı
 listeye eklemek kolaylaşır ve borç hiç kapanmaz.
 
+## İdempotency — tekrar edilemez her yazma için anahtar
+
+**İdempotent / idempotency / tekrar-güvenli:** aynı işlemi iki kez yapmanın
+bir kez yapmakla aynı sonucu vermesi. *Gerçek hayat:* asansör düğmesi — beş
+kez basınca beş asansör gelmez. Dilekçe vermek idempotent **değildir**: iki
+kez verirsen iki dilekçe açılır. Okuma (GET) doğal olarak idempotent; "oluştur"
+(POST) değil.
+
+**Sorun:** cevap ağda kayboldu, kullanıcı tekrar bastı — ya da çift tıkladı.
+Giriş için zararsız; başvuru gönderimi için **ikinci başvuru**, ödeme için
+**ikinci tahsilat**. ⛔ Kural yalnızca ödeme için değil, **tekrar edilemez her
+yazma** için: başvuru, randevu, mesaj, sipariş, ödeme.
+
+**Çözüm — idempotency anahtarı (`Idempotency-Key`):**
+
+| Taraf | Ne yapar |
+|---|---|
+| İstemci | Formu **açtığında** rastgele anahtar üretir (UUID); her göndermede `Idempotency-Key` başlığıyla yollar; başarısız tekrar **aynı anahtarla** gider; form başarıyla bitince yeni anahtar |
+| Sunucu | `idempotency_keys(key, user_id, response_status, response_body, created_at)` tablosu. Anahtar daha önce görüldüyse işlemi **yeniden yapmaz**, kaydedilmiş cevabı aynen döner; görülmediyse işler ve cevabı **aynı transaction'da** kaydeder. 24 saat sonra temizlenir |
+| Yarış | Aynı anahtarla iki istek **aynı anda** gelirse `key` üzerindeki unique index ikincisini durdurur; ikincisi bekler ve ilkinin cevabını döner |
+
+*Gerçek hayat:* evrak kayıt numarası — aynı numarayla ikinci kez gelen
+dilekçe "zaten kayıtlı, işte numaran" diye geri döner; ikinci dosya açılmaz.
+
+**İstemci yeniden deneme politikası** (`07-ui-design-system.md` → yazma
+durumları ile birlikte):
+
+| İstek | Zaman aşımı | Otomatik yeniden deneme |
+|---|---|---|
+| Okuma (GET) | 10 sn | TanStack Query `retry: 3`, üstel bekleme (1 · 2 · 4 sn) |
+| Yazma (POST/PATCH/DELETE) | 10 sn | ⛔ `retry: 0` — kullanıcı düğmeye **kendisi** basar, aynı anahtar gider; sessiz tekrar çift kayıt riskidir |
+| `429` | — | `Retry-After` başlığına uyulur; öncesinde denenmez |
+| `5xx` | — | Okumada yeniden dene; yazmada kullanıcıya "tekrar deneyin" |
+
+Kuyruk işleri de idempotenttir: iş verisinde mesaj kimliği taşınır, worker
+aynı kimlikle ikinci kez göndermez (`00-stack.md` → *"Kuyruğa ne zaman
+atılır"* — outbox işi iki kez gönderebilir).
+
+⭐ **Kararı veren soru:** *"Bu istek iki kez işlenirse dünya değişir mi?"*
+Değişir → anahtar; değişmez → gerek yok.
+
 ## Diğer
-- Ödeme/sipariş gibi tekrarlanmaması gereken işlemlerde idempotency anahtarı kullanılır.
 - Uzun işlemler senkron beklemez.

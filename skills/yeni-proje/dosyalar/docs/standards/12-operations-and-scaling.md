@@ -12,6 +12,46 @@ kaybolur. Yüklenen dosya konteynerin diskine değil, `FileStorage`
 adaptörünün seçtiği depoya gider; `public/` altına asla
 (`05-auth-security.md` → *"Dosya yükleme ve depolama"*).
 
+### ⭐ Açılış sırası — ne yokken DÜŞER, ne yokken kısıtlı DEVAM EDER
+
+**Hızlı düşme / fail-fast** ile **kısıtlı devam / graceful degradation.**
+*Gerçek hayat:* uçağın kalkış kontrol listesi — yakıt göstergesi çalışmıyorsa
+**kalkmazsın**, havada öğrenmek felakettir; kabin eğlence sistemi bozuksa
+**kalkarsın**, yolculara duyurursun. Ayrım: o parça yokken uçak **yalan
+söyler mi** (yakıt var sanıp yok)?
+
+Konteyner açılırken bağımlılıklar **sırayla** kontrol edilir. Olmadan
+yaşayamayacağı şey yoksa uygulama **açılmaz ve nedenini yazar** — DevOps
+duman testinde görür; sessiz yarım açılmış uygulama (kullanıcı "kaydoldu"
+sanır, olmadı) bundan çok daha kötüdür. Olmadan kısıtlı yaşayabileceği şey
+yoksa **uyarı loglar, `/api/health` `degraded` döner**, açılır.
+
+```
+1. Ortam değişkenleri — Zod        ✗ → DÜŞ   (eksik değişken = bilinmeyen davranış)
+2. Migration (kurum, açılışta)     ✗ → DÜŞ   (şeması eksik uygulama "kolon yok" der)
+3. DI konteyneri kurulur
+4. Veritabanı havuzu               ✗ → DÜŞ   (onsuz hiçbir istek doğru cevaplanamaz; 5 sn zaman aşımı)
+5. Redis (kuyruk, önbellek)        ✗ → ADR: OTP/SMS zorunluysa DÜŞ; değilse DEGRADED + uyarı
+6. Worker süreci (ayrı konteyner)  kuyruğu dinler; repeatable (cron) işler kaydedilir
+7. HTTP dinleme + /api/health      { status: ok | degraded, checks: { db, redis, storage } }
+8. Ters vekil trafiği yeni kaba çevirir
+9. Eski kap SIGTERM alır → yeni istek kabul etmez → açık istekleri bitirir (≤ 30 sn) → kapanır
+   (graceful shutdown: `app.enableShutdownHooks()`; entrypoint `exec` ile başlatır ki sinyal Node'a ulaşsın)
+```
+
+| Bağımlılık | Yokken | Neden |
+|---|---|---|
+| Ortam değişkeni · veritabanı · migration | ⛔ Düş | Uygulama kullanıcıya yalan söyler |
+| Redis | ADR'ye göre | OTP'siz giriş yoksa uygulama zaten kullanılamaz; yalnızca rapor kuyruğuysa devam |
+| Dış servisler (KPS, SMS geçidi, e-Belediye) | ✅ Devam — **asla düşme** | İstek anında hata verilir; dış servis kapalı diye kurum sitesi kapanmaz (`integrations.md`) |
+| Dosya deposu | ⚠️ Degraded | Yükleme kapalı, okuma çalışır |
+| Hata takibi (Sentry/GlitchTip) | ✅ Devam | Gözlemleyen, gözlediğini düşüremez (yukarıda) |
+
+⭐ **Kararı veren soru:** *"Bu bağımlılık yokken uygulama kullanıcıya yalan
+söyler mi?"* Söyler → düş. Söylemez → devam et, uyar. Hangi bağımlılığın
+hangi kutuda olduğu `altyapi-durumu.md`'de yazılıdır.
+
+
 ## Loglama
 
 **Kütüphane:** ayrı backend varsa `nestjs-pino`, Next tek başınaysa `pino`.

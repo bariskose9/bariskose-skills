@@ -207,6 +207,62 @@ küçük kalmaz; kalanlarda da maliyet zaten sıfırdı.
 çürüten bir durum) ajan **önerir ve gerekçelendirir**; kullanıcı karar verir
 ve karar **ADR'ye** yazılır. Sessizce birleştirilmez.
 
+## ⭐ Durum makinesi — servis katmanının tek kapısı
+
+**Durum makinesi / state machine / iş akışı durumu:** bir kaydın alabileceği
+durumların listesi + **izinli geçişlerin** tablosu + her geçişte olan şeyler.
+*Gerçek hayat:* nüfus müdürlüğündeki işlem sırası — evrak teslim alınmadan
+onay damgası vurulmaz; sırayı memurun hafızası değil duvardaki **işlem
+şeması** belirler; hangi memur bakarsa baksın aynı sıra.
+
+**Sorun:** başvuru *beklemede → incelemede → onaylandı / reddedildi*, bir de
+*iptal*. "Reddedilen onaylanamaz" kuralı her uçta `if (status === …) throw`
+diye yazılırsa on yere dağılır; on birinci uçta unutulur ve reddedilen
+başvuru onaylanır. Kural **tek yerde**, geçiş **tek kapıdan**:
+
+```ts
+// features/applications/status.ts — durumlar ve geçiş tablosu; başka hiçbir yerde tekrarlanmaz
+export const STATUS = ["pending", "in_review", "approved", "rejected", "cancelled"] as const;
+export type Status = (typeof STATUS)[number];
+
+// Hangi durumdan hangisine geçilebilir — boş dizi = son durum, geri dönüş yok
+export const TRANSITIONS: Record<Status, readonly Status[]> = {
+  pending:   ["in_review", "cancelled"],
+  in_review: ["approved", "rejected"],
+  approved:  [],
+  rejected:  [],
+  cancelled: [],
+};
+
+// application.service.ts — TEK KAPI: durumu değiştirmenin başka yolu yoktur
+async transition(id: bigint, to: Status, actor: Actor) {
+  return this.prisma.$transaction(async (tx) => {
+    const app = await tx.application.findUniqueOrThrow({ where: { id } });
+    if (!TRANSITIONS[app.status].includes(to)) {          // yasak geçiş → 409, kayıt değişmez
+      throw new InvalidTransitionError(app.status, to);
+    }
+    await tx.application.update({ where: { id }, data: { status: to } });
+    await tx.applicationEvent.create({                     // kim, ne zaman, neyden neye — iş akışı geçmişi
+      data: { applicationId: id, from: app.status, to, actorId: actor.id },
+    });
+    // audit before-image'ı Prisma extension kendisi yazar (04-database.md → "Denetim kaydı")
+    return app;
+  });
+  // commit'ten SONRA: SMS / e-Belediye işi kuyruğa (00-stack.md → "Kuyruğa ne zaman atılır")
+}
+```
+
+| Kural | Neden |
+|---|---|
+| ⛔ Repository'de doğrudan `status` güncelleyen `update` **yok**; tek kapı `transition()` | Kapıyı atlayan bir uç, kuralı atlar |
+| Geçiş tablosu = **test tablosu**: her satır bir test ("rejected → approved fırlatır") | Tablo değişince test kırılır, kural sessizce gevşemez |
+| `application_events` ayrı tablo: iş akışı geçmişi ("3 kez incelemeye döndü") | Audit satırın tamamını tutar, olay tablosu akışı; ikisi ayrı soru cevaplar |
+| Durum değerleri tanım tablosunda **da** durur (`04-database.md` → *"Sabit değer kümesi"*); senkron testi | Tablo ekranın, kod kuralın kaynağı |
+| BullMQ'nun `waiting/active/completed/failed`'i ile **ilgisi yok** | O kuyruğun kendi makinesi; `sms` işi `failed` olsa başvuru yine onaylıdır |
+
+⭐ **Kararı veren soru:** *"Bu alanın yeni bir değerinde kod farklı mı
+davranıyor?"* Evet → durum makinesi; hayır → yalnızca tanım tablosu.
+
 ## Klasör yapısı — özellik bazlı
 
 ```

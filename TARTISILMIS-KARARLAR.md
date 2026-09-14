@@ -351,3 +351,13 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 | Çok dillilik: `next-intl`, çeviri tablosu, makine çevirisi kurumda yok; PRD sorusu 6.5 | `02-coding-standards.md` → *"Çok dillilik"* |
 | Zaman dilimi: `TIMESTAMPTZ` UTC · `DATE` saatsiz gün · hesap İstanbul'da · `TZ=UTC` | `02-coding-standards.md` → *"Zaman dilimi"* |
 | Yazma durumları (pending/başarılı/başarısız) ve iyimser UI kararı | `07-ui-design-system.md` → *"Yazma sırasında da durum vardır"* |
+
+### Ek — 2026-09-14, dördüncü tur (uçtan uca yolculuk belgesinden çıkan boşluklar)
+
+| Karar | Ev |
+|---|---|
+| Kuyruğa commit'ten sonra; kayıp kabul edilemezse transactional outbox; worker idempotent | `00-stack.md` → *"Kuyruğa ne zaman atılır"* |
+| İş alanı durum makinesi: `as const` durumlar + geçiş tablosu + tek kapı `transition()` + olay tablosu | `01-architecture.md` → *"Durum makinesi"* |
+| İdempotency anahtarı tekrar edilemez her yazmaya; istemci yeniden deneme politikası | `03-api-guidelines.md` → *"İdempotency"* |
+| Açılış sırası: düş / degraded / devam tablosu; graceful shutdown | `12-operations-and-scaling.md` → *"Açılış sırası"* |
+| `kit-hakkinda/UCTAN-UCA-YOLCULUK.md` — sıra ve akış belgesi; özet belgeler bugünkü kurallara çekildi | ICINDEKILER, CLAUDE.md yayılma tablosu |

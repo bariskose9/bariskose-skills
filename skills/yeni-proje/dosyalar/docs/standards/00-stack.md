@@ -475,6 +475,46 @@ yazılır.
 sunucun ayakta duruyorsa maliyet zaten ödenmiştir, o zaman BullMQ mantıklıdır.
 Karar ADR'ye yazılır.
 
+### ⭐ Kuyruğa ne zaman atılır — commit'ten sonra; kayıp kabul edilemezse outbox
+
+Başvuru kaydedilecek **ve** "başvurunuz alındı" SMS'i gidecek. Kayıt
+PostgreSQL'e, SMS işi Redis'teki kuyruğa yazılır — iki ayrı sistem.
+Transaction ("ya hepsi ya hiçbiri") yalnızca **PostgreSQL'in içinde**
+geçerlidir; Redis dışarıda. İkisini birden garanti edemezsin ve sıraya göre
+iki farklı kaza olur:
+
+| Sıra | Kaza | Sonuç |
+|---|---|---|
+| `queue.add` transaction **içinde**, sonra commit | Commit patlar — ama iş Redis'e çoktan girdi | "Başvurunuz alındı" gider, başvuru **yok** — **hayalet iş** |
+| Commit, **sonra** `queue.add` | Commit oldu, tam o an süreç öldü / Redis'e ulaşılamadı | Başvuru **var**, SMS **yok** — **kayıp iş** |
+
+*Gerçek hayat:* noterde sözleşme — imzalanmadan kargoyu çağırmak (hayalet)
+ile imzaladıktan sonra telefonun çekmemesi (kayıp). İkincisi daha az kötüdür:
+sözleşme var, kargoyu sonra çağırırsın.
+
+⛔ **Varsayılan: `queue.add` commit'ten SONRA.** Kayıp iş hayalet işten iyidir
+ve telafisi kolaydır: gece koşan bir tarama (`12-operations-and-scaling.md` →
+*"Planlı görevler"*) "SMS'i gitmemiş kayıtları" bulup tamamlar. Çoğu iş için
+yeter.
+
+**Kayıp kabul edilemezse — outbox / transactional outbox / giden evrak
+kutusu:** iş Redis'e değil, **aynı transaction içinde** bir `outbox` tablosuna
+yazılır — kayıt satırı ile "SMS gönder" satırı aynı commit'te ya ikisi olur
+ya hiçbiri. Ayrı küçük bir süreç (aktarıcı / relay — worker'ın yanında
+çalışır) tabloyu tarar, satırı Redis'e atar, `sent_at` işaretler. *Gerçek
+hayat:* kurumun **giden evrak defteri** — evrak deftere işlenmeden işlem
+tamamlanmış sayılmaz; kurye postaneye değil deftere bakar.
+
+Bedeli: bir tablo + bir süreç, ve işin **iki kez** gitme ihtimali (aktarıcı
+Redis'e attı, `sent_at` yazamadan düştü). Bu yüzden worker **idempotent**
+olmalıdır: iş verisinde mesaj kimliği taşınır, aynı kimlikle ikinci SMS
+atılmaz (`03-api-guidelines.md` → *"İdempotency"*).
+
+⭐ **Kararı veren soru:** *"Bu iş kaybolursa ne olur?"* Kullanıcı fark etmez /
+gece taraması telafi eder → commit sonrası. Kullanıcı mağdur olur / bildirim
+yasal zorunluluk → outbox, ADR ile.
+
+
 ## Anlık veri — yenile düğmesi mi, polling mi, SSE mi, WebSocket mi
 
 **Anlık veri / realtime**: sunucuda bir şey değişince kullanıcının ekranının

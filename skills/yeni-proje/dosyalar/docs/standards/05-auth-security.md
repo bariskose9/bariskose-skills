@@ -289,7 +289,7 @@ kararı, gerçeğine geçiş yolu ve geçiş kontrol listesi:
 - Tutar, indirim ve para birimi **sunucuda** belirlenir; istemcinin gönderdiği
   tutar reddedilir (`03-api-guidelines.md` → *"Doğrulama"*).
 - Ödeme uçları **idempotency anahtarı** taşır — aynı anahtar iki kez tahsilat
-  üretmez.
+  üretmez (kural ve istemci politikası `03-api-guidelines.md` → *"İdempotency"*).
 - Kart verisi mümkünse **hiç sunucumuza uğramaz**: sağlayıcının barındırdığı
   form veya jetonlaştırma (tokenization) kullanılır. Uğramayan veri sızmaz.
 - Simüle akışta ekranda **açıkça** yazar: *"Bu bir test ödemesidir."*
