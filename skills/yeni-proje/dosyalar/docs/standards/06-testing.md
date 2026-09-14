@@ -207,8 +207,12 @@ Her özellik bittiğinde ajan **bu üç soruyu yazılı cevaplar**:
 2. Hangi **başka API uçlarını** etkiliyor? (aynı servisi veya tabloyu kullananlar)
 3. Veri modeli değiştiyse hangi **eski kayıtlar** etkilendi? (migration geri alınabilir mi)
 
-⛔ *"Sadece şu dosyaya dokundum"* cevap değildir. Etkilenen yer **açıkça
-listelenir ve en az biri fiilen açılıp kontrol edilir.**
+⛔ *"Sadece şu dosyaya dokundum"* cevap değildir. Etkilenen yerler **açıkça
+listelenir ve HEPSİ fiilen açılıp kontrol edilir** — ekran açılır, uç çağrılır,
+ilgili test koşturulur. "En az biri" bir denetim değil örneklemedir: listedeki
+üç yerden ikisi bozuksa ve bakılan tek yer sağlam olansa, kırık kod "kontrol
+edildi" damgasıyla geçer. Liste uzunsa (5+) bu bir **risk sinyalidir** —
+kullanıcıya bildirilir, yine hepsine bakılır; "çok yer var, bakmadım" yoktur.
 
 ### ⭐ ÖĞRETME ZORUNLULUĞU — doğrulama aynı zamanda derstir
 

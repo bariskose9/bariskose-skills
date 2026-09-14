@@ -63,7 +63,7 @@ Bir iş, aşağıdaki maddelerin **tamamı** işaretlenmeden "bitti" sayılmaz.
 ## Beş gözle doğrulama (`06-testing.md`)
 - [ ] Backend · Veri · Frontend · Tasarım/UX · Güvenlik gözlerinin **beşi de** geçildi
 - [ ] **Etki alanı** yazıldı: hangi ekranlar, hangi API uçları, hangi eski kayıtlar
-- [ ] Etkilenen yerlerden **en az biri fiilen açılıp** kontrol edildi
+- [ ] Etkilenen yerlerin **hepsi fiilen açılıp** kontrol edildi (ekran, uç, test); 5+ yer varsa risk olarak bildirildi
 - [ ] Kullanıcıya *ne kontrol edildi ve neden* anlatıldı; yeni terimler
       `calisilacak-konular.md`'ye eklendi
 

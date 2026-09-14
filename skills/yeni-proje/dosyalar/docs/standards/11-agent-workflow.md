@@ -722,6 +722,41 @@ olgudur, *"REST mi GraphQL mi"* bir karardır. Olgu sorulur, karar verilir.
 İstenmeyen iyileştirme yapma. "Bu arada şunu da düzelttim" yasak —
 gördüğün sorunu **bildir**, ayrı iş olarak planla.
 
+## ⛔ AŞIRI MÜHENDİSLİK KAPISI — her soyutlama bedelini kanıtlar
+
+**Aşırı mühendislik / over-engineering / erken soyutlama** — *Gerçek hayat:*
+tek katlı ev için asansör boşluğu bırakmak; "belki üç kat çıkarız" diye
+bugün beton dökmek, ama üç kat hiç gelmez ve boşluk her gün yer kaplar.
+*Yazılım:* bugün olmayan bir ihtiyaç için bugün yazılan katman, arayüz,
+yapılandırma, genel amaçlı yardımcı. Ajanların **en yaygın** hatasıdır: her
+şeyi genellemek, her değeri yapılandırılabilir yapmak, tek kullanımlık bir iş
+için üç dosya açmak.
+
+⛔ **Token maliyeti ölçüt değildir** — kapsamlı yorum, test ve doküman pahalı
+olsa da yazılır (`02-coding-standards.md`). Ölçüt **ihtiyaç kanıtı**dır. Bir
+soyutlama (arayüz, base class, generic yardımcı, yeni katman, yeni
+yapılandırma anahtarı) eklenmeden önce üç soru **yazılı** cevaplanır:
+
+| # | Soru | "Hayır" ise |
+|---|---|---|
+| 1 | **İkinci kullanım var mı — şimdi?** Aynı şeyi bugün kodda iki yer mi yapıyor? | Soyutlama yok; tekrar üçüncü kez çıkınca yapılır (*rule of three*) |
+| 2 | **Kural mı, tahmin mi?** Bu esneklik PRD'de yazan bir gereksinim mi, "belki lazım olur" mu? | Tahmin için kod yazılmaz; `roadmap.md`'ye not düşülür |
+| 3 | **Silmek kolay mı?** Yanlış çıkarsa tek dosya silinip geri dönülebiliyor mu? | Geri dönülemeyen soyutlama ADR ister |
+
+⭐ Kitin **kendi** soyutlamaları bu kapıdan geçmiştir ve istisnadır: katmanlar
+(`01-architecture.md` → *"DEĞERLENDİRİLDİ, REDDEDİLDİ"*), `FileStorage` ve
+simüle dış servis adaptörleri (`00-stack.md` → *"SİMÜLE EDİLEN DIŞ SERVİS"*) —
+gerekçeleri yazılı, ikinci kullanımı bilinen (gerçek ↔ sahte, R2 ↔ MinIO).
+Onun dışındaki her genelleme kapıya girer.
+
+**Ters yön de ihlaldir:** *"basit tutalım"* diye katman atlamak, testi
+yazmamak, yorumu kısaltmak aşırı mühendislikten kaçmak değil, **eksik
+mühendisliktir**. Kapı yalnızca *ihtiyacı olmayan* karmaşıklığı keser.
+
+⭐ Her özellik bitince `agent-skills` → `code-simplification` becerisiyle
+sadeleştirme geçişi yapılır: davranış aynı kalır, gereksiz karmaşıklık iner.
+Ölçüt: *"Kıdemli bir mühendis bu koda bakıp 'neden şunu yapmadın' der mi?"*
+
 ## ⛔ ANLATIM DÜZEYİ SABİT DEĞİL — SEVİYE DEFTERİNDEN OKUNUR
 
 Ajanın görevi yalnızca işi yapmak değil; **kullanıcının gelişimini ölçüp

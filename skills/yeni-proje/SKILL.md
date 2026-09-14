@@ -59,7 +59,7 @@ sırası her zaman altyapı → veri modeli → backend → arayüz.
 
 | Parça | Ne için |
 |---|---|
-| `agent-skills@addy-agent-skills` | `interview-me`, `security-and-hardening`, `code-review-and-quality`, `test-driven-development`, **`frontend-ui-engineering`**, **`debugging-and-error-recovery`**, **`incremental-implementation`**, **`doubt-driven-development`** |
+| `agent-skills@addy-agent-skills` | `interview-me`, `security-and-hardening`, `code-review-and-quality`, `test-driven-development`, **`frontend-ui-engineering`**, **`debugging-and-error-recovery`**, **`incremental-implementation`**, **`doubt-driven-development`**, **`code-simplification`** (her özellik sonunda sadeleştirme geçişi — `11-agent-workflow.md` → *"AŞIRI MÜHENDİSLİK KAPISI"*) |
 
 ⭐ Üçü sonradan eklendi, sebepleriyle:
 `debugging-and-error-recovery` — kitte *"üç başarısız denemede dur"* kuralı var

@@ -78,7 +78,7 @@ kopya olsaydı biri güncellenir, diğeri geride kalırdı — ve geride kalan t
 veriyi üçüncü bir servise gönderen taraf olurdu.
 
 ## İzleme (observability)
-- Hata takibi: Sentry (ücretsiz katman) — üretimdeki her istisna yakalanır.
+- Hata takibi: Sentry (ücretsiz katman) — üretimdeki her istisna yakalanır; kurum modunda GlitchTip / kurumun aracı (aşağıda *"Hata takibi ne yakalar"*).
 - ⛔ **YAKALANMIŞ hatalar da iletilir.** Hata takip SDK'ları kendiliğinden
   yalnızca **yakalanmamış** istisnaları görür. Oysa en önemli arızaların çoğu
   bilinçli olarak yakalanır (planlı görevin düşmesi, e-posta gönderilememesi,
@@ -96,6 +96,39 @@ veriyi üçüncü bir servise gönderen taraf olurdu.
 - Performans: Vercel Analytics — Core Web Vitals izlenir (LCP < 2.5s, INP < 200ms, CLS < 0.1).
 - Çalışma süresi izleme: sağlık ucuna dışarıdan periyodik ping.
 - Uyarı eşikleri tanımlıdır: hata oranı %1'i geçerse, yanıt süresi 2 katına çıkarsa haber ver.
+
+### Hata takibi ne yakalar, alternatifleri ne, kurumda ne olur
+
+**Hata takibi / error tracking / hata izleme servisi** — *Gerçek hayat:*
+uçaktaki kara kutu: kaza olduğunda "ne oldu" sorusunu pilotun hatırlamasına
+bırakmaz, son dakikaları kayıttan verir. *Yazılım:* canlıda fırlayan her
+istisnayı (exception) toplayıp bir panelde gösteren servis. Yalnızca "hata
+oldu" demez; her hata için şunları verir:
+
+| Ne | Ne işe yarar |
+|---|---|
+| **Yığın izi** (stack trace) — hatanın hangi dosya, hangi satırdan geldiği; **source map** ile derlenmiş kodda değil senin yazdığın satırda | "Nerede" |
+| **Breadcrumb** (ekmek kırıntısı) — hatadan önceki son işlemler: hangi sayfaya girdi, hangi isteği attı, hangi butona bastı | "Hangi adımlardan sonra" |
+| **Bağlam** — tarayıcı, işletim sistemi, uygulama sürümü (release), kullanıcı kimliği (maskeli) | "Kimde, hangi sürümde" |
+| **Gruplama ve sayım** — aynı hata 400 kez olduysa 400 satır değil, 1 grup + sayaç; ilk ve son görülme | "Ne kadar yaygın, yeni mi" |
+| **Uyarı** — yeni hata grubu çıkınca ya da sayı eşiği aşınca bildirim | "Ben bakmadan haber ver" |
+
+⛔ Sentry yalnızca **fırlayan** hatayı görür; veri yanlış ama kod hata
+vermiyorsa (yanlış hesaplanan tutar) göremez — onun için `warn` seviyesinde
+**bilinçli** log ve iş kuralı testleri (`06-testing.md`).
+
+| Araç | Ne | Ne zaman |
+|---|---|---|
+| **Sentry** | Piyasa standardı, ücretsiz katman, Next/Nest SDK'sı olgun | ⭐ Kendi proje varsayılanı |
+| **GlitchTip** | Sentry'nin açık kaynak, **kendi sunucunda** kurulan uyumlusu; aynı SDK çalışır (`SENTRY_DSN` adresi değişir) | ⭐ **Kurum modu** — veri dışarı çıkamıyorsa |
+| Bugsnag · Rollbar · Highlight | Aynı iş, farklı fiyat/panel | Kurum dayatıyorsa |
+| OpenTelemetry + Grafana/Loki | Hata takibi değil, **izleme altyapısı**: log + metrik + iz (trace) tek yerde; hata takibi bunun üstüne kurulur | Kurumun DevOps'unda genelde bu vardır |
+
+⭐ **Kurum modunda kural:** hata takibi olayı kurum ağından **dışarı gitmez**
+(kişisel veri ve KVKK). Ya kurumun izleme aracına JSON log ile yazılır
+(DevOps'a sorulur — `kurumdan-ogrenilecekler.md` → *"BÖLÜM 5"* satır 5.7),
+ya da kurum içine GlitchTip kurulur; Sentry bulutu **kullanılmaz**. Kod tarafı
+aynı kalır — SDK aynı, yalnızca adres değişir.
 
 ## Yedekleme ve kurtarma
 - Veritabanı otomatik günlük yedek (Neon point-in-time recovery).

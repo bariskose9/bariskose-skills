@@ -62,7 +62,10 @@ ve gecikme bedeli kabul edilir.
 ⭐ **"Session caching" (oturum önbellekleme) bu stack'te GEREKSİZDİR.** Oturum
 zaten çerezin içinde taşınıyor, veritabanında değil — önbelleklenecek bir sorgu
 yok. Önbellek gerekiyorsa **`tokenVersion` kontrolü** için gerekir, oturumun
-kendisi için değil.
+kendisi için değil. Kurum modunda (NestJS + Redis varsa) `tokenVersion`
+okuması Redis'te 5 dk TTL ile önbelleklenir; Redis yoksa veritabanından —
+"her istekte DB'ye gitmek" kabul edilebilir bir maliyettir, tek satırlık
+birincil anahtar okumasıdır.
 
 ## Yetkilendirme
 - Kontrol **her zaman sunucuda**. UI'da butonu gizlemek yetkilendirme değildir.

@@ -322,3 +322,14 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 | — | Kuruma sorulacak 23 soru, aşama haritasıyla | `sablonlar/kurumdan-ogrenilecekler.md` |
 
 ⛔ Kite proje/kurum adı yazılmadı; belgelerden yalnızca **genel** kural alındı.
+
+### Ek — 2026-09-14, ikinci tur (başka bir AI ile yapılan tartışmadan)
+
+| Karar | Nerede |
+|---|---|
+| Supabase/Firebase (BaaS) kitte yok — üç gerekçe, meşru istisna ADR ile | `00-stack.md` → *"Kullanılmayacaklar"* |
+| NoSQL: modül modül "kararı veren soru" | aynı yer, MongoDB maddesi |
+| Etki alanı: "en az biri" → **hepsi** fiilen kontrol edilir; 5+ yer risk sinyali | `06-testing.md` · `10-definition-of-done.md` |
+| Hata takibi ne yakalar; GlitchTip kurum modu; Sentry bulutu kurumda kullanılmaz | `12-operations-and-scaling.md` |
+| Aşırı mühendislik kapısı: üç soru; `code-simplification` her özellik sonunda | `11-agent-workflow.md` · `SKILL.md` |
+| Session caching: `tokenVersion` için Redis (kurum), aksi DB | `05-auth-security.md` |

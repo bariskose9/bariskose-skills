@@ -606,12 +606,41 @@ oturumda delinir. Bir maddenin gerekçesi bu projede geçerli değilse **yasak d
 geçerli değildir** — o zaman ADR yazılır ve karar gerekçesiyle değiştirilir;
 madde sessizce çiğnenmez.
 
+- **Supabase / Firebase (BaaS — Backend as a Service / hazır arka uç)** —
+  *Ne:* veritabanı, kimlik doğrulama, dosya deposu ve anlık veri (realtime)
+  tek pakette, bir şirket işletiyor; sen SDK'yı çağırıyorsun, sunucu yazmıyorsun.
+  *Gerçek hayat:* hazır mutfaklı kiralık daire — hemen yaşamaya başlarsın ama
+  mutfağı taşıyamazsın, sahibi kirayı ve kuralları değiştirir.
+  *Neden kitte yok — üç sebep:*
+  1. **Kuruma taşınmaz.** Kurum projesinde veri kurumun sunucusunda kalır; Supabase
+     Auth, RLS (row level security — satır bazlı yetki, veritabanının içinde) ve
+     Storage orada yoktur. Kendi projende Supabase'le öğrendiğin kimlik/yetki
+     deseni kurumda **sıfırdan** öğrenilir. Kitin ilkesi tersini ister: öğrenilen
+     şey gerçek üretim pratiği olsun (`11-agent-workflow.md`).
+  2. **Yetki iki yere bölünür.** Supabase'in gücü RLS'tir — kural veritabanında
+     yaşar. Kitin mimarisinde yetki **servis katmanında**dır (`05-auth-security.md`);
+     ikisi birlikte olunca "bu kural nerede" sorusu iki cevaplı olur, biri unutulur.
+  3. **Parçalar zaten var, ayrı ayrı ve taşınabilir:** veritabanı Neon (kurumda
+     kurumun Postgres'i), kimlik argon2 + JWT (`tokenVersion`), dosya `FileStorage`
+     adaptörü (R2 / MinIO). Her parça bağımsız değiştirilebilir; Supabase'de hepsi
+     birlikte gider.
+  ⭐ **Meşru istisna:** bir hafta sonu prototipi, portföy demosu, "arka uç hiç
+  yazmayayım" denen tek kişilik deneme — o zaman ADR ile ve *"kuruma
+  taşınmayacak"* notuyla. NestJS + Supabase birleşimi ise iki kez ödemektir:
+  Nest'in getirdiği kimlik/yetki/depolama katmanını Supabase de getirir, biri
+  boşta kalır.
 - **MongoDB** — bu kitin hedeflediği işler (başvuru, kayıt, randevu, yetki,
   ödeme) **ilişkiseldir**: yabancı anahtar, bütünlük kuralı ve çok tablolu
   transaction ister. Postgres bunları veritabanı seviyesinde zorlar; Mongo'da
   yabancı anahtar ve bildirimsel bütünlük yoktur, aynı garantiler uygulama
   koduna taşınır ve ilk eşzamanlı istekte kaybedilir (`04-database.md` →
   *"Eşzamanlılık"*: benzersiz index + transaction).
+  ⭐ **Kararı veren soru — modül modül:** *"Bu kayıtlar başka kayıtlara
+  bağlanıyor mu ve aynı anda birlikte değişiyor mu?"* (başvuru ↔ kentli ↔ ödeme:
+  evet → ilişkisel). *"Kayıtlar birbirinden bağımsız, şeması kayıttan kayda
+  değişiyor ve hacmi büyük mü?"* (sensör ölçümü, tıklama olayı: evet →
+  belge/NoSQL). Aynı projede ikisi de olabilir; ilişkisel olan Postgres'te,
+  olay akışı ayrı bir depoda — ADR ile.
   ⭐ **Meşru istisna:** şeması gerçekten belirsiz, ilişkisiz ve yüksek hacimli
   veri (ham log, olay akışı, sensör kaydı). Böyle bir modül çıkarsa bu bir yasak
   değil **ADR konusudur** — Postgres `jsonb` ile karşılaştırılır, ölçülür, karar
