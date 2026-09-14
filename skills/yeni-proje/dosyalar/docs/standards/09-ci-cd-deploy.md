@@ -220,6 +220,59 @@ Kullanılmayan dosya zararsızdır; taşınma günü **ek iş çıkmaz.**
 ⛔ **Teslim linki**, kurumun fiilen kullandığı platformdan verilir — ikisinden
 birini seçmek bu kurulumu değiştirmez.
 
+### ⭐ HAT KURUMUN MERKEZÎ DEPOSUNDAN GELİYORSA — `include` senaryosu
+
+Kurumlarda `.gitlab-ci.yml` çoğu zaman hattı **tanımlamaz**, başka bir
+depodan **alır**:
+
+```yaml
+# .gitlab-ci.yml — deponun dosyasının tamamı bu olabilir
+include:
+  - project: devops/ci-cd-yaml-dosyalar     # DevOps'un kendi deposu
+    file: NXT-<proje-adi>.yml               # bu proje için oradaki tanım
+```
+
+**Hat / pipeline**: kod her gönderildiğinde (push) otomatik koşan kontrol
+zinciri; adımları **iş** (job), gruplar **aşama** (stage) — biri kırmızıysa
+sonraki çalışmaz. *Gerçek hayat:* fabrikadaki kalite kontrol bandı. `include`
+ile hat **franchise** olur: mağaza kendi kuralını yazmaz, merkezin el kitabını
+uygular. Kurum bunu tek kalıp, güvenlik (geliştirici gizli değeri dışarı
+gönderen iş ekleyemez) ve tek bakım için ister — "tek DBA, çok ekip"
+mantığının CI'daki hâli.
+
+**Sonucu: hattın içeriği bizim kontrolümüzde değil.** Beş şey değişir:
+
+| # | Ne değişir | Ne yapılır |
+|---|---|---|
+| 1 | Merkezî kalıp büyük ihtimalle "imajı derle → registry'ye gönder → test sunucusuna al"dır; **lint/typecheck/test aşaması olmayabilir** — "CI kırmızıysa merge yok" kapısı yok olur | **Sorulur** (`kurumdan-ogrenilecekler.md` → *"BÖLÜM 5"* satır 5.5). İzin varsa `include`'un altına **yerel iş** eklenir — GitLab buna izin verir: `verify: { stage: test, script: pnpm ci:verify }`. ⭐ *"Adımlar betikte"* kuralı tam burada işe yarar: DevOps'a **tek satır** istenir |
+| 2 | Yerel iş eklenemiyorsa hat bizim testi hiç koşturmaz | Kapı **makineye** taşınır: `pre-push` kancası tam `ci:verify` koşturur (aşağıda *"Git kancaları"*). Kırmızıysa push olmaz |
+| 3 | Kalıp `npm ci` koşturuyorsa `pnpm-lock.yaml` ilk adımda kırar | Kurum hangisini koşturuyorsa o (`00-stack.md` → *"DAYATILAN SEÇİM"*); sorulur (5.4), `package.json` → `packageManager` ona göre |
+| 4 | DevOps yalnızca `docker build` koşturur; "önce şunu çalıştır" diyemeyiz | **Dockerfile kendi kendine yeter:** çok aşamalı; içinde sır yok; kurum ağının yavaş/kopan bağlantısı için `npm config set fetch-retries 5` / `fetch-retry-maxtimeout` ayarları; migration klasörü veya koşucu imaja girmemişse **derleme bilinçli olarak başarısız** — şemasız imaj üretilmesin |
+| 5 | Dal → ortam eşlemesi (`main` → test, etiket → canlı) kalıbın içinde | Varsayılmaz, **kalıptan doğrulanır** (5.5). Kalıp "her etiket canlıya" diyorsa deneme etiketi canlıya çıkmaktır |
+
+⛔ Merkezî hat, iki platform dosyasını da yazma kuralını **kaldırmaz**:
+`.gitlab-ci.yml` = `include` (+ izin varsa `verify` işi); `.github/workflows/ci.yml`
+yine yazılır, zararsızdır.
+
+### ⭐ Git kancaları — kapı makinede de vardır, her modda
+
+**Git hook / kanca**: git'in belirli anlarda (commit öncesi, push öncesi)
+otomatik çalıştırdığı betik. *Gerçek hayat:* fabrika bandı kurumda değilse
+kontrolü sevkiyattan önce kendi deponda yaparsın; kurumda olsa bile ürünü
+kırık göndermezsin. Araç **husky** (en yaygın; `"prepare": "husky"` ile
+`pnpm install`'da herkeste kurulur) + **lint-staged** (yalnızca değişen
+dosyalara lint/format).
+
+| Kanca | Ne koşar | Neden bu kadar |
+|---|---|---|
+| `pre-commit` | `lint-staged` — değişen dosyalarda Prettier + ESLint | Saniyeler; her commit'te tam test beklenmez |
+| `pre-push` | Kendi proje: `typecheck` + birim testleri · **Kurum modu, hat bizim testi koşturmuyorsa: tam `ci:verify`** | Push, kodun makineden çıktığı an; kırmızı kod dışarı çıkmaz |
+| CI | Tam `ci:verify` (+ e2e) | Kancalar atlatılabilir (`--no-verify`); CI atlatılamaz — o yüzden kanca CI'ın **yerine** değil, **önüne** |
+
+⭐ **Kararı veren soru:** *"Kodum GitLab'a gitmeden önce kırmızıyı gören biri
+var mı — o biri ben miyim, hat mı?"* Hat değilse kanca; hatsa da kanca (hız
+için) — cevap her durumda "ikisi de".
+
 ### ⭐ Bağımlılık botu — proje tipine göre KARAR TABLOSU
 
 ⛔ **Bot her projede kendiliğinden kurulmaz.** Kurulum maliyeti proje tipine

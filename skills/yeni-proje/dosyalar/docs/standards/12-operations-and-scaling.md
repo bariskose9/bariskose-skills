@@ -7,6 +7,11 @@
   yeniden deneme üstel geri çekilme ile ve en fazla 2 kez.
 - Dış servis çökerse uygulama çökmez: widget hata durumunu gösterir, sayfa ayakta kalır.
 
+⛔ **Konteyner geçicidir:** içine sonradan yazılan dosya yeniden açılışta
+kaybolur. Yüklenen dosya konteynerin diskine değil, `FileStorage`
+adaptörünün seçtiği depoya gider; `public/` altına asla
+(`05-auth-security.md` → *"Dosya yükleme ve depolama"*).
+
 ## Loglama
 
 **Kütüphane:** ayrı backend varsa `nestjs-pino`, Next tek başınaysa `pino`.
@@ -135,7 +140,7 @@ sürücüsü girer. Veritabanın tek bölgedeyse Edge'e taşımak her sorguyu
 |---|---|
 | Veritabanına giden her şey | **Veritabanının yanındaki bölgede** |
 | Statik / ISR ile üretilmiş sayfa | CDN'den gelir; zaten Edge'dedir, ayrıca ayar gerekmez |
-| Yalnızca çerez okuyup yönlendiren middleware | Edge uygun |
+| Yalnızca çerez okuyup yönlendiren ara katman (`proxy.ts` — Next 16 adı) | Edge uygun |
 
 ⛔ **Asıl sorun genellikle "10 API isteği"nin kendisidir.** Açılışta on ayrı
 istek atılıyorsa çözüm bölge değiştirmek değil, **sunucu bileşeninde tek seferde

@@ -1,6 +1,6 @@
 # `proje-kiti` — Ne Yapıyor, Nasıl Yapıyor
 
-**Sürüm:** 3.5.0 · **Tarih:** 2026-09-06
+**Sürüm:** 3.7.0 · **Tarih:** 2026-09-14
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Terimler ilk geçtikleri yerde açıklanır. Sonda toplu bir sözlük vardır.
@@ -564,6 +564,7 @@ projede bunları aramana gerek yok, orada olmayacaklar:
 | **Ajanın kuralları** | `CLAUDE.md` (projeye özel olan) + `docs/standards/` — **19 dosya** |
 | **Senin belgelerin** | `CALISMA-KILAVUZU.md` · `REPO-YAPISI.md` · `README.md` |
 | **Projeye özel** | `docs/project/` altında PRD, roadmap, ADR, altyapı durumu ve diğerleri |
+| ⭐ **Senin defterlerin** | `docs/kullanici/` altında `calisilacak-konular.md` + `ogrendigim-konular.md`. ⛔ `docs/project/` altına **açılmazlar**: proje belgeleri her projede sıfırlanır, defterler **birikir** ve `/kit-senkron` ile kite geri döner |
 | **Ayarlar** | `.env.example` · `.vscode/extensions.json` |
 | **İzinler** | `.claude/settings.json` |
 

@@ -231,13 +231,70 @@ if (existsSync(pluginYolu)) {
   }
 }
 
+// 6) ŞABLON HEDEFİ — şablonun KENDİ beyanı ile onu anan tablolar tutuyor mu
+//    ⛔ NEDEN VAR: 2026-09-09'da "defterler `docs/kullanici/` altına gider"
+//    kararı alındı ama yalnızca İKİ tabloya işlendi; `SKILL.md` Adım 2'ye,
+//    `OKUBENI.md` girişine ve `16`'nın iki özet cümlesine işlenmedi. Sapma
+//    2026-09-11'deki ilk gerçek kurulumda ortaya çıktı: iki defter yanlış
+//    klasöre açıldı, sonra taşındı. Hiçbir kontrol bunu ölçmüyordu.
+//
+//    ⭐ ÇÖZÜM İKİ PARÇALI: (a) her şablon kendi hedefini başındaki
+//    `ŞABLON —` satırında BEYAN EDER, (b) o beyan tek doğru kaynaktır ve
+//    şablonu anan her tablo satırı ona uymak zorundadır. Beyan yoksa yanlış
+//    listeye itiraz eden hiçbir şey olmaz — kök sebep tam olarak buydu.
+//
+//    ⚠️ SINIR: serbest metindeki iddia ölçülemez (liste maddesi satırlara
+//    yayılır, hedef başka satırda durur). Bu yüzden hedef bilgisi TABLOYA
+//    taşındı; tablo satırı tek satırdır ve makine okuyabilir.
+const sablonDizin = tumu
+  .map((x) => dirname(relative(kok, x)))
+  .find((d) => d.endsWith("/sablonlar") || d.endsWith("/sablonlar/decisions"));
+if (sablonDizin) {
+  const kokDizin = sablonDizin.replace(/\/decisions$/, "");
+  const sablonlar = hepsi.filter((x) => relative(kok, x).startsWith(kokDizin + "/"));
+  /** şablon adı → beyan ettiği klasör ("docs/project" | "docs/kullanici") */
+  const beyan = new Map();
+  for (const x of sablonlar) {
+    const ad = basename(x);
+    if (ad === "OKUBENI.md") continue;              // klasörün indeksi, projeye gitmez
+    const satir = readFileSync(x, "utf8").match(/^\s*(?:<!--\s*)?ŞABLON\s*—.*$/mu);
+    const klasor = satir && satir[0].match(/`?(docs\/(?:project|kullanici))\//u);
+    if (!klasor) {
+      bulgular.push(["ŞABLON BEYANI", ad, "başında `ŞABLON — <hedef>` satırı yok — hedefi hiçbir yerden doğrulanamaz"]);
+      continue;
+    }
+    beyan.set(ad, klasor[1]);
+  }
+
+  // Beyanı, şablonu anan HER tablo satırıyla karşılaştır.
+  for (const x of hepsi) {
+    for (const satir of readFileSync(x, "utf8").split("\n")) {
+      if (!satir.trimStart().startsWith("|")) continue;          // yalnızca tablo satırı
+      const klasorler = new Set(
+        [...satir.matchAll(/docs\/(project|kullanici)\//gu)].map((m) => `docs/${m[1]}`),
+      );
+      if (!klasorler.size) continue;                             // hedef iddiası yok
+      for (const [ad, dogru] of beyan) {
+        if (!satir.includes("`" + ad + "`") && !satir.includes("/" + ad + "`")) continue;
+        if (!klasorler.has(dogru))
+          bulgular.push([
+            "ŞABLON HEDEFİ",
+            basename(x),
+            `${ad} → satırda ${[...klasorler].join(" + ")} yazıyor, şablonun kendi beyanı ${dogru}`,
+          ]);
+      }
+    }
+  }
+}
+
 // ── Rapor ───────────────────────────────────────────────────────────────────
 if (!bulgular.length) {
   // ⛔ Mesaj, FİİLEN koşan kontrolleri sayar. Kontrol eklenip bu satır
   //    güncellenmezse çıktı yaptığından azını söyler ve okuyan yanlış güvenir.
   console.log(
-    "✓ Denetim temiz — beş kontrol geçti: kırık referans · kırık bölüm atfı ·\n" +
-      "  bayat PDF · haritada görünmeyen dosya · bayat sürüm damgası.",
+    "✓ Denetim temiz — altı kontrol geçti: kırık referans · kırık bölüm atfı ·\n" +
+      "  bayat PDF · haritada görünmeyen dosya · bayat sürüm damgası ·\n" +
+      "  şablon hedefi (beyan ↔ tablolar).",
   );
   process.exit(0);
 }

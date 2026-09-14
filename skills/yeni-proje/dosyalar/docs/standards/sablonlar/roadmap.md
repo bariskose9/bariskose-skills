@@ -1,5 +1,7 @@
 # Yol Haritası — yapım planı
 
+<!-- ŞABLON — `docs/project/roadmap.md` olarak kopyalanır ve doldurulur. -->
+
 Bu dosya *"ne yapılacak"* sorusunun tek cevabıdır. Her adım; **ne ürettiğini,
 hangi teknolojiyle, hangi klasöre yazıldığını ve neye bağlandığını** söyler.
 

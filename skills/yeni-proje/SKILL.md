@@ -572,14 +572,25 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
 3. `CLAUDE.md` §0 bloğunu Adım 1'deki cevaplarla **doldur** — proje adı, tip,
    ana dal, diller. ⚠️ **`STACK` ve `DEPLOY` satırları şimdilik boş kalır**
    (`<Adım 3b'de doldurulacak>` yazılır); o karar PRD'den sonra verilir.
-4. `docs/standards/sablonlar/` içindeki şablonları `docs/project/` altına aç:
-   `PRD.md` · `roadmap.md` · `altyapi-durumu.md` · `CHANGELOG.md` ·
-   `yeni-oturuma-verilecek-sonraki-adim-promptu.md` · `teknoloji-ve-plan.md` ·
-   `calisilacak-konular.md` · `ogrendigim-konular.md` ·
-   `decisions/ADR-000-sablon.md` ·
-   (veritabanı varsa) `data-model.md` · (dış servis varsa) `integrations.md` ·
-   (sahte veri gerekiyorsa) `fake-data-guide.md` ·
-   ⭐ **(işyeri projesiyse) `kurumdan-ogrenilecekler.md`**
+4. `docs/standards/sablonlar/` içindeki şablonları aç.
+   ⛔ **HEPSİ AYNI YERE GİTMEZ — iki hedef var:**
+
+   | Hedef | Hangi şablonlar |
+   |---|---|
+   | `docs/project/` | `PRD.md` · `roadmap.md` · `altyapi-durumu.md` · `CHANGELOG.md` · `yeni-oturuma-verilecek-sonraki-adim-promptu.md` · `teknoloji-ve-plan.md` · `vscode-eklentileri.md` · `decisions/ADR-000-sablon.md` · (veritabanı varsa) `data-model.md` · (dış servis varsa) `integrations.md` · (sahte veri gerekiyorsa) `fake-data-guide.md` · ⭐ (işyeri projesiyse) `kurumdan-ogrenilecekler.md` |
+   | ⭐ `docs/kullanici/` | `calisilacak-konular.md` · `ogrendigim-konular.md` — **yalnızca bu ikisi** |
+
+   ⛔ **İki defter `docs/project/` altına AÇILMAZ.** `docs/kullanici/` üçüncü
+   bir bölgedir ve bilerek öyledir; gerekçesi `16-yeni-proje-kurulumu.md`
+   içinde yazılı, burada tekrarlanmaz.
+
+   ⚠️ **Yanlış yere açıp sonra taşımak, hiç açmamaktan pahalıdır.** 2026-09-11
+   tarihli **ilk gerçek kurulumda** yaşandı: iki defter `docs/project/` altına
+   açıldı, fark edilip taşındı. Sebebi bu listenin kendisiydi — 2026-09-09'da
+   alınan `docs/kullanici/` kararı `16`'ya işlendi, **buraya işlenmedi.**
+
+   ⭐ **Yetkili liste `sablonlar/OKUBENI.md` içindedir.** Çakışma olursa o
+   tablo üstündür; buradaki özet ona uyar.
 
    ⛔ **`kurumdan-ogrenilecekler.md` yalnızca işyeri projesinde açılır.**
    Kendi projende soracak bir kurum yok. İçindeki üç DevOps sorusu
@@ -603,7 +614,9 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    geçerli değildir — ADR yazılır, madde sessizce çiğnenmez.
 6. ⭐ **Seviye defteri — ÜZERİNE YAZMA, BİRLEŞTİR.**
 
-   `calisilacak-konular.md` kitle birlikte gelir ve **her projede aynıdır**. Klasörde
+   `docs/kullanici/calisilacak-konular.md` ve ikizi
+   `docs/kullanici/ogrendigim-konular.md` kitle birlikte gelir ve **her projede
+   aynıdır**. ⛔ **Bu ikisi `docs/project/` altına açılmaz** (madde 4). Klasörde
    zaten bir defter varsa:
 
    - Kitteki satırlardan **projede olmayanları ekle**
@@ -729,19 +742,23 @@ Sıra: **3b.1** backend kurgusu → **3b.2** API biçimi → **3b.3** listeyi ö
 
 ### 3b.1 — Backend kurgusu: Next tek başına mı, Next + Nest mi
 
-Dört soru. **Hepsi "hayır" ise Next tek başına. En az biri "evet" ise
-Next (arayüz) + NestJS (API + worker).**
+Dört soru. **İlk ikisinden en az biri "evet" ise Next (arayüz) + NestJS
+(API + worker); ikisi de "hayır" ise Next tek başına.** 3 ve 4 tetikleyici
+değil, bilgi sorusudur (`00-stack.md` → *"DÖRT KURGU"* → *"Karar akışı"*).
+⭐ **İşyeri projesinde varsayılan Next + NestJS** — saf içerik sitesi istisnası
+ADR ile.
 
 1. API'yi kendi web arayüzünden **başkası** tüketecek mi? (mobil, başka sistem)
 2. Kullanıcı istek atmasa da **kendiliğinden** çalışması gereken iş var mı?
    (zamanlanmış görev, kuyruk, webhook karşılama)
 3. Katmanlı mimari + **DI yaşam döngüsü** (singleton/scoped) + çok modüllü yapı
    gerekiyor mu?
-4. Kod kurumun **kendi sunucusunda** mı çalışacak (sunucusuz platform yok)?
+4. Kod kurumun **kendi sunucusunda** mı çalışacak? — *bilgi sorusu:* evet ise
+   ayrı worker + BullMQ mümkün; tek başına NestJS'e götürmez.
 
-**Neden bu kural:** Next.js Route Handler ile API yazılabilir ama üç şeyi
-veremez — sürekli çalışan arka plan süreci, DI konteyneri ve yaşam döngüleri,
-zorlanan katman sınırları. Bunlara ihtiyaç yoksa ikinci bir sunucu **saf
+**Neden bu kural:** Next.js Route Handler ile API yazılabilir ama iki şeyi
+veremez — sürekli çalışan arka plan süreci ve başkasının tüketeceği birinci
+sınıf API (otomatik OpenAPI, sürümleme, Guard/Pipe). Bunlara ihtiyaç yoksa ikinci bir sunucu **saf
 maliyettir**: iki deploy, CORS, kimlik doğrulamanın iki tarafta kurgulanması,
 tiplerin paylaşılması, yerel geliştirmede dört süreç.
 

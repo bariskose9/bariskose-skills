@@ -5,9 +5,10 @@
 > arayacağını, hangi adımda ne yapacağını ve ne zaman devreye gireceğini
 > anlatır.
 >
-> ⛔ **Bayat kalmaz.** `denetim.mjs` her commit öncesi **beş** şeyi denetler:
+> ⛔ **Bayat kalmaz.** `denetim.mjs` her commit öncesi **altı** şeyi denetler:
 > kırık dosya referansı · kırık bölüm atfı · bayat PDF · **haritada görünmeyen
-> dosya** · **bayat sürüm damgası**. Biri bile varsa commit durur.
+> dosya** · **bayat sürüm damgası** · ⭐ **şablon hedefi** (şablonun kendi
+> beyanı ile onu anan tablolar tutuyor mu). Biri bile varsa commit durur.
 
 ---
 
@@ -55,7 +56,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `yeni-proje/SKILL.md` | **Kurulum akışı** — sekiz adım. Ajan bunu izler |
 | `yeni-proje/dosyalar/` | Projeye kopyalanan her şey ↓ |
 | `kit-senkron/SKILL.md` | İki yönlü kural senkronu |
-| `kit-senkron/bin/denetim.mjs` | ⛔ **Commit öncesi zorunlu kontrol** — beş denetim (yukarıda) |
+| `kit-senkron/bin/denetim.mjs` | ⛔ **Commit öncesi zorunlu kontrol** — altı denetim (yukarıda) |
 | `video-analiz/SKILL.md` | Video → kural dönüşümü |
 | `video-analiz/bin/yt-transkript.mjs` | Transkript alıcı |
 | `pdf-uret/SKILL.md` | PDF üretimi |

@@ -18,6 +18,7 @@ Kural yazmaya başlamadan önce `skills/yeni-proje/dosyalar/PROJEYE-CLAUDE-MD-OL
 |---|---|
 | *"⭐ ROL — bu kitte kim olduğun"* | Hangi rollerin kıdemlisisin, hangi kararı kim verir |
 | *"⭐ KARAKTER — bu rolün huyu"* | Öğretmek gönüllüdür; terim kullanılır ve açıklanır |
+| *"⭐ ANLATIM ÖLÇÜTÜ"* | Okuyan hiçbir kelimede takılmadan sonuna gelmeli; dört adım şablon değil kontrol listesi, sorunla başla, tek örneği taşı, her terimi yerinde aç — `11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"* |
 | *"⛔ EKSİKSİZLİK, KISALIĞA FEDA EDİLMEZ"* | Ne kadar açıklanır, sınır nerede |
 | *"4. Bana Karşı Davranış"* | Kanıtsız "bitti" denmez, emin değilsen söylenir |
 
@@ -56,10 +57,15 @@ projelerde de aynı dosya okunur; öğrenilen `/kit-senkron` ile buraya döner.
 node skills/kit-senkron/bin/denetim.mjs .
 ```
 
-**Beş** şeyi yakalar: kırık dosya referansı · **kırık bölüm atfı** (`<dosya>.md`
+**Altı** şeyi yakalar: kırık dosya referansı · **kırık bölüm atfı** (`<dosya>.md`
 → *"Başlık"* denen başlık hedefte var mı) · bayat PDF · **haritada görünmeyen
 dosya** · **bayat sürüm damgası** (rehberdeki `Sürüm:` ile `plugin.json` aynı
-MAJOR.MINOR mu). **Çıktısını oku** — çalıştırıp kırpmak, atlamakla aynı şeydir.
+MAJOR.MINOR mu) · ⭐ **şablon hedefi** (her şablonun başındaki `ŞABLON —`
+beyanı ile onu anan her tablo satırı tutuyor mu).
+**Çıktısını oku** — çalıştırıp kırpmak, atlamakla aynı şeydir.
+
+⛔ **Yeni şablon eklersen başına `ŞABLON — <hedef>` satırı yaz.** Yoksa denetim
+durur: hedefi beyan etmeyen şablon, yanlış listeye itiraz edemez.
 
 ⛔ **Kural değiştirdiysen kullanıcı rehberlerini de gözden geçir:**
 `kit-hakkinda/KIT-REHBER.md` (terim terim anlatım) ve `kit-hakkinda/KIT-NE-YAPIYOR.md` (döngü ve

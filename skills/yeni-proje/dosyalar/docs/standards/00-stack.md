@@ -36,6 +36,21 @@ dosya adı istiyorsa kitin `kebab-case` tercihi geçmez.
 ⚠️ **Dayatma olup olmadığı TAHMİN EDİLMEZ, SORULUR** — `SKILL.md` Adım 1,
 *"STACK'İ HEMEN KURMA"*.
 
+⭐ **Kurum sessiz kaldığı her konuda kalite DÜŞMEZ, YÜKSELİR.** İşyeri projesi
+"kurum ne isterse o" demek değildir: kurumun kural koyduğu yerde kurum,
+**geri kalan her yerde kitin en kapsamlı varsayılanı** (test, tip güvenliği,
+mimari test, erişilebilirlik, performans bütçesi) uygulanır. DevOps'un ek
+istekleri bunun **üstüne** eklenir, yerine geçmez.
+
+⚠️ **Emsal (precedent) ≠ dayatma.** Kurumda daha önce yapılmış bir proje
+(*"şu projede böyle yapılmış"*) ortamı **kanıtlı** anlatır — hesap adları,
+DevOps'un ne verdiği, hangi dış servisin var olduğu. Ama o projenin mühendislik
+seçimleri (ORM'siz SQL, test yokluğu, kod dili) **kural değildir**; öğrenilir,
+sorgulanır, kopyalanmaz. Emsalden alınan her olgu
+`kurumdan-ogrenilecekler.md`'de **"doğrulanacak"** olarak işaretlenir — o
+projede doğru olan bu projede değişmiş olabilir.
+
+
 ### ⛔ KARAR NEREYE YAZILIR — yönlendirme tablosu
 
 ⛔ **Her seçim ADR gerektirmez, ama hiçbir seçim de kayıtsız kalmaz.** Ölçüt
@@ -124,7 +139,7 @@ sonra *"bunu neden kurmadık"* sorusu yeniden araştırılır. Üç durum:
 | Lint/Format | ESLint + Prettier | 9 / 3 | ESLint 10 kullanılamıyor, aşağıya bak |
 | CI | GitHub Actions | — | |
 | Hosting | Vercel | — | |
-| Dosya depolama | Vercel Blob | — | Repoya dosya yüklenmez |
+| Dosya depolama | `FileStorage` adaptörü — sürücü: **S3-uyumlu** (R2 / MinIO) varsayılan · Vercel Blob kabul · kalıcı disk (kurum, tek kopya) · `BYTEA` (küçük dosya, local/CI) | — | Repoya dosya yüklenmez; `public/` altına asla. Kural `05-auth-security.md` → *"Dosya yükleme ve depolama"* |
 | Konteyner | Docker + Docker Compose | — | Sadece local geliştirme ve öğrenme amaçlı |
 | Mobil | Expo (React Native) | — | Aynı REST API'yi tüketir |
 
@@ -184,11 +199,16 @@ Next (arayüz) + NestJS (API + worker):**
 2. Kullanıcı istek atmasa da **kendiliğinden** çalışması gereken iş var mı?
    (gece çalışan tarama, zamanlanmış hatırlatma, webhook karşılama)
 3. Katmanlı mimari, **DI yaşam döngüsü** ve çok modüllü bir yapı gerekiyor mu?
-4. Kod kurumun **kendi sunucusunda** mı çalışacak? (sunucusuz platform yok)
+4. ~~Kod kurumun kendi sunucusunda mı çalışacak?~~ ⛔ **Tetikleyici değil.**
+   Kurum sunucusu yalnızca *"ayrı worker mümkün"* demektir; Next tek başına da
+   orada çalışır. Kararı 1 ve 2 verir — ayrıntı aşağıda *"DÖRT KURGU"* → *"Karar
+   akışı"*.
 
-**Gerekçe:** Next Route Handler ile API yazılabilir ama üç şeyi veremez —
-sürekli çalışan arka plan süreci, DI konteyneri ve yaşam döngüleri, zorlanan
-katman sınırları. Bunlara ihtiyaç yoksa ikinci sunucu saf maliyettir.
+**Gerekçe:** Next Route Handler ile API yazılabilir ama iki şeyi veremez —
+sürekli çalışan arka plan süreci ve başkasının tüketeceği birinci sınıf bir API
+(otomatik OpenAPI, sürümleme, Guard/Pipe). Bunlara ihtiyaç yoksa ikinci sunucu
+saf maliyettir. ⭐ **İşyeri projesinde varsayılan Next + NestJS'tir** —
+gerekçesi *"DÖRT KURGU"* bölümünde.
 
 ⛔ **"Ayrı backend" kararı ADR'siz alınmaz.** Hangi koşulun sağlandığı yazılır.
 
@@ -205,6 +225,215 @@ Ayrı backend seçildiyse:
 | İş kuyruğu | BullMQ + Redis | **Yalnızca sürekli açık worker varsa.** Sunucusuzda çalışmaz — aşağıya bak |
 | Log | `nestjs-pino` | JSON üretir; kurumsal toplama sistemleri düz metin toplayamaz (`12-operations-and-scaling.md`) |
 | İstek bağlamı | `nestjs-cls` | Aktif kullanıcı ve correlation ID'yi katmanlara parametre geçmeden taşır; statik erişim yasağının karşılığı |
+
+## ⭐ DÖRT KURGU — hangisi neden, ve her birinde bir isteğin HATTI
+
+Yukarıdaki dört soru **hangi kurguya** gireceğini söyler; bu bölüm her kurguda
+**neyin neden kurulduğunu** ve bir isteğin baştan sona **hangi araçlardan
+geçtiğini** anlatır. Katmanların tanımı ve "durak durak" örneği
+`01-architecture.md` → *"BİR İSTEĞİN TAM YOLU"*'nda; burada tekrarlanmaz,
+kurgular arası **fark** anlatılır.
+
+Önce iki kavram, dört adımla:
+
+**Kurgu / topology / mimari düzen** — *Gerçek hayat:* Bir işletmenin bina
+planı: her şey tek dükkânda mı, dükkân + ayrı depo mu, yalnızca vitrin mi
+(mal başkasının deposundan geliyor), yalnızca depo mu (vitrin başkasında).
+*Yazılım:* Arayüz, API, iş kuralı, kuyruk ve veritabanının **kaç ayrı programa**
+bölündüğü. *Bu projede:* `CLAUDE.md` §0'daki "Backend kurgusu" satırı.
+
+**Hat / request path / istek yolu** — *Gerçek hayat:* Restoranda siparişin yolu:
+garson → mutfak → depo → mutfak → garson → masa. Her durak tek iş yapar; depo
+yemek pişirmez. *Yazılım:* Tarayıcıdan çıkan bir HTTP isteğinin veritabanına
+gidip cevabın geri dönene kadar geçtiği duraklar. *Bu projede:* Aşağıdaki
+şemalar; her durağın dosyası `01-architecture.md` → *"Klasör yapısı"*.
+
+### Karar akışı — soruların sırası ve ağırlığı
+
+```
+Arayüz bizde mi?
+├─ HAYIR → [D] YALNIZCA API — arayüzü başkası yazıyor
+└─ EVET → Veri ve iş kuralı bizde mi?
+          ├─ HAYIR → [A] YALNIZCA ARAYÜZ — mevcut API'lere bağlanır
+          └─ EVET → API'yi başkası tüketecek mi?  VEYA  kendiliğinden çalışan iş var mı?
+                    ├─ EVET (en az biri) → [C] NEXT + NESTJS (+ worker)
+                    └─ HAYIR (ikisi de)  → [B] NEXT TEK BAŞINA
+```
+
+⛔ **"Kod kurumun sunucusunda çalışacak" tek başına [C]'ye götürmez.** Next.js
+tek başına Docker'da kurum sunucusunda sorunsuz çalışır — kurumlarda bu
+şekilde canlıda olan projeler var. O soru yalnızca şunu açar: **ayrı worker ve BullMQ mümkün**
+— sunucusuz platformda mümkün değildi. Kararı **tüketici** ve **arka plan işi**
+verir; DI/katman ihtiyacı da tek başına belirleyici değildir, Next içinde de
+katman kurulur (`01-architecture.md`).
+
+⭐ **İşyeri (belediye) projesinde varsayılan [C]'dir.** Gerekçe: kurum içi
+sistemler birbirine bağlanır (EBYS, e-Belediye, diğer müdürlükler, mobil) ve
+*"bugün tüketen yok"* yarın değişir; ayrık API'yi **sonradan** çıkarmak servis
+katmanını yeniden yazmaktır. Tek istisna: saf içerik/tanıtım sitesi — hiçbir
+sistem tüketmeyecek, arka plan işi yok — o zaman [B], **ADR ile**. Kendi
+projede varsayılan [B] kalır (sunucusuz, düşük maliyet).
+
+---
+
+### [A] YALNIZCA ARAYÜZ — veri ve API kurumda, biz ekranı yazıyoruz
+
+**Ne zaman:** Kurum *"API'miz hazır, siz ekranları yapın"* der; veritabanına
+dokunma yetkimiz yok.
+
+**Neden bu araçlar:**
+
+| Araç | Neden var |
+|---|---|
+| Next.js (App Router) | Sunucu bileşenleri kurumun API'sini **sunucuda** çağırır; API anahtarı tarayıcıya hiç inmez |
+| Route Handler — **BFF** rolünde | *backend-for-frontend / arayüz arka ucu*: tarayıcı kurumun API'sine doğrudan gitmez, önce bizim ince katmana gelir. *Gerçek hayat:* otel resepsiyonu — misafir mutfağı aramaz, resepsiyon arar |
+| TanStack Query | Sunucu verisini önbellekler, yeniden dener, "yükleniyor / hata" durumunu yönetir |
+| ⭐ **Zod — gelen CEVABI doğrular** | Dış API'nin döndüğüne güven yok: alan adı değişirse çalışma anında değil, `parse` anında yakalanır |
+| `openapi-typescript` | Kurum OpenAPI belgesi verdiyse tipler **elle yazılmaz**, belgeden üretilir |
+| MSW (Mock Service Worker) | Kurumun API'si erişilemezken (VPN yok, test ortamı kapalı) aynı sözleşmeyle **simüle** edilir (`00-stack.md` → *"SİMÜLE EDİLEN DIŞ SERVİS"*) |
+
+**Hat:**
+
+```
+Tarayıcı ──fetch──▶ Route Handler (BFF)  ──HTTP──▶  KURUMUN API'Sİ ──▶ kurumun DB'si
+   ▲                  │ kimlik/anahtar ekler                │
+   │                  │ Zod.parse(cevap) ◀──────────────────┘
+   └── TanStack Query ─┘ (önbellek, yeniden deneme)
+```
+
+**Bu kurguda OLMAYAN:** Prisma, migration, veri modeli, PostgreSQL. Bize lazım
+olan **API sözleşmesi** (`03-api-guidelines.md`), veri modeli değil
+(`04-database.md` → *"Bu proje bunlara ihtiyaç duyar mı"*).
+
+---
+
+### [B] NEXT TEK BAŞINA — arayüz + API + veri, tek program
+
+**Ne zaman:** Tüketici yalnızca kendi arayüzümüz, kendiliğinden çalışan iş yok.
+İçerik siteleri, yönetim panelleri, küçük iç araçlar.
+
+**Neden bu araçlar:**
+
+| Araç | Neden var |
+|---|---|
+| Next.js Route Handler | Dışa açılan HTTP ucu (webhook, dosya, açık API); ayrı sunucu, ayrı deploy, CORS yok |
+| Server Action | Kendi formlarının yazma yolu — URL yok, `useActionState` ile durum; kimlik + Zod action içinde (`01-architecture.md` → *"Server Action mı, Route Handler mı"*) |
+| React Hook Form + Zod | Form **tarayıcıda** aynı şemayla doğrulanır — kullanıcı hatayı göndermeden görür |
+| Zod (sunucuda, aynı şema) | ⛔ Tarayıcı doğrulaması güvenlik değildir; sunucu **yeniden** doğrular. Aynı şema iki yerde, tek tanım |
+| Servis · Repository | Katman Next içinde de kurulur; HTTP'yi bilmeyen iş kuralı yarın NestJS'e **taşınabilir** olsun |
+| Prisma | ORM: nesne ↔ tablo çevirisi (`01-architecture.md` → *"ORM ne demek"*) |
+| PostgreSQL | Tek veri kaynağı |
+| Inngest / QStash (gerekirse) | Sunucusuz uyumlu "sonra yap" — e-posta, PDF. BullMQ **çalışmaz** (aşağıdaki *"İş kuyruğu"*) |
+
+**Hat:**
+
+```
+Tarayıcı ─(form: RHF + Zod)─▶ Route Handler ─Zod.parse─▶ Servis ─▶ Repository ─▶ Prisma ─SQL─▶ PostgreSQL
+                                   │ kimlik çöz (cookie)     │ iş kuralı          │ prisma.x.create()      │
+                                   ◀──── 201 / 422 ◀────────┘◀──── nesne ◀───────┘◀──── satır ◀──────────┘
+```
+
+**Bu kurguda OLMAYAN:** sürekli açık worker, Redis, DI konteyneri, ikinci
+konteyner. Ağır iş varsa Inngest/QStash ile HTTP üzerinden tetiklenir.
+
+---
+
+### [C] NEXT + NESTJS (+ WORKER) — arayüz ayrı, API ayrı program
+
+**Ne zaman:** API'yi başkası da tüketecek (mobil, başka müdürlük, dış sistem)
+**veya** kimse ekranı açmasa da çalışması gereken iş var (gece raporu, SMS
+kuyruğu, webhook). ⭐ **İşyeri projesinde varsayılan.**
+
+**Neden bu araçlar:**
+
+| Araç | Neden var |
+|---|---|
+| Next.js | Yalnızca ekran: sunucu bileşenleri NestJS'i çağırır, istemci bileşenleri TanStack Query ile; form yazmaları Server Action üzerinden NestJS'e (ince BFF — token sunucuda kalır) |
+| NestJS (Express adaptörü) | API **birinci sınıf ürün** olur: modül, DI, Guard, Pipe. Spring/.NET bilen kurum ekibi deseni tanır. Express, Nest'in altında zaten var; çıplak kurulmaz |
+| **Guard** | *Gerçek hayat:* bina girişindeki kartlı kapı. İstek controller'a **ulaşmadan** kimlik (JWT) ve rol kontrolü |
+| **Pipe** + `nestjs-zod` | Gövdeyi Zod şemasıyla doğrular, DTO'ya çevirir; geçemeyen 400 ile döner, controller'ı hiç görmez |
+| Controller · Service · Repository | `01-architecture.md` katmanları; controller HTTP, service kural, repository Prisma |
+| `packages/contracts` | Zod şemaları **tek yerde**; Next ve Nest aynı paketi içe alır — alan adı değişince arayüz **derlenmez** |
+| OpenAPI (Swagger) — otomatik | `@nestjs/swagger` şemadan belge üretir; tüketen ekip `/api/docs`'u açar, bize sormaz. `/api/v1` sürümleme baştan |
+| **BullMQ + Redis** | Kuyruk: *"sonra yap"* listesi Redis'te durur; worker sırayla alır. Sunucu 7/24 açık olduğu için mümkün |
+| **Worker** (ayrı süreç/konteyner) | Kuyruktan iş alır, **aynı servis katmanını** çağırır — kural iki yerde yazılmaz |
+| `nestjs-pino` · `nestjs-cls` | JSON log (kurum toplama sistemi için) · istek bağlamı (correlation ID) katmanlara parametre geçmeden |
+| Turborepo + pnpm workspaces | Üç paket (web, api, contracts) tek repoda, tek komutla |
+
+**Hat — eşzamanlı (senkron) istek:**
+
+```
+Tarayıcı ─▶ Next (RSC / TanStack Query) ─fetch─▶ NESTJS
+                                                  │ Guard    : JWT doğru mu, rol yeter mi      ✗→ 401/403
+                                                  │ Pipe     : Zod.parse(gövde) → DTO          ✗→ 400
+                                                  │ Controller: servisi çağır, HTTP'ye çevir
+                                                  │ Service  : iş kuralı
+                                                  │ Repository ─▶ Prisma ─SQL─▶ PostgreSQL
+                                                  ◀── 201 + nesne ◀──────────── satır ◀─┘
+```
+
+**Hat — arka plan işi (SMS gönderimi örneği):**
+
+```
+Service: "SMS gönder" ─▶ queue.add(job) ─▶ REDIS (kuyruk)      ← istek burada 202 ile DÖNER,
+                                                │                  kullanıcı beklemez
+   WORKER (ayrı süreç, 7/24) ◀── job al ────────┘
+     │ aynı Service'i çağırır ─▶ kurumun SMS API'si
+     │ başarısız → BullMQ yeniden dener (backoff), 3'te de olmazsa "dead letter"
+     └─ sonuç: PostgreSQL'e durum yazar → arayüz polling / WebSocket ile görür
+```
+
+*Gerçek hayat:* Kargo şubesi — paketi bırakırsın, fiş alırsın (202), teslimatı
+kurye sonra yapar; olmadıysa tekrar dener, üçte de olmazsa "teslim edilemedi"
+rafına kaldırır.
+
+**Bu kurguda OLMAYAN:** Route Handler içinde API (Next yalnızca BFF olarak,
+gerekiyorsa). Inngest/QStash gereksiz — worker zaten var.
+
+---
+
+### [D] YALNIZCA API / SERVİS — arayüzü başkası yazıyor
+
+**Ne zaman:** Mobil ekip, başka müdürlük ya da mevcut bir portal arayüzü
+yapıyor; bizden yalnızca API isteniyor.
+
+**Neden bu araçlar:** [C]'nin NestJS yarısı, Next'siz. Ek olarak **zorunlu**:
+
+| Araç | Neden var |
+|---|---|
+| OpenAPI belgesi + Swagger UI | Teslim edilen **ürün** budur; ekran yok. Tüketen ekip belgeye bakar |
+| `/api/v1` sürümleme | Tüketiciyi biz güncelleyemeyiz; kırıcı değişiklik yeni sürümde |
+| Postman/Bruno koleksiyonu | Teslim paketine girer; DevOps ve tüketen ekip tek tıkla dener |
+| Sözleşme testi (contract test) | Belge ile gerçek cevap ayrışmasın: CI'da OpenAPI'ye karşı doğrulama |
+
+**Hat:** [C]'deki NestJS hattı; istemci bizim değil.
+
+**Bu kurguda OLMAYAN:** Next.js, React, Tailwind, shadcn. Arayüz teslimi yok.
+
+---
+
+### Migration yan yolu — hattın ÜSTÜNDE değil, ÖNCESİNDE
+
+Dört kurguda da (A hariç) aynı; isteğin hattında **hiç yer almaz**
+(`01-architecture.md` → *"İKİ YAYGIN YANLIŞ ANLAMA"* → 2. madde):
+
+```
+Geliştirici schema.prisma'yı değiştirir
+  └─ prisma migrate dev (LOCAL) ─▶ migration SQL dosyası üretilir ─▶ git'e girer
+       └─ MR → CI (ci:verify) → merge → imaj
+            └─ DEPLOY ANI: prisma migrate deploy (kendi proje) / scripts/migrate.mjs + V__ dosyaları (kurum) — DDL yetkili hesapla, advisory lock
+                 └─ uygulama başlar → istekler artık yalnızca DML (svc_ hesabı)
+```
+
+⭐ İki hesap ayrımı ve kurum biçimi (`V__` dosyaları) `04-database.md` ve
+`13-environments.md` → *"Yol C"*'de.
+
+### Kurgular arası geçiş — neden katman baştan kurulur
+
+[B]'den [C]'ye geçiş, servis ve repository katmanı Next içinde **HTTP'den
+bağımsız** yazıldıysa dosya taşımaktır; Route Handler'ın içine `if` yığıldıysa
+yeniden yazmaktır. Katman kuralı bu yüzden "küçük projede birleştirilebilir"
+denerek gevşetilmez (`01-architecture.md` → *"DEĞERLENDİRİLDİ, REDDEDİLDİ"*).
 
 ## İş kuyruğu — mimariye göre DEĞİŞİR, tek doğru yok
 

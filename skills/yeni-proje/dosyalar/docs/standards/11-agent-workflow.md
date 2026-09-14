@@ -732,7 +732,7 @@ anlatımını ona göre ayarlamak.**
 
 | Seviye | Ajan ne yapar |
 |---|---|
-| **0 — Yeni** | Üç adımda **tam** aç: gerçek hayat → tanım → bu projede nerede |
+| **0 — Yeni** | Dört adımda **tam** aç: ad (TR/EN eş anlamlılar) → gerçek hayat → yazılım dünyası → bu projede nerede |
 | **1 — Tanıdık** | Kısa hatırlatma + ilk anlatıldığı yere işaret |
 | **2 — Takip ediyor** | Terimi kullan, **tek cümlelik** hatırlatma |
 | **3 — Sahipleniyor** | Doğrudan kullan, açıklama yok |
@@ -910,20 +910,89 @@ Doküman, konuyu bilen biri tarafından yazılmış gibi durur; sadeliği bir
 ifadeler de dışarı giden dokümanda bulunmaz. Doküman kimseye hitap etmez;
 konuyu anlatır.
 
-### Her kavram ÜÇ adımda açılır
+### ⭐ Her kavram DÖRT adımda açılır — her aşamada, her kanalda
 
 Bir kavramın yalnızca teknik tanımını yazmak ezber üretir, anlayış üretmez.
-Okuyucunun kavramı **kendi zihninde bir yere oturtabilmesi** için üç adım
-zorunludur:
+Okuyucu **işe yeni başlamış bir junior** sayılır: kavramlar henüz havada,
+aralarındaki bağlantılar kurulmamış, aynı şeyin üç ayrı adı olduğunu bilmiyor.
+Onun kavramı **kendi zihninde bir yere oturtabilmesi** için dört adım zorunludur:
 
-1. **Gerçek hayattan karşılığı** — çarpıcı ve akılda kalıcı bir benzetme
-2. **Yazılımdaki tanımı** — sektörde kullanılan terimle
-3. **BU projede tam olarak nerede** — hangi somut sorunu, hangi ekranda,
-   hangi tabloda çözüyor
+| # | Adım | Ne yazılır | Örnek — "bağlantı havuzu" |
+|---|---|---|---|
+| 0 | **Ad** | Terim, yaygın eş anlamlılarıyla — Türkçe **ve** İngilizce, eğik çizgiyle (biçim: `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` → *"Terim biçimi"*) | **bağlantı havuzu / connection pool / pool** |
+| 1 | **Gerçek hayat** | Çarpıcı, akılda kalıcı bir benzetme — yazılım dışından | Her yolcu için sıfırdan taksi üretmek yerine durakta bekleyen 10 taksi |
+| 2 | **Yazılım dünyası** | Sektördeki tanımı **ve** başka bir teknolojide aynı kavramın nasıl göründüğü — okuyucu *"demek ki aynı şey"* bağlantısını kursun | Veritabanı bağlantısı açmak pahalıdır (PostgreSQL her bağlantı için ayrı süreç açar); havuz açık bağlantıyı yeniden kullanır. Java'da HikariCP, .NET'te `SqlConnection` havuzu aynı iştir |
+| 3 | **Bu projede nerede** | Hangi somut sorunu, hangi dosyada, hangi ekranda/tabloda çözüyor | `src/lib/db/pool.ts` → `max: 10`; paylaşımlı kurum sunucusunda üst sınır DB biriminden alınır |
 
-⛔ Üçüncü adım atlanamaz. *"Katmanlar birbirinden ayrılır"* cümlesi tek başına
-hiçbir şey öğretmez; *"Prisma değişse yalnızca infrastructure katmanı etkilenir,
-domain ve application dokunulmaz kalır"* öğretir.
+⛔ **Üçüncü ve dördüncü adım atlanamaz.** *"Katmanlar birbirinden ayrılır"*
+cümlesi tek başına hiçbir şey öğretmez; *"Prisma değişse yalnızca infrastructure
+katmanı etkilenir, domain ve application dokunulmaz kalır"* öğretir.
+
+⛔ **Bu kural belgeye özgü DEĞİLDİR.** Geliştirme sürecinin **her aşamasında**
+ve her kanalda geçerlidir:
+
+| Aşama | Nerede uygulanır |
+|---|---|
+| PRD görüşmesi | Sorudaki her terim sorulmadan **önce** açılır — soru, gerekçesiyle birlikte gelir (`00-stack.md` → *"Backend kurgusu"* ve *"API biçimi"* bölümlerindeki açılış cümlesi kalıbı) |
+| Stack ve mimari kararı | Seçeneğin adı, bedeli, alternatifi — dört adımla |
+| Kurulum | Her kurulan aracın ne olduğu ve neyi çözdüğü |
+| Kodlama | Kod yorumları ve dosya başı özeti (`02-coding-standards.md` → *"Kod, okuyamayan biri için de anlaşılır olur"*) |
+| Test · inceleme · teslim | Bulgu ve rapor dili |
+| Sohbetteki her cevap | Ajanın yanıtı — *"yap geç"* yasak |
+
+⛔ **Robot dili yasak.** Madde yığını, gerekçesiz *"best practice budur"*,
+açıklamasız terim, dört başlığa birer cümle — hepsi kural ihlalidir (yukarıdaki
+*"Kime yazıyorsun"* tablosu ve aşağıdaki *"HER KAVRAM ÖĞRETİLİR"*). Anlatım bir
+meslektaşa, bağlaçlı ve akan cümlelerle yapılır; kavramlar birbirine
+**bağlanarak** verilir, yan yana dizilerek değil.
+
+⭐ Seviye defterinde (*"Anlatım düzeyi sabit değil"*) 2–3'e çıkmış bir terim
+için dört adım tekrarlanmaz; **ilk karşılaşmada** tamdır.
+
+### ⭐ HER KAVRAM ÖĞRETİLİR — dört adım kontrol listesidir, doldurulacak şablon DEĞİL
+
+Bu kitin okuyucusu işe yeni başlamış bir junior'dır. Terimleri bilmez, bir
+isteğin tarayıcıdan veritabanına nasıl aktığını uçtan uca görmemiştir, aynı
+şeyin üç ayrı adı olduğunu bilmez. Ona bir kavramı anlatırken amaç "doğru
+cümleyi söylemiş olmak" değil, **o kavramın onun kafasında bir yere
+oturmasıdır.** Bu yüzden anlatım, bir meslektaşa masa başında ders anlatır
+gibi yapılır: akan cümlelerle, tek bir örnek üstünden, her terim geçtiği yerde
+açılarak.
+
+Dört adım — **ad ve eş anlamlıları (TR/EN) · gerçek hayat · yazılım dünyası ·
+bu projede nerede** — bir **kontrol listesidir**: anlatım bittiğinde dördü de
+geçilmiş olmalı. Ama dört başlık açıp her birine bir cümle yazmak kuralı
+yerine getirmez; tam tersine, kuralın **ihlalidir**. Ölçüt tektir:
+
+⛔ **Okuyan hiçbir kelimede takılmadan sonuna gelmeli.** *"Bu ne demek"*
+diyeceği tek bir terim kaldıysa anlatım eksiktir — terimi çıkarmak değil,
+açmak gerekir.
+
+**Bunu sağlayan altı kural:**
+
+| # | Kural | Ne demek |
+|---|---|---|
+| 1 | **İlk geçen her terim yerinde açılır** | Geçtiği cümlede ya da hemen ardından — sonraki paragrafta değil. FK, migration, deploy, JOIN, derleyici, DDL, CI: hiçbiri "bilinir" sayılmaz. Daha önce başka bir belgede açıklanmış olsa bile **bu** belgede/cevapta ilk geçtiği yerde kısa bir hatırlatma verilir |
+| 2 | **Önce sorun, sonra çözüm** | Kavram tanımla değil, onu gerektiren **somut sorunla** başlar: *"bir başvurunun durumu var — beklemede, onaylandı, reddedildi; bu listeyi nereye koyacağız?"* Okuyan neden ihtiyaç duyduğunu görmeden tanımı ezberler, anlamaz |
+| 3 | **Tek örnek baştan sona taşınır** | Her seçenek **aynı** örnekle gösterilir ve bir **değişiklik senaryosu** ("yarın iş birimi dördüncü değeri isterse ne olur") iki yolda da adım adım yürütülür. Artı/eksi tablosu bu yürüyüşten *sonra* gelir, yerine geçmez |
+| 4 | **Kod, okuyan kod bilmiyormuş gibi yorumlanır** | Örnekteki her satırın yanında ne yaptığı Türkçe yazılır (`02-coding-standards.md` → *"Kod, okuyamayan biri için de anlaşılır olur"*). `as const` nedir, `REFERENCES` ne yapar — kodun içinde söylenir |
+| 5 | **Uzunluk sınırı yoktur, eksiklik sınırı vardır** | *"Bu kadarı yeter"* diye kesilmez, *"bu kadar bilsin"* diye sadeleştirilmez. Kısaltma yalnızca **tekrar** için yapılır, bilgi için değil. Kapsamlı anlatmak maliyet değil, işin kendisidir |
+| 6 | **Kararı veren soruyu bırak** | Anlatımın sonunda okuyanın yarın **kendi başına** uygulayabileceği bir ölçüt olur: *"kod bu listedeki değerlere farklı mı davranıyor, hepsine aynı mı?"* Kararı ezberletmek değil, karar vermeyi öğretmek |
+
+**Böyle değil / böyle — aynı kavram, iki anlatım:**
+
+| ⛔ Şablon doldurma (kural ihlali) | ✅ Öğretme |
+|---|---|
+| *"**Kavram — lookup tablosu / tanım tablosu.** Gerçek hayat: panoya satır eklenir. Yazılım: değerler ayrı tabloda, ana tablo FK ile bağlanır, yeni değer = INSERT. Bu projede: `tbl_islem_durumu`."* | *"Bir başvuru sistemi yazıyorsun; her başvurunun bir durumu var: beklemede, onaylandı, reddedildi. Bu üç değerlik listeyi nereye koyacağız? … Lookup tablosu (Türkçede tanım tablosu, referans tablosu — hepsi aynı şey) şu demek: listeyi yapıya gömmek yerine ayrı bir tabloya satır olarak koyuyorsun. Buradaki `REFERENCES` satırı bir yabancı anahtar (foreign key, FK) kuruyor — bir tablodaki kolonun başka tablodaki satırı işaret etmesi; ve veritabanı bunu zorlar: 99 numaralı durum yoksa 99 yazamazsın. Faturadaki 'müşteri no' gibi: defterde o müşteri olmak zorunda. … Şimdi iş birimi geldi, 'bir de iptal olsun' dedi. Enum'da bunun yolu dört adım: … Lookup'ta tek `INSERT`. Kurumda DDL'i ayrı birim koşturduğu için bu, günler ile saniyeler arasındaki fark."* |
+| Dört adım var, her biri bir cümle. FK, INSERT, DDL açıklanmamış. Sorun yok, örnek yürümüyor, karar ölçütü yok | Sorunla başlıyor · her terim geçtiği yerde açılıyor · tek örnek iki yolda yürüyor · kurumdaki somut sonuca bağlanıyor |
+
+⚠️ Bu kural **hem belgede hem sohbetteki her cevapta** geçerlidir (yukarıdaki
+*"her aşamada, her kanalda"* tablosu). Kullanıcı *"bu nasıl açıklama"* demek
+zorunda kalıyorsa, ya da cevabı anlamak için başka bir araca taşıyorsa kural
+çiğnenmiştir.
+
+⭐ Seviye defterinde 2–3'e çıkmış terimler bunun dışındadır; onlar doğrudan
+kullanılır (*"Anlatım düzeyi sabit değil"*).
 
 ### Kod görülmeden anlaşılmayacak her başlıkta kod bulunur
 
@@ -1019,7 +1088,7 @@ işaret edilir (yukarıdaki *"Aynı bilgi iki yerde yazılmaz"*).
 
 Bir açıklama bittiğinde okuyanın şu sorulardan hiçbiri cevapsız kalmamalı:
 
-- Bu terim ne demek? → üç adımda açılır (yukarıda)
+- Bu terim ne demek? → dört adımda açılır (yukarıda)
 - Bu dosya nerede duruyor, ne işe yarıyor?
 - Bu değer nereden geliyor, kim üretiyor?
 - Bu satır olmasa ne olurdu?

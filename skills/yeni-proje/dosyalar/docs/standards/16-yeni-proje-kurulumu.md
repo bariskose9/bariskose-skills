@@ -157,7 +157,7 @@ gerekçe, kararı verirken en net hatırlanır.
 | `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` | repo kökü, ⛔ **adı `CLAUDE.md` olarak** | Olduğu gibi kopyala + **yeniden adlandır**, sonra yalnızca §0 "Proje Değişkenleri" bloğunu doldur. Ad değişmezse Claude Code yüklemez |
 | `CALISMA-KILAVUZU.md` | Kullanıcının kılavuzu: nasıl başlanır, ne sorulur, hangi dosya ne işe yarar | Olduğu gibi kopyalanır |
 | `docs/standards/**` (00–18, **19 dosya**) | `docs/standards/` | **Olduğu gibi kopyala, İÇİNİ DEĞİŞTİRME.** Stack farklıysa yalnızca `00-stack.md` tablosu güncellenir |
-| `docs/standards/sablonlar/**` | `docs/project/` | Kopyala ve **içini doldur** — her şablonun başında ne yazılacağı anlatılıyor |
+| `docs/standards/sablonlar/**` | ⛔ **İKİYE AYRILIR:** çoğu `docs/project/` · ⭐ iki defter `docs/kullanici/` | Kopyala ve **içini doldur**. Hedefler satır satır aşağıdaki *"`sablonlar/` içinde ne var"* tablosunda — ezberden `docs/project/` yazma |
 | `REPO-YAPISI.md` | repo kökü | Kopyala, projeye özel klasör adlarını değiştir |
 
 **Kural:** `docs/standards/` **asla projeye göre değişmez.** Bir kural projeye
@@ -208,7 +208,10 @@ dışında kalmıştı (`teknoloji-ve-plan` · `calisilacak-konular` · `vscode-
 
 ### 1. Dosyaları yerleştir
 Yukarıdaki tabloyu uygula. `docs/standards/sablonlar/` klasörü kopyalandıktan
-sonra **kaynak projeden silinmez**, hedef projede `docs/project/` altına açılır.
+sonra **kaynak projeden silinmez**. ⛔ Hedef projede **tek bir klasöre açılmaz**:
+çoğu `docs/project/`, ⭐ iki defter `docs/kullanici/` altına gider. Her şablonun
+hedefi **kendi başındaki `ŞABLON —` satırında** yazılıdır; denetim betiği bunu
+kontrol eder.
 
 ### 2. `CLAUDE.md` §0'ı doldur
 Proje adı, stack, deploy hedefi, ana dal, arayüz dili, kod dili.

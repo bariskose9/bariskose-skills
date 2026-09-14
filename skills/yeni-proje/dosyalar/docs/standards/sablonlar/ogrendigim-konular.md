@@ -1,5 +1,7 @@
 # Öğrendiğim konular
 
+<!-- ŞABLON — `docs/kullanici/ogrendigim-konular.md` olarak kopyalanır. ⛔ `docs/project/` DEĞİL — ikizi `calisilacak-konular.md` ile aynı bölgede. -->
+
 > **Bu dosya boş başlar ve zamanla dolar.** İkizi `calisilacak-konular.md`:
 > orası *"üzerinde çalışılan"*, burası *"artık bilinen"*.
 >

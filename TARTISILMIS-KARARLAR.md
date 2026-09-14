@@ -184,9 +184,9 @@ Sürüm: `1.85.0` → `3.1.0`. Kurulu kopya da güncellendi.
 
 ## Sırada ne var
 
-- [ ] ⭐ **Kit hâlâ hiç kullanılmadı.** `/yeni-proje` fiilen çalıştırılmadı;
-      bugünkü kuralların hiçbiri sınanmadı. İlk kurulumda çıkacak sorunlar
-      buraya yazılacak. **Şu an bilinen en büyük belirsizlik bu.**
+- [x] ~~⭐ **Kit hâlâ hiç kullanılmadı.**~~ — **kullanıldı (2026-09-11).**
+      `/yeni-proje` ilk kez fiilen çalıştırıldı. Sonuç aşağıda:
+      *"İlk gerçek kullanım — 2026-09-11"*.
 
 - [ ] ⭐ **Kullanıcı yarın devam edecek.** Bu oturumda karar bekleyen madde
       kalmadı; üçü de kapatıldı (aşağıdaki arşiv).
@@ -196,9 +196,8 @@ Sürüm: `1.85.0` → `3.1.0`. Kurulu kopya da güncellendi.
 - [ ] İki dosya bölünme eşiğine yaklaşıyor: `CALISMA-KILAVUZU.md` (1161 satır)
       ve `11-agent-workflow.md` (970). Büyümeye devam ederlerse bölünmeleri
       önerilecek. Ölçüm: `wc -l`
-- [ ] ⚠️ **Kit hiç kullanılmadı.** Tüm bu kurallar `/yeni-proje` fiilen
-      çalıştırılarak **sınanmadı**. İlk gerçek kurulumda çıkacak sorunlar
-      buraya yazılacak.
+- [x] ~~⚠️ **Kit hiç kullanılmadı.**~~ — yukarıdaki maddenin tekrarıydı,
+      birlikte kapandı (2026-09-11).
 
 ### 📦 Kapatılan kararlar — arşiv
 
@@ -224,3 +223,102 @@ Sürüm: `1.85.0` → `3.1.0`. Kurulu kopya da güncellendi.
       adı ve ödev metni geçiyor. Kullanıcıya bildirildi, *"şimdilik kalsın"*
       dedi. Kapatılmak istenirse `.gitignore` + takipten çıkarma yeterli;
       **git geçmişini temizlemek ayrı bir iştir.**
+
+---
+
+## ⭐ İlk gerçek kullanım — 2026-09-11
+
+⛔ **Kit bugün ilk kez fiilen çalıştırıldı.** `/yeni-proje`, boş bir klasörde
+(`~/baris_projects/deneme-proje`) Adım 0'dan Adım 2'nin sonuna kadar koşturuldu.
+Kurulum yarıda bırakıldı — amaç proje kurmak değil, **kiti sınamaktı.**
+
+### Bulgu 1 — `docs/kullanici/` yayılma eksiği · **DÜZELTİLDİ**
+
+**Belirti:** kurulum iki defteri (`calisilacak-konular.md`,
+`ogrendigim-konular.md`) `docs/project/` altına açtı, sonra `docs/kullanici/`
+altına taşımak zorunda kaldı. Aynı iş iki kez yapıldı.
+
+**Kök sebep:** 2026-09-09'da alınan *"defterlerin yeri `docs/kullanici/`"*
+kararı **eksik yayıldı.** Karar `16` ve `OKUBENI` tablolarına işlendi;
+`SKILL.md` Adım 2'ye ve iki özet metne işlenmedi. Yani bu deponun kendi
+*"YAYILMA TABLOSU"* kuralı çiğnenmişti — `CLAUDE.md` → *"TAZELEME KULLANICININ
+İŞİ DEĞİL"*.
+
+**Ölçüm:** düzeltmeden önce `docs/kullanici` ifadesi `SKILL.md` içinde
+**0 kez** geçiyordu; şimdi 5 kez.
+
+**Düzeltilen dört yer:**
+
+| Dosya | Neydi | Ne oldu |
+|---|---|---|
+| `skills/yeni-proje/SKILL.md` Adım 2 md. 4 | Tüm şablonlar `docs/project/` diye listeleniyordu | **İki hedefli tablo** — defterler ayrı satırda |
+| `skills/yeni-proje/SKILL.md` Adım 2 md. 6 | Defter tam yolu olmadan anılıyordu | Tam yol + *"`docs/project/` altına açılmaz"* uyarısı |
+| `…/sablonlar/OKUBENI.md` girişi | *"İçindeki dosyalar `docs/project/` altına açılır"* — **kendi tablosuyla çelişiyordu** | İki hedef olduğu yazıldı, tabloya yönlendirildi |
+| `…/16-yeni-proje-kurulumu.md` özet tablosu (sat. 160) | `sablonlar/** → docs/project/` — **kendi detay tablosuyla çelişiyordu** | *"İKİYE AYRILIR"* + detay tablosuna atıf |
+| `…/16-yeni-proje-kurulumu.md` kurulum sırası (sat. 211) | *"hedef projede `docs/project/` altına açılır"* | İki hedef yazıldı + `ŞABLON —` beyanına atıf |
+| `kit-hakkinda/KIT-REHBER.md` → *"projene YERLEŞEN dosyalar"* | `docs/kullanici/` **hiç sayılmıyordu** — kullanıcı kendi defterlerinin nereye geldiğini bilmiyordu | Satır eklendi, `docs/project/` ile farkı yazıldı |
+
+### ⛔ KÖK SEBEBİN KÖKÜ — beş şablon hedefini BEYAN ETMİYORDU
+
+⚠️ İlk düzeltme *"çakışmada `OKUBENI.md` üstündür"* demekti. **Bu yetersizdi** —
+kullanıcı itiraz etti ve haklıydı: *"çakışma nerelerde varsa onları bulup
+düzeltmek lazım."* Yetkili ilan etmek, çakışmanın **kalmasına izin vermektir.**
+
+Tarayınca asıl sebep çıktı: şablonların **dokuzu** kendi başında *"ben şuraya
+kopyalanırım"* diye yazıyordu; **beşi yazmıyordu** — `calisilacak-konular.md`,
+`ogrendigim-konular.md`, `roadmap.md`, `teknoloji-ve-plan.md`,
+`vscode-eklentileri.md`.
+
+⭐ **Beyan olmayınca yanlış listeye itiraz eden hiçbir şey yok, ölçebilecek bir
+şey de yok.** İki defter kendi içinde `docs/kullanici/` deseydi sapma ilk
+günde görünürdü.
+
+### ✅ KALICI ÇÖZÜM — hatırlamak yerine ÖLÇMEK
+
+1. **Her şablon kendi hedefini beyan eder** — başında `ŞABLON — <hedef>`
+   satırı. Beş eksik olana eklendi; artık on dördünde de var.
+2. **`denetim.mjs`'e altıncı kontrol eklendi: `ŞABLON HEDEFİ`.** Beyanı olmayan
+   şablonu ve beyanla çelişen her **tablo satırını** yakalar.
+
+⛔ **Kontrol koşturularak sınandı, "temiz" çıktısına güvenilmedi.** Depo geçici
+bir kopyaya alındı, iki hata kasten geri konuldu (bir tablo satırı eski yanlış
+hedefe çevrildi, bir şablonun beyanı silindi); **ikisi de yakalandı.**
+
+*Gerekçe:* betiğin kendi başlığındaki uyarı — 2026-09-06'da üç kontrolün
+ikisinin hiç çalışmadığı, yine de *"✓ temiz"* yazdığı ölçülmüştü.
+
+⚠️ **Ölçülemeyen sınır, bilerek kabul edildi:** serbest metindeki hedef iddiası
+kontrol edilemiyor — liste maddesi satırlara yayılır, hedef başka satırda
+kalır (bugünkü hatanın biçimi tam buydu). Bu yüzden hedef bilgisi **tabloya
+taşındı**; tablo satırı tek satırdır ve makine okuyabilir. Serbest metinde
+yeniden yazılırsa kontrol yine kör kalır.
+
+**Sürüm:** `3.5.0` → `3.6.0` (yama değil **minor**: yeni bir commit kapısı).
+
+## ⭐ Belediye standartları turu — 2026-09-13 / 14
+
+Kuruma ait iki belge okundu (veritabanı geliştirme standardı; daha önce
+canlıya çıkmış bir kurum projesinin teknik özeti) ve kit **kurum modu** için
+sekiz çatışma üzerinden gözden geçirildi. Kural: kurumun yazdığı yerde kurum,
+sustuğu her yerde kitin en kapsamlı varsayılanı; **emsal ≠ dayatma**.
+Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
+
+| # | Karar | Nerede |
+|---|---|---|
+| 0 | Anlatım: her kavram dört adımla, junior'a öğretir gibi; dört adım şablon değil kontrol listesi; robot dili yasak | `11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"* · CLAUDE.md şablonu → *"ANLATIM ÖLÇÜTÜ"* |
+| 0 | Kod dili proje moduna göre (kurum DB standardı Türkçeyse kod da Türkçe); dosya başı özet yorumu her dosyada | `02-coding-standards.md` |
+| 0 | Dört kurgu (yalnızca arayüz / Next / Next+Nest / yalnızca API) — her biri neden, hangi araçlar, isteğin hattı; 4. soru tetikleyici değil; kurum varsayılanı Next+NestJS | `00-stack.md` → *"DÖRT KURGU"* |
+| 1 | İsimlendirme: kurum standardı `@map` ile; kurum modunda iki taraf Türkçe | `04-database.md` → *"İsimlendirme"* |
+| 2 | PK: kendi projede UUIDv7, kurumda `BIGINT IDENTITY` (`BIGSERIAL` düzeltmesi, `public_id`) | `04-database.md` → *"BİRİNCİL ANAHTAR"* |
+| 3 | Enum yok; tanım tablosu (+ mantık taşıyan kümede `as const` liste + senkron testi) | `04-database.md` → *"SABİT DEĞER KÜMESİ"* |
+| 4 | Migration: kendi projede Prisma Migrate, kurumda Prisma Client + Flyway biçimi SQL + koşucu; CI'da `migrate diff --exit-code` | `04-database.md` → *"MIGRATION ARACI"* |
+| 5 | Audit: before-image JSONB, INSERT-only, tek noktadan otomatik, aynı transaction | `04-database.md` → *"Denetim kaydı"* |
+| 6 | KVKK: `*_encrypted BYTEA` (AES-256-GCM, anahtar sürümü) + `*_hash` (tuzlu HMAC) | `14-privacy-and-compliance.md` |
+| 7 | CI hattı merkezî `include` ise: yerel `verify` işi / `pre-push` kancası; husky + lint-staged her modda | `09-ci-cd-deploy.md` |
+| 8 | Dosya depolama: `FileStorage` adaptörü, S3-uyumlu varsayılan, `public/` yasak, sekiz yükleme kuralı | `05-auth-security.md` → *"Dosya yükleme ve depolama"* |
+| — | Zod: hazır kural → regex → refine; ReDoS ve `\p{L}` | `03-api-guidelines.md` |
+| — | Server Action / Route Handler görev bölüşümü; `proxy.ts` | `01-architecture.md` |
+| — | Yol C: test + canlı iki sunucu, `main` → test, etiket → canlı | `13-environments.md` |
+| — | Kuruma sorulacak 23 soru, aşama haritasıyla | `sablonlar/kurumdan-ogrenilecekler.md` |
+
+⛔ Kite proje/kurum adı yazılmadı; belgelerden yalnızca **genel** kural alındı.

@@ -1,7 +1,9 @@
 # Şablonlar — ne, nereye
 
 > Bu klasör **her projede aynıdır** ve `docs/standards/` ile birlikte kopyalanır.
-> İçindeki dosyalar hedef projede `docs/project/` altına açılır ve **doldurulur**.
+> İçindeki dosyalar hedef projede açılır ve **doldurulur**. ⛔ **Hepsi aynı yere
+> gitmez:** çoğu `docs/project/` altına, ⭐ **iki defter `docs/kullanici/` altına**
+> gider — aşağıdaki tablonun *Hedef* sütunu bunu satır satır yazar.
 > Kaynak projeden **silinmez** — bir sonraki projeye yine lazım olacak.
 
 Adım adım kurulum: `docs/standards/16-yeni-proje-kurulumu.md`.

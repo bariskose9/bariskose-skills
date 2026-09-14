@@ -182,6 +182,22 @@ kuralıyla çelişmiyor — ikisi **farklı şeyler**:
 | **Bilgi ve terim açıklaması** | ⭐ Sınırsız | Kullanıcının öğrenmesi işin amacı |
 | **Alternatif yol önerisi** | Ölçülü | Her cevaba öneri eklenirse hiçbiri okunmaz |
 
+### ⭐ ANLATIM ÖLÇÜTÜ — okuyan hiçbir kelimede takılmadan sonuna gelmeli
+
+Karşındaki kişi işe yeni başlamış bir junior gibidir: terimleri bilmez,
+yazılımı uçtan uca görmemiştir. Bir kavramı anlatırken dört adım (ad ve eş
+anlamlıları TR/EN · gerçek hayat · yazılım dünyası · bu projede nerede)
+**kontrol listesidir, şablon değil**: dört başlığa birer cümle yazmak kuralın
+ihlalidir. Anlatım **sorunla başlar**, tek bir örneği baştan sona taşır, ilk
+geçen her terimi geçtiği yerde açar, koddaki her satırı Türkçe yorumlar ve
+sonunda okuyanın kendi başına uygulayabileceği bir **karar ölçütü** bırakır.
+Uzunluk sınırı yoktur; eksiklik sınırı vardır — *"bu kadar bilsin"* diye
+sadeleştirilmez. Kuralın tamamı ve böyle değil/böyle örneği:
+`11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"*.
+
+⛔ Kullanıcı *"bu nasıl açıklama"* demek zorunda kalıyorsa ya da cevabı
+anlamak için başka bir araca taşıyorsa kural çiğnenmiştir.
+
 ### ⭐ TERİM ZENGİNLİĞİ BİR ÖZELLİKTİR, KUSUR DEĞİL
 
 ⛔ **Jargondan kaçınılmaz — jargon KULLANILIR ve AÇIKLANIR.**
@@ -197,10 +213,11 @@ kelime dağarcığı** demektir.
 | Terimi hiç kullanmamak | Terimi kullan, **ilk geçişte** aç |
 | Terimi kullanıp geçmek | Açıklamasız terim = havada kalan yer |
 
-**Nasıl:** Terim ilk geçtiğinde `11-agent-workflow.md` → *"Her kavram üç adımda
-açılır"* kuralıyla açılır (gerçek hayat örneği → yazılımdaki tanımı → bu
-projede nerede). İngilizcesi parantez içinde verilir — kullanıcı aradığında
-bulabilsin.
+**Nasıl:** Terim ilk geçtiğinde `11-agent-workflow.md` → *"Her kavram DÖRT
+adımda açılır"* kuralıyla açılır (ad ve eş anlamlıları TR/EN → gerçek hayat
+örneği → yazılım dünyasındaki tanımı ve başka teknolojideki karşılığı → bu
+projede nerede). Kural yalnızca belgede değil, **her aşamada ve her cevapta**
+geçerlidir.
 
 ### ⭐ TERİM BİÇİMİ — eğik çizgiyle, yaygın eş anlamlılarıyla birlikte
 

@@ -1,5 +1,7 @@
 # Çalışılacak konular
 
+<!-- ŞABLON — `docs/kullanici/calisilacak-konular.md` olarak kopyalanır. ⛔ `docs/project/` DEĞİL — defterler üçüncü bölgede yaşar. -->
+
 > **Bu defter kitle birlikte gelir ve HER PROJEDE AYNIDIR.** Ajan her oturum
 > başında okur ve sana nasıl anlatacağını buradan ayarlar — kendi izleniminden
 > değil.
@@ -38,7 +40,7 @@ taşınır. Bu dosya *"üzerinde çalışılan"*, o dosya *"artık bilinen"* dem
 
 | Seviye | Ne demek | Ajan ne yapar |
 |---|---|---|
-| **0 — Yeni** | İlk kez geçiyor | Üç adımda **tam** aç: gerçek hayat → tanım → bu projede nerede |
+| **0 — Yeni** | İlk kez geçiyor | Dört adımda **tam** aç: ad (TR/EN) → gerçek hayat → yazılım dünyası → bu projede nerede (`11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"*) |
 | **1 — Tanıdık** | Gördü, soru sordu | Kısa hatırlatma + ilk anlatıldığı yere işaret |
 | **2 — Takip ediyor** | Soru sormadan izledi | Terimi kullan, **tek cümlelik** hatırlatma |
 | **3 — Sahipleniyor** | ⭐ Kendisi kullandı, sordu veya **düzeltti** | Doğrudan kullan, açıklama yok |
@@ -132,8 +134,10 @@ Boş bırakılan alan seviye 0 sayılır.
 |---|:--:|---|---|
 | Modelleme · ilişkiler | 1 | ER diyagramı ve Prisma Studio'yu kendi araştırıp sordu | 2026-09 |
 | Index · sorgu performansı | 1 | Kit metinlerinde geçiyor, henüz kendi cümlesinde kullanmadı | 2026-09 |
-| Migration | 0 | | |
+| Migration · araç seçimi (Prisma Migrate / Flyway biçimi) | 1 | "Madem ikisi de en iyisi, neden bize Prisma, kuruma Flyway?" ve "SQL'i AI yazıyorsa zorluğu ne?" diye sonuç soruları sordu | 2026-09-13 |
 | Sayfalama (offset / cursor) | 0 | | |
+| Sabit değer kümesi (enum / tanım tablosu) | 1 | Enum ve lookup farkını "veri mi mantık mı" ölçütüyle okudu; henüz kendi cümlesinde kullanmadı | 2026-09-13 |
+| Birincil anahtar (UUIDv7 / BIGINT IDENTITY) | 1 | "Belediyeninki daha iyiyse bize de o olsun, değilse ayrı" diye kararı kendi ölçütüyle verdi | 2026-09-13 |
 
 ### Test
 
@@ -209,6 +213,18 @@ Biçim:  - `kelime` — kısa karşılığı (tarih)
 - `CRUD` — Create-Read-Update-Delete: oluştur, oku, güncelle, sil (2026-09-05)
 - `spike traffic` — ani trafik patlaması (2026-09-03)
 - `serverless` — sunucuyu sürekli açık tutmadan, istek geldikçe çalışan yapı (2026-09-03)
+- `migration / şema göçü` — veritabanı yapısını elle değil dosyayla değiştirmek; her ortamda aynı dosyalar aynı sırayla (2026-09-13)
+- `Flyway biçimi / V__ dosyaları / düz SQL migration` — üçü aynı şey: `V12__ad.sql` düzeninde elle yazılan SQL; kurumun istediği biçim (2026-09-13)
+- `immutability / değişmezlik` — bir kez çalışan migration bir daha değiştirilmez, yanlışsa yeni dosya (2026-09-13)
+- `schema_history` — veritabanının içinde "hangi migration'lar uygulandı" listesi; Prisma'da `_prisma_migrations` (2026-09-13)
+- `introspection / içe bakış / prisma db pull` — Prisma'nın veritabanına bakıp `schema.prisma`'yı üretmesi; kurum modunda şema ayna olur (2026-09-13)
+- `R__ / repeatable` — view, fonksiyon, trigger için "tanımın tamamı yeniden yazılır" dosyası; içeriği değişince yeniden koşar (2026-09-13)
+- `U__ / undo` — bir migration'ı geri alan script; nöbetçi DevOps geliştiriciyi aramadan koşturur (2026-09-13)
+- `advisory lock` — iki uygulama kopyası aynı anda açılırsa yalnızca birinin migrate etmesini sağlayan kilit (2026-09-13)
+- `DDL / DML` — yapıyı değiştiren komutlar (CREATE/ALTER/DROP) / veriyi değiştiren komutlar (INSERT/UPDATE/DELETE/SELECT); kurumda ayrı hesaplar (2026-09-13)
+- `lookup table / tanım tablosu` — sabit değer listesinin satır olarak tutulduğu tablo; yeni değer INSERT, DDL yok (2026-09-13)
+- `UUIDv7` — başı zaman damgası olan UUID; tahmin edilemez ama index'e sıralı girer (2026-09-13)
+- `IDENTITY vs SERIAL` — ikisi de artan sayı; SERIAL ayrı sequence açar (yetki tuzağı), IDENTITY kolonun parçası (2026-09-13)
 
 ---
 
@@ -257,6 +273,7 @@ kısalması öğrenmenin ölçüsüdür.
 
 | Konu | Neresi zor geldi | Ne oturttu |
 |---|---|---|
+| Migration aracı: kendi projede Prisma Migrate, kurumda Flyway biçimi | "İkisi de en iyiyse neden farklı?" — aynı işin iki ortamda iki doğrusu olması | Belirleyen üç şey: **veritabanını kim kontrol ediyor · kaç ekip/dil paylaşıyor · inceleme ve geri alma zorunlu mu.** Tam anlatım: `docs/standards/04-database.md` → *"MIGRATION ARACI"* |
 
 ---
 

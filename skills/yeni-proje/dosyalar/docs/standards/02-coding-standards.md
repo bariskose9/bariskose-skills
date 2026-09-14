@@ -41,23 +41,33 @@
 
 ## Yorumlar
 
-### ⛔ KOD İNGİLİZCE, YORUM TÜRKÇE — ikisi karıştırılmaz
+### ⛔ KOD DİLİ PROJE MODUNA GÖRE, YORUM HER ZAMAN TÜRKÇE
 
-Bu kitte iki ayrı dil, iki ayrı iş yapar. Karıştırmak ikisini de bozar.
+Kod adının dili (değişken, fonksiyon, tip, dosya, tablo, kolon) **proje moduna**
+bağlıdır (`SKILL.md` → *"Bu proje kimin için: sınıflandırmayı SEN yap"*). Karar `CLAUDE.md` §0'a yazılır ve
+proje boyunca değişmez.
+
+| Mod | Kod adı | Tablo · kolon | Neden |
+|---|---|---|---|
+| **Kendi projem** | **İngilizce** | **İngilizce** | Sektörün ortak dili; portföy ve açık kaynak dışarı açılır. Türkçe karakter ve çekim ekleri araç zincirinde bozulur |
+| **İşyeri projesi** — kurumun DB standardı Türkçe | ⭐ **Türkçe, Türkçe karaktersiz** (`olusturmaTarihi`, `Basvuru`) | Kurum standardı (`tbl_basvuru.olusturma_tarihi`) | Kod İngilizce + tablo Türkçe olunca **aynı şeyin iki adı** olur: `Application` ↔ `tbl_basvuru`, 90 tabloda 90 çift. Okuyan her seferinde kafasında çevirir; hata buradan çıkar. Tek dil, tek sözlük |
+| **İşyeri projesi** — kurum standardı yok veya İngilizce | İngilizce | İngilizce | Kendi projemle aynı |
+
+⭐ **Türkçe ad kuralları (işyeri modu):** `ç ğ ı ö ş ü` **hiç** kullanılmaz
+(`olusturma`, `basvuru`, `gecikmis`); `camelCase` / `PascalCase` aynen; soru eki
+yok (`aktif`, `aktifMi` değil — kurumun kuralıyla aynı); çatı ve kütüphane
+adları neyse o (`useState`, `findMany` çevrilmez).
+
+⛔ **Kitin kendi örnekleri her zaman İngilizcedir.** Gerekçe: ajan kuralı
+değil **örneği** taklit eder. Türkçe adlı bir örnek kitte dursa, kendi
+projesinde de Türkçe üretir. Modu **proje** belirler, kit değil.
 
 | Ne | Dil | Neden |
 |---|---|---|
-| Değişken · fonksiyon · tip · dosya · klasör | **İngilizce** | Sektörün ortak dili; kodu okuyan herkes (ekip, denetçi, sonraki geliştirici) bu adları tanır |
-| Tablo · kolon · enum · API yolu | **İngilizce** | Şema ve sözleşme dışarı açılır; Türkçe karakter ve çekim ekleri araç zincirinde bozulur |
-| Commit mesajı | **İngilizce** | `08-git-workflow.md` |
-| ⭐ **Yorumlar** | **Türkçe** | Yorumun okuyucusu koddan farklıdır: kararı veren, denetleyen, kodu okumayan kişi |
+| Commit mesajı | **İngilizce** (her modda) | `08-git-workflow.md` |
+| ⭐ **Yorumlar** | **Türkçe** (her modda) | Yorumun okuyucusu koddan farklıdır: kararı veren, denetleyen, kodu okumayan kişi |
 | ⭐ **Kod örneklerinin açıklamaları** | **Türkçe** | Örnek öğretmek içindir; öğretilen kişi Türkçe okur |
 | Kullanıcıya görünen metin | **Türkçe** | Son kullanıcı Türk |
-
-⛔ **Kod adı Türkçe yazılmaz.** `olustur()`, `girdi`, `LokasyonPasifHatasi`,
-`sla_bitis_zamani` gibi adlar bu kitte **hatadır** — örnekte bile.
-*Gerekçe:* ajan kuralı değil **örneği** taklit eder; Türkçe adlı bir örnek,
-sonraki projede Türkçe adlı bir kod tabanı üretir.
 
 ### ⭐ TÜRKÇE KARŞILIK YORUMDA, PARANTEZ İÇİNDE VERİLİR
 
@@ -80,6 +90,45 @@ const workOrder = await this.workOrders.create({ ...dto, slaDueAt: plan.dueAt })
 ⭐ **Kazanç aranabilirliktir:** kullanıcı `grep "iş emri"` de yazsa
 `grep "workOrder"` de yazsa aynı yeri bulur. Türkçe okuyan ile İngilizce
 arayan aynı kod tabanında buluşur.
+
+⭐ **İşyeri modunda yön tersine döner:** kod zaten Türkçe olduğu için
+parantezde **İngilizce** karşılık verilir — `basvuru (application)`,
+`olusturmaTarihi (createdAt)`. Amaç aynı: sektör terimini öğretmek ve
+`grep "createdAt"` yazanın da bulabilmesi.
+
+### ⭐ HER DOSYANIN BAŞINDA ÖZET YORUMU — istisnasız, her modda
+
+Satır satır yorum bir ağacın yapraklarını anlatır; **dosya başı özeti**
+ormanı. Biri olmadan diğeri eksiktir. Her kaynak dosya (`.ts`, `.tsx`, `.sql`,
+`.prisma`, `.yml`, `.mjs`) şu blokla başlar:
+
+```ts
+/**
+ * NE:        İş emri (work order) oluşturma ve durum güncelleme kuralları.
+ * AKIŞ:      Route Handler → BU DOSYA (servis) → WorkOrderRepository → PostgreSQL.
+ *            Çağıran: src/app/api/work-orders/route.ts
+ *            Çağırdığı: work-order.repository.ts, notification.service.ts
+ * NEDEN VAR: HTTP'yi bilmeyen iş kuralı burada durur; aynı kural yarın bir
+ *            zamanlanmış görevden de çağrılabilsin diye route'un içine yazılmadı.
+ * KARARLAR:  İyimser kilit (version kolonu) burada uygulanır — ADR-003.
+ * DİKKAT:    status geçişleri STATUS_FLOW tablosuna bağlı; oraya dokunmadan
+ *            buraya dokunma.
+ */
+```
+
+| Satır | Cevapladığı soru |
+|---|---|
+| **NE** | Dosya tek cümleyle ne yapıyor |
+| **AKIŞ** | Sistemin neresinde duruyor — kim çağırıyor, kimi çağırıyor |
+| **NEDEN VAR** | Olmasaydı ne bozulurdu; neden başka yerde değil |
+| **KARARLAR** | Bu dosyada verilmiş, ADR'si olan kararlar |
+| **DİKKAT** | Değiştirirken ne kırılır |
+
+⛔ Bir satırın cevabı yoksa satır **silinmez**, `—` yazılır: sonraki okuyan
+*"unutulmuş mu, gerçekten yok mu"* diye düşünmez.
+
+⭐ Bu blok *"Kodu sil, yorumları bırak"* ölçütünün dosya düzeyindeki hâlidir:
+yalnızca başlık blokları okunarak sistemin **haritası** çıkarılabilmeli.
 
 ### ⛔ KOD, OKUYAMAYAN BİRİ İÇİN DE ANLAŞILIR OLUR
 

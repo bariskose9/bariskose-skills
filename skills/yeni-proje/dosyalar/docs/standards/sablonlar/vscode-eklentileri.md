@@ -1,5 +1,7 @@
 # VS Code eklentileri
 
+<!-- ŞABLON — `docs/project/vscode-eklentileri.md` olarak kopyalanır; kurulan stack'e göre uyarlanır. -->
+
 Projeyi VS Code'da açtığında sağ altta *"Bu projede önerilen eklentiler var"*
 uyarısı çıkar → **Install All** de. Liste `.vscode/extensions.json` içinde.
 

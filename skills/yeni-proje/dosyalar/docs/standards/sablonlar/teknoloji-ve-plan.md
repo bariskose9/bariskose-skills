@@ -1,5 +1,7 @@
 # <Proje Adı> — Teknoloji ve Plan
 
+<!-- ŞABLON — `docs/project/teknoloji-ve-plan.md` olarak kopyalanır ve her adımda büyütülür. -->
+
 > Bu belge iki soruyu birden cevaplar: **neyi neden kullanıyoruz** ve **hangi
 > sırayla yapacağız.** Her bölüm kendi içinde yeterlidir; bir konuyu okurken
 > başa dönmek gerekmez.

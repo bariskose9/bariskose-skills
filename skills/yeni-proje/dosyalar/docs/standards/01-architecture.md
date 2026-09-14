@@ -40,7 +40,7 @@ sınırını görünmez kılar.
 | # | Durak | Ne yapar | Ne YAPMAZ |
 |---|---|---|---|
 | 1 | **İstemci** | `POST /api/appointments` ile gövdeyi gönderir | İş kuralı bilmez |
-| 2 | **API katmanı**<br>`*.controller.ts` / `route.ts` | Zod ile gövdeyi doğrular · kimliği çözer · servisi çağırır · sonucu HTTP'ye çevirir (201/422) | ⛔ İş kuralı **yazılmaz** |
+| 2 | **API katmanı**<br>`*.controller.ts` / `route.ts` / `actions.ts` | Zod ile gövdeyi doğrular · kimliği çözer · servisi çağırır · sonucu HTTP'ye çevirir (201/422) | ⛔ İş kuralı **yazılmaz** |
 | 3 | **Servis katmanı**<br>`*.service.ts` | Kuralları uygular: çalışma saati içinde mi · aynı gün ikinci randevu var mı · slot dolu mu | ⛔ `req`/`res` **tanımaz**, HTTP kodu döndürmez |
 | 4 | **Repository katmanı**<br>`*.repository.ts` | ORM'e ne isteneceğini söyler: `prisma.appointment.create({ data })` | ⛔ Tek bir `if` bile **bulunmaz** |
 | 5 | **ORM (Prisma)** | Çağrıyı SQL'e, dönen satırı nesneye çevirir — **iki yönlü eşleme** | Karar vermez, kural bilmez |
@@ -48,6 +48,57 @@ sınırını görünmez kılar.
 
 Cevap aynı yoldan **geri tırmanır**: repository nesneyi döndürür → servis
 döndürür → API onu HTTP yanıtına çevirir.
+
+### ⭐ Server Action mı, Route Handler mı — iki kapı, iki görev
+
+Next.js'te sunucuya yazma göndermenin iki yolu var; ikisi de App Router'da
+(Next 16). **Route Handler** (`app/api/**/route.ts`): klasik HTTP ucu — URL,
+method, durum kodu; tarayıcı standardı `Request`/`Response` nesneleriyle
+(Node'un `req`/`res`'i değil; bu yüzden aynı kod Edge'de de çalışır).
+**Server Action** (`"use server"` fonksiyonu): URL yazmazsın; sunucuda
+çalışacak bir fonksiyon yazar, formun `action` özelliğine fonksiyonun
+**kendisini** verirsin; Next perde arkasında gizli kimlikli bir `POST` üretir.
+*Gerçek hayat:* mutfağa "4 numaralı formu doldurup gönder" (Route Handler)
+yerine garsona "bunu mutfağa söyle" demek (Server Action) — sipariş yine
+mutfağa gider, formu sen bilmezsin.
+
+```ts
+// features/applications/actions.ts
+"use server";                                   // bu dosyadaki fonksiyonlar SUNUCUDA çalışır, tarayıcıya inmez
+
+export async function createApplication(_prev: State, formData: FormData) {
+  const session = await getSession();                                   // 1) kimlik — atlanmaz
+  if (!session) return { error: "Oturum yok" };
+  const parsed = CreateApplicationSchema.safeParse(Object.fromEntries(formData)); // 2) Zod — atlanmaz
+  if (!parsed.success) return { fieldErrors: parsed.error.flatten().fieldErrors };
+  await applicationService.create(parsed.data, session.user);           // 3) servis — iş kuralı burada, action'da değil
+  revalidatePath("/applications");                                      // 4) listeyi yeniden üret
+  return { ok: true };
+}
+// page.tsx (istemci): const [state, formAction] = useActionState(createApplication, init);
+//                     <form action={formAction}> — URL yok, fetch yok
+```
+
+⛔ **`"use server"` güvenli yapmaz, yalnızca sunucuda çalıştırır.** Gizli
+kimliği bilen herkes fonksiyonu `curl` ile çağırabilir. Route Handler'da
+yapılan her şey — kimlik, Zod, yetki, hız sınırı — action'ın **içinde** de
+yapılır. Action bir API katmanıdır: iş kuralı yazılmaz, servisi çağırır.
+
+| Durum | Araç | Neden |
+|---|---|---|
+| Kendi arayüzünden **form yazması** (kaydet, güncelle, sil) | **Server Action** | URL ve fetch kodu yok; `useActionState` ile hata/yükleniyor durumu hazır; JavaScript kapalıyken bile çalışır (progressive enhancement) |
+| Kendi arayüzünden **okuma** | Sunucu bileşeni doğrudan servis/repository'yi çağırır | İstek bile yok |
+| **Başkasının** çağıracağı uç (mobil, başka sistem) · webhook · dosya indirme/yükleme akışı · herkese açık okuma API'si | **Route Handler** | HTTP sözleşmesi gerekiyor: URL, method, durum kodu, OpenAPI |
+| Kurgu [A]/[C] — asıl API kurumda veya NestJS'te (`00-stack.md` → *"DÖRT KURGU"*) | Server Action **ince BFF**: token'ı sunucuda ekleyip API'yi çağırır | Anahtar tarayıcıya inmez; Next tarafında iş kuralı yazılmaz |
+
+Route Handler ölmedi; **görev bölüşümü** oldu: dışa açılan kapı Route
+Handler, kendi formun Server Action. İkisi de `01-architecture.md`'deki API
+katmanıdır; altındaki servis ve repository aynıdır.
+
+⚠️ Next 16'da ara katman dosyası `middleware.ts` değil **`proxy.ts`**, dışa
+aktarılan fonksiyon `proxy()`. Edge'de çalışır; içinde veritabanı istemcisi
+(Prisma) kullanılamaz — yalnızca çerez/JWT okuyup yönlendirir, veritabanı
+gerektiren karar Route Handler / Server Action katmanına bırakılır.
 
 ### ORM ne demek, somut olarak
 
@@ -168,6 +219,7 @@ src/
 │   └── page.tsx
 ├── features/<özellik>/    → HER ÖZELLİK KENDİ KLASÖRÜNDE
 │   ├── components/
+│   ├── actions.ts         → Server Action'lar (form yazmaları) — API katmanı
 │   ├── services/          → iş mantığı
 │   ├── repositories/      → Prisma erişimi
 │   ├── schemas/           → Zod şemaları
@@ -264,15 +316,17 @@ farklı biçimde olması bilerek seçilmiştir, kaza değil. Üç gerekçe:
 
 ⛔ **`import` yolu dosya adıyla birebir aynı yazılır.**
 
-### Dil — kod İngilizce, anlatım Türkçe
+### Dil — kod dili proje moduna göre, anlatım Türkçe
 
-- **Tüm kod isimleri İngilizce:** değişken, fonksiyon, tip, dosya, klasör,
-  tablo, kolon, enum, API yolu, commit mesajı.
+- **Kod isimleri** (değişken, fonksiyon, tip, dosya, klasör, tablo, kolon,
+  enum, API yolu) **proje moduna** göre: kendi projede İngilizce; kurumun
+  Türkçe DB standardı olan işyeri projesinde Türkçe (Türkçe karaktersiz).
+  Commit mesajı her modda İngilizce.
 - **Yorumlar, açıklamalar ve kullanıcıya görünen metinler Türkçe.**
-- ⭐ Bir kod adı ilk geçtiğinde **Türkçesi yorumda parantez içinde** verilir
-  (`workOrder` → *iş emri*), ki hem İngilizce adı hem Türkçe karşılığı
-  aranabilir olsun. Kuralın tamamı ve örnekleri:
-  `02-coding-standards.md` → *"KOD İNGİLİZCE, YORUM TÜRKÇE"*.
+- ⭐ Bir kod adı ilk geçtiğinde **diğer dildeki karşılığı yorumda parantez
+  içinde** verilir (`workOrder` → *iş emri* · `basvuru` → *application*), ki
+  iki adı da aranabilir olsun. Kuralın tamamı ve örnekleri:
+  `02-coding-standards.md` → *"KOD DİLİ PROJE MODUNA GÖRE, YORUM HER ZAMAN TÜRKÇE"*.
 
 ## Boyut sınırları
 Dosya > 300 satır → böl. Fonksiyon > 50 satır → böl. İç içe if > 3 seviye → erken return.

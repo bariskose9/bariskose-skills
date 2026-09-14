@@ -204,10 +204,73 @@ Yetki kaynağı değiştiğinde (örn. personel listesinden çıkma) yeniden de�
 - Dış servisten gelen kimlik verisi kalıcı kopyalanmaz; yalnızca gerekli alanlar
   ve son senkron tarihi tutulur.
 
-## Dosya yükleme
-Tip + boyut + uzantı doğrulanır (sadece istemci tarafında değil).
-Dosya adı sanitize edilir, orijinal ad kullanılmaz. Yüklenen dosya uygulama
-sunucusundan değil ayrı depolamadan (Vercel Blob) servis edilir.
+## Dosya yükleme ve depolama
+
+### Sorun — kaybolur mu, herkes görebilir mi, iki sunucu olunca ne olur?
+
+Vatandaş dilekçesine PDF ekler, memur panelden görsel yükler. Dosya bir
+yerde durmak zorunda ve o yerin üç sorusu vardır: **kaybolur mu · kim
+görebilir · iki sunucu kopyası olunca ne olur?**
+
+**Konteyner geçicidir.** Uygulama Docker konteynerinde çalışır; konteyner her
+yayına almada **sıfırdan açılan** kutudur — içine sonradan yazılan dosya, kutu
+yeniden açılınca **kaybolur** (ephemeral). *Gerçek hayat:* otel odası — her
+misafirde temizlenir. Yüklenen dosyayı konteynerin içine yazmak, eşyayı otel
+odasına bırakmaktır. **Kalıcı disk / volume** DevOps'un dışarıdan bağladığı
+klasördür (resepsiyondaki kasa); çalışır ama üç derdi vardır:
+
+| Dert | Ne olur |
+|---|---|
+| **İki kopya** (replica — aynı uygulamanın iki sunucuda çalışan örneği) | Dosya A'nın diskine yazıldı, istek B'ye düştü: "dosya yok". Çözüm ortak ağ diski (NFS) — yavaş, kilit dertli |
+| **Yedek** | DB yedeklenir, disk **ayrıca** yedeklenmeli; unutulursa DB "ek var" der, ek yoktur |
+| ⛔ **`public/` tuzağı** | Next.js `public/` altındaki her şeyi **herkese**, yetki sormadan servis eder. Dilekçe eki `public/uploads/x.pdf`'deyse URL'i tahmin eden herkes okur — KVKK ihlali. **Yüklenen dosya asla `public/` altına yazılmaz** |
+
+**Nesne depolama / object storage / blob storage:** dosyaların bir **anahtar**
+(key — `ekler/2026/09/3f2a….pdf`) ile saklandığı, HTTP ile erişilen,
+sunucudan **bağımsız** depo — Amazon S3, Cloudflare R2, Vercel Blob, kurumların
+içeride kurduğu **MinIO** (S3 ile aynı dili konuşan açık kaynak). *Gerçek
+hayat:* kargo deposu — fişle verirsin, fişle alırsın; hangi binada olduğu
+seni ilgilendirmez, iki dükkânın da aynı depoyu kullanır. Üç dert birden
+çözülür.
+
+**Dosyayı veritabanına koymak** (`BYTEA` kolon): küçük hacimde meşrudur —
+yedek DB ile gelir, yetki DB'de, ikinci servis yok. Ama DB şişer, her okuma
+DB'yi yorar. Yalnızca küçük ve az dosya (profil fotoğrafı, ikon); büyüyen
+ekler için değil.
+
+### Karar — uygulama depoyu bilmez: adaptör
+
+Uygulama bir `FileStorage` **arayüzüne** konuşur (`put` · `get` · `delete`);
+hangi sürücünün devrede olduğunu ortam değişkeni (`FILE_STORAGE_DRIVER`)
+seçer. *Gerçek hayat:* priz — cihaz arkasında santral mi jeneratör mü bilmez.
+
+| Sürücü | Nerede | Ne zaman |
+|---|---|---|
+| `s3` (S3-uyumlu: MinIO · R2 · AWS S3) | Kurum ve kendi proje | ⭐ **Varsayılan** — S3 dili taşınabilir: bugün R2, yarın MinIO, aynı kod |
+| `blob` (Vercel Blob) | Kendi proje, Vercel'de | Kabul edilebilir; SDK'sı yalnızca Vercel'de çalışır, taşınmaz |
+| `local` (kalıcı disk) | Kurum, nesne deposu yoksa | Tek kopya şartıyla; volume ve yedek sorumluluğu `altyapi-durumu.md`'de DevOps'a yazılı |
+| `db` (`BYTEA`) | Her ikisi | Küçük/az dosya; local ve CI'da **her zaman** çalışan sürücü — testler bununla koşar |
+
+Kurumda MinIO/nesne deposu var mı, kaç replica çalışacak, yedek kimde —
+`kurumdan-ogrenilecekler.md` → *"BÖLÜM 5"* satır 5.6.
+
+### Yükleme güvenliği — her modda sekiz kural
+
+| # | Kural | Neden |
+|---|---|---|
+| 1 | **Boyut, baytlar okunmadan önce** (`Content-Length` / `File.size`), okununca **ikinci kez** | Sınırsız gövde belleği doldurur; `File.size` da istemcinin beyanıdır |
+| 2 | **Tür baytlardan** — ilk baytlar (**magic bytes / dosya imzası**: PDF `%PDF`, PNG `\x89PNG`) türü söyler; istemcinin MIME'ı ve uzantı **iddiadır** | `.jpg` adlı `.exe` |
+| 3 | Uzantı + MIME + imza **üçü birden** tutarlı | Biri uymuyorsa reddet |
+| 4 | **Dosya adı yeniden üretilir** — UUID + zaman; kullanıcının adı diske hiç yazılmaz, yalnızca gösterim için DB'de | `../../etc/passwd` adlı dosya — **path traversal** (`..` ile klasör dışına çıkma) |
+| 5 | **Hedef klasör beyaz listeden**, istemciden gelmez | Keyfi yol yok |
+| 6 | **Özel dosya yetkili uçtan servis edilir** — `GET /api/attachments/:id` kimlik + sahiplik kontrolü yapar, sonra depodan okur ya da **kısa ömürlü imzalı URL** (signed URL, 5 dk) üretir | Tahmin edilen URL = KVKK ihlali |
+| 7 | **Görseller normalize edilir** (`sharp`): yeniden kodlanır, boyut sınırlanır, **EXIF silinir** | Telefon fotoğrafındaki GPS konumu kişisel veridir; yeniden kodlama gömülü zararlıyı da temizler |
+| 8 | **Virüs taraması** — kurumda ClamAV benzeri varsa yükleme sonrası kuyruğa; yoksa sorulur (5.6) | Vatandaştan gelen PDF |
+
+⭐ **Kararı veren soru — dosya türü başına:** *"Bunu kim görebilmeli, kaç
+sunucu kopyası olacak, kaybolursa ne olur?"* Herkes + yeniden üretilir (site
+logosu) → `public/`; belirli kişi + kaybolamaz (dilekçe eki) → adaptör +
+yetkili uç + nesne deposu.
 
 ## Ödeme
 

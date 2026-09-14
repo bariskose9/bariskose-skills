@@ -42,8 +42,51 @@ bir değerdir.
 
 ## Doğrulama
 - Her endpoint girişi (body, query, params) **Zod ile** doğrulanır. İstisna yok.
+  Server Action'lar da endpoint sayılır (`01-architecture.md` → *"Server Action"*).
 - İstemciye güvenilmez: fiyat, indirim, kullanıcı kimliği, rol **sunucuda** belirlenir.
   İstemcinin gönderdiği `price` veya `userId` alanı reddedilir.
+
+### Zod kuralı seçme sırası — hazır kural → regex → refine
+
+**Zod** bir şema doğrulama kütüphanesidir: "şema" burada veritabanı şeması
+değil, gelen verinin **nasıl görünmesi gerektiğinin tarifi** — başvuru
+formunun kenarındaki kurallar gibi ("TCKN 11 hane, telefon 05 ile başlar").
+**Regex** (düzenli ifade / regular expression / kalıp) ise bir metin kalıbı
+dili — kâğıdın üstüne konan **şablon**: harfler deliklerden geçiyorsa uyar;
+şekle bakar, **anlama** bakmaz. Regex Zod'un alternatifi değil, içindeki
+araçlardan biridir (`.regex()`); Zod'un `.email()` kuralı bile perde arkasında
+Zod ekibinin bakımını yaptığı bir regex'tir.
+
+| Sıra | Araç | Ne zaman | Örnek |
+|---|---|---|---|
+| 1 | **Hazır kural** | Zod'da varsa **hep önce** — test edilmiş, bakımı Zod'da | `.email()` `.url()` `.uuid()` `.min()` `.max()` `.datetime()` `z.enum([...])` `.int().positive()` |
+| 2 | **`.regex()`** | Hazır kural yok, kural **şekilsel** | TCKN 11 rakam `/^[1-9]\d{10}$/`, plaka, posta kodu |
+| 3 | **`.refine()` / `.superRefine()`** | Kural **mantıksal**, şekille anlatılamaz | TCKN kontrol hanesi (10. ve 11. hane ötekilerden hesaplanır) · "bitiş tarihi başlangıçtan sonra" · "iki alandan en az biri dolu" |
+| 4 | **Özel kütüphane** | Kural bir alanın bütün dünyası | Telefon için `libphonenumber-js` — `00-stack.md` yaygınlık ölçütünden geçerse |
+
+*Gerçek hayat:* IBAN'ı gişeye verirsin; gişe önce **uzunluğuna** bakar
+(şablon = regex), sonra **kontrol hanelerini hesaplar** (kural = refine).
+Uzunluk doğru ama hane tutmuyorsa IBAN yanlıştır — şablon bunu göremez.
+
+```ts
+export const TcknSchema = z
+  .string()
+  .max(11)                                                          // önce uzunluk sınırı — regex'ten ÖNCE, aşağıdaki ReDoS notu
+  .regex(/^[1-9]\d{10}$/, "TCKN 11 haneli olmalı, 0 ile başlayamaz")  // şekil
+  .refine(isValidTcknChecksum, "Geçersiz TCKN");                    // mantık: hane hesabı
+```
+
+⛔ **İki regex tuzağı:**
+
+| Tuzak | Ne olur | Kural |
+|---|---|---|
+| **ReDoS** (regular expression denial of service) | Kötü yazılmış regex — iç içe tekrar, `(a+)+$` gibi — özel bir girdiyle saniyeler/dakikalar sürer, sunucuyu kilitler | Regex kısa, **başı ve sonu bağlı** (`^…$`), iç içe `+`/`*` yok. `.max()` **regex'ten önce** — Zod kuralları sırayla çalışır, uzun girdi regex'e hiç ulaşmaz |
+| **Türkçe harf** | `\w` yalnızca ASCII tanır — "Çağla" `\w+` kalıbına **uymaz**, kullanıcı sessizce reddedilir | Harf gerekiyorsa `\p{L}` (Unicode harf sınıfı) + `u` bayrağı: `/^[\p{L} ]+$/u` |
+
+⭐ Şema **tek yerde** yazılır, tarayıcı formu (React Hook Form) ve sunucu aynı
+şemayı kullanır (`01-architecture.md` → *"Klasör yapısı — özellik bazlı"* →
+`features/<özellik>/schemas/`; ayrı backend varsa `packages/contracts`). Tarayıcıdaki doğrulama kullanıcıya anında
+hata göstermek içindir; **güvenlik sunucudakidir** — tarayıcı atlatılabilir.
 
 ## Yetki
 - Her korumalı endpoint'te iki soru cevaplanır:
