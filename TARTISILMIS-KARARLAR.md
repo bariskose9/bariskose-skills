@@ -188,21 +188,28 @@ Sürüm: `1.85.0` → `3.1.0`. Kurulu kopya da güncellendi.
       `/yeni-proje` ilk kez fiilen çalıştırıldı. Sonuç aşağıda:
       *"İlk gerçek kullanım — 2026-09-11"*.
 
-- [ ] ⭐ **Kullanıcı yarın devam edecek.** Bu oturumda karar bekleyen madde
-      kalmadı; üçü de kapatıldı (aşağıdaki arşiv).
+- [x] ~~⭐ **Kullanıcı yarın devam edecek.**~~ — devam edildi (2026-09-13/14 turları); bayat madde kapatıldı (2026-09-17).
 - [ ] ⭐ **Mobil standardı (`17-mobile.md`) iskelet** — deep link, push, çevrimdışı,
       zorunlu güncelleme, mağaza reddi, izin akışı, biyometri, Maestro yok. İlk
       gerçek mobil projede yaşanarak genişletilecek; tahminle yazılmayacak
       (dosyanın başındaki uyarı, 2026-09-14).
-- [ ] ⭐ **3.9.0 hiç uçtan uca koşmadı.** Sonraki adım yeni kural değil, kitle bir
-      projeyi baştan sona bitirmek; ilk tam tur kuralların çelişkisini ve ajanın
-      atladığı adımları gösterecek.
-- [ ] Kullanıcı `KIT-REHBER.md` ve `KIT-NE-YAPIYOR.md`'yi okuyup dönüş yapacak
+- [ ] ⭐ **3.11.0 hiç uçtan uca koşmadı.** Sonraki adım yeni kural değil, kitle bir
+      projeyi baştan sona bitirmek. O turdan öğrenilecekler (2026-09-17'de
+      yazıldı): (1) kuralların **birbiriyle çelişip çelişmediği** — kağıtta
+      tutarlı görünen 19 dosya aynı özellikte yan yana gelince çatışabilir;
+      (2) ajanın **hangi adımları atladığı** — DoD ve beş göz kağıtta var,
+      fiilen uygulanıyor mu; (3) anlatım kuralının **sohbette** tutup tutmadığı;
+      (4) hangi kural dosyalarının **fiilen okunduğu** — bölünme kararı buna
+      göre; (5) kurum sorularının sırasının **doğru zamanda** gelip gelmediği;
+      (6) "beş göz" listesinin fazla mı eksik mi olduğu (aşağıdaki madde).
+- [x] ~~Kullanıcı `KIT-REHBER.md` ve `KIT-NE-YAPIYOR.md`'yi okuyup dönüş yapacak~~ — okundu (2026-09-17); dönüş: özet belgeler 3.10.0'da bugünkü kurallara çekildi.
 - [ ] Özellikle **`06-testing.md` → beş gözle doğrulama** listesi kalibre
       edilecek: fazla mı, eksik mi — ancak kullanan söyleyebilir
-- [ ] İki dosya bölünme eşiğine yaklaşıyor: `CALISMA-KILAVUZU.md` (1161 satır)
-      ve `11-agent-workflow.md` (970). Büyümeye devam ederlerse bölünmeleri
-      önerilecek. Ölçüm: `wc -l`
+- [ ] **Dört dosya bölünme eşiğinde** (2026-09-17 ölçümü): `CALISMA-KILAVUZU.md`
+      1205 · `11-agent-workflow.md` 1139 · `SKILL.md` 1075 · `00-stack.md` 912.
+      ⭐ **Karar (2026-09-17): bölünme ilk uçtan uca projeden SONRA.** Gerekçe:
+      o tur hangi bölümlerin fiilen okunduğunu gösterecek; şimdi bölmek tahminle
+      bölmektir ve her bölünme işaretçi/yayılma işi doğurur. Ölçüm: `wc -l`
 - [x] ~~⚠️ **Kit hiç kullanılmadı.**~~ — yukarıdaki maddenin tekrarıydı,
       birlikte kapandı (2026-09-11).
 
