@@ -233,6 +233,9 @@ Sürüm: `1.85.0` → `3.1.0`. Kurulu kopya da güncellendi.
 
 ### ⚠️ Bilinen ve kabul edilmiş açık
 
+- [ ] **Denetim betiğine "çift kural" kontrolü** — aynı anahtar kelimeleri taşıyan iki `###` başlığı
+      (ör. "dört adım" iki bölümde) uyarı versin. 2026-09-14'te iki anlatım bölümü yan yana yazıldı,
+      betik yakalamadı; 2026-09-18'de elle birleştirildi.
 - [ ] **`calisma-dokumanlari/` depoda açık.** On dosya public; altısında kurum
       adı ve ödev metni geçiyor. Kullanıcıya bildirildi, *"şimdilik kalsın"*
       dedi. Kapatılmak istenirse `.gitignore` + takipten çıkarma yeterli;
@@ -368,3 +371,12 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 | İdempotency anahtarı tekrar edilemez her yazmaya; istemci yeniden deneme politikası | `03-api-guidelines.md` → *"İdempotency"* |
 | Açılış sırası: düş / degraded / devam tablosu; graceful shutdown | `12-operations-and-scaling.md` → *"Açılış sırası"* |
 | `kit-hakkinda/UCTAN-UCA-YOLCULUK.md` — sıra ve akış belgesi; özet belgeler bugünkü kurallara çekildi | ICINDEKILER, CLAUDE.md yayılma tablosu |
+
+
+### Ek — 2026-09-18 (3.12.0): birleştirme ve oturum kancası
+
+| Karar | Ev |
+|---|---|
+| `11-agent-workflow.md`'de iki çakışan anlatım bölümü ("DÖRT adımda açılır" + "HER KAVRAM ÖĞRETİLİR") **tek bölüme** indirildi; işaretçiler tek başlığa | `11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"* |
+| **SessionStart kancası**: plugin açıkken her oturumda, klasör ne olursa olsun, anlatım ölçütünün özeti + kuralın tam yolu + kitin becerileri enjekte edilir. Kuralın kopyası değil, işaretçi | `hooks/hooks.json` · `hooks/session-start.sh` |
+| Denetim betiği **çift kuralı yakalayamıyor** (yalnızca kırık atıf arıyor) — aynı konuyu iki başlıkta yazan bölümleri bulan bir kontrol fikri | *"Sırada ne var"*a eklendi |

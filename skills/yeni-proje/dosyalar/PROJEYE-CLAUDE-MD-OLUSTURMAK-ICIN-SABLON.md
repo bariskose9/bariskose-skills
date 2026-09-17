@@ -213,8 +213,8 @@ kelime dağarcığı** demektir.
 | Terimi hiç kullanmamak | Terimi kullan, **ilk geçişte** aç |
 | Terimi kullanıp geçmek | Açıklamasız terim = havada kalan yer |
 
-**Nasıl:** Terim ilk geçtiğinde `11-agent-workflow.md` → *"Her kavram DÖRT
-adımda açılır"* kuralıyla açılır (ad ve eş anlamlıları TR/EN → gerçek hayat
+**Nasıl:** Terim ilk geçtiğinde `11-agent-workflow.md` → *"HER KAVRAM
+ÖĞRETİLİR"* kuralıyla açılır (ad ve eş anlamlıları TR/EN → gerçek hayat
 örneği → yazılım dünyasındaki tanımı ve başka teknolojideki karşılığı → bu
 projede nerede). Kural yalnızca belgede değil, **her aşamada ve her cevapta**
 geçerlidir.

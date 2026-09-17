@@ -62,6 +62,13 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | `pdf-uret/SKILL.md` | PDF üretimi |
 | `pdf-uret/bin/md-pdf.mjs` | Node + Chrome ile PDF |
 
+### `hooks/` — plugin açıkken her oturumda çalışan kanca
+
+| Yol | Ne |
+|---|---|
+| `hooks/hooks.json` | Claude Code'a "oturum başında şu betiği koştur" der |
+| `hooks/session-start.sh` | ⭐ Klasör ne olursa olsun ajana kitin varlığını, anlatım ölçütünün **özetini** ve kuralın tam yolunu enjekte eder — kuralın kopyası değil, işaretçi. Kural tek yerde: `11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"* |
+
 ### `skills/yeni-proje/dosyalar/` — projeye kopyalananlar
 
 | Dosya | Kim okur | Ne |
