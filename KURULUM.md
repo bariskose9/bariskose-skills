@@ -170,8 +170,13 @@ dosyası oturum başında okunuyor. (VSCode eklentisinde `/hooks` menüsü yok.)
 
 ## 3. Ortam gereksinimleri
 
+Kitin **kendi** ön koşulu yalnızca Node LTS + Git — tablo ve kurulum komutları
+`README.md` → *"Ön koşullar"* bölümünde; burada tekrar edilmez. Aşağıdakiler
+projelerin ve öteki eklentilerin istedikleri:
+
 | Araç | Durum | Not |
 |---|---|---|
+| `jq` | **agent-skills eklentisi** oturum kancası için ister; kit istemez | Windows `winget install jqlang.jq` (winget'in `Links` kısayolu boş kalabilir → `jq.exe`'yi `%USERPROFILE%\bin` içine kopyala ki Git Bash kancaları bulsun) · macOS `brew install jq` |
 | `gh` | PATH'te olmalı, giriş yapılmış | PR açma, CI okuma |
 | `vercel` | PATH'te olmayabilir → `npx vercel` | Ortam değişkeni, yeniden dağıtım |
 | `neonctl` | PATH'te olmayabilir → `npx neonctl` | `--org-id` gerekiyor |

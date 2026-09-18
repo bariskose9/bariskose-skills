@@ -12,6 +12,27 @@ kullanıcının işi olmasın diye var.
 Kullanıcı yalnızca **analiz dokümanını** verir ve sorulara cevap verir; kurulum,
 mühendislik standartları, yol haritası ve canlıya çıkış ajanın işidir.
 
+## Ön koşullar — kit kurulmadan önce makinede olmalı
+
+Kit kurulduğu anda çalışması için **iki** şey gerekir; başka bir şey istemez
+(jq, Python, Docker gerekmez — Docker yalnızca projelerin yerel veritabanı
+içindir, projeye göre kurulur).
+
+| Araç | Neden gerekli | Windows | macOS |
+|---|---|---|---|
+| **Node.js LTS** (`node --version` → 24.x) | Denetim betiği, PDF üretici, **oturum kancası** ve her kit projesi Node ile çalışır | `winget install OpenJS.NodeJS.LTS` (ya da nvm-windows) | `brew install node` (ya da nvm) |
+| **Git** (`git --version`) | Depo işlemleri; **Windows'ta Git for Windows, Git Bash'i de getirir — Claude Code kancaları onunla çalıştırır** | `winget install Git.Git` | Xcode komut satırı araçları ya da `brew install git` |
+
+Kontrol: iki komut da sürüm yazdırıyorsa hazırsın. Kit'in kancası
+(`hooks/session-start.mjs`) her oturumda çalışır; Node yoksa oturum açılırken
+"hook failed" notu görürsün — kit yine çalışır ama anlatım ölçütü hatırlatması
+gelmez.
+
+⚠️ Üçüncü parti eklentiler kendi ön koşullarını ister; bunlar kitin gereği
+değildir. Örnek: `agent-skills` (addyosmani) oturum kancası için **jq** ister
+— Windows `winget install jqlang.jq`, macOS `brew install jq`. Ayrıntı
+`KURULUM.md` → *"3. Ortam gereksinimleri"*.
+
 ## Kurulum
 
 Claude Code içinde:

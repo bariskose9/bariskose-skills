@@ -66,8 +66,8 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 
 | Yol | Ne |
 |---|---|
-| `hooks/hooks.json` | Claude Code'a "oturum başında şu betiği koştur" der |
-| `hooks/session-start.sh` | ⭐ Klasör ne olursa olsun ajana kitin varlığını, anlatım ölçütünün **özetini** ve kuralın tam yolunu enjekte eder — kuralın kopyası değil, işaretçi. Kural tek yerde: `11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"* |
+| `hooks/hooks.json` | Claude Code'a "oturum başında `node hooks/session-start.mjs` çalıştır" der — kabuk kullanmayan exec biçimi, iki işletim sisteminde aynı |
+| `hooks/session-start.mjs` | ⭐ Klasör ne olursa olsun ajana kitin varlığını, anlatım ölçütünün **özetini** ve kuralın tam yolunu enjekte eder — kuralın kopyası değil, işaretçi. Kural tek yerde: `11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"*. Yalnızca Node ister (jq gerekmez — 3.12.1) |
 
 ### `skills/yeni-proje/dosyalar/` — projeye kopyalananlar
 

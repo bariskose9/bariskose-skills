@@ -236,6 +236,10 @@ Sürüm: `1.85.0` → `3.1.0`. Kurulu kopya da güncellendi.
 - [ ] **Denetim betiğine "çift kural" kontrolü** — aynı anahtar kelimeleri taşıyan iki `###` başlığı
       (ör. "dört adım" iki bölümde) uyarı versin. 2026-09-14'te iki anlatım bölümü yan yana yazıldı,
       betik yakalamadı; 2026-09-18'de elle birleştirildi.
+- [ ] **Kanca değişince iki makinede doğrula** — Windows + Mac, yeni oturumda açılış
+      mesajı geldi mi. 3.12.0 yalnızca Mac'te denenmişti; 3.12.1 Windows'ta
+      `node hooks/session-start.mjs` ile test edildi, Mac'te yeni oturumla doğrulanacak.
+      Denetim betiği bunu ölçemez.
 - [ ] **`calisma-dokumanlari/` depoda açık.** On dosya public; altısında kurum
       adı ve ödev metni geçiyor. Kullanıcıya bildirildi, *"şimdilik kalsın"*
       dedi. Kapatılmak istenirse `.gitignore` + takipten çıkarma yeterli;
@@ -380,3 +384,12 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 | `11-agent-workflow.md`'de iki çakışan anlatım bölümü ("DÖRT adımda açılır" + "HER KAVRAM ÖĞRETİLİR") **tek bölüme** indirildi; işaretçiler tek başlığa | `11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"* |
 | **SessionStart kancası**: plugin açıkken her oturumda, klasör ne olursa olsun, anlatım ölçütünün özeti + kuralın tam yolu + kitin becerileri enjekte edilir. Kuralın kopyası değil, işaretçi | `hooks/hooks.json` · `hooks/session-start.sh` |
 | Denetim betiği **çift kuralı yakalayamıyor** (yalnızca kırık atıf arıyor) — aynı konuyu iki başlıkta yazan bölümleri bulan bir kontrol fikri | *"Sırada ne var"*a eklendi |
+
+
+### Ek — 2026-09-18 (3.12.1): oturum kancası Node'a taşındı
+
+| Karar | Ev |
+|---|---|
+| **Kanca bash + jq yerine Node** (`hooks/session-start.mjs`), hooks.json **exec biçimi** (`command: node`, `args`) — kabuk yok. Neden: 3.12.0 kancası `jq` istiyordu; jq ne Windows'ta ne macOS'ta hazır gelir, yalnızca tesadüfen kurulu olduğu Mac'te çalıştı; Windows iş makinesinde her oturum "jq bulunamadı" düştü, kural gelmedi. Claude Code, SessionStart için **düz metin stdout'u bağlama ekler** (belgeli); `{priority, message}` JSON'u tanımlı bir biçim değildi. Node zaten kitin ön koşulu | `hooks/hooks.json` · `hooks/session-start.mjs` |
+| **Kural: kanca ve betikler kitin ön koşulu dışında araç istemez** (Node + Git). Yeni bağımlılık = README *"Ön koşullar"* tablosuna satır + iki OS'ta deneme | `README.md` → *"Ön koşullar"* |
+| **Bilinen açık:** kanca değişince iki makinede de (Windows + Mac) yeni oturumda mesajın geldiği doğrulanmalı; 3.12.0'da yalnızca Mac'te denendi. Denetim betiği bunu ölçemez | *"Sırada ne var"* |
