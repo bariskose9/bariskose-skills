@@ -236,7 +236,7 @@ Sürüm: `1.85.0` → `3.1.0`. Kurulu kopya da güncellendi.
 - [ ] **Denetim betiğine "çift kural" kontrolü** — aynı anahtar kelimeleri taşıyan iki `###` başlığı
       (ör. "dört adım" iki bölümde) uyarı versin. 2026-09-14'te iki anlatım bölümü yan yana yazıldı,
       betik yakalamadı; 2026-09-18'de elle birleştirildi.
-- [ ] **Kanca değişince iki makinede doğrula** — Windows + Mac, yeni oturumda açılış
+- [x] ~~**Kanca değişince iki makinede doğrula**~~ — **kapatıldı (2026-09-20):** Windows'ta 3.12.1 iş bilgisayarında, Mac'te 3.12.1 `backend-ogrenme` klasöründe yeni oturumda "proje-kiti 3.12.1 yüklü" mesajı doğrulandı (Node v25.6.0, kanca `session-start.mjs`). Not: mesajdaki "CLAUDE.md yoksa" ayrımı kit projesi olmayan ama CLAUDE.md'si olan depoyu ayırt edemiyor — zararsız, projenin CLAUDE.md'si üstün. — Windows + Mac, yeni oturumda açılış
       mesajı geldi mi. 3.12.0 yalnızca Mac'te denenmişti; 3.12.1 Windows'ta
       `node hooks/session-start.mjs` ile test edildi, Mac'te yeni oturumla doğrulanacak.
       Denetim betiği bunu ölçemez.
@@ -392,4 +392,4 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 |---|---|
 | **Kanca bash + jq yerine Node** (`hooks/session-start.mjs`), hooks.json **exec biçimi** (`command: node`, `args`) — kabuk yok. Neden: 3.12.0 kancası `jq` istiyordu; jq ne Windows'ta ne macOS'ta hazır gelir, yalnızca tesadüfen kurulu olduğu Mac'te çalıştı; Windows iş makinesinde her oturum "jq bulunamadı" düştü, kural gelmedi. Claude Code, SessionStart için **düz metin stdout'u bağlama ekler** (belgeli); `{priority, message}` JSON'u tanımlı bir biçim değildi. Node zaten kitin ön koşulu | `hooks/hooks.json` · `hooks/session-start.mjs` |
 | **Kural: kanca ve betikler kitin ön koşulu dışında araç istemez** (Node + Git). Yeni bağımlılık = README *"Ön koşullar"* tablosuna satır + iki OS'ta deneme | `README.md` → *"Ön koşullar"* |
-| **Bilinen açık:** kanca değişince iki makinede de (Windows + Mac) yeni oturumda mesajın geldiği doğrulanmalı; 3.12.0'da yalnızca Mac'te denendi. Denetim betiği bunu ölçemez | *"Sırada ne var"* |
+| ~~Bilinen açık: kanca iki makinede doğrulanmalı~~ — 3.12.1 Windows + Mac'te doğrulandı (2026-09-20). Denetim betiği bunu ölçemez | *"Sırada ne var"* |
