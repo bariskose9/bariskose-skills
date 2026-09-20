@@ -1,6 +1,6 @@
 # `proje-kiti` — Ne Yapıyor, Nasıl Yapıyor
 
-**Sürüm:** 3.15.1 · **Tarih:** 2026-09-20
+**Sürüm:** 3.15.2 · **Tarih:** 2026-09-20
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Terimler ilk geçtikleri yerde açıklanır. Sonda toplu bir sözlük vardır.

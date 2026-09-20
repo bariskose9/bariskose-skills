@@ -788,21 +788,18 @@ yükseltmeye çalışır ve aynı duvara toslar.
 
 ## Sürüm politikası
 - Node.js LTS (>=20). Sürüm `.nvmrc` ile sabitlenir.
-- **Paket yöneticisi `pnpm`'dir** ve bağımlılıklar `pnpm-lock.yaml` ile
-  kilitlenir; `^` ile geniş aralık bırakılmaz.
+- **Paket yöneticisi `CLAUDE.md` §0'da yazar; kilit dosyası onunkidir.** Kendi
+  projede varsayılan `pnpm` (`pnpm-lock.yaml`); kurum projesinde **kurumun CI
+  hattı hangisini koşturuyorsa o** (`npm` → `package-lock.json`) — *"DAYATILAN
+  SEÇİM"* kuralı; soru `kurumdan-ogrenilecekler.md` → *"BÖLÜM 5 — Ağ, dış servisler ve hat"* satır 5.4). Seçilen yöneticinin
+  kilit dosyası **commit edilir**, diğerininki depoda bulunmaz; iki kilit
+  dosyası = hangisi doğru belirsiz.
 
-  ⭐ *Gerekçe:* monorepo kararı zaten `pnpm workspaces` üzerine kurulu
-  ("Backend kurgusu" tablosu) ve CI `pnpm install --frozen-lockfile` ile koşuyor
-  (`09-ci-cd-deploy.md`). Tek repoda da aynı araç kullanılır — iki farklı paket
-  yöneticisi iki farklı kilit dosyası demektir ve hangisinin doğru olduğu
-  ayrışır. `pnpm` ayrıca bağımlılıkları içerik-adresli tek bir depoda tutar,
-  disk ve kurulum süresi kazandırır.
-
-  ⛔ **`package-lock.json` aranmaz** — `pnpm` onu hiç üretmez. Kilit dosyası
-  `pnpm-lock.yaml`'dır ve **commit edilir**.
-
-  ⚠️ Kurum `npm` veya `yarn` dayatıyorsa yukarıdaki *"DAYATILAN SEÇİM"* kuralı
-  işler: onlarınki uygulanır, sapma ADR'ye yazılır.
+  ⭐ *Neden kendi projede `pnpm`:* monorepo `pnpm workspaces` üzerine kurulu
+  (*"DÖRT KURGU"* → [C]), CI `pnpm install --frozen-lockfile` ile koşar
+  (`09-ci-cd-deploy.md`); içerik-adresli depo disk ve süre kazandırır.
+  ⛔ Bu bir **varsayılandır, dayatma değil** — 2026-09-20'de bir projede "npm
+  yasak" gibi okunup kit sapması sanıldı; kural §0'a bağlandı.
   `package.json` içinde sürümler **tam** yazılır (`16.2.12`, `^16.2.12` değil).
 - Major sürüm yükseltmesi ayrı PR olur, feature PR'ına karıştırılmaz.
 - Bir bağımlılıkta yamalanmış sürüm varsa ama bağımlılık ağacı eskisini çekiyorsa,
