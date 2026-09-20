@@ -393,3 +393,17 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 | **Kanca bash + jq yerine Node** (`hooks/session-start.mjs`), hooks.json **exec biçimi** (`command: node`, `args`) — kabuk yok. Neden: 3.12.0 kancası `jq` istiyordu; jq ne Windows'ta ne macOS'ta hazır gelir, yalnızca tesadüfen kurulu olduğu Mac'te çalıştı; Windows iş makinesinde her oturum "jq bulunamadı" düştü, kural gelmedi. Claude Code, SessionStart için **düz metin stdout'u bağlama ekler** (belgeli); `{priority, message}` JSON'u tanımlı bir biçim değildi. Node zaten kitin ön koşulu | `hooks/hooks.json` · `hooks/session-start.mjs` |
 | **Kural: kanca ve betikler kitin ön koşulu dışında araç istemez** (Node + Git). Yeni bağımlılık = README *"Ön koşullar"* tablosuna satır + iki OS'ta deneme | `README.md` → *"Ön koşullar"* |
 | ~~Bilinen açık: kanca iki makinede doğrulanmalı~~ — 3.12.1 Windows + Mac'te doğrulandı (2026-09-20). Denetim betiği bunu ölçemez | *"Sırada ne var"* |
+
+### Ek — 2026-09-20: öğrenme deposundan gelen yedi bulgu (`backend-ogrenme/_notlar/kite-tasinacaklar.md`)
+
+| # | Bulgu | Sonuç |
+|---|---|---|
+| 1 | `.gitattributes` yok | ✅ 3.12.2 — `* text=auto eol=lf`, betikler LF |
+| 2 | `08` rebase anlatmıyor | ✅ 3.12.2 — *"İki makine, bir dal — merge mi, rebase mi"* |
+| 3 | Düz SQL öğretilmiyor | ✅ 3.12.2 — kural değil, defter satırı ("SQL okuma") + `04`'e tek cümle |
+| 4 | Eski projeyi yeniden yazma senaryosu yok | ✅ 3.13.0 — envanter 7b + `11` → *"ESKİ PROJEYİ YENİDEN YAZMA"* + soru 6.6; ayrı skill bilinçli olarak yok |
+| 5 | "Teslim paketi" adlandırılmış mı | ✅ 3.12.2 — 6b'de vardı; `13` ve `kurumdan` işaret eder; DevOps sınaması cümlesi; sağlık ucu `/api/health` ile tutarlı |
+| 6 | .NET cümlesi | ✅ 3.12.2 — `11` adım 2: karşılık tek cümle, kit yalnızca JS ailesi |
+| 7 | Standartlar `.claude/rules/`'a | ⏳ **Deney yapıldı (2.1.265, `claude -p`):** rules + `@import` çalışıyor · `paths` çalışıyor (eşleşen dosya okununca yükleniyor) · ⛔ **`@import`, `paths`'li dosyanın içinde de açılışta genişletiliyor — kapsamı deliyor.** Bu yüzden "ince rules + import" tasarımı geçersiz. Yeni tasarım: çekirdek (`paths`'siz, ~120 satır) + tetikleyici (`paths`'li, 10–15 satır: "şu standardı oku" + kural adları özeti) + `docs/standards/` tek kaynak. Şablon 691 → ~100. `InstructionsLoaded` hook ile yüklenenler loglanır. **Ayrı tur** |
+
+- [ ] ⭐ **Tur C — rules dönüşümü** (yukarıdaki tasarımla): `SKILL.md` Adım 2, `16-yeni-proje-kurulumu`, şablon `CLAUDE.md`, `.claude/rules/` üretimi, `InstructionsLoaded` kancası, önce/sonra `/context` ölçümü. Deney klasörü: scratchpad (kalıcı değil); yeniden üretmek 5 dakika.
