@@ -136,6 +136,7 @@ Boş bırakılan alan seviye 0 sayılır.
 | Index · sorgu performansı | 1 | Kit metinlerinde geçiyor, henüz kendi cümlesinde kullanmadı | 2026-09 |
 | Migration · araç seçimi (Prisma Migrate / Flyway biçimi) | 1 | "Madem ikisi de en iyisi, neden bize Prisma, kuruma Flyway?" ve "SQL'i AI yazıyorsa zorluğu ne?" diye sonuç soruları sordu | 2026-09-13 |
 | Sayfalama (offset / cursor) | 0 | | |
+| SQL okuma — Prisma'nın ürettiği JOIN · GROUP BY · `EXPLAIN` çıktısı | 0 | | |
 | Sabit değer kümesi (enum / tanım tablosu) | 1 | Enum ve lookup farkını "veri mi mantık mı" ölçütüyle okudu; henüz kendi cümlesinde kullanmadı | 2026-09-13 |
 | Birincil anahtar (UUIDv7 / BIGINT IDENTITY) | 1 | "Belediyeninki daha iyiyse bize de o olsun, değilse ayrı" diye kararı kendi ölçütüyle verdi | 2026-09-13 |
 

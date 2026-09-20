@@ -648,3 +648,5 @@ noktaya taşınır. Kurumun merkezî audit tablosu ve IP başlıkları
 - Migration'lar sırayla ve tekrarlanabilir çalışmalıdır; local'de sıfırdan kurulum denenir.
 - `prisma migrate diff` ile şema ile veritabanı arasındaki sapma düzenli kontrol edilir.
 - Yavaş sorgular (>200ms) tespit edilip index veya sorgu düzeltmesiyle giderilir.
+- Geliştirici Prisma'nın ürettiği SQL'i (JOIN, GROUP BY, `EXPLAIN` planı) **okuyabilmeli** —
+  ORM yazmayı üstlenir, anlamayı değil. Öğrenme yolu seviye defterinde (`calisilacak-konular.md`).

@@ -291,6 +291,9 @@ Adım 3b, 4 ve 5'te sorulur. Muhatap: DBA / veritabanı birimi.
 
 # BÖLÜM 5 — Ağ, dış servisler ve hat
 
+> Bu bölümün cevapları **teslim paketine** girer (`SKILL.md` → *"Adım 6b"*):
+> Dockerfile, compose, `.env.example`, README, migration stratejisi, `/api/health`.
+
 <!-- Adım 3b ve 4'te sorulur. Muhatap: DevOps. -->
 
 | # | Konu | Aşama | Cevap |

@@ -955,6 +955,13 @@ yayınsız bırakır.
 Burada **deploy etmiyorsun.** Ürettiğin şey, DevOps'un çalıştıracağı pakettir.
 ⛔ Domain, sunucu, DNS, SSL adımlarını **hiç açma**.
 
+⭐ **DevOps'un sınaması genelde tektir:** Docker'da PostgreSQL'i ayağa kaldırır,
+dosyalarını atar, `docker compose up` der — açılıyorsa kabul. Paket bu sınavı
+**sen sormadan** geçmeli: tek komut, eksiksiz `.env.example`, migration
+kendiliğinden ya da README'de üç komut. Bu paketin adı kitte **"teslim
+paketi"**dir; `13-environments.md` → *"Yol C"* ve `kurumdan-ogrenilecekler.md`
+buraya işaret eder.
+
 1. Kurumun GitLab'ına push et; `.gitlab-ci.yml` kur (adımlar `package.json`
    script'inde, CI dosyası ince sarmalayıcı olsun — platform değişirse taşınsın)
 2. **Teslim paketini üret:**
@@ -963,11 +970,11 @@ Burada **deploy etmiyorsun.** Ürettiğin şey, DevOps'un çalıştıracağı pa
    - `.env.example` — **eksiksiz**; DevOps hiçbir değişkeni tahmin etmemeli
    - `README.md` — kurulum, çalıştırma, migration, test, bilinen eksikler
    - Migration stratejisi — şema değişikliği ne zaman hangi komutla uygulanır
-   - `GET /health/live` + `GET /health/ready` (ready veritabanını da yoklar)
+   - `GET /api/health` — uygulama + veritabanı + Redis durumu (`12-operations-and-scaling.md` → *"Açılış sırası"*)
 3. **Paketi kendi makinende DOĞRULA** — "yazdım" yetmez:
    ```bash
    docker compose up --build        # sıfırdan, tek komutta ayağa kalkmalı
-   curl localhost:<API_PORT>/health/ready
+   curl localhost:<API_PORT>/api/health
    ```
    `chrome-devtools` MCP ile ekranları fiilen tıkla; konsol hatası kalmasın.
 4. Log biçimi **JSON** olmalı — kurumun toplama sistemi düz metni toplayamaz
@@ -975,7 +982,7 @@ Burada **deploy etmiyorsun.** Ürettiğin şey, DevOps'un çalıştıracağı pa
    > "Uygulama GitLab'da `main` dalında. `docker compose up --build` ile ayağa
    > kalkıyor. Gereken değişkenler `.env.example` içinde listeli, değerleri
    > sizde. Migration'lar açılışta `prisma migrate deploy` ile çalışıyor.
-   > Sağlık uçları `/health/live` ve `/health/ready`."
+   > Sağlık ucu `/api/health`."
 
 ## Adım 7 — Son kontrol
 

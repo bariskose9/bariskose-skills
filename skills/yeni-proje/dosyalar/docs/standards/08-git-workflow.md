@@ -121,6 +121,31 @@ yanlış kimlikle kalır.
 - Merge stratejisi: **squash merge** (geçmiş temiz kalır).
 - Merge sonrası dal silinir.
 
+## İki makine, bir dal — merge mi, rebase mi
+
+Aynı depoda iki bilgisayardan çalışıyorsun: evde bir commit attın, işte bir
+commit attın, ikisi de `main`'e. GitHub ikinciyi **reddeder** — "önce
+birleştir" der; bu hata değil, git'in "iki tarih var, tek tarih yap" demesi.
+İki yol var:
+
+| | **merge** | **rebase** |
+|---|---|---|
+| *Gerçek hayat* | İki defter tutuldu; üçüncü bir sayfaya "şu tarihte ikisini birleştirdim" yazılır | Senin sayfaların, karşı tarafın sayfalarının **arkasına yeniden yazılır** — tek defter, düz sıra |
+| Ne yapar | İki dalı bir "birleştirme commit'i" ile bağlar; geçmişte çatal görünür | Senin commit'lerini karşı tarafın son commit'inin **üstüne** yeniden dizer; geçmiş düz kalır |
+| Komut | `git pull` (varsayılan) | `git pull --rebase origin main` |
+| Ne zaman | PR birleştirirken (GitHub bunu zaten squash ile yapar) | ⭐ **Kendi commit'lerini** henüz kimseyle paylaşmadan güncel dalın üstüne almak — iki makine senaryosu tam bu |
+
+**Kural:** kendi makineleri arasında `git pull --rebase`; çakışma çıkarsa git
+dosyayı `<<<<<<<` / `>>>>>>>` işaretleriyle gösterir, sen doğru olanı bırakıp
+`git add` + `git rebase --continue` dersin. ⛔ **Push edilmiş ve başkasının
+çektiği commit'ler rebase edilmez** — onların defteri de değişmek zorunda
+kalır (yukarıdaki *"Asla"*: paylaşılan dala `--force` yok). Tek kişilik iki
+makine "başkası" sayılmaz; ikisi de sensin.
+
+⭐ İki makinede aynı dosyaya dokunulduysa satır çakışması çıkar; **anlam
+çakışması** (iki yerde aynı kuralı yazmak) git'e görünmez — birleştirdikten
+sonra ajana "aynı konuyu iki kez yazmış mıyız" diye baktırılır.
+
 ## Asla
 `git push --force` (paylaşılan dala) · `git reset --hard` (onaysız) ·
 `.env` veya anahtar commit'i · `node_modules`/build çıktısı commit'i ·

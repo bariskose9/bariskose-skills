@@ -103,6 +103,9 @@ Test ve canlı **aynı imajı** çalıştırır; fark yalnızca ortam değişken
 | **test** | Kurumun test sunucusu | Kurumun test DB'si | **DevOps** alır, **veritabanı birimi** DB'yi verir | `main`'e her merge'de (DevOps tetikler) |
 | **canlı** | Kurumun canlı sunucusu | Kurumun canlı DB'si | DevOps + veritabanı birimi | Yalnızca **etiketli sürüm** (`v1.2.0`) — testte onaylandıktan sonra |
 
+⭐ Bu yolun çıktısı **teslim paketi**dir — içeriği ve doğrulaması `SKILL.md` →
+*"Adım 6b — Kurum projesi: teslim paketini hazırla ve DOĞRULA"*.
+
 **Preview ortamı yoktur.** Her MR'da otomatik açılan bir adres beklenmez;
 MR'ın kapısı CI'dır (`pnpm ci:verify`), gerçek ortamda deneme **test
 sunucusunda** yapılır.

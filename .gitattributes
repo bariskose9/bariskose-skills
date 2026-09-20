@@ -1,0 +1,9 @@
+# NE: Satır sonlarını git'in nasıl saklayacağı. Windows metin dosyasına iki karakter (CRLF), Mac/Linux tek (LF) koyar;
+#     iki OS'lu depoda bu belirtilmezse her commit'te "LF will be replaced by CRLF" uyarısı çıkar ve betikler CRLF ile bozulur.
+# KURAL: depoda her metin dosyası LF ile saklanır — hangi OS'tan gelirse gelsin.
+* text=auto eol=lf
+*.sh  text eol=lf
+*.mjs text eol=lf
+*.pdf binary
+*.png binary
+*.jpg binary

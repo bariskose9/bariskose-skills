@@ -961,7 +961,7 @@ açılarak.
 |---|---|---|---|
 | 0 | **Ad** | Terim, yaygın eş anlamlılarıyla — Türkçe **ve** İngilizce, eğik çizgiyle (biçim: `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` → *"Terim biçimi"*) | **bağlantı havuzu / connection pool / pool** |
 | 1 | **Gerçek hayat** | Çarpıcı, akılda kalıcı bir benzetme — yazılım dışından | Her yolcu için sıfırdan taksi üretmek yerine durakta bekleyen 10 taksi |
-| 2 | **Yazılım dünyası** | Sektördeki tanımı **ve** başka bir teknolojide aynı kavramın nasıl göründüğü — okuyucu *"demek ki aynı şey"* bağlantısını kursun | Veritabanı bağlantısı açmak pahalıdır (PostgreSQL her bağlantı için ayrı süreç açar); havuz açık bağlantıyı yeniden kullanır. Java'da HikariCP, .NET'te `SqlConnection` havuzu aynı iştir |
+| 2 | **Yazılım dünyası** | Sektördeki tanımı **ve** başka bir teknolojide aynı kavramın nasıl göründüğü — okuyucu *"demek ki aynı şey"* bağlantısını kursun. ⛔ Karşılık **tek cümledir**; kit yalnızca JS ailesiyle dolar, .NET/C#/Java içerik girmez | Veritabanı bağlantısı açmak pahalıdır (PostgreSQL her bağlantı için ayrı süreç açar); havuz açık bağlantıyı yeniden kullanır. Java'da HikariCP, .NET'te `SqlConnection` havuzu aynı iştir |
 | 3 | **Bu projede nerede** | Hangi somut sorunu, hangi dosyada, hangi ekranda/tabloda çözüyor — *"katmanlar ayrılır"* hiçbir şey öğretmez, *"Prisma değişse yalnızca infrastructure katmanı etkilenir"* öğretir | `src/lib/db/pool.ts` → `max: 10`; paylaşımlı kurum sunucusunda üst sınır DB biriminden alınır |
 
 ⛔ **Dört adım bir kontrol listesidir, doldurulacak şablon değil.** Dört

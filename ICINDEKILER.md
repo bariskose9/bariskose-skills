@@ -39,6 +39,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 |---|:--:|:--:|---|
 | `ICINDEKILER.md` (bu dosya) | ✅ | ⛔ | Harita |
 | `README.md` | ✅ | ⛔ | Kurulum ve tanıtım |
+| `.gitattributes` | ✅ | ⛔ | Satır sonu kuralı: depoda her metin LF — iki OS'lu depoda betikler CRLF ile bozulmasın |
 | `KURULUM.md` | ✅ | ⚠️ | Sesli bildirim kurulumu, gerekçeleriyle |
 | `CLAUDE.md` (kökte) | ⚠️ | ✅ | Bu **depoda** çalışan ajanın kuralları |
 | `TARTISILMIS-KARARLAR.md` | ✅ | ✅ | Kesinleşmiş kararlar — yeniden tartışılmaz |
