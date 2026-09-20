@@ -10,8 +10,11 @@ paths:
 
 `docs/standards/06-testing.md` bağlayıcıdır; kural adları aşağıda.
 
-- Önce **kırmızı** test, sonra kod; hata düzeltmesi hatayı yakalayan testle
-  başlar (`06-testing.md` → *"Kurallar"*).
+- Beceri: `test-driven-development`. Önce **kırmızı** test, sonra kod; hata
+  düzeltmesi hatayı yakalayan testle başlar (`06-testing.md` → *"Kurallar"*).
+- Ekran değişince `browser-testing-with-devtools` (chrome-devtools MCP): ajan
+  tarayıcıda fiilen tıklar; kullanıcı PC + telefon tarayıcısından ayrıca dener
+  (`06-testing.md` → *"Mobil doğrulama — üç ayrı şey, karıştırılmaz"*).
 - Piramit: çok unit / orta entegrasyon / az e2e; her uç için mutlu yol + hata
   yolu + yetki testi; yalnızca mock'u doğrulayan test yazılmaz.
 - Mimari test: katman sınırı ihlali kırmızıdır.

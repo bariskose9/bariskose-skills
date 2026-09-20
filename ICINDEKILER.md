@@ -76,7 +76,17 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | Dosya | Kim okur | Ne |
 |---|:--:|---|
 | `.claude/rules/00-cekirdek.md` | Ajan | ⭐ **Çekirdek: her oturumda kendiliğinden yüklenen davranış kuralları** — rol, anlatım ölçütü, hangi soru → hangi dosya, sekiz kapı, commit protokolü, asla yapma, oturum hijyeni |
-| `.claude/rules/<alan>.md` (kod · veritabani · api · guvenlik · arayuz · test · yayin · mobil) | Ajan | ⭐ **Tetikleyiciler:** `paths` ile yalnızca ilgili dosya açılınca yüklenir; "şu standardı oku" + kural adları özeti. ⛔ İçlerinde `@import` yok |
+| `.claude/rules/kod.md` | Ajan | ⭐ Tetikleyici — `src/**/*.{ts,tsx}` açılınca: katman, Server Action/Route Handler, durum makinesi, önbellek, başlık bloğu, aşırı mühendislik → `01`, `02` |
+| `.claude/rules/veritabani.md` | Ajan | Tetikleyici — `prisma/**`, `*repository*.ts`, `database/**`: `@map`, PK, tanım tablosu, migration aracı, audit, şifreli kolon → `04`, `14` |
+| `.claude/rules/api.md` | Ajan | Tetikleyici — `**/api/**`, `*.controller.ts`, `actions.ts`, `contracts/**`: Zod sırası, yetki, hata biçimi, idempotency, kuyruk zamanı → `03` |
+| `.claude/rules/guvenlik.md` | Ajan | Tetikleyici — `**/auth/**`, `*guard*.ts`, `proxy.ts`, `upload*/**`: argon2id, JWT, 2FA, dosya yükleme sekiz kural, KVKK → `05`, `14` |
+| `.claude/rules/arayuz.md` | Ajan | Tetikleyici — `*.tsx`, `*.css`, `components/**`: tasarım yönü ADR, token, dört + üç durum, erişilebilirlik → `07`, `18` |
+| `.claude/rules/test.md` | Ajan | Tetikleyici — `*.test.ts`, `tests/**`, `e2e/**`: önce kırmızı test, piramit, beş göz, etki alanı, tarayıcı doğrulaması → `06` |
+| `.claude/rules/yayin.md` | Ajan | Tetikleyici — `Dockerfile*`, `compose*`, `.github/**`, `.gitlab-ci.yml`, `src/config/**`, `.env*`: CI betiği, kancalar, ortamlar, açılış sırası, log → `09`, `12`, `13` |
+| `.claude/rules/mobil.md` | Ajan | Tetikleyici — `apps/mobile/**`, `app.json`: iskelet uyarısı, jeton, zaman aşımı, sürümleme → `17` |
+
+⛔ Tetikleyicilerde `@import` yok — `paths` kapsamını deler (`11-agent-workflow.md` → *"Bağlam yönetimi"*).
+
 | `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` | Ajan | **§0 proje değişkenleri + kurallar nerede tablosu** (kısa). ⛔ Projeye kopyalanırken adı `CLAUDE.md` olur — ancak o zaman yüklenir. §0'ı kurulum doldurur |
 | `CALISMA-KILAVUZU.md` | **Sen** | Projeyi nasıl yürüteceğin — terimler, oturum ritmi, dosya açıklamaları. ⚠️ Ajan bunu da kendiliğinden okumaz; senin kılavuzun, ama **güncel tutmak onun işi** |
 | `REPO-YAPISI.md` | İkisi | Hangi iş hangi klasörde — kurulumdan sonra doldurulur |

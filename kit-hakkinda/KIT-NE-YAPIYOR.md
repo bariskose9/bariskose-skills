@@ -1,6 +1,6 @@
 # `proje-kiti` — Kit Ne Yapıyor
 
-**Sürüm:** 3.14.0 · **Tarih:** 2026-09-20
+**Sürüm:** 3.14.1 · **Tarih:** 2026-09-20
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Bu belge, kitin **kurulumdan canlıya çıkışa kadar** ne yaptığını anlatır.

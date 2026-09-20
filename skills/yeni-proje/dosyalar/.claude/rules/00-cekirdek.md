@@ -81,7 +81,8 @@ Hangi beceriyi kullanacağına sen karar ver; her cevabın **ilk satırında**
 | 1 | `interview-me` ile **tek tek** soru; varsayım yok | Gereksinim belirsizse |
 | 2 | Plan sun, **onay bekle** | Kod yazmadan önce, her zaman |
 | 3 | `security-and-hardening` | Girdi, kimlik, ödeme, dosya, dış API içeren her işte |
-| 4 | Test yaz, koştur, yeşili göster | Her davranış değişikliğinde; testsiz "bitti" yok |
+| 4 | `test-driven-development`: önce **kırmızı** test — unit (Vitest) · entegrasyon · e2e (Playwright, masaüstü + 375px) — sonra kod; yeşili göster | Her davranış değişikliğinde; testsiz "bitti" yok |
+| 4b | `browser-testing-with-devtools` (chrome-devtools MCP): ajan tarayıcıda **fiilen tıklar** — akış, hata mesajı, dört durum, dark mode, 375px, konsol/network | Her ekran değişikliğinde; sonra kullanıcıya **PC ve telefon tarayıcısından** deneyeceği adımlar verilir (rapor: `10-definition-of-done.md` → *"Commit önerisi raporu"*) |
 | 5 | `code-review-and-quality` | Her commit öncesi |
 | 6 | `10-definition-of-done.md` kapıları | "Tamamlandı" demeden önce |
 | 7 | `15-oturum-devri-kurallari.md` — devir promptu | Her adım bitiminde, oturum kapanmadan |
@@ -109,8 +110,10 @@ Etkilenen yerlerin **hepsi** fiilen açılıp kontrol edilir; "en az biri" yok.
   yarım iş commit'lenmez, on iş tek commit'e tıkılmaz.
 - Commit'ten önce **üç doğrulama, sırayla, hepsi geçmeden teklif yok:**
   (1a) `lint → typecheck → test → build`, çıktı gösterilir; (1b) güvenlik
-  denetimi — liste `10-definition-of-done.md` → *"Güvenlik"*; (1c) tarayıcıda
-  **fiilen tıklayarak** — liste `10` → *"Tarayıcı doğrulaması"*.
+  denetimi — `security-and-hardening` + `security-auditor`, liste
+  `10-definition-of-done.md` → *"Güvenlik"*; (1c) `browser-testing-with-devtools`
+  ile tarayıcıda **fiilen tıklayarak** — liste `10` → *"Tarayıcı doğrulaması"*;
+  kullanıcının PC + telefon tarayıcısından deneyeceği adımlar rapora yazılır.
 - Sonra **COMMIT ÖNERİSİ** raporu (biçim: `10-definition-of-done.md` →
   *"Commit önerisi raporu"*), Türkçe, kod göstermeden; *"evet"* → commit +
   push + PR/MR; *"düzelt"* → yeniden. ⛔ Onaysız `git commit`, `push`, `merge`
