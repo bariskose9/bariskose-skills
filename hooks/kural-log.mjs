@@ -22,7 +22,7 @@ process.stdin.on("end", () => {
     const proje = basename(cwd) || "bilinmeyen";
     const klasor = join(homedir(), ".claude", "proje-kiti", "log");
     mkdirSync(klasor, { recursive: true });
-    const satir = { t: new Date().toISOString(), olay: m.hook_event_name };
+    const satir = { t: new Date().toISOString(), oturum: (m.session_id || "").slice(0, 8), olay: m.hook_event_name };
     if (m.hook_event_name === "InstructionsLoaded") {
       satir.dosya = m.file_path?.replace(cwd + "/", "");
       satir.neden = m.load_reason;

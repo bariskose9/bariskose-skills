@@ -68,6 +68,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | Yol | Ne |
 |---|---|
 | `hooks/hooks.json` | Claude Code'a "oturum başında `node hooks/session-start.mjs` çalıştır" der — kabuk kullanmayan exec biçimi, iki işletim sisteminde aynı |
+| `hooks/kural-rapor.mjs` | Log okuyucu: `node <plugin>/hooks/kural-rapor.mjs [proje] [--son N]` — oturum başına açılışta gelen · tetiklenen (hangi dosyayla) · fiilen okunan standart · **"tetikleyici geldi ama standardı açılmadı"** uyarısı |
 | `hooks/kural-log.mjs` | Ölçüm kancası: `InstructionsLoaded` (hangi kural, neden, tetikleyen) ve `PostToolUse(Read)` (hangi standart okundu) → `~/.claude/proje-kiti/log/<proje>.jsonl`. Karar vermez, engellemez |
 | `hooks/session-start.mjs` (⭐ 3.15.0: GitHub sürümüyle karşılaştırır, geride ise "güncelleyeyim mi?" sordurur) | ⭐ Klasör ne olursa olsun ajana kitin varlığını, anlatım ölçütünün **özetini** ve kuralın tam yolunu enjekte eder — kuralın kopyası değil, işaretçi. Kural tek yerde: `11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"*. Yalnızca Node ister (jq gerekmez — 3.12.1) |
 
