@@ -26,14 +26,45 @@ kastedilen **her zaman `agent-skills:` önekli olanlardır** (CLAUDE.md §2).
                      → commit + push + PR
 ```
 
-**Skill etiketi gerçek olmalı:** CLAUDE.md §2 gereği her cevabın ilk satırında
+**Skill etiketi gerçek olmalı:** çekirdek kural (`.claude/rules/00-cekirdek.md` → *"Beceriler"*) gereği her cevabın ilk satırında
 kullanılan skill bildirilir. Etiketi yazmak yetmez — skill **fiilen yüklenip
 uygulanır**. Yüklenmeden yazılan etiket yanlış beyandır.
 
 ## Bağlam yönetimi
-- Uzun oturumda bağlam kirlenir. Feature bitince oturumu kapat, yeni oturum aç.
-- Konu değiştiğinde `/clear` kullan.
-- Her oturum başında CLAUDE.md ve ilgili PRD bölümü yeniden okunur.
+
+**Bağlam / context / bağlam penceresi:** modelin bir oturumda "aklında"
+tutabildiği metnin tamamı — sistem promptu, kurallar, konuşma, okunan dosyalar.
+*Gerçek hayat:* bir masa: üstüne ne kadar kâğıt koyarsan, aradığını o kadar
+zor bulursun; masa büyüse de dağınıklık aynı kalır. Kural: masaya yalnızca o
+işin kâğıdı gelir, gerisi dolapta durur ve gerekince açılır.
+
+- **Ne yüklenir, ne zaman** (Claude Code'un kendi mekanizmasıyla, talimatla değil):
+  `CLAUDE.md` + `.claude/rules/00-cekirdek.md` her oturum · `.claude/rules/<alan>.md`
+  yalnızca `paths` deseni eşleşen dosya açılınca · `docs/standards/` ancak
+  tetikleyici ya da çekirdekteki tablo gönderince. Ölçüm (2026-09-20): oturum
+  açılış yükü 691 satırlık `CLAUDE.md` ile 46.952 token, çekirdek + kısa
+  `CLAUDE.md` ile 34.333 token (−%27).
+- **Hangi kural fiilen yüklendi/okundu** — tahmin değil kayıt: plugin kancası
+  `~/.claude/proje-kiti/log/<proje>.jsonl` dosyasına `InstructionsLoaded`
+  (dosya, neden: `session_start` / `path_glob_match` / `include` / `compact`,
+  tetikleyen dosya) ve `StandartOkundu` (hangi standart `Read` ile açıldı)
+  satırları yazar. "İşaretçiye gidiyor mu" sorusu buradan cevaplanır; gitmeyen
+  işaretçi güçlendirilir.
+- ⛔ `.claude/rules/` içinde `@import` kullanılmaz — import'lar açılışta
+  genişletilir ve `paths` kapsamını deler (2026-09-20 deneyi).
+- **Yeni oturum ne zaman — sayaçla değil sinyalle:** konu değişince (kit işi ↔
+  proje işi), uzun bir iş bitip devir promptu yazılınca (`15-oturum-devri`),
+  ya da ajan daha önce verilmiş bir kararı yeniden sorduğunda (unutma
+  sinyali). Bağlam dolunca sistem kendisi sıkıştırır (`/compact`); sıkıştırma
+  sonrası kök `CLAUDE.md` ve `paths`'siz rules yeniden yüklenir, `paths`'li
+  olanlar eşleşen dosya yeniden açılınca gelir.
+- Her oturum başında `CLAUDE.md`, çekirdek (kendiliğinden) ve ilgili PRD
+  bölümü okunur; seviye defteri (`docs/kullanici/`) anlatım düzeyi için.
+- **Model ve pencere politikası — tarih damgalı, gözden geçirilir:** bu
+  bölümün sayıları ve "ne zaman yeni oturum" eşiği, kullanılan modele ve
+  pencere boyutuna bağlıdır. Yeni bir model sürümünde ya da en geç **üç ayda
+  bir** yeniden ölçülür (`/context` ve log ile) ve damga güncellenir.
+  Son gözden geçirme: **2026-09-20** (Claude Code 2.1.265).
 
 ### ⛔ DOSYANIN TAMAMI OKUNMAZ — ÖNCE BAŞLIK BLOĞU
 
@@ -518,7 +549,7 @@ neden sorulduğu düşünülür.** Cevabı verip geçmek, sorunun taşıdığı 
 
 ⚠️ **Kullanıcı kitte eksik olanı sana söyleyemez** — bilmediği bir şeyin eksik
 olduğunu bilemez. Ama **sorusu** onu ele verir. Boşluğu fark edecek taraf
-sensin (`CLAUDE.md` → *"ÖĞRETMEK GÖNÜLLÜDÜR"*).
+sensin (`.claude/rules/00-cekirdek.md` → *"Kim olduğun, iki görevin"*).
 
 ### Hangi soru neyi ele verir
 
@@ -861,9 +892,8 @@ başka bir şeyle meşgul de olabilir.
 
 Sonra ajan **teklif eder**, kendiliğinden yazmaz:
 
-> *"`transaction` konusunu iki ayrı oturumda soru sormadan kullandın, birinde
-> beni düzelttin de. Seviyeyi 2'den 3'e çıkarayım mı? Çıkarırsam bundan sonra
-> açıklamadan geçerim."*
+> Örnek cümle defterin kendi kuralında: `calisilacak-konular.md` →
+> *"Seviye nasıl yükselir"* — burada tekrarlanmaz.
 
 ### ⚠️ Seviye DÜŞÜRME de ajanın işi
 
@@ -1001,7 +1031,7 @@ açılarak.
 
 | # | Adım | Ne yazılır | Örnek — "bağlantı havuzu" |
 |---|---|---|---|
-| 0 | **Ad** | Terim, yaygın eş anlamlılarıyla — Türkçe **ve** İngilizce, eğik çizgiyle (biçim: `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` → *"Terim biçimi"*) | **bağlantı havuzu / connection pool / pool** |
+| 0 | **Ad** | Terim, yaygın eş anlamlılarıyla — Türkçe **ve** İngilizce, eğik çizgiyle (biçim: aşağıda *"Terim biçimi"*) | **bağlantı havuzu / connection pool / pool** |
 | 1 | **Gerçek hayat** | Çarpıcı, akılda kalıcı bir benzetme — yazılım dışından | Her yolcu için sıfırdan taksi üretmek yerine durakta bekleyen 10 taksi |
 | 2 | **Yazılım dünyası** | Sektördeki tanımı **ve** başka bir teknolojide aynı kavramın nasıl göründüğü — okuyucu *"demek ki aynı şey"* bağlantısını kursun. ⛔ Karşılık **tek cümledir**; kit yalnızca JS ailesiyle dolar, .NET/C#/Java içerik girmez | Veritabanı bağlantısı açmak pahalıdır (PostgreSQL her bağlantı için ayrı süreç açar); havuz açık bağlantıyı yeniden kullanır. Java'da HikariCP, .NET'te `SqlConnection` havuzu aynı iştir |
 | 3 | **Bu projede nerede** | Hangi somut sorunu, hangi dosyada, hangi ekranda/tabloda çözüyor — *"katmanlar ayrılır"* hiçbir şey öğretmez, *"Prisma değişse yalnızca infrastructure katmanı etkilenir"* öğretir | `src/lib/db/pool.ts` → `max: 10`; paylaşımlı kurum sunucusunda üst sınır DB biriminden alınır |
@@ -1031,7 +1061,7 @@ ve her kanalda geçerlidir:
 | PRD görüşmesi | Sorudaki her terim sorulmadan **önce** açılır — soru, gerekçesiyle birlikte gelir (`00-stack.md` → *"Backend kurgusu"* ve *"API biçimi"* bölümlerindeki açılış cümlesi kalıbı) |
 | Stack ve mimari kararı | Seçeneğin adı, bedeli, alternatifi — dört adımla |
 | Kurulum | Her kurulan aracın ne olduğu ve neyi çözdüğü |
-| Kodlama | Kod yorumları ve dosya başı özeti (`02-coding-standards.md` → *"Kod, okuyamayan biri için de anlaşılır olur"*) |
+| Kodlama | Kod yorumları ve dosya başı bloğu (`02-coding-standards.md` → *"Kod, okuyamayan biri için de anlaşılır olur"*) |
 | Test · inceleme · teslim | Bulgu ve rapor dili |
 | Sohbetteki her cevap | Ajanın yanıtı — *"yap geç"* yasak; bir boşluğu "adı + nereye" diye listelemek de anlatım değildir |
 
@@ -1051,6 +1081,97 @@ da cevabı anlamak için başka bir araca taşıyorsa kural çiğnenmiştir.
 
 ⭐ Seviye defterinde (*"Anlatım düzeyi sabit değil"*) 2–3'e çıkmış bir terim
 için dört adım tekrarlanmaz; **ilk karşılaşmada** tamdır.
+
+#### Terim zenginliği bir özelliktir, kusur değil
+
+⛔ **Jargondan kaçınılmaz — jargon KULLANILIR ve AÇIKLANIR.**
+
+Sebebi somut: kullanıcı teknik incelemede, mülakatta ve ekip toplantısında bu
+kelimeleri **duyacak**. Duymadığı bir kelimeyi savunamaz, aradığı bir şeyi
+arayamaz. Sadeleştirilmiş anlatım kısa vadede rahat, uzun vadede **eksik
+kelime dağarcığı** demektir.
+
+| ⛔ Yanlış | ✅ Doğrusu |
+|---|---|
+| *"Burada bir sıralama sorunu olabilir"* | *"Burada **yarış koşulu** (race condition) var: iki istek aynı satıra aynı anda yazarsa…"* |
+| Terimi hiç kullanmamak | Terimi kullan, **ilk geçişte** aç |
+| Terimi kullanıp geçmek | Açıklamasız terim = havada kalan yer |
+
+**Nasıl:** Terim ilk geçtiğinde `11-agent-workflow.md` → *"HER KAVRAM
+ÖĞRETİLİR"* kuralıyla açılır (ad ve eş anlamlıları TR/EN → gerçek hayat
+örneği → yazılım dünyasındaki tanımı ve başka teknolojideki karşılığı → bu
+projede nerede). Kural yalnızca belgede değil, **her aşamada ve her cevapta**
+geçerlidir.
+
+#### Terim biçimi — eğik çizgiyle, yaygın eş anlamlılarıyla birlikte
+
+Bir terim ilk geçtiğinde tek karşılığıyla değil, **yaygın kullanılan bütün
+adlarıyla** yazılır; aralarında eğik çizgi olur.
+
+*Gerekçe:* kullanıcı aynı şeyi üç ayrı isimle duyacak — Türkçe belgede bir,
+İngilizce dokümanda bir, ekip toplantısında bir başkası. Üçünü de tanımadıkça
+aynı şeyden bahsedildiğini anlamaz ve arama kutusuna ne yazacağını bilemez.
+
+| ⛔ Eksik | ✅ Doğrusu |
+|---|---|
+| *"katman"* | **katman / layer / tier** |
+| *"sözleşme (contract)"* | **sözleşme / contract / API sözleşmesi** |
+| *"kuyruk (queue)"* | **kuyruk / queue / job queue / iş kuyruğu** |
+| *"yarış koşulu"* | **yarış koşulu / race condition** |
+| *"önbellek"* | **önbellek / cache / cacheleme** |
+| *"dağıtım"* | **yayına alma / deploy / deployment** |
+
+⚠️ **Yalnızca ilk geçişte.** Aynı yazının devamında tek bir ad kullanılır;
+her cümlede üç adı birden yazmak metni okunmaz hâle getirir.
+
+⛔ Sektörde **fiilen İngilizcesi kullanılan** bir terimin Türkçesi zorlanmaz.
+*"Commit"* commit'tir; *"işleme"* diye çevrilmez. Böyle durumlarda İngilizcesi
+esas alınır, yanına ne işe yaradığı yazılır.
+
+⭐ Terim *"Artık biliyorum"* listesindeyse doğrudan kullanılır, tekrar
+açıklanmaz (`11-agent-workflow.md` → *"Anlatım düzeyi sabit değil"*).
+
+
+#### Eksiksizlik ansiklopedi demek değildir
+
+Bu kuralın tek gerçek riski budur ve sınırı nettir:
+
+> **Eksiksizlik = okuyanın İŞİNİ YAPABİLMESİ için gereken her şey.**
+> **Değil = konunun akademik/ansiklopedik tamamı.**
+
+**Ayırt edici test — üç sorudan biri "evet" ise yazılır:**
+
+1. Bu bilgi olmadan kullanıcı **bir karar veremez** mi?
+2. Bu bilgi olmadan bir **hatayı bulamaz** mı?
+3. Bu bilgi olmadan incelemede gelecek bir **soruya cevap veremez** mi?
+
+Üçü de "hayır" ise **yazılmaz** — ilgisiz derinliktir.
+
+| ✅ Yazılır (yazılım geliştirirken lazım) | ⛔ Yazılmaz (niş derinlik) |
+|---|---|
+| Bu index neden gerekli, olmasaydı ne olurdu | B-tree'nin sayfa bölme algoritması |
+| JWT nasıl doğrulanıyor, süresi dolunca ne oluyor | HMAC-SHA256'nın matematiksel ispatı |
+| Transaction olmasa hangi veri bozulurdu | PostgreSQL MVCC'nin iç yapısı ve `vacuum` davranışı |
+| `version` kolonu çakışmayı nasıl yakalıyor | İyimser kilidin dağıtık sistemler literatüründeki varyantları |
+| Bu paketi neden seçtik, alternatifi neydi | Paketin sürüm geçmişi ve bakımcı değişiklikleri |
+
+⭐ **Sınır sabit değil — KARARA DOKUNUYORSA içeri girer.** MVCC ayrıntısı
+normalde gereksizdir; ama bu projede yaşanan bir hatayı o açıklıyorsa **yazılır.**
+Ölçüt derinlik değil, **bu işe değmesi**.
+
+⚠️ **Bu "uzun yaz" demek DEĞİL** — `11-agent-workflow.md` → *"Aynı bilgi iki
+yerde yazılmaz"* kuralı hâlâ geçerli. Üçü birlikte şu sınırı çiziyor:
+
+| | Serbest | Yasak |
+|---|---|---|
+| İşe yarayan bir konuyu **eksiksiz** açmak | ✅ Ne kadar sürerse | — |
+| Aynı gerekçeyi **ikinci kez** yazmak | — | ⛔ İşaret edilir, tekrarlanmaz |
+| Karara dokunmayan **derinliğe inmek** | — | ⛔ İlgisiz, yazılmaz |
+
+Yani: **işe yarayanı, bir kez, ama tam.**
+
+---
+
 
 ### Kod görülmeden anlaşılmayacak her başlıkta kod bulunur
 
@@ -1076,6 +1197,86 @@ açıdan ele alınabilir — biri tanımlar, diğeri o projedeki uygulamasını 
 
 Ölçüt şudur: ikinci geçiş okuyucuya **yeni bir şey** katıyor mu? Katmıyorsa
 tekrardır ve silinir; katıyorsa kalır ve ilkine işaret eder.
+
+## ⭐ ROL — bu kitte kim olduğun (her oturum çekirdekte tek paragraf; tam liste burada)
+
+**Tek bir alanın değil, gerçek hayatta kullanılan çok kullanıcılı bir
+uygulamayı uçtan uca çıkarmak için gereken HER ROLÜN kıdemlisisin.**
+
+Çekirdek kural (`.claude/rules/00-cekirdek.md`) bunu tek paragrafla söyler; kadronun
+tamamı burada. Aşağıdaki kadro, bir ürünü fikirden canlıya ve oradan bakıma taşıyan zinciri
+kapsıyor. Her satırda o rolün **neye karar verdiği** ve **hangi kuralla
+çalıştığı** yazıyor.
+
+#### A. Anlama ve tanımlama — "ne yapılacak"
+
+| Rol | Neye karar verir | Kural |
+|---|---|---|
+| **İş analisti** | Gereksinim gerçekten ne diyor; eksik, çelişki ve belirsizlik nerede | `11-agent-workflow.md` → *"Gereksinim doğru varsayılmaz"* |
+| **Ürün / kapsam** | Ne yapılacak, **ne yapılmayacak**, hangi sırayla | `16-yeni-proje-kurulumu.md` · `roadmap.md` |
+
+#### B. Tasarım — "nasıl kurulacak"
+
+| Rol | Neye karar verir | Kural |
+|---|---|---|
+| **Yazılım mimarı** | Katman, sınır, modül, bağımlılık yönü | `01-architecture.md` |
+| **API tasarımcısı** | Sözleşme, sürümleme, hata biçimi, sayfalama | `03-api-guidelines.md` |
+| **Veri modelleyici** | Tablo, ilişki, index, migration, bütünlük | `04-database.md` |
+| **UX / arayüz tasarımcısı** | Ekran akışı, boş/hata/yükleniyor durumları, tutarlılık | `07-ui-design-system.md` |
+| **Görsel tasarım yönü** | Yazı ailesi, palet, karakter, hareket. **Koddan önce karar** | `07` → *Tasarım yönü* · `decisions/ADR-*-tasarim-yonu.md` |
+| **Erişilebilirlik** | Klavye ile kullanım, ekran okuyucu, kontrast | `07` · `14-privacy-and-compliance.md` |
+
+#### C. Yapım — "kim yazacak"
+
+| Rol | Neye karar verir | Kural |
+|---|---|---|
+| **Backend** | İş kuralı, transaction, eşzamanlılık, yetki | `02` · `03` |
+| **Frontend (web)** | Durum yönetimi, veri getirme, önbellek | `07` |
+| **Mobil** | Expo, mağaza süreci, çevrimdışı, bildirim | `17-mobile.md` |
+| **Arka plan işleri** | Kuyruk, zamanlanmış görev, idempotency, yeniden deneme | `12-operations-and-scaling.md` |
+| **Veritabanı** | Sorgu biçimi, index kararı, performans | `04` |
+| **SEO / aranabilirlik** | Render stratejisi, URL biçimi, meta, yapılandırılmış veri, site haritası | `18-seo.md` |
+| **Test / doğrulama** | Özellik bitince beş gözle kontrol, etki alanı, öğretme | `06-testing.md` → *beş gözle doğrulama* |
+
+#### D. Doğrulama — "gerçekten çalışıyor mu"
+
+| Rol | Neye karar verir | Kural |
+|---|---|---|
+| **QA / test mühendisi** | Test stratejisi, piramit, koruma testleri | `06-testing.md` |
+| **Kod incelemecisi** | Ne birleşir, ne geri döner | `08` · `10` · `code-reviewer` skill |
+| **Güvenlik denetçisi** | Açık, sızıntı, yetki aşımı | `05-auth-security.md` · `security-auditor` |
+| **Performans denetçisi** | Darboğaz, yük davranışı, bütçe | `12` · `web-performance-auditor` |
+
+#### E. Çalıştırma — "canlıda ayakta kalıyor mu"
+
+| Rol | Neye karar verir | Kural |
+|---|---|---|
+| **DevOps / platform** | Docker, CI, ortamlar, gizli değer yönetimi | `09` · `13-environments.md` |
+| **SRE / gözlemlenebilirlik** | Log, izleme, uyarı, sağlık ucu, ölçekleme | `12` |
+| **Sürüm yönetimi** | Dal, etiket, changelog, **geri alma** | `08-git-workflow.md` · `09` |
+| **Olay yönetimi / destek** | Bilet önceliği, tekrar üretme, kök neden | `12` |
+
+#### F. Uyum ve süreklilik — "yıllarca yaşayacak mı"
+
+| Rol | Neye karar verir | Kural |
+|---|---|---|
+| **Gizlilik / KVKK** | Hangi veri, ne kadar süre, kimin erişimiyle | `14-privacy-and-compliance.md` |
+| **Teknik yazar** | Ne yazılır, kime, nerede | `11` |
+| **Maliyet (FinOps)** | Neyin faturası var, büyüyünce ne olur | `00` · `09` içinde dağınık |
+
+⛔ **"Bu benim alanım değil" diye bir cevap yoktur.** Bir alanda karar
+gerekiyorsa o kararı sen verirsin — ölçütü `11-agent-workflow.md` →
+*"Mühendislik seçimi kullanıcıya devredilmez"*.
+
+⚠️ **Bu liste kapalı değil.** Projenin ihtiyacı bir rol doğuruyorsa (arama,
+ödeme, entegrasyon, raporlama, veri göçü…) o rol de sende. Listede olmaması
+sorumluluğu kaldırmaz.
+
+⚠️ **Kitin bilinen ince noktaları — gizlenmiyor:** *arka plan işleri* ve
+*maliyet* rollerinin kendi standart dosyası yok, kurallar başka dosyalara
+dağılmış. Bu alanlarda karar verirken dağınıklığı hesaba kat; kural netleşirse
+`/kit-senkron` ile toplanır.
+
 
 ## ⛔ ÖĞRETME YÜKÜMLÜLÜĞÜ — çalışan kod işin YARISIDIR
 
@@ -1137,7 +1338,7 @@ Her adımdan sonra Türkçe olarak anlatılır:
 | **Bu ne işe yarar** | Kararın hangi somut problemi çözdüğü |
 
 ⛔ **Madde sayısı sınırı YOKTUR.** Konu ne kadar açıklama gerektiriyorsa o kadar
-yazılır — `CLAUDE.md` → *"Eksiksizlik, kısalığa feda edilmez"*.
+yazılır — aşağıda *"Eksiksizlik ansiklopedi demek değildir"* ve çekirdek kuralın anlatım ölçütü.
 
 ⚠️ Sınır uzunlukta değil, **tekrarda**: aynı gerekçe ikinci kez yazılmaz, ilkine
 işaret edilir (yukarıdaki *"Aynı bilgi iki yerde yazılmaz"*).

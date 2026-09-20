@@ -46,7 +46,7 @@ anlatım değildir. Tam kural: ${join(std, "11-agent-workflow.md")} → "HER KAV
 
 KİT NEREDE — bu klasör kit projesi değilse (CLAUDE.md yok) standartlar şurada:
 ${std} (00-stack … 18-seo). Yeni proje: /yeni-proje · kite kural: /kit-senkron · PDF: /pdf-uret.
-Kit projesindeysen projenin CLAUDE.md'si ve docs/standards/ zaten yüklüdür; bu not onların yerine geçmez.`;
+Kit projesindeysen CLAUDE.md, .claude/rules/ (çekirdek her oturum, alan kuralları dosya açılınca) ve docs/standards/ zaten devrededir; bu not onların yerine geçmez.`;
 
   process.stdout.write(message + "\n");
 } catch (err) {

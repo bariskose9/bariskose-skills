@@ -534,7 +534,15 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    köküne kopyala ve adını `CLAUDE.md` YAP.** Ad değişmezse Claude Code onu
    hiç yüklemez ve proje **sessizce kuralsız** kalır — hata vermez.
    Doğrula: `ls <proje>/CLAUDE.md`
-2. `dosyalar/` içeriğinin geri kalanını projeye kopyala: `CALISMA-KILAVUZU.md`,
+   ⭐ Bu dosya artık **kısadır** (§0 + "kurallar nerede" tablosu): davranış
+   kuralları `.claude/rules/00-cekirdek.md`'de, alan kuralları `.claude/rules/<alan>.md`'de.
+2. ⛔ **`.claude/` klasörünü olduğu gibi kopyala** — `settings.json` + `rules/`
+   (9 dosya). Claude Code `rules/00-cekirdek.md`'yi her oturum, diğer sekizini
+   `paths` deseni eşleşen bir dosya açılınca **kendisi** yükler; talimat
+   gerekmez. Doğrula: `ls <proje>/.claude/rules | wc -l` → 9.
+   ⛔ `rules/` içinde `@import` yok — nedeni `11-agent-workflow.md` →
+   *"Bağlam yönetimi"*.
+3. `dosyalar/` içeriğinin geri kalanını projeye kopyala: `CALISMA-KILAVUZU.md`,
    `REPO-YAPISI.md`, `docs/standards/**`, **`.vscode/extensions.json`**
 
    ⭐ **Kitin KÖKÜNDEN de iki şey kopyalanır.** `$KIT` değişkeni
@@ -574,10 +582,10 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
 
    ⚠️ `CALISMA-KILAVUZU.md` **kullanıcı için**; `CLAUDE.md` ajan için. Kurulum
    bitince kullanıcıya *"nasıl devam edeceğin bu dosyada"* diye söylenir.
-3. `CLAUDE.md` §0 bloğunu Adım 1'deki cevaplarla **doldur** — proje adı, tip,
+4. `CLAUDE.md` §0 bloğunu Adım 1'deki cevaplarla **doldur** — proje adı, tip,
    ana dal, diller. ⚠️ **`STACK` ve `DEPLOY` satırları şimdilik boş kalır**
    (`<Adım 3b'de doldurulacak>` yazılır); o karar PRD'den sonra verilir.
-4. `docs/standards/sablonlar/` içindeki şablonları aç.
+5. `docs/standards/sablonlar/` içindeki şablonları aç.
    ⛔ **HEPSİ AYNI YERE GİTMEZ — iki hedef var:**
 
    | Hedef | Hangi şablonlar |
@@ -601,7 +609,7 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    Kendi projende soracak bir kurum yok. İçindeki üç DevOps sorusu
    (`CALISMA-KILAVUZU.md` → *"DevOps sınırı"*) **işe başlamadan** sorulur —
    cevapları hem oraya hem `altyapi-durumu.md`'ye işlenir.
-5. **`docs/standards/` içini değiştirme** — istisna **bölüm** seviyesindedir,
+6. **`docs/standards/` içini değiştirme** — istisna **bölüm** seviyesindedir,
    dosya seviyesinde değil. `00-stack.md`'de iki yer projeye aittir:
 
    | Nerede | Ne yazılır |
@@ -617,7 +625,7 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    ⛔ **Gerekçesiz yasak yazılmaz.** Sonraki oturum gerekçesiz maddeyi anlamaz
    ve delmeye çalışır. Bir yasağın gerekçesi bu projede geçerli değilse yasak da
    geçerli değildir — ADR yazılır, madde sessizce çiğnenmez.
-6. ⭐ **Seviye defteri — ÜZERİNE YAZMA, BİRLEŞTİR.**
+7. ⭐ **Seviye defteri — ÜZERİNE YAZMA, BİRLEŞTİR.**
 
    `docs/kullanici/calisilacak-konular.md` ve ikizi
    `docs/kullanici/ogrendigim-konular.md` kitle birlikte gelir ve **her projede
@@ -745,44 +753,20 @@ netleşen cevaplara dayanır; PRD'siz sorulursa kullanıcı tahmin eder.
 Sıra: **3b.1** backend kurgusu → **3b.2** API biçimi → **3b.3** listeyi ölç →
 **3b.4** kararı yaz.
 
-### 3b.1 — Backend kurgusu: Next tek başına mı, Next + Nest mi
+### 3b.1 — Kurgu: dört kurgudan hangisi
 
-Dört soru. **İlk ikisinden en az biri "evet" ise Next (arayüz) + NestJS
-(API + worker); ikisi de "hayır" ise Next tek başına.** 3 ve 4 tetikleyici
-değil, bilgi sorusudur (`00-stack.md` → *"DÖRT KURGU"* → *"Karar akışı"*).
-⭐ **İşyeri projesinde varsayılan Next + NestJS** — saf içerik sitesi istisnası
-ADR ile.
+Karar kuralı, dört kurgu, araç tabloları ve isteğin hattı **tek yerde**:
+`00-stack.md` → *"DÖRT KURGU"* → *"Karar akışı"*. Burada yalnızca akış:
 
-1. API'yi kendi web arayüzünden **başkası** tüketecek mi? (mobil, başka sistem)
-2. Kullanıcı istek atmasa da **kendiliğinden** çalışması gereken iş var mı?
-   (zamanlanmış görev, kuyruk, webhook karşılama)
-3. Katmanlı mimari + **DI yaşam döngüsü** (singleton/scoped) + çok modüllü yapı
-   gerekiyor mu?
-4. Kod kurumun **kendi sunucusunda** mı çalışacak? — *bilgi sorusu:* evet ise
-   ayrı worker + BullMQ mümkün; tek başına NestJS'e götürmez.
-
-**Neden bu kural:** Next.js Route Handler ile API yazılabilir ama iki şeyi
-veremez — sürekli çalışan arka plan süreci ve başkasının tüketeceği birinci
-sınıf API (otomatik OpenAPI, sürümleme, Guard/Pipe). Bunlara ihtiyaç yoksa ikinci bir sunucu **saf
-maliyettir**: iki deploy, CORS, kimlik doğrulamanın iki tarafta kurgulanması,
-tiplerin paylaşılması, yerel geliştirmede dört süreç.
-
-⛔ **Express'i çıplak seçme.** NestJS zaten Express'in üstünde çalışır; Nest'i
-seçince Express'i almış olursun. Çıplak Express yalnızca tek amaçlı, 5–10 uçlu
-mikro servislerde (webhook alıcı, proxy) tercih edilir.
-
-**Ayrı backend seçildiyse kararlar:**
-
-| Konu | Seçim | Gerekçe |
-|---|---|---|
-| HTTP adaptörü | **Express** (Nest varsayılanı) | Darboğaz veritabanıdır, HTTP katmanı değil. Fastify'ın kazancı bu senaryoda ölçülemez; adaptör tek satırla değiştirilebilir |
-| API biçimi | **REST** (varsayılan) | GraphQL eklenip eklenmeyeceği `00-stack.md` → "API biçimi" bölümündeki **dört soru** ile karara bağlanır. Soruları sen sor, cevabı sen yorumla; hepsi "hayır" ise GraphQL'i gündeme getirme. ⚠️ İkisi birbirini dışlamıyor — aynı sistemde yan yana çalışabilirler |
-| Sürümleme | `/api/v1/...` **baştan** | Kural ve gerekçesi `03-api-guidelines.md` → "Sözleşme ömrü"nde, burada tekrarlanmaz. Mobil varsa **zorunlu**: uygulama kullanıcının telefonunda eski sürümde kalır |
-| Tip paylaşımı | Monorepo + `packages/contracts` | Zod şeması tek yerde; API alan adı değişince frontend **derlenmez** — hata çalışma anına kalmaz |
-
-Mobil seçilirse `05-auth-security.md` ve `17-mobile.md` birlikte okunur:
-oturum kararı **baştan** hem çerezi hem jetonu kapsayacak şekilde alınır.
-Sonradan eklemek kimlik doğrulamayı baştan yazdırır.
+1. İki belirleyici soru sorulur — API'yi başkası tüketecek mi · kendiliğinden
+   çalışan iş var mı. Sorulmadan önce **neden sorulduğu** söylenir
+   (`00-stack.md` → *"Backend kurgusu"* açılış cümlesi).
+2. Cevaba göre kurgu [A]/[B]/[C]/[D] seçilir; **işyeri projesinde varsayılan
+   [C] (Next + NestJS)**, saf içerik sitesi istisnası ADR ile.
+3. Seçim `CLAUDE.md` §0 `KURGU` satırına ve ADR'ye yazılır.
+4. [C] seçildiyse ayrı backend kararları (adaptör, sürümleme, `packages/contracts`)
+   ve mobil varsa oturum stratejisi `00-stack.md` tablosundan uygulanır;
+   `05-auth-security.md` + `17-mobile.md` birlikte okunur.
 
 ### 3b.2 — API biçimi: REST tek başına mı, yanına GraphQL de mi
 
@@ -1011,6 +995,7 @@ Bitirmeden önce kendine sor ve **eksik varsa kullanıcıya sor**:
       `teknoloji-ve-plan.md`'de hangi kutuda olduğu belirtildi mi
       (`00-stack.md` → *"KARAR NEREYE YAZILIR"*)
 - [ ] ⛔ **Projenin kökünde `CLAUDE.md` VAR MI** — `ls <proje>/CLAUDE.md`.
+- [ ] ⛔ **`.claude/rules/` 9 dosya mı** — `ls <proje>/.claude/rules | wc -l`; ilk oturumda kanca logunda `00-cekirdek.md` `session_start` ile göründü mü (`~/.claude/proje-kiti/log/<proje>.jsonl`).
       Şablon kopyalanıp adı değiştirilmediyse Claude Code hiçbir kural
       yüklemez ve bunu **hata olarak bildirmez**; sessizce kuralsız çalışır
 - [ ] `00-stack.md` sürümleri `package.json` ile birebir aynı mı
@@ -1046,8 +1031,7 @@ kurulumda ne yapıldıysa hepsi yazılır.
 
 - **Bu skill özellikleri yazmaz.** Kurulumu bitirir ve yol haritasını çıkarır.
   Sonrasında roadmap adım adım ilerler ve **her adımda plan sunulup onay
-  beklenir** (`CLAUDE.md` §3 kapıları). Vaat "tek promptla uygulama" değil,
-  **"tek promptla doğru kurulmuş proje ve net yol haritası"**.
+  beklenir** (`CLAUDE.md` §3 kapıları). Vaat, kurulmuş proje ve yol haritasıdır; bitmiş uygulama değil (`KIT-NE-YAPIYOR.md`).
 - Kurulum bittikten sonra artık bu skill değil, projedeki `CLAUDE.md` ve
   `docs/standards/` geçerlidir.
 - Bir kural ile kullanıcının isteği çakışırsa **dur ve sor**. Kendi başına karar verme.

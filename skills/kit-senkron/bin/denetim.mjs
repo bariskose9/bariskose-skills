@@ -287,14 +287,67 @@ if (sablonDizin) {
   }
 }
 
+
+// 7) BENZER CÜMLE — aynı kural iki dosyada başka kelimelerle yazılmış mı
+//    ⛔ Gerekçe: birebir kopya nadiren olur; tehlike, aynı kuralın iki yerde
+//    farklı cümleyle durmasıdır — biri güncellenir, diğeri bayatlar (2026-09-14:
+//    "en az biri" üç dosyada üç ayrı cümleydi; 2026-09-18: iki anlatım bölümü
+//    yan yana). Kural: aynı bilgi bir yerde durur, diğeri ona işaret eder.
+//    Ölçüm: 90–400 karakterlik cümleler, 4-kelimelik dizi (shingle) kesişimi
+//    ≥ %75 ve farklı dosya → bulgu. Tablo satırı, kod bloğu ve yorum dışarıda.
+//    Kapsam: standartlar, çekirdek/tetikleyiciler, SKILL, şablon, kit-hakkinda.
+//    calisma-dokumanlari ve defterler dışarıda (kişisel not, tekrar doğaldır).
+{
+  const kapsam = hepsi.filter((p) => {
+    const y = relative(kok, p);
+    if (/calisma-dokumanlari|sablonlar\/(calisilacak|ogrendigim)|README|KURULUM|LICENSE|TARTISILMIS/.test(y)) return false;
+    return /docs\/standards|\.claude\/rules|yeni-proje\/SKILL|PROJEYE-CLAUDE|kit-hakkinda|CALISMA-KILAVUZU|ICINDEKILER|kit-senkron\/SKILL/.test(y);
+  });
+  const cumleler = [];
+  for (const p of kapsam) {
+    let t = readFileSync(p, "utf8").replace(/```[\s\S]*?```/g, " ").replace(/<!--[\s\S]*?-->/g, " ");
+    t = t.split("\n").filter((l) => !l.trim().startsWith("|")).join(" ");
+    t = t.replace(/[*_`>#|]/g, " ").replace(/\s+/g, " ");
+    for (const c of t.split(/(?<=[.!?])\s+/)) {
+      const s = c.trim();
+      if (s.length < 90 || s.length > 400) continue;
+      const w = (s.toLocaleLowerCase("tr").match(/[\p{L}\p{N}]+/gu) || []);
+      const sh = new Set();
+      for (let i = 0; i + 4 <= w.length; i++) sh.add(w.slice(i, i + 4).join(" "));
+      if (sh.size >= 6) cumleler.push({ p: relative(kok, p), s, sh });
+    }
+  }
+  const idx = new Map();
+  cumleler.forEach((c, i) => c.sh.forEach((g) => { if (!idx.has(g)) idx.set(g, []); idx.get(g).push(i); }));
+  const ciftler = new Map();
+  for (const ids of idx.values()) {
+    if (ids.length > 40) continue;
+    const u = [...new Set(ids)].sort((a, b) => a - b);
+    for (let a = 0; a < u.length; a++) for (let b = a + 1; b < u.length; b++) {
+      if (cumleler[u[a]].p === cumleler[u[b]].p) continue;
+      const k = u[a] + ":" + u[b]; ciftler.set(k, (ciftler.get(k) || 0) + 1);
+    }
+  }
+  const raporlanan = new Set();
+  for (const [k, ortak] of ciftler) {
+    const [a, b] = k.split(":").map(Number);
+    const oran = ortak / Math.min(cumleler[a].sh.size, cumleler[b].sh.size);
+    if (oran < 0.75) continue;
+    const anahtar = [cumleler[a].p, cumleler[b].p].sort().join(" ⇄ ");
+    if (raporlanan.has(anahtar + cumleler[a].s.slice(0, 40))) continue;
+    raporlanan.add(anahtar + cumleler[a].s.slice(0, 40));
+    bulgular.push(["BENZER CÜMLE", anahtar, `%${Math.round(oran * 100)} — "${cumleler[a].s.slice(0, 90)}…" — biri kalır, diğeri işaret eder`]);
+  }
+}
+
 // ── Rapor ───────────────────────────────────────────────────────────────────
 if (!bulgular.length) {
   // ⛔ Mesaj, FİİLEN koşan kontrolleri sayar. Kontrol eklenip bu satır
   //    güncellenmezse çıktı yaptığından azını söyler ve okuyan yanlış güvenir.
   console.log(
-    "✓ Denetim temiz — altı kontrol geçti: kırık referans · kırık bölüm atfı ·\n" +
+    "✓ Denetim temiz — yedi kontrol geçti: kırık referans · kırık bölüm atfı ·\n" +
       "  bayat PDF · haritada görünmeyen dosya · bayat sürüm damgası ·\n" +
-      "  şablon hedefi (beyan ↔ tablolar).",
+      "  şablon hedefi (beyan ↔ tablolar) · benzer cümle (aynı kural iki yerde).",
   );
   process.exit(0);
 }

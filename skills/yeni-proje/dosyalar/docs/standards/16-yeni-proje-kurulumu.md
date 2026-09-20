@@ -155,6 +155,7 @@ gerekçe, kararı verirken en net hatırlanır.
 | Ne | Nereye | Nasıl |
 |---|---|---|
 | `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` | repo kökü, ⛔ **adı `CLAUDE.md` olarak** | Olduğu gibi kopyala + **yeniden adlandır**, sonra yalnızca §0 "Proje Değişkenleri" bloğunu doldur. Ad değişmezse Claude Code yüklemez |
+| `.claude/**` (`settings.json` + `rules/` 9 dosya) | `.claude/` | **Olduğu gibi kopyala.** `rules/00-cekirdek.md` her oturum, diğerleri `paths` ile ilgili dosya açılınca kendiliğinden yüklenir; içlerinde `@import` yok |
 | `CALISMA-KILAVUZU.md` | Kullanıcının kılavuzu: nasıl başlanır, ne sorulur, hangi dosya ne işe yarar | Olduğu gibi kopyalanır |
 | `docs/standards/**` (00–18, **19 dosya**) | `docs/standards/` | **Olduğu gibi kopyala, İÇİNİ DEĞİŞTİRME.** Stack farklıysa yalnızca `00-stack.md` tablosu güncellenir |
 | `docs/standards/sablonlar/**` | ⛔ **İKİYE AYRILIR:** çoğu `docs/project/` · ⭐ iki defter `docs/kullanici/` | Kopyala ve **içini doldur**. Hedefler satır satır aşağıdaki *"`sablonlar/` içinde ne var"* tablosunda — ezberden `docs/project/` yazma |
@@ -298,7 +299,8 @@ kuralı görmezden gelmek değil, **kimin sorumlu olduğunu bulup istemektir**.
 |---|---|---|
 | `docs/standards/00-stack.md` | **Bazen** | Yalnızca sürüm tablosu, o da fiilen kurulanla eşitlenerek |
 | `docs/standards/01–18` | **Hayır** | Mühendislik kuralları projeden bağımsızdır |
-| `CLAUDE.md` | **Sadece §0** | Geri kalanı çalışma protokolü, sabit |
+| `CLAUDE.md` | **Sadece §0** | Geri kalanı "kurallar nerede" tablosu; davranış kuralları `.claude/rules/00-cekirdek.md`'de, sabit |
+| `.claude/rules/*` | **Hayır** | Çekirdek ve alan tetikleyicileri projeden bağımsızdır; standart değişince `/kit-senkron` ile birlikte güncellenir |
 | `docs/project/PRD.md` | **Tamamen** | Her projenin işi başkadır |
 | `docs/project/roadmap.md` | **Tamamen** | Adımlar işe göre |
 | `docs/project/data-model.md` | **Tamamen** | — |
@@ -322,15 +324,13 @@ dosyada yaşar. Biri boş kalırsa o soru bir daha cevaplanamaz.
 Üç pratik kural:
 
 1. **`00-stack.md`'deki sürüm sütunu `package.json` ile birebir aynı olur.**
-   Tahmini sürüm yazmak, yazmamaktan kötüdür. En yenisi kullanılmıyorsa
-   **neden kullanılamadığı** yazılır — yoksa sonraki oturum "unutulmuş" sanıp
-   yükseltmeye çalışır ve aynı duvara toslar.
+   Tahmini sürüm yazmak, yazmamaktan kötüdür; en yenisi kullanılmıyorsa
+   nedeni yazılır — kural ve gerekçesi `00-stack.md` → *"Sürüm tavanları"*.
 2. **`altyapi-durumu.md` ilk gün açılır**, ilk hesapla dolmaya başlar.
    Sonradan hatırlamaya çalışmak işe yaramaz. ⛔ Anahtar **değeri** yazılmaz —
    yalnızca adı, yeri, ne işe yaradığı.
-3. **Geri dönmesi pahalı her karar ADR olur.** Ölçüt: "altı ay sonra biri
-   'bu neden böyle' diye sorarsa cevabı nerede?" Cevap sohbet geçmişiyse,
-   o cevap **yok** demektir.
+3. **Geri dönmesi pahalı her karar ADR olur.** Ölçütü `00-stack.md` →
+   *"KARAR NEREYE YAZILIR"* verir; burada tekrarlanmaz.
 
 ## Kullanıcıya sormadan ÖNCE
 

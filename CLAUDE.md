@@ -54,7 +54,7 @@ projelerde de aynı dosya okunur; öğrenilen `/kit-senkron` ile buraya döner.
 ## ⛔ Commit öncesi zorunlu
 
 ```bash
-node skills/kit-senkron/bin/denetim.mjs .
+node skills/kit-senkron/bin/denetim.mjs .   # ⛔ TEK BAŞINA koştur — `| tail` ile kırpma: boru hattı çıkış kodunu yutar, kırmızı geçer (2026-09-20'de iki kez oldu)
 ```
 
 **Altı** şeyi yakalar: kırık dosya referansı · **kırık bölüm atfı** (`<dosya>.md`

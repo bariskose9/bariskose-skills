@@ -1,6 +1,6 @@
 # `proje-kiti` — Ne Yapıyor, Nasıl Yapıyor
 
-**Sürüm:** 3.13.0 · **Tarih:** 2026-09-20
+**Sürüm:** 3.14.0 · **Tarih:** 2026-09-20
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Terimler ilk geçtikleri yerde açıklanır. Sonda toplu bir sözlük vardır.
@@ -172,7 +172,7 @@ kitin varsayılanı geçmez, **o uygulanır** ve sapma varsa gerekçesi kayda ge
 
 ### Adım 2 — Kural dosyalarını yerleştir
 
-19 standart, ajanın uyacağı kurallar dosyası (`CLAUDE.md`) ve senin okuyacağın
+19 standart, ajanın davranış kuralları (`.claude/rules/`, kısa `CLAUDE.md`) ve senin okuyacağın
 kılavuz projeye kopyalanır.
 
 ### Adım 3 — PRD
@@ -213,8 +213,7 @@ değil, **bağımlılığa** göredir: veritabanı olmadan API yazılmaz.
 yaptık"* sorusunun altı ay sonraki cevabı. Yazılmazsa sonraki oturum kararı
 "yanlışlıkla böyle olmuş" sanıp geri alır.
 
-Yol haritası yazıldıktan sonra **altı gözle denetlenir**: ürün · risk · geri
-alınabilirlik · dış bağımlılık · mühendislik · kullanım.
+Yol haritası yazıldıktan sonra altı gözle denetlenir — gözlerin listesi `KIT-NE-YAPIYOR.md` → *"Adım 4"*.
 
 ### Adım 5 — İskeleti kur
 
@@ -252,46 +251,13 @@ eşleşti mi.
 
 ## Bölüm 4b — Kurulumdan sonra: her özellikte ne oluyor
 
-Kurulum bitince kit devreden çıkmaz. Her özellik bittiğinde şunlar işler:
-
-### Beş gözle doğrulama (`06-testing.md`)
-
-Testlerin yeşil olması "bitti" demek değil. Otomatik test **kodun yaptığını**
-doğrular, **doğru şeyi yaptığını** değil. Sırayla beş göz:
-
-| # | Göz | Bakılan | Kim bakar |
-|---|---|---|---|
-| 1 | **Backend** | Mutlu yol, hata yolları, yetkisiz erişim, sınır değerler, eşzamanlılık | Ajan kanıt sunar |
-| 2 | **Veri** | Kayıt gerçekten yazıldı mı — Prisma Studio ile bakılır | ⭐ **Sen görürsün** |
-| 3 | **Frontend** | 375/768/1440px, açık + koyu tema, konsol hatası, dört ekran durumu | Ekran görüntüleri |
-| 4 | **Tasarım / UX** | Tasarım kararına uygun mu, "yapay zekâ işi" kalıbı var mı | ⭐ **Asıl senin katmanın** |
-| 5 | **Güvenlik + işletme** | Yetki, girdi doğrulama, N+1 sorgu, performans bütçesi | Ajan kanıt sunar |
-
-### Etki alanı
-
-Her özellikte üç soru **yazılı** cevaplanır: hangi başka ekranlar · hangi başka
-API uçları · hangi eski kayıtlar etkilendi. ⛔ *"Sadece şu dosyaya dokundum"*
-cevap değildir; etkilenenlerin **hepsi fiilen açılıp** kontrol edilir.
-
-### Öğretme zorunluluğu
-
-⭐ **Anlatım bitince ajan sana sorar:** *"Bu açıklama yeterli mi, yoksa
-detaylandırayım mı?"* Anlaşılmayan bir yer kalıp kalmadığını yalnızca sen
-bilebilirsin. *"Detaylandır"* dersen aynı şeyi tekrar etmez, bir alt katmana
-iner: terimi açar, örnek verir.
-
-Ajan ne kontrol ettiğini **ve neden o kontrolü yaptığını** anlatır. ⛔ *"Test
-geçti"* tek başına rapor değildir — neyin test edildiği söylenmezse neyin test
-**edilmediği** bilinemez. Öğrenilen yeni terimler seviye defterine eklenir.
-
-### Sıra ve akış — "önce ne yazılır, uygulama nasıl çalışır"
-
-Bu belge teknolojileri **tek tek** anlatır; hangi kararın hangisinden önce
-geldiği, bir isteğin hangi parçalardan sırayla geçtiği ve uygulamanın ayağa
-kalkarken ne yaptığı ayrı bir belgede: `UCTAN-UCA-YOLCULUK.md`. Orada bir
-belediye başvuru sistemi üstünden yedi gerçek senaryo var — başarılı giriş,
-bağlantı kopması, başvuru oluşturma, memur onayı, gece raporu, ani yük, canlı
-hata — ve sık yapılan mantık hatalarının düzeltilmiş hâli.
+Kurulum bitince kit devreden çıkmaz: her özellik bittiğinde beş gözle
+doğrulama, etki alanı (etkilenen yerlerin **hepsi** açılıp kontrol edilir),
+öğretme zorunluluğu ve seviye defteri güncellemesi işler. Bu döngünün tamamı
+**tek yerde** anlatılıyor — burada tekrarlanmaz: `KIT-NE-YAPIYOR.md` →
+*"Kurulumdan sonra — her özellikte ne oluyor"*. Sıra ve akış (önce ne
+yazılır, uygulama nasıl çalışır, gerçek senaryolar) ise
+`UCTAN-UCA-YOLCULUK.md`'de.
 
 ### Dış QA aracı (TestSprite gibi)
 
@@ -390,8 +356,7 @@ uçlarını, hangi eski kayıtları etkiledi. *"Sadece şu dosyaya dokundum"* ce
 sayılmaz.
 
 Ve **öğretme zorunluluğu**: ajan ne kontrol ettiğini **ve neden o kontrolü
-yaptığını** anlatır. *"Test geçti"* tek başına rapor değildir — neyin test
-edildiği söylenmezse neyin test **edilmediği** bilinemez.
+yaptığını** anlatır. "Test geçti" tek başına rapor değildir (`06-testing.md` → *"ÖĞRETME ZORUNLULUĞU"*).
 
 ### 07 — Arayüz: "yapay zekâ işi" görünmemesi
 
@@ -465,9 +430,8 @@ güvenlik denetimi ve **tarayıcıda fiilen tıklayarak** kontrol. Kodu okuyup
 ⛔ Bir **ADR**'ye aykırı kod yazılmaz; karar değişecekse **önce yeni ADR**
 yazılır. Yoksa kararlar sessizce erir.
 
-Ve iş bölümü: **ajanın yapabildiği hiçbir iş kullanıcıya yaptırılmaz.** Senin
-zamanın yalnızca ajanın *yapamadığı* işler için harcanır — hesap açma, ödeme,
-kurumdan yetki alma. Bunlar kimlik doğrulaması gerektirir.
+Ve iş bölümü: **ajanın yapabildiği hiçbir iş kullanıcıya yaptırılmaz** —
+hangi işlerin sende kaldığı `KIT-NE-YAPIYOR.md` → *"Ajan kapıları"*.
 
 Bir kural daha: **üçüncü başarısız düzeltmeden sonra kod yazılmaz.** Aynı hata
 için üç yama tutmadıysa sorun yanlış tahmin değil, **yanlış yapıdır**. Ajan
@@ -576,7 +540,7 @@ projede bunları aramana gerek yok, orada olmayacaklar:
 
 | Grup | Ne gelir |
 |---|---|
-| **Ajanın kuralları** | `CLAUDE.md` (projeye özel olan) + `docs/standards/` — **19 dosya** |
+| **Ajanın kuralları** | `CLAUDE.md` (kısa: §0 + kurallar nerede) + `.claude/rules/` (çekirdek her oturum, 8 alan tetikleyicisi ilgili dosya açılınca — Claude Code kendisi yükler) + `docs/standards/` — **19 dosya**, tam kural ve gerekçe |
 | **Senin belgelerin** | `CALISMA-KILAVUZU.md` · `REPO-YAPISI.md` · `README.md` |
 | **Projeye özel** | `docs/project/` altında PRD, roadmap, ADR, altyapı durumu ve diğerleri |
 | ⭐ **Senin defterlerin** | `docs/kullanici/` altında `calisilacak-konular.md` + `ogrendigim-konular.md`. ⛔ `docs/project/` altına **açılmazlar**: proje belgeleri her projede sıfırlanır, defterler **birikir** ve `/kit-senkron` ile kite geri döner |

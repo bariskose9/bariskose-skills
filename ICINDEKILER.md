@@ -16,8 +16,8 @@
 
 Boş bir klasörde `/yeni-proje` yazarsın; soruları cevaplarsın; kurulmuş, test
 edilmiş, yol haritası çıkarılmış ve canlıya çıkmış bir proje elde edersin.
-Vaat *"tek promptla uygulama"* değil — **"tek promptla doğru kurulmuş proje ve
-net yol haritası"**.
+Vaat: **doğru kurulmuş proje ve net yol haritası** — "tek promptla bitmiş uygulama"
+değil (açık hâli `kit-hakkinda/KIT-NE-YAPIYOR.md` → *"Kit tek cümlede"*).
 
 ## Dört komut
 
@@ -68,13 +68,16 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | Yol | Ne |
 |---|---|
 | `hooks/hooks.json` | Claude Code'a "oturum başında `node hooks/session-start.mjs` çalıştır" der — kabuk kullanmayan exec biçimi, iki işletim sisteminde aynı |
+| `hooks/kural-log.mjs` | Ölçüm kancası: `InstructionsLoaded` (hangi kural, neden, tetikleyen) ve `PostToolUse(Read)` (hangi standart okundu) → `~/.claude/proje-kiti/log/<proje>.jsonl`. Karar vermez, engellemez |
 | `hooks/session-start.mjs` | ⭐ Klasör ne olursa olsun ajana kitin varlığını, anlatım ölçütünün **özetini** ve kuralın tam yolunu enjekte eder — kuralın kopyası değil, işaretçi. Kural tek yerde: `11-agent-workflow.md` → *"HER KAVRAM ÖĞRETİLİR"*. Yalnızca Node ister (jq gerekmez — 3.12.1) |
 
 ### `skills/yeni-proje/dosyalar/` — projeye kopyalananlar
 
 | Dosya | Kim okur | Ne |
 |---|:--:|---|
-| `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` | Ajan | **Çalışma protokolü ve sekiz zorunlu kapı.** ⛔ Projeye kopyalanırken adı `CLAUDE.md` olur — ancak o zaman yüklenir. §0'ı kurulum doldurur |
+| `.claude/rules/00-cekirdek.md` | Ajan | ⭐ **Çekirdek: her oturumda kendiliğinden yüklenen davranış kuralları** — rol, anlatım ölçütü, hangi soru → hangi dosya, sekiz kapı, commit protokolü, asla yapma, oturum hijyeni |
+| `.claude/rules/<alan>.md` (kod · veritabani · api · guvenlik · arayuz · test · yayin · mobil) | Ajan | ⭐ **Tetikleyiciler:** `paths` ile yalnızca ilgili dosya açılınca yüklenir; "şu standardı oku" + kural adları özeti. ⛔ İçlerinde `@import` yok |
+| `PROJEYE-CLAUDE-MD-OLUSTURMAK-ICIN-SABLON.md` | Ajan | **§0 proje değişkenleri + kurallar nerede tablosu** (kısa). ⛔ Projeye kopyalanırken adı `CLAUDE.md` olur — ancak o zaman yüklenir. §0'ı kurulum doldurur |
 | `CALISMA-KILAVUZU.md` | **Sen** | Projeyi nasıl yürüteceğin — terimler, oturum ritmi, dosya açıklamaları. ⚠️ Ajan bunu da kendiliğinden okumaz; senin kılavuzun, ama **güncel tutmak onun işi** |
 | `REPO-YAPISI.md` | İkisi | Hangi iş hangi klasörde — kurulumdan sonra doldurulur |
 | `.vscode/extensions.json` | — | VS Code eklenti önerileri |
@@ -185,11 +188,9 @@ geride kalırsa kırık atıf olarak çıkar. *"Kendiliğinden okunmaz"* ile
 ⚠️ **Adım 3 atlanmaz.** Analiz dokümanı her zaman eksiktir; ajan eksiği
 tahminle doldurursa yanlış varsayım veri modeline, API'ye ve ekrana yayılır.
 
-⭐ **Sıra bilerek böyle: önce *ne yapacağız*, sonra *neyle yapacağız*.**
-Backend kurgusunu ve API biçimini belirleyen sekiz soru aslında **ürün
-sorusudur** (*"API'yi başkası tüketecek mi", "kendiliğinden çalışan iş var
-mı"*). PRD'den önce sorulursa tahmin ederek cevaplarsın ve mimari yanlış
-temele oturur. Bu yüzden Adım 1 yalnızca **kısıt** toplar, karar 3b'dedir.
+⭐ **Sıra bilerek böyle: önce *ne yapacağız*, sonra *neyle yapacağız*.** Kurguyu
+belirleyen sorular ürün sorusudur; gerekçesi `kit-hakkinda/KIT-NE-YAPIYOR.md` →
+*"Adım 3b — Stack kararı"*.
 
 ---
 
@@ -252,8 +253,7 @@ sonra Claude'u yeniden başlat.
 GitHub'dan **indirir**. İndirmeden yenilersen eski sürümle çalışırsın.
 
 ⚠️ Kurulu sürüm yalnızca `/yeni-proje` veya `/kit-senkron` çalıştırmadan
-**önce** önemlidir. Mevcut bir projede çalışırken eski olması hiçbir şeyi
-bozmaz — o proje kendi `docs/standards/` klasörünü okur.
+**önce** önemlidir. Kurulu kopyanın ne zaman okunduğu `15-oturum-devri-kurallari.md` → *"Kurulu plugin yalnızca iki anda okunur"* tablosunda.
 
 ---
 

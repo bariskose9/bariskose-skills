@@ -96,39 +96,23 @@ parantezde **İngilizce** karşılık verilir — `basvuru (application)`,
 `olusturmaTarihi (createdAt)`. Amaç aynı: sektör terimini öğretmek ve
 `grep "createdAt"` yazanın da bulabilmesi.
 
-### ⭐ HER DOSYANIN BAŞINDA ÖZET YORUMU — istisnasız, her modda
+### ⭐ HER DOSYANIN BAŞINDA BAŞLIK BLOĞU — istisnasız, her modda
 
-Satır satır yorum bir ağacın yapraklarını anlatır; **dosya başı özeti**
-ormanı. Biri olmadan diğeri eksiktir. Her kaynak dosya (`.ts`, `.tsx`, `.sql`,
-`.prisma`, `.yml`, `.mjs`) şu blokla başlar:
+Satır satır yorum bir ağacın yapraklarını anlatır; **dosya başı bloğu**
+ormanı. Her kaynak dosya (`.ts`, `.tsx`, `.sql`, `.prisma`, `.yml`, `.mjs`)
+aşağıdaki *"BAŞLIK BLOĞU SABİT BİÇİMDE YAZILIR"* bloğuyla başlar — halkalar:
+**NEREDEN · NE · NEREYE · SONUÇ · KAYNAK**, ve iki ek halka:
 
-```ts
-/**
- * NE:        İş emri (work order) oluşturma ve durum güncelleme kuralları.
- * AKIŞ:      Route Handler → BU DOSYA (servis) → WorkOrderRepository → PostgreSQL.
- *            Çağıran: src/app/api/work-orders/route.ts
- *            Çağırdığı: work-order.repository.ts, notification.service.ts
- * NEDEN VAR: HTTP'yi bilmeyen iş kuralı burada durur; aynı kural yarın bir
- *            zamanlanmış görevden de çağrılabilsin diye route'un içine yazılmadı.
- * KARARLAR:  İyimser kilit (version kolonu) burada uygulanır — ADR-003.
- * DİKKAT:    status geçişleri STATUS_FLOW tablosuna bağlı; oraya dokunmadan
- *            buraya dokunma.
- */
-```
-
-| Satır | Cevapladığı soru |
+| Halka | Cevapladığı soru |
 |---|---|
-| **NE** | Dosya tek cümleyle ne yapıyor |
-| **AKIŞ** | Sistemin neresinde duruyor — kim çağırıyor, kimi çağırıyor |
-| **NEDEN VAR** | Olmasaydı ne bozulurdu; neden başka yerde değil |
-| **KARARLAR** | Bu dosyada verilmiş, ADR'si olan kararlar |
-| **DİKKAT** | Değiştirirken ne kırılır |
+| **NEDEN** | Bu dosya neden var, neden başka yerde değil — olmasaydı ne bozulurdu |
+| **DİKKAT** | Değiştirirken ne kırılır; hangi tabloya/dosyaya dokunmadan buraya dokunulmaz |
 
-⛔ Bir satırın cevabı yoksa satır **silinmez**, `—` yazılır: sonraki okuyan
-*"unutulmuş mu, gerçekten yok mu"* diye düşünmez.
-
-⭐ Bu blok *"Kodu sil, yorumları bırak"* ölçütünün dosya düzeyindeki hâlidir:
-yalnızca başlık blokları okunarak sistemin **haritası** çıkarılabilmeli.
+⛔ Bir halkanın cevabı yoksa halka **silinmez**, `—` yazılır: sonraki okuyan
+*"unutulmuş mu, gerçekten yok mu"* diye düşünmez. ⭐ Bu blok *"Kodu sil,
+yorumları bırak"* ölçütünün dosya düzeyindeki hâlidir: yalnızca başlık blokları
+okunarak sistemin **haritası** çıkarılabilmeli (`11-agent-workflow.md` →
+*"DOSYANIN TAMAMI OKUNMAZ"*).
 
 ### ⛔ KOD, OKUYAMAYAN BİRİ İÇİN DE ANLAŞILIR OLUR
 
@@ -307,6 +291,9 @@ haritasıdır.**
  * NE      : <burada ne oluyor, hangi kural uygulanıyor>
  * NEREYE  : <dosya/yolu.ts> → <ne gidiyor, hangi biçimde>
  * SONUÇ   : <görünür karşılığı — ekranda ne, veritabanında hangi kayıt>
+ * KAYNAK  : <kuralın kararlaştırıldığı yer — aşağıda>
+ * NEDEN   : <bu dosya neden var, neden başka yerde değil>
+ * DİKKAT  : <değiştirirken ne kırılır>
  */
 ```
 

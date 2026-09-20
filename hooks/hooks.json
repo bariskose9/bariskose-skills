@@ -1,5 +1,5 @@
 {
-  "description": "proje-kiti: oturum başında anlatım ölçütünü ve kitin yerini hatırlatır (Node; kabuk ve jq gerekmez)",
+  "description": "proje-kiti: oturum başında anlatım ölçütünü ve kitin yerini hatırlatır; kural yüklenmelerini ve standart okumalarını ~/.claude/proje-kiti/log/ altına kaydeder (Node; kabuk ve jq gerekmez)",
   "hooks": {
     "SessionStart": [
       {
@@ -7,7 +7,40 @@
           {
             "type": "command",
             "command": "node",
-            "args": ["${CLAUDE_PLUGIN_ROOT}/hooks/session-start.mjs"],
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/session-start.mjs"
+            ],
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "InstructionsLoaded": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/kural-log.mjs"
+            ],
+            "async": true,
+            "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PostToolUse": [
+      {
+        "matcher": "Read",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "node",
+            "args": [
+              "${CLAUDE_PLUGIN_ROOT}/hooks/kural-log.mjs"
+            ],
+            "async": true,
             "timeout": 10
           }
         ]

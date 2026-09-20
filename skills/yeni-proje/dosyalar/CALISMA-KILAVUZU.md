@@ -214,8 +214,7 @@ Gerisi sohbet. Sırayla şunlar olur:
 | **7** | Son kontrol | — |
 
 ⚠️ **Bu tek komutluk bir işlem değil.** `/yeni-proje` kurulumu başlatır; Adım 3
-uzun bir görüşmedir. Vaat *"tek promptla uygulama"* değil, **"doğru kurulmuş
-proje ve net yol haritası"**.
+uzun bir görüşmedir. Vaat, kurulmuş proje ve yol haritasıdır; bitmiş uygulama değil.
 
 ⛔ **Adım 3'te acele etme.** Analiz dokümanında yazmayan onlarca karar orada
 netleşir. Cevabı bilinmeyen bir kural kodlanırsa yanlış varsayım tüm katmanlara
@@ -790,28 +789,11 @@ ortama eklendi"* bilgisi yazılır. Değerler `.env` dosyasında durur.
 ⚠️ Bu dosya olmadan altı ay sonra *"bu ayarı nereden yapmıştım"* sorusunun
 cevabı kaybolur. Panelde yapılan bir işlemin git geçmişi yoktur.
 
-### ⭐ Bu dosya iki proje tipinde FARKLI dolar
+### Bu dosya iki proje tipinde farklı dolar
 
-| | **Kendi projen** | **İşyeri projesi** |
-|---|---|---|
-| Kim panel açıyor | **Sen** — hesabı sen açıyorsun, ödemeyi sen yapıyorsun | **Kurumun DevOps ekibi** |
-| Ne yazılır | Hangi servise üye olundu, hangi bölge seçildi, hangi değişken nereye girildi | **Neyin gerekli olduğu** — "canlıda şu 6 değişken tanımlı olmalı" |
-| Kim okur | Gelecekteki sen | Kuruma teslim ederken DevOps ekibi |
-| Örnek satır | *"Neon'da bakim-prod açıldı, Frankfurt"* | *"Uygulama şu 6 değişkeni bekliyor; DIRECT_URL migration içindir, havuzsuz olmalı"* |
-
-⭐ **İşyeri projesinde bu dosya bir "yapıldı" defteri değil, bir
-"gereksinim" listesidir.** Sen paneli açmıyorsun; açacak kişiye **neyin neden
-gerektiğini** anlatıyorsun. Teslim paketinin en çok işe yarayan parçalarından
-biri budur — DevOps ekibi bu dosyayı okuyup sana soru sormadan kurulumu yapar.
-
----
-
-# BÖLÜM 5B — Canlıya çıkış: üç yol ve neyle yapıldıkları
-
-> **Bu bölüm neden var:** Kurulumda *"canlıya nasıl çıkacak"* sorusu geliyor.
-> Cevap vermeden önce seçeneklerin ne olduğunu bilmen gerekiyor. Ayrıca
-> işyeri projesinde bu iş **sana ait olmasa bile**, DevOps ekibiyle aynı dili
-> konuşabilmek için süreci görmen gerekiyor.
+Kendi projende senin açtığın hesapların kaydı, işyeri projesinde DevOps'a
+"canlıda şunlar tanımlı olmalı" listesi — tablo şablonun kendi başında:
+`docs/standards/sablonlar/altyapi-durumu.md` → *"Bu dosya iki proje tipinde FARKLI dolar"*.
 
 ## Yol A — Yönetilen servisler (kendi projelerinde varsayılan)
 

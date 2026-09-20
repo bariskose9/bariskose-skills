@@ -406,4 +406,22 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 | 6 | .NET cümlesi | ✅ 3.12.2 — `11` adım 2: karşılık tek cümle, kit yalnızca JS ailesi |
 | 7 | Standartlar `.claude/rules/`'a | ⏳ **Deney yapıldı (2.1.265, `claude -p`):** rules + `@import` çalışıyor · `paths` çalışıyor (eşleşen dosya okununca yükleniyor) · ⛔ **`@import`, `paths`'li dosyanın içinde de açılışta genişletiliyor — kapsamı deliyor.** Bu yüzden "ince rules + import" tasarımı geçersiz. Yeni tasarım: çekirdek (`paths`'siz, ~120 satır) + tetikleyici (`paths`'li, 10–15 satır: "şu standardı oku" + kural adları özeti) + `docs/standards/` tek kaynak. Şablon 691 → ~100. `InstructionsLoaded` hook ile yüklenenler loglanır. **Ayrı tur** |
 
-- [ ] ⭐ **Tur C — rules dönüşümü** (yukarıdaki tasarımla): `SKILL.md` Adım 2, `16-yeni-proje-kurulumu`, şablon `CLAUDE.md`, `.claude/rules/` üretimi, `InstructionsLoaded` kancası, önce/sonra `/context` ölçümü. Deney klasörü: scratchpad (kalıcı değil); yeniden üretmek 5 dakika.
+- [x] ~~⭐ **Tur C — rules dönüşümü**~~ — **yapıldı, 3.14.0 (2026-09-20).** Sonuç aşağıda *"Tur C — rules dönüşümü"*: `SKILL.md` Adım 2, `16-yeni-proje-kurulumu`, şablon `CLAUDE.md`, `.claude/rules/` üretimi, `InstructionsLoaded` kancası, önce/sonra `/context` ölçümü. Deney klasörü: scratchpad (kalıcı değil); yeniden üretmek 5 dakika.
+
+
+### Tur C — rules dönüşümü (2026-09-20, 3.14.0)
+
+| Ne | Sonuç |
+|---|---|
+| Şablon `CLAUDE.md` | 691 → 50 satır: §0 proje değişkenleri + "kurallar nerede" tablosu |
+| `.claude/rules/00-cekirdek.md` (133 satır, `paths` yok) | Rol tek paragraf · anlatım ölçütü · hangi soru → hangi dosya · kaynak hiyerarşisi · beceriler · sekiz kapı · kullanıcıya karşı · commit protokolü · asla yapma · oturum hijyeni |
+| 8 tetikleyici (`kod` · `veritabani` · `api` · `guvenlik` · `arayuz` · `test` · `yayin` · `mobil`, 10–25 satır, `paths`'li) | "Şu standardı oku" + kural adları; içlerinde `@import` yok |
+| Taşınanlar | Rol A–F, terim zenginliği/biçimi, "ansiklopedi değil" → `11`; commit önerisi raporu → `10`; "kit nerede" → `kit-senkron` |
+| Yayılma | `SKILL.md` Adım 2 ve Adım 7 listesi · `16` tablo · `ICINDEKILER` · `KIT-REHBER` · `11` atıfları · kanca mesajı |
+| Denetim betiği | 7. kontrol **benzer cümle** (4-kelime dizi kesişimi ≥ %75, farklı dosya); ilk koşuda 9 + 1 bulgu, hepsi işaretçiye çevrildi. Kural: betik **tek başına** koşturulur, boru hattı çıkış kodunu yutar |
+| Ölçüm kancası `hooks/kural-log.mjs` | `InstructionsLoaded` + `PostToolUse(Read)` → `~/.claude/proje-kiti/log/<proje>.jsonl`; gerçek oturumda doğrulandı: çekirdek `session_start`, `veritabani.md` ← `prisma/schema.prisma`, `api.md` + `kod.md` ← `route.ts`, `arayuz.md` ← `C.tsx` |
+| Ölçüm | Oturum açılış yükü 46.952 → 34.333 token (−%27), aynı soru |
+| Bulunan ek çelişki | `02`'de iki başlık bloğu biçimi vardı (13 Eyl'de yazdığım ikinci biçim) — kanonik halkalara birleştirildi, `NEDEN` ve `DİKKAT` halkaları eklendi |
+| Politika | `11` → *"Bağlam yönetimi"*: ne yüklenir ne zaman · yeni oturum sinyalleri · model/pencere politikası tarih damgalı, üç ayda bir gözden geçirilir |
+
+⚠️ **Açık:** benim-belediyem ve backend-ogrenme eski yapıda (691 satırlık `CLAUDE.md`, `.claude/rules` yok). Kit projesi olmayan `backend-ogrenme` kendi `CLAUDE.md`'siyle kalır; benim-belediyem'e geçiş, oraya dönüldüğünde `/kit-senkron` ile.

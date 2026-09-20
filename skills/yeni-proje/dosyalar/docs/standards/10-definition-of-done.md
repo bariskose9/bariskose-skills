@@ -67,6 +67,62 @@ Bir iş, aşağıdaki maddelerin **tamamı** işaretlenmeden "bitti" sayılmaz.
 - [ ] Kullanıcıya *ne kontrol edildi ve neden* anlatıldı; yeni terimler
       `calisilacak-konular.md`'ye eklendi
 
+
+## Commit önerisi raporu — onaydan önce sunulan biçim
+
+Üç doğrulama (lint/typecheck/test/build · güvenlik · tarayıcı) geçtikten sonra
+commit **önerilir**, atılmaz. Rapor Türkçe, kod göstermeden, şu biçimde:
+
+```
+━━━ COMMIT ÖNERİSİ ━━━
+
+📌 NE YAPILDI (Türkçe özet)
+   • <eklenen özellik 1>
+   • <değiştirilen davranış>
+   • <düzeltilen hata>
+
+📁 DEĞİŞEN DOSYALAR (N dosya, +X / -Y satır)
+   yeni       : <dosya> — <ne işe yarıyor>
+   güncellendi: <dosya> — <ne değişti>
+   silindi    : <dosya> — <neden>
+
+🗄️ VERİTABANI
+   <migration var mı? tablo/kolon değişti mi? yoksa "değişiklik yok">
+
+🔐 GÜVENLİK
+   <yeni girdi noktası / yetki kontrolü / secret var mı? yoksa "yeni risk yok">
+
+✅ DOĞRULAMA
+   lint/typecheck : <sonuç>
+   testler        : <X geçti, Y başarısız>
+   build          : <sonuç>
+   güvenlik       : <denetim sonucu — bulgu varsa listele, yoksa "temiz">
+   tarayıcı testi : <tıklayarak denediğim akışlar ve sonuçları>
+   konsol/network : <hata var mı>
+   mobil (375px)  : <sonuç>
+   telefon testi  : <senin telefondan denemen gereken adımlar>
+   dark mode      : <sonuç>
+
+👀 SENİN KONTROL ETMEN GEREKENLER
+   <preview URL + 3-5 maddelik tıklama adımı>
+
+⚠️ DİKKAT
+   <bilinen eksik, teknik borç, sonraya bırakılan iş — yoksa "yok">
+
+📝 ÖNERİLEN COMMIT MESAJI
+   <tip>(<kapsam>): <özet>
+
+   - <detay>
+   - <detay>
+
+━━━━━━━━━━━━━━━━━━━━━━━
+Onaylıyor musun? (evet / düzelt: ... / hayır)
+```
+
+*"evet"* → commit + push + PR/MR açılır, link verilir. *"düzelt"* → düzeltilir,
+rapor yeniden sunulur. Onaysız `git commit` / `push` / `merge` çalıştırılmaz
+(`.claude/rules/00-cekirdek.md` → *"Git ve commit"*).
+
 ## Teslim
 - [ ] Commit raporu sunuldu ve onaylandı
 - [ ] PR açıldı, CI yeşil, preview URL doğrulandı
