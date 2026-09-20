@@ -394,7 +394,7 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 | **Kural: kanca ve betikler kitin ön koşulu dışında araç istemez** (Node + Git). Yeni bağımlılık = README *"Ön koşullar"* tablosuna satır + iki OS'ta deneme | `README.md` → *"Ön koşullar"* |
 | ~~Bilinen açık: kanca iki makinede doğrulanmalı~~ — 3.12.1 Windows + Mac'te doğrulandı (2026-09-20). Denetim betiği bunu ölçemez | *"Sırada ne var"* |
 
-### Ek — 2026-09-20: öğrenme deposundan gelen yedi bulgu (`backend-ogrenme/_notlar/kite-tasinacaklar.md`)
+### Ek — 2026-09-20: öğrenme deposundan gelen yedi bulgu (kaynak: özel `backend-ogrenme` deposu, `_notlar` klasöründeki "kite taşınacaklar" listesi — bu depoda yok)
 
 | # | Bulgu | Sonuç |
 |---|---|---|
