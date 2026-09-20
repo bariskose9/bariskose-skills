@@ -115,14 +115,14 @@ curl -s https://raw.githubusercontent.com/bariskose9/bariskose-skills/main/.clau
 | Sonuç | Ne yapılır |
 |---|---|
 | Aynı | Sessizce devam |
-| ⛔ Kurulu **geride** | **DUR.** Kullanıcıya söyle, güncellemesini iste, yeniden başlatmasını hatırlat |
+| ⛔ Kurulu **geride** | **DUR ve SOR:** *"kurulu X, GitHub Y — güncelleyeyim mi?"* Evet → komutları **sen** koştur (`claude plugin marketplace update bariskose-skills` · `claude plugin update proje-kiti@bariskose-skills`), sonra: *"yeni sürüm bu oturumda etkin olmaz — yeniden başlat, `/yeni-proje`'yi tekrar çalıştır."* Hayır → eski sürümle kurulacağını ve hangi kuralların eksik kalacağını söyle, devam et |
 | Ağ yok / karşılaştırılamadı | Bildir ve devam et — engelleme |
 
 ⛔ **Sessizce devam etme.** Bayat şablonla kurulan proje, düzeltilen kuralları
 hiç görmez ve bu ancak aylar sonra fark edilir.
 
-⚠️ **Güncelleme kendiliğinden inmez, kullanıcı çeker:**
-`/plugin marketplace update` → `/plugin update proje-kiti` → **yeniden başlat**.
+⚠️ **Güncelleme kendiliğinden inmez; ajan fark ettiği an sorar, onayla kendisi çeker**
+(oturum kancası da her açılışta bakar). Yeniden başlatma yine kullanıcıda.
 
 ### Adım 0a — Platformu TESPİT ET (sorma)
 

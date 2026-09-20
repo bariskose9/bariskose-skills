@@ -425,3 +425,12 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 | Politika | `11` → *"Bağlam yönetimi"*: ne yüklenir ne zaman · yeni oturum sinyalleri · model/pencere politikası tarih damgalı, üç ayda bir gözden geçirilir |
 
 ⚠️ **Açık:** benim-belediyem ve backend-ogrenme eski yapıda (691 satırlık `CLAUDE.md`, `.claude/rules` yok). Kit projesi olmayan `backend-ogrenme` kendi `CLAUDE.md`'siyle kalır; benim-belediyem'e geçiş, oraya dönüldüğünde `/kit-senkron` ile.
+
+### Ek — 2026-09-20 (3.15.0): kit güncellemesi "fark ettiği an sorar, onayla kendisi çeker"
+
+Kullanıcı kararı: kurulu plugin ya da kaynak klon geride kaldığında ajan **söylemekle
+kalmaz, sorar** ("güncelleyeyim mi?") ve evet derse komutları kendisi koşturur; yeniden
+başlatma gerektiğini söyler. Üç yerde: oturum kancası (her açılışta GitHub'la karşılaştırır,
+3 sn zaman aşımı, ağ yoksa sessiz) · `/yeni-proje` başı · `/kit-senkron` başı (plugin + kaynak
+klon `[behind N]`). Ayrıca çekirdek kapı 4, test ve tarayıcı doğrulama becerilerini adıyla
+sayar (3.14.1).

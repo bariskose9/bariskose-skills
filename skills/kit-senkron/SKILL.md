@@ -37,8 +37,11 @@ git clone --depth 1 https://github.com/bariskose9/bariskose-skills /tmp/kit-ref
 ls docs/standards
 ```
 
-**Kaynak depoyu kullanıyorsan önce güncelle:** `git -C <kaynak> pull --ff-only`
-— başka bir makinede/oturumda yazılmış kurallar kaçırılmasın.
+**Kaynak depoyu kullanıyorsan önce bak, sonra sor:** `git -C <kaynak> fetch -q &&
+git -C <kaynak> status -sb | head -1`. `[behind N]` görüyorsan **sor**: *"kaynak
+klon N commit geride — çekeyim mi?"* Evet → `git -C <kaynak> pull --ff-only`.
+Başka bir makinede yazılmış kurallar kaçırılmasın; `--ff-only` yerel değişikliği
+ezmez, çakışma varsa durur ve söyler.
 
 ### Sürüm tutarlılığı kontrolü (atlanmaz)
 
@@ -49,9 +52,11 @@ grep '"version"' ~/baris_projects/bariskose-skills/.claude-plugin/plugin.json
 find ~/.claude/plugins/cache -name plugin.json -path '*proje-kiti*' -exec grep '"version"' {} \;
 ```
 
-Kurulu sürüm **geride ise dur ve kullanıcıya söyle:** karşılaştırma kaynak
-depoya karşı yapılacak, ama kullanıcı `/yeni-proje` çalıştırmadan önce
-plugin'i güncellemeli. Sessizce devam etme.
+Kurulu sürüm **geride ise dur ve SOR:** *"kurulu X, kaynak Y — plugin'i
+güncelleyeyim mi?"* Evet → `claude plugin marketplace update bariskose-skills`
+ve `claude plugin update proje-kiti@bariskose-skills` komutlarını sen koştur;
+yeniden başlatma gerektiğini söyle. Karşılaştırma zaten kaynak depoya karşı
+yapılır; güncelleme `/yeni-proje` için gerekir. Sessizce devam etme.
 
 Proje bir kit projesi değilse (`docs/standards/` yoksa) dur ve söyle.
 

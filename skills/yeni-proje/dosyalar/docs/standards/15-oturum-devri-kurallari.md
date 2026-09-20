@@ -410,12 +410,15 @@ gereken bölümlerin** aynı olduğudur.
 Mevcut bir projede çalışırken kurulu sürümün eski olması **hiçbir şeyi
 bozmaz** — o proje kendi `docs/standards/` klasörünü okur.
 
-Güncelleme kullanıcı tarafından çekilir, kendiliğinden inmez:
+Güncelleme kendiliğinden inmez. ⭐ **Ajan fark ettiği an sorar** — oturum kancası
+her açılışta GitHub'daki sürüme bakar, `/yeni-proje` ve `/kit-senkron` başında
+yeniden kontrol edilir — ve kullanıcı onaylarsa komutları **kendisi** koşturur:
 ```
-/plugin marketplace update
-/plugin update proje-kiti
+claude plugin marketplace update bariskose-skills
+claude plugin update proje-kiti@bariskose-skills
 ```
-ve Claude yeniden başlatılır.
+Yeni sürüm bu oturumda etkin olmaz; Claude yeniden başlatılır — bunu söylemek
+de ajanın işi.
 
 ## `yeni-oturuma-verilecek-sonraki-adim-promptu.md` — ne içerir
 
