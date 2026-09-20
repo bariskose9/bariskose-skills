@@ -434,3 +434,22 @@ başlatma gerektiğini söyler. Üç yerde: oturum kancası (her açılışta Gi
 3 sn zaman aşımı, ağ yoksa sessiz) · `/yeni-proje` başı · `/kit-senkron` başı (plugin + kaynak
 klon `[behind N]`). Ayrıca çekirdek kapı 4, test ve tarayıcı doğrulama becerilerini adıyla
 sayar (3.14.1).
+
+### Ek — 2026-09-20 (3.16.0): senkronda TEK ANLIK GÖRÜNTÜ + Tur C'den kalan bayat atıflar
+
+Kaynak: benim-belediyem oturumunun *Kite taşınacaklar* maddesi. Aynı makinede iki
+Claude oturumu açıkken (biri kiti yazıyor, biri kiti projeye senkronluyor) proje
+**karışık anlık görüntü** aldı: `00-stack.md` 3.15.1'den, kalan dosyalar 3.15.2'den.
+Sebep: `status -sb` yalnızca uzakla farkı gösterir; klondaki commit edilmemiş
+değişikliği ve senkron sürerken atılan yerel commit'i göstermez. Kural `kit-senkron`
+Adım 1 → *"TEK ANLIK GÖRÜNTÜ"*: başlamadan `status --porcelain` boş mu · `rev-parse
+HEAD` ile mühürle · kopyalamadan önce yeniden ölç, hash değiştiyse baştan. Adım 4
+işaret eder. Yeni kural olduğu için MINOR (Adım 4 kuralı: yama 1.0.**1**, yeni kural
+1.**1**.0 — 3.15.3'teki `save-exact` kuralı da aslında MINOR olmalıydı).
+
+Ayrıca Tur C'de şablon `CLAUDE.md` 50 satıra inince eski bölüm numaraları öksüz
+kaldı; denetim `§N` biçimini denetlemediği için görünmedi. On bir atıf `00-cekirdek.md`
+başlıklarına çevrildi: §6.3 → *"Git ve commit"* (`08`, `15`×2, `kit-senkron`,
+`KIT-NE-YAPIYOR`) · §3 → *"Zorunlu kapılar"* (`16`, `PRD`, `SKILL`) · §1 → *"Hangi soru
+→ hangi dosya"* (`15`, `16`) · §2 → *"Beceriler"* (`11`). Artık ok biçiminde
+oldukları için denetim bundan sonra kırılırsa yakalar.

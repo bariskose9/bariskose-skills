@@ -1031,7 +1031,7 @@ kurulumda ne yapıldıysa hepsi yazılır.
 
 - **Bu skill özellikleri yazmaz.** Kurulumu bitirir ve yol haritasını çıkarır.
   Sonrasında roadmap adım adım ilerler ve **her adımda plan sunulup onay
-  beklenir** (`CLAUDE.md` §3 kapıları). Vaat, kurulmuş proje ve yol haritasıdır; bitmiş uygulama değil (`KIT-NE-YAPIYOR.md`).
+  beklenir** (`00-cekirdek.md` → *"Zorunlu kapılar"*). Vaat, kurulmuş proje ve yol haritasıdır; bitmiş uygulama değil (`KIT-NE-YAPIYOR.md`).
 - Kurulum bittikten sonra artık bu skill değil, projedeki `CLAUDE.md` ve
   `docs/standards/` geçerlidir.
 - Bir kural ile kullanıcının isteği çakışırsa **dur ve sor**. Kendi başına karar verme.

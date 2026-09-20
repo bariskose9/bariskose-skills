@@ -1,6 +1,6 @@
 # `proje-kiti` — Kit Ne Yapıyor
 
-**Sürüm:** 3.15.3 · **Tarih:** 2026-09-20
+**Sürüm:** 3.16.0 · **Tarih:** 2026-09-20
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Bu belge, kitin **kurulumdan canlıya çıkışa kadar** ne yaptığını anlatır.
@@ -231,7 +231,7 @@ Kitin en belirleyici parçası. Ajanın **neyi yapamayacağını** söyler:
 | 7 | `15-oturum-devri-kurallari.md` protokolünü uygula — her adım bitiminde |
 | 8 | Öğrenilen kuralı **iki kopyaya da** yaz ve `diff` ile kanıtla |
 
-⚠️ Ayrıca `CLAUDE.md` §6.3: commit öncesi **üç aşamalı doğrulama** —
+⚠️ Ayrıca `00-cekirdek.md` → *"Git ve commit"*: commit öncesi **üç aşamalı doğrulama** —
 otomatik testler · güvenlik denetimi · **tarayıcıda fiilen tıklayarak** kontrol.
 Kod okuyup *"çalışması lazım"* demek kanıt sayılmaz.
 

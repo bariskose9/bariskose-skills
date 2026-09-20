@@ -11,7 +11,7 @@ Oturum başında: `git status` temiz mi, hangi daldayız, PRD'de bu feature ne d
 
 Komut adları **tam yazılır**. Ortamda aynı adı taşıyan başka skill paketleri
 olabilir (`/spec`, `/review`, `/plan` birden fazla pakette bulunur); bu projede
-kastedilen **her zaman `agent-skills:` önekli olanlardır** (CLAUDE.md §2).
+kastedilen **her zaman `agent-skills:` önekli olanlardır** (`00-cekirdek.md` → *"Beceriler"*).
 
 ```
 /agent-skills:spec   → gereksinimi netleştir (interview-me ile soru sor)  [ONAY]

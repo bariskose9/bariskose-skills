@@ -43,6 +43,29 @@ klon N commit geride — çekeyim mi?"* Evet → `git -C <kaynak> pull --ff-only
 Başka bir makinede yazılmış kurallar kaçırılmasın; `--ff-only` yerel değişikliği
 ezmez, çakışma varsa durur ve söyler.
 
+### ⛔ Aynı makinede başka bir oturum kiti düzenliyor olabilir — TEK ANLIK GÖRÜNTÜ
+
+`status -sb` yalnızca **uzakla** (GitHub) farkı gösterir. Aynı makinede açık
+başka bir Claude oturumu kit klonunu o sırada düzenliyorsa iki şey `[behind]`
+olarak görünmez: klondaki **commit edilmemiş** dosyalar ve senkron sürerken
+klona **atılan yeni commit**. Yaşanan: 2026-09-20'de bir proje `00-stack.md`'yi
+3.15.1'den, kalan dosyaları 3.15.2'den aldı — senkron yarıdayken klonda commit
+atılmıştı. Buna **karışık anlık görüntü** (mixed snapshot) denir: hangi kural
+hangi sürümden, belli değil; projedeki sürüm damgası yalan söyler.
+
+Kural — üç adım:
+
+1. **Başlamadan kirli mi bak:** `git -C <kaynak> status --porcelain` boş
+   değilse **dur ve sor**: *"klonda commit edilmemiş değişiklik var — başka bir
+   oturum kiti düzenliyor olabilir; bitmesini mi bekleyelim?"* Kirli klondan
+   kopyalama; yarım cümle kural olur.
+2. **Anlık görüntüyü mühürle:** `git -C <kaynak> rev-parse --short HEAD` ve
+   `plugin.json` sürümünü not et. Senkron boyunca **yalnızca bu** commit'ten
+   çalışılır; rapora ve devir dosyasına "kit 3.x.y @ <hash>" diye bu yazılır.
+3. **Kopyalamadan hemen önce yeniden ölç** (Adım 4): aynı `rev-parse` komutu.
+   Hash değiştiyse klon ilerlemiştir → Adım 2'ye dön, karşılaştırmayı yeni
+   anlık görüntüden baştan yap. "Yarısı eski yarısı yeni" kopya OLMAZ.
+
 ### Sürüm tutarlılığı kontrolü (atlanmaz)
 
 Kurulu önbellek ile kaynak deponun sürümünü karşılaştır:
@@ -194,8 +217,10 @@ Kuralı düzelt, projeye göre dallandırma.
    ```
    ve Claude'u **yeniden başlatmalı**.
 
-**Projeye getirilecekler için:** dosyayı güncelle, değişikliği Türkçe özetle,
-projenin kendi commit protokolüne uy (`CLAUDE.md` §6.3 — onaysız commit yok).
+**Projeye getirilecekler için:** önce anlık görüntüyü yeniden ölç (Adım 1 →
+*"TEK ANLIK GÖRÜNTÜ"*, 3. madde), sonra dosyayı güncelle, değişikliği Türkçe
+özetle, projenin kendi commit protokolüne uy (`00-cekirdek.md` → *"Git ve commit"* —
+onaysız commit yok).
 
 ## Adım 5 — Kayda geç
 
