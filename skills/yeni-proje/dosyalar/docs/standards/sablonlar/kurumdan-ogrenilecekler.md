@@ -410,6 +410,7 @@ Adım 3b, 4 ve 5'te sorulur. Muhatap: DBA / veritabanı birimi.
 | 6.3 | Kendiliğinden çalışan iş | 3 | *(doldurulacak)* |
 | 6.4 | Kişisel veri ve arama alanı | 3 | *(doldurulacak)* |
 | 6.5 | Çok dillilik: İngilizce (veya başka dil) sürüm isteniyor mu; arayüz mü, içerik de mi | 3 | *(doldurulacak)* |
+| 6.6 | Yenilenecek eski sistem var mı: kaynak kodu · veritabanı erişimi · belge · kim kullanıyor · "yazılı olmayan kurallar" | 3 | *(doldurulacak)* |
 
 ## 6.1 Tarayıcı tabanı
 
@@ -474,6 +475,21 @@ Adım 3b, 4 ve 5'te sorulur. Muhatap: DBA / veritabanı birimi.
 | **Neden soruyorum** | Çok dillilik sonradan eklenemez: URL yapısı, sözlük dosyaları ve içerik tabloları baştan ona göre kurulur (`02-coding-standards.md` → *"Çok dillilik"*). İçerik çevirisi ayrı bir iş yükü ve panel ekranı demektir |
 | **Ne değişir** | `next-intl` kurulumu, `/en` URL'leri, çeviri tabloları, panelde dil sekmesi |
 | **Cevap gelmezse** | Tek dil (Türkçe); metinler yine tek yerden — yapı hazır |
+| **Cevap** | *(doldurulacak)* |
+
+
+## 6.6 Yenilenecek eski sistem
+
+> *"Bu proje mevcut bir sistemin yerine mi geçiyor? Öyleyse: kaynak koduna
+> erişebiliyor muyuz, veritabanına (salt okunur) bağlanabiliyor muyuz, belge
+> var mı, bugün kimler hangi ekranı ne için kullanıyor? Herkesin bildiği ama
+> yazılı olmayan kurallar var mı — ay sonu düzeltmesi, istisna listesi gibi?"*
+
+| | |
+|---|---|
+| **Neden soruyorum** | Eski sistemin davranışının yarısı kodda değil, veride ve alışkanlıkta; kaynak yoksa davranış yalnızca **ölçülerek** (karakterizasyon testi) sabitlenir. Akış `11-agent-workflow.md` → *"ESKİ PROJEYİ YENİDEN YAZMA"* |
+| **Ne değişir** | Harita çıkarma süresi, test stratejisi, veri aktarım planı, strangler dilimleri |
+| **Cevap gelmezse** | Kaynak ve DB erişimi **yok** varsayılır: davranış yalnızca ekrandan ve çıktıdan ölçülür; roadmap'e "harita" ayrı ve uzun bir adım olarak yazılır |
 | **Cevap** | *(doldurulacak)* |
 
 ---

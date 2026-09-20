@@ -385,6 +385,11 @@ Ne verilmiş?
 │     → kurulum yok, uyum var. ⛔ Önce oku ve haritasını çıkar, sonra dokun
 │     → `REPO-YAPISI.md` mevcut yapıya göre doldurulur
 │
+├─ 7b. Eski projeyi YENİDEN YAZMA (modernizasyon) — kurumun en sık işi
+│     → eski kodun yerine geçilir ama davranışı korunur: harita → karakterizasyon
+│       testi → tutarsızlık kural mı hata mı (kuruma sor) → veri → strangler ile parça parça
+│     → akış `11-agent-workflow.md` → *"ESKİ PROJEYİ YENİDEN YAZMA"*; genelde 3 + 5 + 8 ile birleşir
+│
 └─ 8. Veri var ama BAŞKA BİÇİMDE (Excel · Access · eski sistem dökümü)
       → önce taşıma/aktarım işi planlanır, roadmap'te AYRI adım olur
 ```
@@ -397,7 +402,7 @@ hazır bir API var mı, giriş sizin sisteminizden mi gelecek?"*
 
 ### ⛔ BU BİR KAPIDIR — envanter kapanmadan Adım 3'e (PRD) GEÇİLMEZ
 
-Sekiz senaryodan **hangisi ya da hangileri** geçerli, yazılı olarak
+Dokuz senaryodan **hangisi ya da hangileri** geçerli, yazılı olarak
 kararlaştırılmadan PRD sorularına başlanmaz.
 
 *Gerekçe:* envanter cevabı PRD'nin içeriğini değiştirir. Senaryo 4'te (API

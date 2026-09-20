@@ -718,6 +718,48 @@ Orada yasaklanan şey **kararı** kullanıcıya bırakmaktır. Burada anlatılan
 kararı vermek için gereken **olguyu** öğrenmektir: *"kaç istemci olacak"* bir
 olgudur, *"REST mi GraphQL mi"* bir karardır. Olgu sorulur, karar verilir.
 
+## ⭐ ESKİ PROJEYİ YENİDEN YAZMA — modernizasyon akışı (envanter senaryosu 7b)
+
+Kurumun en sık işi yeni sistem değil, **eski sistemi yenilemektir**: on yıllık
+bir PHP/Oracle uygulaması var, çalışıyor, kimse dokunmaya cesaret edemiyor,
+"aynısı ama modern olsun" deniyor. Bu, senaryo 7'den (çalışan projeye ekleme)
+farklıdır: orada eski koda **uyum sağlarsın**, burada eski kodun **yerine**
+geçersin — ama davranışını koruyarak.
+
+*Gerçek hayat:* tarihi bir binayı restore etmek. Yıkıp yeniden yapmazsın;
+önce **rölöve** çıkarırsın (binanın şu anki hâlinin ölçülü çizimi), sonra
+taşıyıcı duvarları belirlersin, sonra kat kat yenilersin — bina bu arada
+**kullanılmaya devam eder**.
+
+⛔ **En büyük tuzak:** "eski kodu okuyup anladım, baştan yazıyorum." Eski
+sistemin davranışının yarısı kodda değil, **verinin içinde ve kullanıcıların
+alışkanlığındadır**: hiç belgelenmemiş bir istisna, boş bırakılınca "0" sayılan
+bir alan, ayın son günü koşan bir düzeltme. Bunları kod okuyarak bulamazsın;
+**ölçerek** bulursun. Akış beş adım:
+
+| # | Adım | Ne yapılır | Kit / beceri |
+|---|---|---|---|
+| 1 | **Harita** (rölöve) | Kullanıcılar kim, hangi ekranı ne için kullanıyor · modüller ve aralarındaki bağ · veri kaynakları (hangi tablo, hangi dış sistem) · zamanlanmış işler · "herkesin bildiği ama yazılı olmayan" kurallar. Kaynak kodu var mı, veritabanına erişim var mı, belge var mı — `kurumdan-ogrenilecekler.md` → 6.6 | `doubt-driven-development` (tanımadığın koda şüpheyle gir) · `context-engineering` |
+| 2 | **Davranışı sabitle** — karakterizasyon testi | *Karakterizasyon testi / characterization test / altın kayıt (golden master):* eski sistemin **şu anki** çıktısını, doğru mu yanlış mı diye **sormadan**, test olarak kaydetmek. "Bu girdiye bu çıktıyı veriyor" — yeni sistem aynı girdiye aynı çıktıyı vermeli. Gerçek hayat: restorasyondan önce her odanın fotoğrafı. Girdi/çıktı çiftleri gerçek (maskelenmiş) veriden alınır | `test-driven-development` — test önce, ama burada "beklenen" = eskinin çıktısı |
+| 3 | **Tutarsızlıkları ayır** | 2. adımda çıkan garipliklerin her biri iş birimine sorulur: *"bu bir kural mı, bir hata mı?"* Kuralsa yeni sistemde korunur ve **belgelenir**; hataysa düzeltilir ve testin beklentisi değişir. ⛔ Ajan buna kendi karar veremez — kurum bilir | `interview-me` · `PRD.md` §2b Varsayımlar |
+| 4 | **Veri** | Mevcut şema `prisma db pull` ile koda çekilir (senaryo 3); kurum adlandırması `@map` ile korunur; veri kalitesi ölçülür (boş, çift, geçersiz kayıt sayıları). Yeni şemaya taşıma **ayrı bir iş** (senaryo 8) — migration değil, **aktarım** (ETL) | `04-database.md` → *"İsimlendirme"*, *"MIGRATION ARACI"* |
+| 5 | **Parça parça devret** — strangler | *Strangler / sarmaşık deseni:* eski sistemi bir anda kapatmak yerine, ters vekil (Nginx) bir ekranı/ucu yeni sisteme yönlendirir; eski sistem o parça için salt-okunur olur; her parça 2. adımdaki testleri geçince sıradaki. Gerçek hayat: sarmaşık ağacı yavaş yavaş sarar, ağaç ayaktayken. Son parça geçince eski sistem kapatılır | `deprecation-and-migration` (kapatma ve kullanıcı geçişi) · `13-environments.md` → *"Yol C"* (ters vekil DevOps'ta) |
+
+| Kural | Neden |
+|---|---|
+| ⛔ Karakterizasyon testleri yazılmadan tek satır yeni kod yazılmaz | Neyi koruduğunu bilmeden "aynısı" yapılamaz |
+| Her tutarsızlık **yazılı** cevap alır (kural mı, hata mı); cevapsız kalanlar PRD varsayımlarına | Ajanın tahmini, kurumun on yıllık alışkanlığını bozar |
+| Strangler dilimi = bir ekran/uç; roadmap'te her dilim ayrı satır, her dilimin kendi testi | "Hepsini yazdık, bir gün geçiş" büyük patlama riskidir |
+| Eski sistem kapanana kadar **iki sistem aynı veriye yazmaz** — tek yazan taraf vardır, diğeri okur | İki yazan = çelişen kayıt |
+
+⭐ **Kararı veren soru:** *"Eski sistemin bu davranışı bir kural mı, bir hata
+mı — ve bunu kim söyleyebilir?"* Sen değil, iş birimi. Ajan soruyu sorar, cevabı
+belgeler, yeni sistem cevaba göre davranır.
+
+Bu akış için ayrı bir beceri (`/eski-proje`) **yazılmadı**: ilk gerçek
+modernizasyon işinde, yaşanan ihtiyaçla (`AŞIRI MÜHENDİSLİK KAPISI`). O güne
+kadar bu bölüm + sayılan beceriler yeter.
+
 ## Kapsam kontrolü
 İstenmeyen iyileştirme yapma. "Bu arada şunu da düzelttim" yasak —
 gördüğün sorunu **bildir**, ayrı iş olarak planla.
