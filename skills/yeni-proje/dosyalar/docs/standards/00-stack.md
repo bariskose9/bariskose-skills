@@ -801,6 +801,11 @@ yükseltmeye çalışır ve aynı duvara toslar.
   ⛔ Bu bir **varsayılandır, dayatma değil** — 2026-09-20'de bir projede "npm
   yasak" gibi okunup kit sapması sanıldı; kural §0'a bağlandı.
   `package.json` içinde sürümler **tam** yazılır (`16.2.12`, `^16.2.12` değil).
+  ⭐ Bunu **araç zorlar**, hafıza değil: `.npmrc` dosyasına `save-exact=true`
+  (npm ve pnpm aynı anahtarı okur) — `npm install x` varsayılan olarak `^`
+  yazar, bu ayar onu tam sürüme çevirir. *Gerçek hayat:* "unutma" notu
+  yerine kapıya otomatik kilit. 2026-09-20'de bir projede yedi paket şapkalı
+  bulundu; hepsi elle eklenmişti — ayar olsaydı hiçbiri olmazdı.
 - Major sürüm yükseltmesi ayrı PR olur, feature PR'ına karıştırılmaz.
 - Bir bağımlılıkta yamalanmış sürüm varsa ama bağımlılık ağacı eskisini çekiyorsa,
   `package.json` → `overrides` ile yükseltilir ve gerekçesi PR'da yazılır.
