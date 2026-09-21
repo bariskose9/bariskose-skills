@@ -480,3 +480,14 @@ Tek seferlik tarama — sekiz aday, kitte ölçüldü:
 Ajanın mesajı 3.15.3'ü güncel sanıyordu (3.16.0 çıkmıştı, "Kite taşınacaklar" maddesi
 3.16.0'da alınmıştı); klon çekilmeden gelen bulgu, senkron kuralının (TEK ANLIK
 GÖRÜNTÜ) neden gerektiğinin bir örneği daha.
+
+### Ek — 2026-09-21 (3.18.0): saat yazarken dilim — ajan mesajında ve platform cron'unda
+
+Kaynak: benim-belediyem 3.17.0 senkron raporu. Ajan "UTC 00:31" yazdı, kullanıcı
+saatte 03:31 gördü. Ölçüm: `02` → *"Zaman dilimi"* yalnızca **uygulama ekranı** için
+"dilim belli" diyordu; ajanın kendi mesajı/devir dosyası için kural yoktu. Ayrıca `02`,
+"cron İstanbul saatiyle tanımlanır, bkz. `12` → Planlı görevler" diye işaret ediyordu
+ama `12`'de o içerik **yoktu** (boş işaretçi). İki ekleme: çekirdek *"Kullanıcıya karşı"*
+tek madde (TSİ; UTC gerekiyorsa ikisi birden; `date -u`) · `12` → *"Planlı görevler"*
+saat dilimi tuzağı (platform cron'u UTC, TR karşılığı yorum; kendi zamanlayıcıda `tz`).
+Aynı raporda: TEK ANLIK GÖRÜNTÜ kuralı ilk kez uygulandı, çalıştı; öneri yok.
