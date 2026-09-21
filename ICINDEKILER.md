@@ -117,6 +117,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | 16 | `16-yeni-proje-kurulumu.md` | Kurulum listesi, plan sıralaması, depo hijyeni |
 | 17 | `17-mobile.md` | Expo, jeton saklama, mağaza süreci |
 | 18 | `18-seo.md` | Render stratejisi, URL, site haritası, indekslenme |
+| — | `KIT-SURUM` | Damga: projedeki kopyanın kit sürümü (`3.21.0 @ hash`); açılış kancası okur, senkron yazar |
 
 ### `docs/standards/sablonlar/` — projede doldurulacak belgeler
 

@@ -544,6 +544,9 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
    *"Bağlam yönetimi"*.
 3. `dosyalar/` içeriğinin geri kalanını projeye kopyala: `CALISMA-KILAVUZU.md`,
    `REPO-YAPISI.md`, `docs/standards/**`, **`.vscode/extensions.json`**
+   ⭐ `docs/standards/KIT-SURUM` damgası kopyayla gelir (yalnız sürüm); kaynak klon
+   varsa mührü ekle: `printf '%s @ %s\n' <sürüm> "$(git -C <klon> rev-parse --short HEAD)" > docs/standards/KIT-SURUM`.
+   Açılış kancası bu damgayla "proje kopyası geride mi" der.
 
    ⭐ **Kitin KÖKÜNDEN de iki şey kopyalanır.** `$KIT` değişkeni
    `.../yeni-proje/dosyalar` klasörünü gösteriyor; kitin kökü onun üç üstü:

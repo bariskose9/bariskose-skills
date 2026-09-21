@@ -533,3 +533,16 @@ Tarama listesine 4b. "CLAUDE.md kapı N" biçimindeki üç bayat atıf da çekir
 
 "Sırada ne var" 3.11.0 maddesinin (4) numaralı sorusu — *hangi kural dosyaları fiilen
 okunuyor* — artık tahmin değil kayıt; bölünme kararı bu log'larla verilecek.
+
+### Ek — 2026-09-21 (3.21.0): `KIT-SURUM` damgası — "proje kopyası geride" artık görünür
+
+Kullanıcı sorusu: *"Mac'te kaç projeyle çalışırsam çalışayım hepsi son değişiklikleri
+görüyor mu?"* Cevap: hayır — üç katman var (kaynak depo → kurulu plugin → proje kopyası)
+ve hiçbiri diğerine kendiliğinden yansımaz; kanca yalnızca 2. katmanı (plugin geride)
+söylüyordu, 3. katmanı (projenin `docs/standards/` kopyası geride) kimse söylemiyordu.
+Çözüm: `docs/standards/KIT-SURUM` tek satır damga (`3.21.0 @ <mühür>`); `/yeni-proje`
+kopyayla getirir, `/kit-senkron` Adım 5'te mühürle yazar (TEK ANLIK GÖRÜNTÜ'nün hash'i);
+açılış kancası cwd'de damgayı okur, güncel kitten gerideyse "senkron edeyim mi?" diye sordurur,
+damga yoksa bir kez "eski kurulum" der. Denetim: damga `plugin.json` ile TAM eşleşmeli.
+Kanca dört durumda sınandı (geride · güncel · damga yok · kit projesi değil).
+Sonuç: kullanıcı hiçbir projeye "kit güncellendi" demez; her proje kendi açılışında sorar.

@@ -224,6 +224,11 @@ if (existsSync(pluginYolu)) {
   //    rehber gözden geçirilmeli. Her yamada damga zorlamak, kontrolü
   //    körlemesine basılan bir mühre çevirirdi.
   const dal = (v) => v.split(".").slice(0, 2).join(".");
+  // ⭐ KIT-SURUM damgası TAM sürümle eşleşir (yama dahil): onu belge değil KANCA okur;
+  //    geride kalırsa her yeni proje "kopyan geride" uyarısıyla doğar.
+  const damga = join(kok, "skills", "yeni-proje", "dosyalar", "docs", "standards", "KIT-SURUM");
+  if (existsSync(damga) && readFileSync(damga, "utf8").trim() !== gercek)
+    bulgular.push(["BAYAT SÜRÜM", "KIT-SURUM", `${readFileSync(damga, "utf8").trim()} yazıyor, kit ${gercek} — damgayı plugin.json ile eşitle`]);
   for (const p of hepsi) {
     const m = readFileSync(p, "utf8").match(/^\*\*Sürüm:\*\*\s*([0-9]+\.[0-9]+\.[0-9]+)/m);
     if (m && dal(m[1]) !== dal(gercek))

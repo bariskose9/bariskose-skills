@@ -17,10 +17,14 @@
  *            (4) 3.15.0: sürüm kontrolü — GitHub'daki plugin.json ile karşılaştırır (3 sn zaman aşımı),
  *            geride ise ajana "kullanıcıya sor, onaylarsa güncelle" talimatı ekler. Kullanıcı kararı:
  *            "fark ettiği an sorsun, güncellemeyi kendisi yapsın".
+ *            (5) 3.21.0: PROJE KOPYASI kontrolü — cwd'deki docs/standards/KIT-SURUM damgası (senkronun
+ *            yazdığı "sürüm @ hash") güncel kitten gerideyse ajana "/kit-senkron öner" talimatı ekler.
+ *            Kullanıcı sorusu: "hepiniz görüyor musunuz son değişiklikleri?" — cevap hayırdı: proje
+ *            kopyası (3. katman) yalnızca senkronla yenilenir ve geride olduğunu söyleyen yoktu.
  * DİKKAT:    Ne olursa olsun exit 0 — kanca oturum açılışını bozmaz. Metin kısa tutulur, her oturumda yüklenir.
  *            Hooks.json'da ${CLAUDE_PLUGIN_ROOT} bu dosyanın yolunu verir; ortam değişkeni olarak da gelir.
  */
-import { readFileSync } from "node:fs";
+import { existsSync, readFileSync } from "node:fs";
 import { dirname, join } from "node:path";
 import { fileURLToPath } from "node:url";
 
@@ -56,6 +60,12 @@ Kit projesindeysen CLAUDE.md, .claude/rules/ (çekirdek her oturum, alan kuralla
 
   // SÜRÜM KONTROLÜ — ağ varsa GitHub'daki sürümle karşılaştır; geride ise ajana "sor ve güncelle" talimatı.
   // 3 sn zaman aşımı: ağ yoksa ya da yavaşsa sessizce geçilir, oturum bekletilmez.
+  const geride = (a, b) => {
+    const A = a.split(".").map(Number), B = b.split(".").map(Number);
+    for (let i = 0; i < 3; i++) if ((A[i] || 0) !== (B[i] || 0)) return (A[i] || 0) < (B[i] || 0);
+    return false;
+  };
+  let uzak = null;
   try {
     const ctrl = new AbortController();
     const t = setTimeout(() => ctrl.abort(), 3000);
@@ -64,12 +74,11 @@ Kit projesindeysen CLAUDE.md, .claude/rules/ (çekirdek her oturum, alan kuralla
       { signal: ctrl.signal },
     );
     clearTimeout(t);
-    const uzak = (await r.json()).version;
-    const geride = (a, b) => {
-      const A = a.split(".").map(Number), B = b.split(".").map(Number);
-      for (let i = 0; i < 3; i++) if ((A[i] || 0) !== (B[i] || 0)) return (A[i] || 0) < (B[i] || 0);
-      return false;
-    };
+    uzak = (await r.json()).version ?? null;
+  } catch {
+    /* ağ yok / zaman aşımı — sessizce geç */
+  }
+  try {
     if (version !== "?" && uzak && geride(version, uzak)) {
       process.stdout.write(`
 ⚠️ KİT GÜNCELLEMESİ VAR — kurulu ${version}, GitHub ${uzak}. İlk fırsatta kullanıcıya SOR:
@@ -81,7 +90,40 @@ sonra söyle: yeni sürüm bu oturumda etkin olmaz, Claude yeniden başlatılmal
 `);
     }
   } catch {
-    /* ağ yok / zaman aşımı — sessizce geç */
+    /* sürüm karşılaştırılamadı — sessizce geç */
+  }
+
+  // PROJE KOPYASI KONTROLÜ (3.21.0) — bu klasör bir kit projesiyse docs/standards/KIT-SURUM damgası
+  // güncel kitten geride mi? Kurulu plugin güncel olsa bile projenin kopyası yalnızca /kit-senkron ile
+  // yenilenir; bunu söyleyen başka kimse yok. cwd, Claude Code'un stdin'e yazdığı JSON'dan gelir.
+  try {
+    let cwd = process.cwd();
+    if (!process.stdin.isTTY) {
+      try { const g = JSON.parse(readFileSync(0, "utf8") || "{}"); if (g.cwd) cwd = g.cwd; } catch { /* stdin yok */ }
+    }
+    const stdDir = join(cwd, "docs", "standards");
+    if (existsSync(stdDir)) {
+      const guncel = uzak && version !== "?" && geride(version, uzak) ? uzak : version !== "?" ? version : uzak;
+      const damgaYolu = join(stdDir, "KIT-SURUM");
+      if (!existsSync(damgaYolu)) {
+        process.stdout.write(`
+ℹ️ Bu kit projesinde docs/standards/KIT-SURUM damgası yok (3.21.0 öncesi kurulum): kopyanın hangi kit
+sürümünde olduğu bilinmiyor. İlk /kit-senkron damgayı yazar; kullanıcıya bir kez söyle.
+`);
+      } else {
+        const proje = (readFileSync(damgaYolu, "utf8").match(/\d+\.\d+\.\d+/) || [])[0];
+        if (proje && guncel && geride(proje, guncel)) {
+          process.stdout.write(`
+⚠️ PROJE KOPYASI GERİDE — bu projenin docs/standards kopyası kit ${proje}, güncel kit ${guncel}.
+İlk fırsatta kullanıcıya SOR: "kit ${guncel} var, projeye /kit-senkron ile getireyim mi?" Evet derse
+önce kaynak klonu çek (git -C <klon> pull --ff-only), gerekiyorsa plugin'i güncelle (yukarıdaki
+komutlar), sonra /kit-senkron'u SEN başlat. Sormadan senkron yapma; sessizce de geçme.
+`);
+        }
+      }
+    }
+  } catch {
+    /* damga okunamadı — sessizce geç */
   }
 } catch (err) {
   // Kanca hiçbir koşulda oturumu kırmaz; sorunu tek satırla söyler.

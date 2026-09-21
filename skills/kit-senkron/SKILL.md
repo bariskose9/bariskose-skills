@@ -83,6 +83,11 @@ yapılır; güncelleme `/yeni-proje` için gerekir. Sessizce devam etme.
 
 Proje bir kit projesi değilse (`docs/standards/` yoksa) dur ve söyle.
 
+**Projenin kopyası hangi sürümde:** `cat docs/standards/KIT-SURUM` →
+`3.18.1 @ 8cd038d` (kit sürümü @ mühür). Dosya yoksa 3.21.0 öncesi kurulumdur;
+bu senkronun sonunda yazılır (Adım 5). Açılış kancası her oturumda bu damgayı
+güncel kitle karşılaştırır — "proje kopyası geride" uyarısı buradan gelir.
+
 ## Adım 2 — Karşılaştır
 
 ### ⛔ ÖNCE SINIRI ÇİZ — neyin karşılaştırılacağı, neyin ASLA karşılaştırılmayacağı
@@ -98,6 +103,7 @@ proje başkasının PRD'siyle, başkasının yol haritasıyla başlar.
 | `docs/kullanici/**` | **Kullanıcıya** — neyi bildiği | ✅ Evet, **birleştirerek** |
 | `TARTISILMIS-KARARLAR.md` (kökte) | **Kite** — kesinleşmiş kararlar | ✅ Evet |
 | `docs/project/**` | **Bu projeye** — PRD, roadmap, ADR, veri modeli, altyapı | ⛔ **Asla** |
+| `docs/standards/KIT-SURUM` | **Damga** — karşılaştırılmaz, Adım 5'te yazılır | ⛔ Karşılaştırma dışı |
 
 ⛔ Ayrıca hiçbir koşulda dönmeyenler: `CLAUDE.md` §0 bloğu (proje adı, stack,
 deploy) · `00-stack.md` içindeki **Stack tablosu** (fiilen kurulu sürümler) ·
@@ -224,6 +230,10 @@ onaysız commit yok).
 
 ## Adım 5 — Kayda geç
 
+- ⭐ **Proje tarafında damgayı yaz — en son, her kopya bittikten sonra:**
+  `printf '%s @ %s\n' <kit sürümü> <mühür> > docs/standards/KIT-SURUM`
+  (mühür = Adım 1'deki `rev-parse` çıktısı, ör. `3.21.0 @ 1a2b3c4`). Bu damga
+  olmadan açılış kancası projeyi sonsuza kadar "geride" ya da "bilinmiyor" sayar.
 - Kit tarafında: `CHANGELOG.md` varsa hangi kuralın neden değiştiğini yaz
 - Proje tarafında: kural değişikliği bir mimari kararsa `docs/project/decisions/`
   altına ADR yaz

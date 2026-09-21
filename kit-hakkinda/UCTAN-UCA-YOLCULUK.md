@@ -1,6 +1,6 @@
 # Uçtan Uca Yolculuk — bir proje nasıl yazılır, nasıl çalışır
 
-**Sürüm:** 3.20.0 · **Tarih:** 2026-09-21
+**Sürüm:** 3.21.0 · **Tarih:** 2026-09-21
 
 > Bu belge kitin **sırasını** anlatır: hangi karar hangisinden önce, hangi kod
 > hangisinden sonra, uygulama ayağa kalkarken ve bir istek gelirken parçalar
