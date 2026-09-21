@@ -519,3 +519,17 @@ Defter: aynı projenin 2026-09-20 ve 21 tarihli altı satırı kit kopyasına bi
 ⚠️ 2026-09-20'deki beş satır 3.16.0–3.18.1 senkronlarında **kitten projeye gelirken
 projeden kite gitmemişti** — senkron fiilen tek yönlü kalmış. Adım 2'deki
 "defter karşılaştırması" bu yüzden atlanmaz; kanıt `diff` çıktısıdır.
+
+### Ek — 2026-09-21 (3.20.0): oturum sonu KURAL RAPORU kuralı — ilk gerçek ölçümle
+
+Tur C'nin açık ucu kapandı. İlk gerçek ölçüm (benim-belediyem, 107c, oturum b56cd330):
+açılışta `CLAUDE.md` + `00-cekirdek.md` · `kod.md` ← `src/features/cart/schemas/cart-summary.schema.ts`
+· `test.md` ← `tests/unit/cart-summary-response.test.ts` · **fiilen okunan standart: hiç** →
+rapor "⚠️ İşaretçiye gidilmedi: 01/02 ve 06 açılmadı" dedi. Kanca `Read` ve Bash (`cat`/`sed`)
+okumalarını başsız (`claude -p`) oturumda ayrıca doğrulandı — uyarı gerçek. Kural `15` →
+*"KURAL RAPORU"*: devir dosyasından önce rapor koşturulur, çıktısı DURUM'a yapıştırılır;
+uyarı varsa oturum kapanmaz — standart açılır, yazılan kod ona karşı yeniden okunur.
+Tarama listesine 4b. "CLAUDE.md kapı N" biçimindeki üç bayat atıf da çekirdeğe çevrildi.
+
+"Sırada ne var" 3.11.0 maddesinin (4) numaralı sorusu — *hangi kural dosyaları fiilen
+okunuyor* — artık tahmin değil kayıt; bölünme kararı bu log'larla verilecek.

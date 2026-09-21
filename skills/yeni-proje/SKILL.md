@@ -874,7 +874,7 @@ gelince durur. İşaretlenenler `kurumdan-ogrenilecekler.md`'ye de yazılır ve
 
 Bulunan sorun **roadmap'te düzeltilir**, not olarak bırakılmaz.
 ⚠️ Bu denetim kullanıcı onayının yerine geçmez: düzeltilmiş roadmap yine
-kullanıcıya sunulur ve onayı beklenir (`CLAUDE.md` kapı 2).
+kullanıcıya sunulur ve onayı beklenir (`00-cekirdek.md` → *"Zorunlu kapılar"* kapı 2).
 
 
 ## Adım 5 — İskeleti kur
