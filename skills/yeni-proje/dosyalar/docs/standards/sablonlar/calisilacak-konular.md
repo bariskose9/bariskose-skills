@@ -108,6 +108,7 @@ Boş bırakılan alan seviye 0 sayılır.
 | SOLID | 0 | | |
 | Tasarım desenleri (Factory, Strategy…) | 0 | | |
 | Durum makinesi | 0 | | |
+| HTTP çatısı seçimi (Express / Fastify) · darboğaz ölçütü | 1 | Bir arama motoru cevabını getirip "yanlış varsa alma" dedi; "handler DB'siz mi" ölçütü ilk kez anlatıldı, henüz kendi cümlesinde kullanmadı | 2026-09-21 |
 
 ### Backend
 
