@@ -30,7 +30,7 @@ for (const [id, ev] of secilen) {
   const acilis = ev.filter((e) => e.olay === "InstructionsLoaded" && e.neden === "session_start").map((e) => e.dosya);
   const tetik = ev.filter((e) => e.olay === "InstructionsLoaded" && e.neden === "path_glob_match");
   const diger = ev.filter((e) => e.olay === "InstructionsLoaded" && !["session_start", "path_glob_match"].includes(e.neden));
-  const okunan = ev.filter((e) => e.olay === "StandartOkundu").map((e) => e.dosya);
+  const okunan = ev.filter((e) => e.olay === "StandartOkundu").map((e) => e.dosya + (e.arac === "bash" ? " (bash)" : ""));
   console.log(`Açılışta yüklenen (${acilis.length}): ${acilis.join(" · ") || "—"}`);
   console.log(`Tetiklenen (${tetik.length}):`);
   for (const e of tetik) console.log(`  ${e.dosya.padEnd(34)} ← ${e.tetikleyen || "?"}`);

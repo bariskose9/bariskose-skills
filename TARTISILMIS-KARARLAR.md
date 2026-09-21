@@ -491,3 +491,13 @@ ama `12`'de o içerik **yoktu** (boş işaretçi). İki ekleme: çekirdek *"Kull
 tek madde (TSİ; UTC gerekiyorsa ikisi birden; `date -u`) · `12` → *"Planlı görevler"*
 saat dilimi tuzağı (platform cron'u UTC, TR karşılığı yorum; kendi zamanlayıcıda `tz`).
 Aynı raporda: TEK ANLIK GÖRÜNTÜ kuralı ilk kez uygulandı, çalıştı; öneri yok.
+
+### Ek — 2026-09-21 (3.18.1): ölçüm kancası Bash okumalarını da görür
+
+benim-belediyem'in 3.17.0 senkron oturumu log'a **hiçbir şey** yazmadı (dosya hâlâ 20 Eyl
+16:40'taki 3 satır). İki olası sebep: (1) oturum yeniden başlatılmadı — açılış olayı yok;
+(2) ajan "auto" modda dosyaları `Read` yerine `cat`/`sed`/`grep` ile okuyor, `PostToolUse(Read)`
+kancası bunu görmüyor. (2) kesin bir ölçüm boşluğu: kanca `Read|Bash` oldu; Bash komutunda
+okuma fiili (`cat sed head tail grep awk less more rg bat diff`) + `docs/standards/…md` ya da
+`.claude/rules/…md` yolu varsa `StandartOkundu` + `arac: "bash"` yazılır; `cp` sayılmaz.
+Sahte olayla test edildi. (1) kullanıcı yeni oturum açınca log'dan doğrulanacak.

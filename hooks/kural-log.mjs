@@ -1,7 +1,8 @@
 // NE      : Hangi kural dosyasının ne zaman ve neden yüklendiğini, hangi standardın fiilen
 //           okunduğunu satır satır kaydeder (JSONL). Ölçüm kancası — karar vermez, engellemez.
 // NEREDEN : Claude Code → InstructionsLoaded (CLAUDE.md / .claude/rules yüklenince) ve
-//           PostToolUse(Read) (bir dosya okununca) → stdin JSON → bu betik → ~/.claude/proje-kiti/log/<proje>.jsonl
+//           PostToolUse(Read|Bash) (bir dosya okununca; Bash'te cat/sed/grep ile okuma da sayılır)
+//           → stdin JSON → bu betik → ~/.claude/proje-kiti/log/<proje>.jsonl
 // NEDEN   : "Hangi kural fiilen okunuyor" sorusu tahminle cevaplanıyordu. Rules dönüşümünden
 //           sonra çekirdek her oturum, alan kuralları dosya açılınca gelmeli; işaretçiyle
 //           gönderilen standartlar açılıyor mu — kanıtı bu log (TARTISILMIS-KARARLAR → Tur C).
@@ -33,6 +34,16 @@ process.stdin.on("end", () => {
       if (!/docs\/standards\/|\.claude\/rules\//.test(yol)) process.exit(0); // yalnızca kural okumaları
       satir.olay = "StandartOkundu";
       satir.dosya = yol.replace(cwd + "/", "");
+    } else if (m.hook_event_name === "PostToolUse" && m.tool_name === "Bash") {
+      // Ajan "auto" modda dosyayı Read yerine cat/sed/grep ile okur; o okumalar Read kancasına
+      // görünmez. Komutta geçen standart/kural yollarını ayıkla, okuma fiili varsa kaydet.
+      const komut = m.tool_input?.command || "";
+      if (!/\b(cat|sed|head|tail|grep|awk|less|more|rg|bat|diff)\b/.test(komut)) process.exit(0);
+      const yollar = [...new Set(komut.match(/(?:docs\/standards|\.claude\/rules)\/[\w./-]+\.md/g) || [])];
+      if (!yollar.length) process.exit(0);
+      for (const y of yollar)
+        appendFileSync(join(klasor, `${proje}.jsonl`), JSON.stringify({ ...satir, olay: "StandartOkundu", dosya: y, arac: "bash" }) + "\n");
+      process.exit(0);
     } else process.exit(0);
     appendFileSync(join(klasor, `${proje}.jsonl`), JSON.stringify(satir) + "\n");
   } catch {
