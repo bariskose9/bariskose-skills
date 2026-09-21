@@ -501,3 +501,21 @@ kancası bunu görmüyor. (2) kesin bir ölçüm boşluğu: kanca `Read|Bash` ol
 okuma fiili (`cat sed head tail grep awk less more rg bat diff`) + `docs/standards/…md` ya da
 `.claude/rules/…md` yolu varsa `StandartOkundu` + `arac: "bash"` yazılır; `cp` sayılmaz.
 Sahte olayla test edildi. (1) kullanıcı yeni oturum açınca log'dan doğrulanacak.
+
+### Ek — 2026-09-21 (3.19.0): yanıt şemasında para `integer`; iç içe `Date` gövdede açık çevirmen, spread yok
+
+Kaynak: benim-belediyem 107c (yanıt sözleşmesi, ticaret uçları). İki ölçüm, `03` →
+*"Yanıt gövdesi de belgelenir"* bölümüne iki kural: **(1)** `z.number()` ile `z.int()`
+derlemede aynı tip; fark yalnızca belgede — `"type": "number"` *"ondalık olabilir"*
+demek, belgeden tip üreten bir istemci kuruşu lira sanabilir. Para alanı `z.int()`,
+tek paylaşılan şema, CI kapısı adı `Kurus` ile biten her alanı `integer` diye ölçer ve
+**sıfır alan bulursa da kırmızı** (mutasyonla kanıtlandı: `z.number()` yazılınca alan
+adıyla yakalandı). **(2)** İç içe gövde `Date` taşıyınca `ZodType<T>` derleme kapısı
+`Date`≠`string` diye kırıldı; şemayı gevşetmek yerine açık çevirmen, alanlar tek tek.
+Çevirmende `...spread` yasak: çalışma anı kontrolü fazladan alanı bilerek reddetmiyor
+(alan eklemek kırıcı değil), spread iç bir alanı belgeye yazılmadan API'ye sızdırır —
+sızıntı deneyi testi (spread'e dönünce kırmızı, ölçüldü).
+Defter: aynı projenin 2026-09-20 ve 21 tarihli altı satırı kit kopyasına birleştirildi.
+⚠️ 2026-09-20'deki beş satır 3.16.0–3.18.1 senkronlarında **kitten projeye gelirken
+projeden kite gitmemişti** — senkron fiilen tek yönlü kalmış. Adım 2'deki
+"defter karşılaştırması" bu yüzden atlanmaz; kanıt `diff` çıktısıdır.
