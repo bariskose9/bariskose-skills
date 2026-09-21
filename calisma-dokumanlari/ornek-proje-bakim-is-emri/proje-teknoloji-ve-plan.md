@@ -5076,8 +5076,18 @@ Aşağıdakiler düşünüldü, ölçüldü ve **bilerek** seçilmedi.
 
 ### Neden Express, Fastify değil (NestJS'in altındaki HTTP katmanı)
 
-NestJS bir HTTP sunucusu değil; altına bir adaptör takılıyor. İki seçenek var:
-**Express** (varsayılan) ve **Fastify** (daha hızlı).
+NestJS bir HTTP sunucusu değil; altına bir **adaptör** takılıyor (iki parçayı
+birbirine uyduran ara parça — prizle fiş arasındaki dönüştürücü gibi). İki
+seçenek var: **Express** (varsayılan) ve **Fastify** (daha hızlı). Seçim
+`main.ts`'te tek satır:
+
+```ts
+// Express — adaptör verilmedi, Nest varsayılanı takar
+const app = await NestFactory.create(AppModule);
+
+// Fastify — yalnızca bu satır değişir; controller, service, guard, pipe aynı kalır
+const app = await NestFactory.create<NestFastifyApplication>(AppModule, new FastifyAdapter());
+```
 
 **Darboğaz** = zincirin en yavaş halkası. Yalnızca onu hızlandırmanın anlamı
 var; diğerlerini hızlandırmak toplam süreyi değiştirmez.
@@ -5119,13 +5129,67 @@ Aynı emeği doğru bir index'e harcamak 80 ms'yi 5 ms'ye indiriyor: **16 kat.**
 > ⭐ Değerlendirmeci bunu sorduğunda anlatılacak şey teknoloji değil, **öncelik
 > muhakemesi**: hangi optimizasyonun ölçülebilir karşılığı var.
 
+**Fastify'ın öteki iki artısı Nest'in altında zaten var.** Fastify'ı hız
+dışında iki şey için överler: **kapsüllü eklenti sistemi** (bir eklentinin
+kaydettiği şey yalnızca kendi alt ağacında görünür; Express'te her middleware
+herkese açıktır) ve **yerleşik JSON Schema doğrulama** (AJV). Nest'in altında
+ikisi de adaptörden bağımsız olarak karşılanır: kapsüllemeyi **Nest modülü**,
+doğrulamayı **`ZodValidationPipe`** yapar (→ C.4). Adaptörü Fastify yapınca
+bunlar değişmez; yani Fastify'ın üç artısından ikisi Nest'te **etkisiz**, biri
+(hız) **ölçülemez**. Savunmanın en güçlü halkası budur.
+
+**Ne değişirse Fastify kazanır — ters koşul.** Kazandıran şey "mikroservis"
+ya da "yüksek trafik" sözü değil, ölçülebilir bir durumdur:
+
+| Durum | Neden Fastify ölçülür hâle gelir |
+|---|---|
+| **Handler veritabanına gitmiyor** — API geçidi, başka servise köprü, bellekten cevap veren statik yoğun uç | HTTP katmanı toplamın %1'i değil **%50'si** olur; iki kat hız gerçekten iki kat hızdır |
+| **Ölçüm öyle diyor** — izleme aracında (APM) HTTP ayrıştırma + serileştirme toplamın %20'sini geçiyor | Darboğaz yer değiştirmiştir; artık HTTP katmanı halkadır |
+| **Yeni proje, ekip Fastify biliyor, Express'e özgü middleware bağımlılığı yok** | Bedel sıfır; seçim serbest |
+
+Bir mikroservis veritabanına gidiyorsa Express'le aynı hızda kalır; bir
+monolitteki DB'siz uç Fastify'la hızlanır. **Sebep mimari değil, handler'ın
+işi.**
+
+**Sık duyulan dört iddia ve doğrusu** — ajan ya da arama motoru cevabı
+bunları üretir; önden bil:
+
+| İddia | Doğrusu |
+|---|---|
+| *"Fastify 3–5 kat daha fazla istek işler; yüksek trafik ve mikroservis → Fastify"* | 3–5 kat, **hiç iş yapmayan** (merhaba döndüren) sunucunun ölçümü. Veritabanına giden istekte fark %0.25. Ani yükte darboğaz da HTTP değil **veritabanı bağlantı sayısı** (→ `12-operations-and-scaling.md`) |
+| *"TypeScript kullanıyorsan Fastify"* | Express'in tipleri `@types/express`'ten (ayrı paket, on yıldır bakımlı), Fastify'ınki paketin içinde. Bu "tip dosyasını kim yayımlıyor" farkı, "tip güvenliği" farkı değil. Nest'te adaptör tipleri görünmez bile |
+| *"AJV ile JSON 2 kat hızlı"* | İki ayrı kütüphane, iki ayrı iş: **AJV** girdiyi doğrular, **fast-json-stringify** çıktıyı serileştirir. Hız ikincisinden gelir ve yalnızca **cevap şeması yazılırsa**; Nest altında bunun için ayrıca Fastify şeması yazmak gerekir |
+| *"Sunucusuz → Fastify (cold start)"* | Sunucusuzda çatı seçilmez, platformun fonksiyon biçimi kullanılır (Next route handler, Lambda handler). Cold start'ı paket boyutu ve veritabanı bağlantısı belirler, çatı değil |
+
 ⭐ **Savunma cümlesi:** *"Fastify daha hızlı, doğru. Ama isteğimizin süresinin
 %95'i veritabanında geçiyor; HTTP katmanını iki katına çıkarmak toplamda
-ölçülemeyen bir kazanç veriyor. Emeği index'lere harcadım. Nest'te adaptör tek
-satır — ölçüp gerekirse geçeriz, bu karar bizi bağlamıyor."*
+ölçülemeyen bir kazanç veriyor. Öteki iki artısı — kapsülleme ve doğrulama —
+Nest'te modül ve Zod pipe olarak zaten var. Emeği index'lere harcadım. Nest'te
+adaptör tek satır — handler'ı DB'siz bir uç çıkar da ölçüm HTTP derse geçeriz,
+bu karar bizi bağlamıyor."*
 
-Ayrıca yaygınlık farkı büyük: Nest'in Express adaptörü haftada ~6.6M, Fastify
-adaptörü ~1.3M indiriliyor.
+**Kararı veren soru:** *"İsteğin süresinin yüzde kaçı HTTP katmanında geçiyor —
+ölçtüm mü?"* %5'in altındaysa Express'te kal. "Trafik çok olacak" ölçüm
+değildir.
+
+**🔧 Kendin ölç (10 dakika):** `autocannon` (Node için yük aracı — verilen
+adrese saniyede olabildiğince istek atar ve sayar) ile DB'siz ve DB'li iki ucu
+önce Express, sonra Fastify adaptöründe ölç:
+
+```bash
+npx autocannon -d 10 http://localhost:3000/health        # DB'ye gitmeyen uç
+npx autocannon -d 10 http://localhost:3000/work-orders   # DB'ye giden uç
+```
+
+Beklenen: `/health`'te Fastify belirgin önde (3–5 kat oradan çıkar);
+`/work-orders`'ta iki sayı neredeyse aynı. "Trafik artacak, Fastify'a geçelim"
+diyen birine hangi ucu ölçtüğünü sor.
+
+Yaygınlık ve sürüm (14–20 Eylül 2026 haftası, npm): `express` 101M, `fastify`
+9.6M indirme; Nest'in Express adaptörü 7.4M, Fastify adaptörü 1.3M. Express
+**5.x** (5.0 Eylül 2024, `latest` Mart 2025 — `async` handler hatası artık
+yerleşik yakalanıyor; "Express bakımsız" cümlesi bayat), Fastify 5.x. İkisi de
+diri.
 
 ---
 

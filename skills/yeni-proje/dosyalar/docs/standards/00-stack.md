@@ -219,7 +219,7 @@ Ayrı backend seçildiyse:
 | Konu | Seçim | Gerekçe |
 |---|---|---|
 | Çatı | **NestJS** (çıplak Express değil) | Nest zaten Express'in üstünde çalışır; ayrıca modül, DI, Guard, Interceptor, Pipe, Filter getirir. Çıplak Express yalnızca 5–10 uçlu tek amaçlı serviste |
-| HTTP adaptörü | **Express** (Nest varsayılanı) | İstek süresinin ~%95'i veritabanında geçer; HTTP katmanını hızlandırmak toplamda ölçülemez. Emek index'lere harcanır. *(Fastify adaptörü tek satırla değişir — ama ölçmeden geçilmez)* · **Ani yük gerekçesi de yeterli değildir**, aşağıya bak |
+| HTTP adaptörü | **Express** (Nest varsayılanı) | İstek süresinin ~%95'i veritabanında geçer; HTTP katmanını hızlandırmak toplamda ölçülemez. Emek index'lere harcanır. Fastify'ın öteki iki artısı (kapsüllü eklenti, yerleşik doğrulama) Nest'te zaten var: modül + Zod pipe. *(Fastify adaptörü tek satırla değişir — ama ölçmeden geçilmez; ters koşul: handler DB'siz + ölçüm HTTP diyor)* · **Ani yük gerekçesi de yeterli değildir**, aşağıya bak |
 | API biçimi | **REST** (varsayılan) | Karar kuralı aşağıda — "API biçimi" |
 | Sürümleme | `/api/v1/...` baştan | Kural `03-api-guidelines.md` → "Sözleşme ömrü"nde. Mobil varsa zorunlu |
 | Monorepo aracı | pnpm workspaces + **Turborepo** | Yapı `01-architecture.md`'de. Nx daha güçlü ama kendi eklenti dünyasını getirir — bu boyutta gereksiz |

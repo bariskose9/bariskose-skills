@@ -546,3 +546,19 @@ açılış kancası cwd'de damgayı okur, güncel kitten gerideyse "senkron edey
 damga yoksa bir kez "eski kurulum" der. Denetim: damga `plugin.json` ile TAM eşleşmeli.
 Kanca dört durumda sınandı (geride · güncel · damga yok · kit projesi değil).
 Sonuç: kullanıcı hiçbir projeye "kit güncellendi" demez; her proje kendi açılışında sorar.
+
+### Ek — 2026-09-21 (3.22.0): E.13 Express/Fastify — savunmanın eksik halkası ve arama motoru yanlışları
+
+Öğrenme çalışmasında bir arama motoru AI cevabı E.13 ile karşılaştırıldı. Kitin darboğaz
+ölçümü doğruydu ama savunma eksikti: Fastify'ın hız dışındaki iki artısı (kapsüllü eklenti,
+yerleşik JSON Schema doğrulama) **Nest'in altında zaten karşılanıyor** (modül +
+`ZodValidationPipe`) — adaptör değişince değişmez, yani Nest'te etkisiz. Ters koşul da somut
+değildi: kazandıran "mikroservis" değil, **handler'ın DB'siz olması** ya da APM'de HTTP payının
+%20'yi geçmesi. Eklenenler: tek satırlık adaptör kodu; ters koşul tablosu; ajanın ve arama
+motorunun tekrar üreteceği dört iddia ("TS → Fastify", "AJV ile 2 kat JSON", "sunucusuz →
+Fastify", "mikroservis → Fastify") ve doğruları; `autocannon` ile DB'siz/DB'li uç ölçme
+egzersizi; tarih damgalı npm sayıları (express 101M / fastify 9.6M, adaptörler 7.4M / 1.3M);
+Express 5 (Eylül 2024) notu — "Express bakımsız" cümlesi bayat. `00-stack.md` gerekçe hücresi
+aynı iki cümleyle güncellendi. Kural: E.13'teki her "seçilmeyen alternatif" için **"artısı bizim
+katmanda zaten var mı"** sorusu savunmaya eklenir; ölçümler tarih damgasıyla yazılır.
+
