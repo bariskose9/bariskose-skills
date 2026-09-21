@@ -453,3 +453,30 @@ başlıklarına çevrildi: §6.3 → *"Git ve commit"* (`08`, `15`×2, `kit-senk
 `KIT-NE-YAPIYOR`) · §3 → *"Zorunlu kapılar"* (`16`, `PRD`, `SKILL`) · §1 → *"Hangi soru
 → hangi dosya"* (`15`, `16`) · §2 → *"Beceriler"* (`11`). Artık ok biçiminde
 oldukları için denetim bundan sonra kırılırsa yakalar.
+
+### Ek — 2026-09-21 (3.17.0): "kod ertelenir, kural ertelenmez" + alan tamlığı taraması
+
+Kaynak: benim-belediyem oturumu. Kullanıcı "kesirli kuruş birike birike kim öder"
+diye sordu; cevap kitte yoktu (02:507 ve 04:406 yalnızca "float değil" diyordu), o an
+türetildi. Teşhis: kit alan kurallarını yalnızca bir projenin **fiilen çarptığı** yerde
+taşıyordu. İlke `11` → *"Kod ertelenir, kural ertelenmez"*: YAGNI kodu erteler, kuralı
+değil; ayırt edici soru "gerçek bir belediye uygulamasında bu alan var mı"; ölçülmemiş
+kural **iddia notu** taşır (kısa satır, denetimin 90 karakter eşiğinin altında —
+dosyalar arası tekrar bulgusu üretmez).
+
+Tek seferlik tarama — sekiz aday, kitte ölçüldü:
+
+| Alan | Kitte | Sonuç |
+|---|---|---|
+| Para | yalnızca "float değil" | **YOK** → `02` → *"Para"*: tam sayı kuruş, sınırda dönüşüm, birimli alan adı, `describe` ile belgeye, kuruş × adet, tek yuvarlama sonda, en büyük kalan (Σparça === toplam), test; `04` işaret eder |
+| Zaman | `02` → *"Zaman dilimi"* (UTC/İstanbul, DATE, gün sonu, IANA, cron) | **eksik** → yarı açık aralık + çakışma ifadesi + `EXCLUDE gist`; "bir ay sonra" (31 Ocak) |
+| PII/KVKK | `14` + `05` + `04`: maskeleme, log yok, silme/taşınabilirlik, saklama tablosu, periyodik imha | var, yeterli |
+| Dosya | `05` sekiz kural + `public/` tuzağı | **eksik** → kural 6'ya indirme başlıkları (`attachment` + `nosniff`, HTML/SVG XSS) |
+| E-posta/SMS | `00` → *"E-posta"*: Mailer, fake sürücü, kuyruk/retry/dead letter, PII yok, SPF/DKIM | **eksik** → "gönderdim ≠ ulaştı": teslim olayları, sert/yumuşak bounce, OTP "kod gelmedi" yolu |
+| Eşzamanlılık | `03` idempotency (+yarış), `07` çift tıklama, `04` unique+transaction, `version` | **eksik** → `04` → *"Eşzamanlılık"*: koşullu yazma, etkilenen satır sayısı, 200/409 testi |
+| Ölçek | `03` sayfalama tavanı, `04` index + N+1 | var, yeterli |
+| Türkçe/i18n | `02` localeCompare/İ-ı, `04` collation + LIKE kaçırma | var, yeterli |
+
+Ajanın mesajı 3.15.3'ü güncel sanıyordu (3.16.0 çıkmıştı, "Kite taşınacaklar" maddesi
+3.16.0'da alınmıştı); klon çekilmeden gelen bulgu, senkron kuralının (TEK ANLIK
+GÖRÜNTÜ) neden gerektiğinin bir örneği daha.
