@@ -562,3 +562,18 @@ Express 5 (Eylül 2024) notu — "Express bakımsız" cümlesi bayat. `00-stack.
 aynı iki cümleyle güncellendi. Kural: E.13'teki her "seçilmeyen alternatif" için **"artısı bizim
 katmanda zaten var mı"** sorusu savunmaya eklenir; ölçümler tarih damgasıyla yazılır.
 
+
+### Ek — 2026-09-24 (3.22.1): Kartlardaki Türkçe adlı kod örnekleri İngilizceye çevrildi
+
+Öğrenme çalışmasının H1/H2 turunda kartlardan parça kopyalanırken fark edildi: kitin kendi
+kuralı (`02-coding-standards.md` → *"Kitin kendi örnekleri her zaman İngilizcedir"* — ajan
+kuralı değil örneği taklit eder) ile üç bölümdeki örnekler çelişiyordu: C.9 `isEmri.slaBitis`
+ve `function ata`, E.0 `const isEmri`, BÖLÜM F 1. adım `talepOlusturSemasi` / `baslik` /
+`aciklama` / `lokasyonId` / `oncelik` ve `talepOlustur(@Body() gövde: TalepOlusturDto)` (Türkçe
+karakterli tanımlayıcı), 8. adım `sonuc` / `girdi` / `durum`, G.2 `durumDegistirSemasi` ve
+`isEmri.version`. Hepsi İngilizce ada çevrildi (`workOrder`, `createWorkOrderSchema`,
+`title/description/locationId/priority`, `create(@Body() body: CreateWorkOrderDto)`,
+`result/input/status`, `changeStatusSchema`); Türkçe karşılık kitin *"TÜRKÇE KARŞILIK YORUMDA,
+PARANTEZ İÇİNDE"* kuralıyla yorumda bırakıldı. `proje-teknoloji-ve-plan.md`'deki aynı bloklar
+(bayt bayt aynı bölümler) birlikte güncellendi. Kural değişmedi, örnekler kurala uyduruldu →
+yama sürümü.

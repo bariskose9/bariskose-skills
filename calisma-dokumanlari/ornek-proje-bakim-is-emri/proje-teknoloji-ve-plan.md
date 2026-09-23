@@ -1391,17 +1391,17 @@ ortaya çıkıyor.
 
 ```js
 // JavaScript — hata vermiyor ama yanlış çalışıyor
-const gun = isEmri.slaBitis;   // Alanın gerçek adı slaDueAt. Yanlış yazdık.
-console.log(gun);              // Sonuç: undefined. Uyarı yok, çökme yok.
+const due = workOrder.slaDue;   // workOrder (iş emri): alanın gerçek adı slaDueAt. Yanlış yazdık.
+console.log(due);               // Sonuç: undefined. Uyarı yok, çökme yok.
                                // Bu hatayı büyük ihtimalle KULLANICI bulacak.
 ```
 
 ```ts
 // TypeScript — aynı hatayı yazarken yakalıyor
-const gun = isEmri.slaBitis;
-//                 ~~~~~~~~~ Editör anında altını çiziyor:
-//                 "WorkOrder tipinde slaBitis diye bir alan yok.
-//                  slaDueAt demek mi istediniz?"
+const due = workOrder.slaDue;
+//                    ~~~~~~ Editör anında altını çiziyor:
+//                    "WorkOrder tipinde slaDue diye bir alan yok.
+//                     slaDueAt demek mi istediniz?"
 // Yani hata kullanıcıya değil, geliştirme sırasında sana gidiyor.
 ```
 
@@ -1427,7 +1427,7 @@ En katı ayar açık. En çok işe yarayan kısmı **boş değer kontrolü**:
 
 ```ts
 // strict modu açık — bu kod DERLENMİYOR
-function ata(wo: WorkOrder) {
+function assign(wo: WorkOrder) {   // assign (ata)
   return wo.assigneeId.toString();
 //        ~~~~~~~~~~~~ "assigneeId boş (null) olabilir" uyarısı.
 // ⚠️ İş emri henüz kimseye atanmamışsa bu alan boş olur; boş bir değer
@@ -1435,7 +1435,7 @@ function ata(wo: WorkOrder) {
 }
 
 // Derleyici, boş olma ihtimalini ele almanı ZORUNLU kılıyor
-function ata(wo: WorkOrder) {
+function assign(wo: WorkOrder) {   // assign (ata)
   // Atanmamış iş emri durumunu açıkça düşünmek zorundasın
   if (wo.assigneeId === null) throw new NotAssignedError(wo.id);
 
@@ -2677,7 +2677,7 @@ class WorkOrder {
 
 // NESNE = o kalıptan üretilmiş TEK BİR gerçek kayıt.
 // Veritabanındaki her satır, kod tarafında böyle bir nesneye dönüşüyor.
-const isEmri = { id: 1042, number: 'IE-2026-000148', status: 'OPEN', ... };
+const workOrder = { id: 1042, number: 'IE-2026-000148', status: 'OPEN', ... };   // workOrder (iş emri)
 ```
 
 Veritabanındaki `WorkOrder` tablosunun her satırı, bu kalıptan üretilmiş bir
@@ -4306,7 +4306,7 @@ Sol taraf **senin yazdığın**, sağ taraf **veritabanında duran**.
 ```ts
 // apps/api/src/work-orders/work-orders.service.ts
 //
-// NEREDEN : apps/web/.../talep-formu.tsx → form gövdesi, contracts şemasından geçmiş
+// NEREDEN : apps/web/.../work-order-form.tsx → form gövdesi, contracts şemasından geçmiş
 // NE      : SLA'dan hesaplanan bitiş zamanıyla birlikte kayıt açılıyor
 // NEREYE  : PostgreSQL "work_orders" tablosu
 // SONUÇ   : Veritabanında yeni bir satır; ekranda listenin başında görünür
@@ -5501,11 +5501,11 @@ packages/contracts/work-order.ts        ← ŞEMA BURADA, TEK KOPYA
 // packages/contracts/work-order.ts — TEK tanım, iki yerde kullanılıyor
 import { z } from 'zod';
 
-export const talepOlusturSemasi = z.object({
-  baslik:      z.string().min(5).max(200),   // en az 5, en çok 200 karakter
-  aciklama:    z.string().min(10),           // en az 10 karakter
-  lokasyonId:  z.uuid(),                     // geçerli bir kimlik biçimi olmalı
-  oncelik:     z.enum(['DUSUK','ORTA','YUKSEK','KRITIK']), // yalnızca bu dört değer
+export const createWorkOrderSchema = z.object({   // createWorkOrder (talep oluştur)
+  title:       z.string().min(5).max(200),   // başlık: en az 5, en çok 200 karakter
+  description: z.string().min(10),           // açıklama: en az 10 karakter
+  locationId:  z.uuid(),                     // lokasyon kimliği: geçerli bir kimlik biçimi olmalı
+  priority:    z.enum(['LOW','NORMAL','HIGH','CRITICAL']), // öncelik: yalnızca bu dört değer
 });
 ```
 
@@ -5513,8 +5513,8 @@ export const talepOlusturSemasi = z.object({
 
 | # | Nerede | Ne oluyor | Hangi dosya |
 |---|---|---|---|
-| 1 | **Tarayıcı** (kullanıcının bilgisayarı) | Kullanıcı formu doldurur, "Gönder"e basar | `apps/web/.../talep-formu.tsx` |
-| 2 | **Tarayıcı** | Şema burada çalışır. Başlık 3 harfse form **hiç gönderilmez**, kullanıcı anında uyarı görür | aynı dosya — `zodResolver(talepOlusturSemasi)` |
+| 1 | **Tarayıcı** (kullanıcının bilgisayarı) | Kullanıcı formu doldurur, "Gönder"e basar | `apps/web/.../work-order-form.tsx` |
+| 2 | **Tarayıcı** | Şema burada çalışır. Başlık 3 harfse form **hiç gönderilmez**, kullanıcı anında uyarı görür | aynı dosya — `zodResolver(createWorkOrderSchema)` |
 | 3 | **Ağ** | Veri JSON olarak internete çıkar: `POST /api/v1/work-orders` | — |
 | 4 | **Sunucu** (belediyenin makinesi) | İstek NestJS'e ulaşır. Controller metodu **henüz çalışmaz** | `apps/api/.../work-orders.controller.ts` |
 | 5 | **Sunucu** | ⭐ **Şema İKİNCİ KEZ burada çalışır** — controller'a girmeden önce, `ZodValidationPipe` içinde | `nestjs-zod` · `app.useGlobalPipes(...)` |
@@ -5523,16 +5523,16 @@ export const talepOlusturSemasi = z.object({
 
 ```ts
 // apps/api/.../work-orders.controller.ts
-import { talepOlusturSemasi } from '@bakim/contracts';   // ⭐ AYNI şema, web ile aynı dosya
+import { createWorkOrderSchema } from '@bakim/contracts';   // ⭐ AYNI şema, web ile aynı dosya
 import { ZodValidationPipe } from 'nestjs-zod';
 
 @Post()
-@UsePipes(new ZodValidationPipe(talepOlusturSemasi))
+@UsePipes(new ZodValidationPipe(createWorkOrderSchema))
 // ↑ Bu satır "kapıda bekçi" gibidir: gövde şemaya uymuyorsa
 //   aşağıdaki metot HİÇ çalışmaz, istek 400 ile geri döner.
-async talepOlustur(@Body() gövde: TalepOlusturDto) {
+async create(@Body() body: CreateWorkOrderDto) {   // body (istek gövdesi)
   // Buraya ulaşan veri şemadan GEÇMİŞTİR — burada tekrar kontrol etmeye gerek yok.
-  return this.servis.olustur(gövde);
+  return this.service.create(body);
 }
 ```
 
@@ -5612,24 +5612,24 @@ ALTER TABLE "WorkOrder" ADD COLUMN "version" INTEGER NOT NULL DEFAULT 0;
 
 ```ts
 // 1) Kullanıcı iş emrini açar. API cevabında version da gider.
-//    { id: "abc", baslik: "Pompa arızası", durum: "ACIK", version: 7 }
+//    { id: "abc", title: "Pompa arızası", status: "OPEN", version: 7 }
 
 // 2) Kullanıcı "Kaydet"e basar. Tarayıcı OKUDUĞU version'ı geri yollar: 7
 
 // 3) Sunucu güncellemeyi ŞARTLI yapar:
-const sonuc = await prisma.workOrder.updateMany({
+const result = await prisma.workOrder.updateMany({   // result (sonuç) · input (girdi)
   where: {
-    id:      girdi.id,
-    version: girdi.version,   // ⭐ ŞART: kayıt HÂLÂ 7. sürümde mi?
+    id:      input.id,
+    version: input.version,   // ⭐ ŞART: kayıt HÂLÂ 7. sürümde mi?
   },
   data: {
-    durum:   girdi.durum,
+    status:  input.status,
     version: { increment: 1 },  // başarılıysa 7 → 8
   },
 });
 
 // 4) updateMany kaç satır etkilediğini SAYI olarak döner.
-if (sonuc.count === 0) {
+if (result.count === 0) {
   // ⛔ Hiçbir satır güncellenmedi = kayıt artık 7. sürümde DEĞİL.
   //    Demek ki aramızda başka biri kaydetti. Üstüne yazMIYORUZ.
   throw new ConflictException('Bu kayıt siz bakarken değiştirildi. Yenileyip tekrar deneyin.');
@@ -6071,15 +6071,15 @@ döner (ödev §17 · E.10).
 
 ```tsx
 const form = useForm({
-  resolver: zodResolver(durumDegistirSemasi),
+  resolver: zodResolver(changeStatusSchema),   // changeStatus (durum değiştir)
   // ↑ ⭐ packages/contracts'tan gelen AYNI şema. Backend de bunu kullanıyor
   //   (BÖLÜM F, 1. adımın açılımı). Kural tek yerde.
 });
 
 const mutation = useMutation({
-  mutationFn: (girdi) => apiPatch(`/api/v1/work-orders/${id}/status`, {
-    ...girdi,
-    version: isEmri.version,   // ⭐ Okuduğumuz sürüm geri gönderiliyor.
+  mutationFn: (input) => apiPatch(`/api/v1/work-orders/${id}/status`, {
+    ...input,
+    version: workOrder.version,   // ⭐ Okuduğumuz sürüm geri gönderiliyor.
     //                            Çakışma kontrolü bununla yapılıyor (BÖLÜM F, 8. adım).
   }),
   onSuccess: () => {
