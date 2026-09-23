@@ -154,6 +154,7 @@ Boş bırakılan alan seviye 0 sayılır.
 | Konu | Sv | Son kanıt | Tarih |
 |---|:--:|---|---|
 | Docker · konteyner | 2 | Docker'daki Postgres'e nasıl bakılacağını sordu — kurulu olduğunu biliyor | 2026-09 |
+| Sürüm kontrolü (Git) | 0 | "Klon / kaynak klon / kurulu kopya" ayrımını ve "GitHub güncelse pull neden gerekiyor"u sordu — anlatıldı, kanıt bekleniyor | 2026-09-22 |
 | CI/CD hattı | 1 | Kitte yazılı, henüz üzerine konuşmadık | 2026-09 |
 | Ortamlar · gizli değerler | 0 | | |
 | İzleme · günlük · uyarı | 0 | | |
