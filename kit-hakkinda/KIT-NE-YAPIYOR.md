@@ -1,6 +1,6 @@
 # `proje-kiti` — Kit Ne Yapıyor
 
-**Sürüm:** 3.22.0 · **Tarih:** 2026-09-21
+**Sürüm:** 3.23.0 · **Tarih:** 2026-09-24
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Bu belge, kitin **kurulumdan canlıya çıkışa kadar** ne yaptığını anlatır.
@@ -238,6 +238,14 @@ Kod okuyup *"çalışması lazım"* demek kanıt sayılmaz.
 Ve iş bölümü kuralı: ⛔ **Ajanın yapabildiği hiçbir iş kullanıcıya
 yaptırılmaz.** Kullanıcının zamanı yalnızca ajanın *yapamadığı* işler için
 harcanır (hesap açma, ödeme, kurumdan yetki alma).
+
+### Adım sınırında model önerisi
+
+Plan bitip yapıma, yapım bitip incelemeye geçerken ajan önerilen modeli ve
+efortu tek satırla söyler ve devam eder; devir promptuna da sonraki adımın
+model/efort satırını yazar. Seçim ölçütü ("hatayı kim yakalar") ve tablo
+`docs/standards/11-agent-workflow.md` → *"MODEL VE EFORT"*; kullanıcı
+diliyle özeti `KIT-REHBER.md` → *"Hangi adımda hangi model"*.
 
 ---
 

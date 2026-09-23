@@ -647,6 +647,10 @@ hesabı, zamanlanmış hat, registry erişimi). Karar tablosu ve sorulacak cüml
 
 ## Adım 3 — PRD (en kritik adım)
 
+⭐ **Model önerisi — kullanıcıya tek satır:** PRD, stack kararı ve yol
+haritası plan adımıdır; önerilen en güçlü model + `max`
+(`11-agent-workflow.md` → *"MODEL VE EFORT"*). Kullanıcı değiştirmese de devam.
+
 Kullanıcının analiz dokümanını iste. **Her zaman eksiktir.**
 
 - `interview-me` skill'ini kullan. **Tek tek** sor, birden fazla soruyu aynı
@@ -881,6 +885,10 @@ kullanıcıya sunulur ve onayı beklenir (`00-cekirdek.md` → *"Zorunlu kapıla
 
 
 ## Adım 5 — İskeleti kur
+
+⭐ **Model önerisi — kullanıcıya tek satır:** iskelet ve sonraki dilimler
+yapım adımıdır; önerilen bir alt kademe model + `xhigh`
+(`11-agent-workflow.md` → *"MODEL VE EFORT"*).
 
 1. Framework'ü kur, TypeScript strict, lint + format yapılandır
 2. `git init`, `.gitignore`, `.env.example` (⛔ `.env` **asla** commit edilmez)

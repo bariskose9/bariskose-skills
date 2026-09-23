@@ -435,6 +435,15 @@ Code'da aynı işi yapan hazır bir panel var:
 **PDF'te okuyorsan:** PDF'lerin başında **içindekiler** var, başlıklar
 tıklanabilir. Telefonda da çalışır.
 
+## Hangi adımda hangi model ve efort
+
+Her `/clear` aynı zamanda model değiştirmek için en doğal an: plan adımında
+en güçlü model ve `max`, kod dilimlerinde bir alt model ve `xhigh`, merge
+öncesi incelemede yine en güçlüsü. Ajan sınıra gelince tek satırla
+hatırlatır; sen `/model` ile değiştirirsin, konuşma ve dosyalar kaybolmaz.
+Neden böyle, fiyatlar ve tam tablo: `docs/standards/11-agent-workflow.md`
+→ *"MODEL VE EFORT"*.
+
 ## Neden her adımda `/clear`
 
 Konuşma uzadıkça ajanın bağlamı dolar ve ayrıntı kaybolur. Her adım kendi

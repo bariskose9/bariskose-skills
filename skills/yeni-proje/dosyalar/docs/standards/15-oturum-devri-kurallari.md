@@ -474,6 +474,9 @@ Yeni bir oturum bunu okuyup **soru sormadan** çalışmaya başlayabilmeli:
 - **ÖNCE ÇÖZÜLECEK MESELELER** — dokümanlar arası çelişki, eksik karar
 - **TUZAKLAR** — bu projede daha önce vakit kaybettiren şeyler
 - **KOMUTLAR** — çalıştırılabilir komut listesi
+- **SONRAKİ ADIM İÇİN MODEL / EFORT** — tek satır: sıradaki adım hangi tür
+  (plan · yapım · inceleme), önerilen model ve efort; tablo
+  `11-agent-workflow.md` → *"MODEL VE EFORT"*
 - **NOT** — çözülmüş ama tekrar edebilecek sorunlar
 
 Adım bitince bu dosya **yeniden yazılır**, üstüne eklenmez. Eski talimat

@@ -577,3 +577,20 @@ karakterli tanımlayıcı), 8. adım `sonuc` / `girdi` / `durum`, G.2 `durumDegi
 PARANTEZ İÇİNDE"* kuralıyla yorumda bırakıldı. `proje-teknoloji-ve-plan.md`'deki aynı bloklar
 (bayt bayt aynı bölümler) birlikte güncellendi. Kural değişmedi, örnekler kurala uyduruldu →
 yama sürümü.
+
+### Ek — 2026-09-24 (3.23.0): Model ve efort adıma göre — "hatayı kim yakalar" ölçütü
+
+Kullanıcı sordu: *"belediye projelerini hangi modelle yaptırırdın, kiti hangisiyle;
+max hiç gerekli değil mi?"* Karar: tek model yok, adıma göre. Ölçüt: adımın hatasını
+test ya da betik yakalıyorsa ucuz model (`xhigh`), yalnızca insan yakalayacaksa ya da
+hata geç dönecekse en güçlü model (`max`). Plan, güvenlik tasarımı, kit kuralı, merge
+öncesi inceleme, tasarım yönü kararı → en güçlü + `max`; dilim geliştirme, bileşen,
+test → bir alt kademe + `xhigh`; mekanik iş → `high`. Tablo tek yerde,
+`11-agent-workflow.md` → "MODEL VE EFORT"; rehberler, kılavuz ve `SKILL.md` Adım 3/5
+işaret eder; çekirdek kural (`00-cekirdek.md`) davranışı her oturumda taşır: adım
+sınırında tek satır öneri, devir promptunda "SONRAKİ ADIM İÇİN MODEL / EFORT" satırı
+(`15-oturum-devri`). Kayda giren iki olgu: model değişimi hafızayı silmez (düşünce
+blokları taşınmaz, önbellek yenilenir — kullanıcı bunu "ajan unutur" sanmıştı);
+Opus 5.5'in API efort varsayılanı `medium`, adil karşılaştırma için elle `xhigh`.
+Fiyatlar tarih damgalı; yeni model çıkınca tablo güncellenir. ⚠️ Tablo akıl yürütme,
+ölçüm değil — ilk gerçek karşılaştırma buraya yazılacak.

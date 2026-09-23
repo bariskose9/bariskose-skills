@@ -66,6 +66,65 @@ işin kâğıdı gelir, gerisi dolapta durur ve gerekince açılır.
   bir** yeniden ölçülür (`/context` ve log ile) ve damga güncellenir.
   Son gözden geçirme: **2026-09-20** (Claude Code 2.1.265).
 
+### ⭐ MODEL VE EFORT — adıma göre seçilir, tarih damgalı
+
+Aynı projede her adım aynı modelle yapılmaz. *Gerçek hayat:* şantiyede
+statik hesabı en kıdemli mühendis yapar, duvarı usta örer; ikisini de
+kıdemliye yaptırmak pahalı, ikisini de ustaya yaptırmak tehlikelidir. "Kim
+neyi yapar" sorusunun cevabı **hatayı kim yakalar** sorusundadır.
+
+İki ayar var. **Model**: hangi Claude — bugün en güçlüsü Fable 5.1, bir altı
+Opus 5.5 (fiyatlar aşağıda). **Efort / effort / düşünme derinliği**: modelin
+cevap vermeden önce ne kadar düşüneceği; `low` · `medium` · `high` ·
+`xhigh` · `max`. Efort arttıkça cevap daha dikkatli ve daha pahalı olur;
+fark yalnızca en zor işlerde çıkar, sıradan işte `high` ile `max` aynı
+sonucu verir.
+
+| Adım | Model | Efort | Neden — hatayı kim yakalar |
+|---|---|---|---|
+| Plan: PRD, veri modeli, API sözleşmesi, ADR, yol haritası (`SKILL.md` Adım 3–4) | En güçlü | `max` | Test yakalamaz; hata aylar sonra migration olarak döner. Token payı küçük, kararın bedeli büyük |
+| Kimlik, yetki, KVKK, ödeme, kurum entegrasyonu **tasarımı** | En güçlü | `max` | Hata sessizdir: yanlış kişinin verisini gösteren koda test "yanlış" demez |
+| Kite kural yazmak (`/kit-senkron`) | En güçlü | `max` | Yanlış kural sonraki her projeye kopyalanır; `denetim.mjs` yalnızca mekanik hatayı görür |
+| Merge öncesi inceleme, güvenlik incelemesi, teslim paketi, kurum sunucusuna migration | En güçlü | `max` | Okumak yazmaktan ucuzdur; geri alması zor işler |
+| Tasarım yönü kararı (`07-ui-design-system.md`, ADR olarak yazılır) | En güçlü | `max` | Test "yapay zekâ işi görünüyor" demez; uygulaması (bileşen) bir alt kademede |
+| Dilim geliştirme: repository, servis, controller, bileşen, test, belge (Adım 5 ve sonrası) | Bir alt kademe | `xhigh` | Tokenin büyük payı burada; hatayı `tsc`, Vitest, Playwright, `dependency-cruiser`, CI yakalar |
+| Mekanik iş: yeniden adlandırma, format, test koşturma, küçük düzeltme | Bir alt kademe | `high` | Düşünme gerektirmez |
+
+**Ölçüt, satırları ezberlemek yerine:** *"Bu adımın hatasını bir test ya da
+betik yakalar mı, yoksa yalnızca insan mı?"* Betik yakalıyorsa ucuz model;
+yalnızca insan yakalayacaksa ya da hata geç dönecekse en güçlü model, en
+yüksek efort.
+
+**Ajanın iki görevi.** (1) Bir adımın sınırında — plan bitip yapıma,
+yapım bitip incelemeye geçilirken — önerilen model ya da efort değişiyorsa
+kullanıcıya **tek satır** söylenir: *"Bu adım plan adımı; önerilen Fable +
+`max`. Değiştirmek için `/model`."* Kullanıcı değiştirmese de iş durmaz.
+(2) Devir promptuna *"SONRAKİ ADIM İÇİN MODEL / EFORT"* satırı yazılır
+(`15-oturum-devri-kurallari.md` → *"ne içerir"*); model değişimi için en
+doğal an zaten devir anıdır, `/clear` öncesi.
+
+**Model değiştirmek hafızayı silmez.** Konuşma, okunan dosyalar, verilen
+kararlar yerinde kalır; yalnızca önceki modelin **düşünce blokları** (cevaptan
+önceki gizli akıl yürütmesi) yeni modele taşınmaz ve önbellek yenilendiği
+için ilk cevap biraz pahalı olur. Kitin "her karar dosyada" kuralı tam bu
+yüzden yeter: PRD, ADR ve devir notu modelden bağımsızdır. Efortu
+değiştirmek de aynı: hafıza değil, yalnızca önbellek yenilenir.
+
+**Fiyat ve varsayılanlar** (Anthropic API fiyat sayfası, 2026-09-24 okundu;
+abonelikte para değil kullanım sınırı harcanır, sınır fiyatla orantılı dolar):
+
+| Model | Girdi $/1M token | Çıktı $/1M token | Efort varsayılanı |
+|---|---|---|---|
+| Fable 5.1 | 10 | 50 | API `high`; Claude Code `xhigh` |
+| Opus 5.5 | 4 | 20 | ⚠️ API `medium` — Claude Code'da elle `xhigh` yap, yoksa karşılaştırma adil olmaz |
+
+⚠️ İddia: tablo akıl yürütmedir, ölçüm değil — Opus 5.5 bu kitle henüz
+hiçbir projede çalıştırılmadı; ilk kullanan aynı adımı iki modelle yaptırıp
+farkı `TARTISILMIS-KARARLAR.md`'ye yazar. ⛔ **Yeni bir Claude modeli
+çıktığında ya da fiyat değiştiğinde bu tablo güncellenir**, damga yenilenir;
+güncellenmeyen tablo yanlış modele yönlendirir. Son gözden geçirme:
+**2026-09-24** (Claude Code 2.1.280).
+
 ### ⛔ DOSYANIN TAMAMI OKUNMAZ — ÖNCE BAŞLIK BLOĞU
 
 `02-coding-standards.md` her dosyanın başına **dört halkalı** bir blok yorum

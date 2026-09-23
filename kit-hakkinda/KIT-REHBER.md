@@ -1,6 +1,6 @@
 # `proje-kiti` — Ne Yapıyor, Nasıl Yapıyor
 
-**Sürüm:** 3.22.0 · **Tarih:** 2026-09-21
+**Sürüm:** 3.23.0 · **Tarih:** 2026-09-24
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Terimler ilk geçtikleri yerde açıklanır. Sonda toplu bir sözlük vardır.
@@ -436,6 +436,27 @@ hangi işlerin sende kaldığı `KIT-NE-YAPIYOR.md` → *"Ajan kapıları"*.
 Bir kural daha: **üçüncü başarısız düzeltmeden sonra kod yazılmaz.** Aynı hata
 için üç yama tutmadıysa sorun yanlış tahmin değil, **yanlış yapıdır**. Ajan
 durur ve mimariyi tartışmaya açar.
+
+### Hangi adımda hangi model — kısa sürüm
+
+Claude'un birden fazla modeli var; en güçlüsü pahalı, bir altı ucuz. Bir de
+**efort** ayarı var: modelin cevaptan önce ne kadar düşüneceği (`low`'dan
+`max`'a). Kit her adımda aynı modeli önermez; ayrım şu: hatayı bir test
+yakalayabiliyorsa ucuz model yeter, yalnızca sen yakalayabileceksen en
+güçlüsü.
+
+| Sen ne yapıyorsun | Öneri | Neden |
+|---|---|---|
+| Plan: PRD, veri modeli, mimari kararlar, güvenlik | En güçlü model, `max` | Sonradan düzeltmesi en pahalı kararlar |
+| Kod: özellik dilimleri, ekran bileşenleri, testler | Bir alt model, `xhigh` | Testler ve CI hatayı yakalar; tokenin çoğu burada |
+| Merge öncesi inceleme, kite kural yazma | En güçlü model, `max` | Okumak yazmaktan ucuz; kural her projeye kopyalanır |
+
+Ajan adım sınırına gelince bunu tek satırla hatırlatır; modeli sen `/model`
+ile değiştirirsin. Değiştirince ajan bir şey unutmaz: konuşma ve dosyalar
+yerinde kalır, yalnızca eski modelin kendi içindeki düşünme notları yeni
+modele geçmez. Tam tablo, fiyatlar ve gerekçe ajanın kural dosyasında:
+`docs/standards/11-agent-workflow.md` → *"MODEL VE EFORT"*. Yeni bir model
+çıktığında tablo orada güncellenir, burası ona bakar.
 
 ---
 

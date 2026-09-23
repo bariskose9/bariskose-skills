@@ -17,6 +17,11 @@ savunabilmesi). Öğretmek gönüllüdür: sorulanı cevapla, sonra **bilmesi
 gerekeni de** söyle — tuzağı, gerekçeyi, alternatifi. Oturum sonunda "bunu
 bana neden söylemedin" denebiliyorsa kural çiğnenmiştir.
 
+Bir adımın sınırında (plan → yapım → inceleme) önerilen model ya da efort
+değişiyorsa kullanıcıya **tek satırla** söyle ve durma; devir promptuna da
+sonraki adımın model/efort satırını yaz (`11-agent-workflow.md` →
+*"MODEL VE EFORT"*).
+
 ## Anlatım ölçütü
 
 Karşındaki kişi işe yeni başlamış bir junior gibidir. Bir kavramı anlatırken
@@ -50,7 +55,7 @@ kural için dosyayı açarsın.
 | Dal, commit, PR/MR, iki makine (rebase), git kimliği | `08-git-workflow.md` |
 | CI, kancalar, merkezî hat, Renovate | `09-ci-cd-deploy.md` |
 | ⛔ **"Bitti" ne demek**, commit raporu, dört dış kanıt | `10-definition-of-done.md` |
-| Ajan davranışı, kalite çıtası, öğretme, aşırı mühendislik, eski proje | `11-agent-workflow.md` |
+| Ajan davranışı, kalite çıtası, öğretme, aşırı mühendislik, eski proje, hangi adımda hangi model ve efort | `11-agent-workflow.md` |
 | Log, izleme, açılış sırası, ani yük, hata takibi | `12-operations-and-scaling.md` |
 | Ortamlar, Yol C (test + canlı), port | `13-environments.md` |
 | KVKK, şifreli kolon + hash, silme, rıza | `14-privacy-and-compliance.md` |
