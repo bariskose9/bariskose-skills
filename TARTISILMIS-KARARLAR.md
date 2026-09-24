@@ -594,3 +594,16 @@ blokları taşınmaz, önbellek yenilenir — kullanıcı bunu "ajan unutur" san
 Opus 5.5'in API efort varsayılanı `medium`, adil karşılaştırma için elle `xhigh`.
 Fiyatlar tarih damgalı; yeni model çıkınca tablo güncellenir. ⚠️ Tablo akıl yürütme,
 ölçüm değil — ilk gerçek karşılaştırma buraya yazılacak.
+
+### Ek — 2026-09-25 (3.23.1): Seviye defteri birleştirildi — onaylı düşürme kite de yansır
+
+`backend-ogrenme` defteri kit şablonuyla birleştirildi (K24 akışı, kullanıcı "yaz" dedi):
+14 konu satırı eklendi (SDLC, gereksinim okuma, OOP, modül düzeni, eski projeyi
+devralmak, API biçimi, ağ, HTTP, TS dil, derleyici hatası, TS tip sistemi, veri yapıları,
+tarih/para/metin, Node/npm), üç satıra kanıt notu, kelime defterine sekiz satır (CRLF/LF,
+veri mi davranış mı, kabul ölçütü, varlık/değer nesnesi, tasarım iki anlam, model dört
+anlam, servis üç anlam, alan modeli). "Katmanlı mimari" satırı 1 → 0: kullanıcı "servis =
+API + mantık" deyince düşürme önerildi ve onaylandı. Birleştirme kuralındaki *"seviye
+çakışırsa yüksek kalır"* bayat kopyaya karşı bir korumadır; **tarihli ve kullanıcı onaylı
+bir düşürme kite aynen geçer**, yoksa defter "her projede aynı" olmaktan çıkar. "Sürüm
+kontrolü (Git)" satırı kitteki (kurum adı geçmeyen) hâliyle kaldı — defter herkese açık.

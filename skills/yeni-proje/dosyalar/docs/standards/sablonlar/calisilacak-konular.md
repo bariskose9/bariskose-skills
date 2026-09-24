@@ -104,10 +104,15 @@ Boş bırakılan alan seviye 0 sayılır.
 
 | Konu | Sv | Son kanıt | Tarih |
 |---|:--:|---|---|
-| Katmanlı mimari · bağımlılık yönü | 1 | "Repository ne demek" diye sordu; katman testi eklenince kabul etti | 2026-09 |
+| Katmanlı mimari · bağımlılık yönü | 0 | ⬇️ 1→0 (Barış onayı, 25 Eyl): 24 Eyl'de "servis, API'nin mantık eklenmiş hâli değil mi" dedi — servisin HTTP'yi bilmemesi, katmanların ayrı odalar olması oturmamış; öğrenme belgesi (backend-ogrenme deposu, BACKEND.md) §1.6 üçüncü durak (vezne / memur / arşiv) yeniden yazıldı, okuyup "yeterli" deyince 1'e döner. Önceki kanıt: "Repository ne demek" diye sordu, katman testi eklenince kabul etti (2026-09) | 2026-09-25 |
+| SDLC · aşama sırası ve döngü | 0 | öğrenme belgesi (backend-ogrenme deposu, BACKEND.md) §1.0 yazıldı, Barış okuyor; kanıt bekleniyor (delegasyonla eklendi 24 Eyl) | 2026-09-24 |
+| Gereksinim okuma · beş kusur · veri-kural soruları | 0 | §1.1 / §3.1 yazıldı; kanıt bekleniyor | 2026-09-24 |
+| OOP · sınıf / kapsülleme / interface = sınır / bileşim-kalıtım | 0 | §2.7 yazıldı (H2); kanıt: 🔧 (3) bileşim-kalıtım karşılaştırması | 2026-09-24 |
+| Modül ve klasör düzeni · ESM/CJS · özellik bazlı | 0 | §2.9 yazıldı (H2); kanıt bekleniyor | 2026-09-24 |
+| Eski projeyi devralmak · harita / karakterizasyon testi / strangler | 0 | §3.6 yazıldı; kurumun asıl işi — kanıt: 🔧'deki AI yanlışını belgeleme | 2026-09-24 |
 | SOLID | 0 | | |
 | Tasarım desenleri (Factory, Strategy…) | 0 | | |
-| Durum makinesi | 0 | | |
+| Durum makinesi | 0 | §4.5 yazıldı; kanıt: 🔧 (1) iki derleme hatası | 2026-09-24 |
 | HTTP çatısı seçimi (Express / Fastify) · darboğaz ölçütü | 1 | Bir arama motoru cevabını getirip "yanlış varsa alma" dedi; "handler DB'siz mi" ölçütü ilk kez anlatıldı, henüz kendi cümlesinde kullanmadı | 2026-09-21 |
 
 ### Backend
@@ -115,10 +120,18 @@ Boş bırakılan alan seviye 0 sayılır.
 | Konu | Sv | Son kanıt | Tarih |
 |---|:--:|---|---|
 | API sözleşmesi · sürümleme | 1 | "Contract da ne" diye sordu, açıklandı (2026-09). 107c'de **tel biçimi / DTO** (kod içi `Date` → telde metin, açık çevirmen) ve **belgede `integer` ile `number` farkı** (mobil istemci kuruşu lira sanabilir) ilk kez anlatıldı; soru gelmedi, kendi cümlesinde kullanmadı — kanıt sayılmadı, seviye değişmedi | 2026-09-21 |
+| API biçimi (REST / GraphQL) · ne zaman hangisi | 0 | 21 Eyl: "trafiği fazla, ayrı sunucuda çalışacak modül → GraphQL" kısayolu 17 Eyl'deki düzeltmeden sonra ikinci kez geldi; sohbette düzeltildi, §4.10(b) yazılınca okunacak | 2026-09-21 |
+| Ağ temelleri · DNS / IP / port · istek-cevap | 0 | §2.1 yazıldı (H1); kanıt bekleniyor | 2026-09-24 |
+| HTTP · yöntem / başlık / gövde / durum kodu | 0 | §2.2 yazıldı (H1); PDF kontrol sorusu: HTTP'yi örnekle açıklıyor mu | 2026-09-24 |
+| TypeScript dil · tip / birleşim / daraltma | 0 | §2.5 yazıldı (H1); kanıt bekleniyor | 2026-09-24 |
+| Derleyici hatası okuma | 0 | §2.5 (i) + EK §8.2; PDF kontrol sorusu: compiler hatasını okuyup düzeltiyor mu | 2026-09-24 |
+| TypeScript tip sistemi · yapısal tipleme / generics / ayrıştırılmış birleşim | 0 | §2.6 yazıldı (H2); kanıt: 🔧 (2) `never` hatası | 2026-09-24 |
+| Veri yapıları · Array / Map / Set · Big-O sezgisi | 0 | §2.10 yazıldı; kanıt: 🔧 ölçümü | 2026-09-24 |
+| Tarih / para / Türkçe metin tuzakları · UTC-kuruş-locale | 0 | §2.11 yazıldı; kanıt bekleniyor | 2026-09-24 |
 | Kimlik doğrulama · yetki | 0 | | |
 | Transaction · eşzamanlılık | 0 | | |
 | Arka plan işleri · kuyruk | 1 | BullMQ'nun sunucusuzda çalışmadığını kendi getirdi, maliyeti sordu | 2026-09 |
-| Hata yönetimi | 0 | | |
+| Hata yönetimi | 0 | §2.8 yazıldı (H2); kanıt bekleniyor | 2026-09-24 |
 
 ### Frontend (UI)
 
@@ -155,6 +168,7 @@ Boş bırakılan alan seviye 0 sayılır.
 |---|:--:|---|---|
 | Docker · konteyner | 2 | Docker'daki Postgres'e nasıl bakılacağını sordu — kurulu olduğunu biliyor | 2026-09 |
 | Sürüm kontrolü (Git) | 0 | "Klon / kaynak klon / kurulu kopya" ayrımını ve "GitHub güncelse pull neden gerekiyor"u sordu — anlatıldı, kanıt bekleniyor | 2026-09-22 |
+| Node · npm · package.json · semver | 0 | §2.3 yazıldı (H1); kanıt bekleniyor | 2026-09-24 |
 | CI/CD hattı | 1 | Kitte yazılı, henüz üzerine konuşmadık | 2026-09 |
 | Ortamlar · gizli değerler | 0 | | |
 | İzleme · günlük · uyarı | 0 | | |
@@ -230,7 +244,15 @@ Biçim:  - `kelime` — kısa karşılığı (tarih)
 - `UUIDv7` — başı zaman damgası olan UUID; tahmin edilemez ama index'e sıralı girer (2026-09-13)
 - `IDENTITY vs SERIAL` — ikisi de artan sayı; SERIAL ayrı sequence açar (yetki tuzağı), IDENTITY kolonun parçası (2026-09-13)
 - `skill` — ajana "bu işi nasıl yaparsın" diye öğreten talimat paketi; yetenek vermez, var olan aracı iyi kullanmayı öğretir (2026-09-20)
+- `CRLF / LF` — satır sonu işareti: Windows iki karakter (CR+LF), Mac/Linux tek (LF); depo LF saklar, `.gitattributes` bunu zorlar, Windows'ta çalışma kopyası CRLF görünebilir — ikisi de çalışır, betikler (`.sh`) hariç (2026-09-21)
 - `MCP sunucusu` — ajana yeni bir YETENEK veren program (tarayıcıyı sürmek gibi); o yoksa hangi skill kurulu olursa olsun iş yapılamaz (2026-09-20)
+- `veri mi davranış mı` — bir kural tablo satırı mı (sayı değişir) yoksa sınıf mı (formül değişir) olacak; ölçüt öğrenme belgesi (backend-ogrenme deposu, BACKEND.md) §1.6 (2026-09-24)
+- `kabul ölçütü / acceptance criterion` — bir gereksinimin "bitti" sayılması için ölçülebilir koşul; §3.1 (2026-09-24)
+- `varlık (entity) / değer nesnesi (value object)` — kimliği olan, değişen şey / kimliksiz, yalnızca değeriyle var olan şey; §3.2 (2026-09-24)
+- `tasarım (yazılım) ≠ tasarım (arayüz)` — sistemin içini kurma kararı (ERD, API sözleşmesi, ADR) / kullanıcının gördüğünü kurma kararı (Figma); Barış sordu, §1.2 (2026-09-24)
+- `model (dört anlam)` — veri modeli (veri nasıl saklanır: tablo, kolon) · Prisma model (aynı kararın `schema.prisma`'daki kod yazımı) · alan modeli (veri ne anlama gelir, hangi kuralla değişir: `WorkOrder` sınıfı) · MVC Model (desenin "geri kalan her şey" kutusu); küçük projede dördü tek `WorkOrder`'a çöker, kural gelince ayrılır; Barış "üçü aynı mı" diye sordu, §1.2 (2026-09-25)
+- `servis (üç anlam)` — servis sınıfı / katmanı (kuralın yaşadığı yer; HTTP'yi bilmez) · web servisi (dışarıya açık API) · daemon / arka plan servisi; "API artı mantık" değil, "mantık, API'sız" — API kapı, servis oda; §1.6 (2026-09-25)
+- `alan modeli / domain model` — alan dilinin (§3.2) sınıf hâli: verinin ne anlama geldiği ve hangi kuralla değiştiği; veri modelinden kural gelince ayrışır (hesaplanan `slaDeadline` tabloda yok, `deleted_at` alan modelinde yok); §3.2 (2026-09-25)
 
 ---
 
