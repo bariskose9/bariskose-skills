@@ -831,9 +831,36 @@ model Asset {
 }
 ```
 
-Bağlantının iki yarısı — `prisma.config.ts` (migration komutları okur) ve
-`@prisma/adapter-pg` ile kurulan istemci (uygulama okur) — kopyalanabilir
-hâliyle `04-database.md` → *"Prisma 7 düzeni"* bölümünde.
+Bağlantının iki yarısı ayrı dosyalarda durur. Migration komutları
+(`migrate dev` / `deploy` / `diff`) adresi `prisma.config.ts`'ten okur;
+uygulama ise çalışma anında sürücü bağdaştırıcısıyla (`@prisma/adapter-pg`)
+bağlanır:
+
+```ts
+// prisma.config.ts — migration komutlarının okuduğu ayar
+import "dotenv/config";                            // .env dosyasını process.env'e yükler
+import { defineConfig } from "prisma/config";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: { path: "prisma/migrations" },
+  datasource: { url: process.env.DATABASE_URL },   // havuzlu adres veren sağlayıcıda (Neon) burada havuzsuz DIRECT_URL
+});
+```
+
+```ts
+// Uygulamanın bağlantısı — Nest'te PrismaService'in kurucusunda
+import { PrismaClient } from "../generated/prisma/client";  // output'un yazdığı klasör
+import { PrismaPg } from "@prisma/adapter-pg";               // pg sürücüsünün Prisma bağdaştırıcısı
+
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }), // havuzu pg kurar: varsayılan en çok 10 bağlantı
+});
+```
+
+⚠️ Prisma 7'de `migrate dev` istemciyi **yeniden üretmez**; şema değişince
+`prisma generate` ayrıca koşulur (aşağıda, 4. adım). Kuralın kaynağı:
+`04-database.md` → *"Prisma 7 düzeni"*.
 
 ⭐ **Devralınabilirlik açısından belirleyici olan nokta:** Entity Framework
 Core'da veri modelini görmek için 30 sınıf dosyası gezersiniz. Prisma'da tek
@@ -984,6 +1011,132 @@ hata olsa bile veri bozulmaz.
 
 ⚠️ Bu yüzden zaten lokasyonları **silmiyoruz**, pasife alıyoruz (E.9 → soft
 delete). Foreign key, kazara silmeye karşı ikinci savunma hattı.
+
+### JOIN türleri — hangi satırlar gelir (okul örneği)
+
+**Gerçek hayat:** Okul, öğrenci listesini veli defteriyle yan yana koyuyor.
+Soru hep aynı — *"öğrenci, velisi, velinin telefonu"* — ama cevap, defterde
+karşılığı olmayanlara ne yapılacağına göre değişir: velisi girilmemiş öğrenci
+listede kalsın mı, öğrencisi olmayan veli görünsün mü? JOIN türü bu kararın
+adıdır.
+
+**Yazılımda:** JOIN, iki tablonun satırlarını bir koşula göre yan yana koyar;
+koşul (`ON`) neredeyse her zaman "yabancı anahtar = birincil anahtar"dır.
+Türler **yalnızca** eşleşmeyen ya da birden çok eşleşen satırlarda
+birbirinden ayrışır; her satırın tam bir karşılığı olsaydı hepsi aynı sonucu
+verirdi. Bu yüzden örnek veriye bilerek dört "zor" durum kondu: **Can**'ın
+veli kaydı yok (`parent_id` boş) · **Deniz**'in velisi Elif kayıtlı ama
+telefonu boş · **Mehmet** ile **Ela** kardeş, velileri aynı (Hasan Demir) ·
+**Ayşe Şahin** bir veli ama tabloda öğrencisi yok.
+
+```sql
+-- Okul örneği: iki tablo, aralarında bir yabancı anahtar
+CREATE TABLE parents (                                       -- veliler
+  id        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- velinin kimliği
+  full_name TEXT NOT NULL,                                   -- adı soyadı
+  phone     TEXT                                             -- BOŞ olabilir: Elif'inki boş
+);
+CREATE TABLE students (                                      -- öğrenciler
+  id        BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY, -- öğrencinin kimliği
+  full_name TEXT NOT NULL,                                   -- adı
+  parent_id BIGINT REFERENCES parents (id)                   -- yabancı anahtar; BOŞ olabilir: Can'ın velisi girilmemiş
+);
+INSERT INTO parents (full_name, phone) VALUES                -- kimlikler sırayla 1-2-3-4
+  ('Zeynep Yılmaz', '0532 111 11 11'), ('Hasan Demir', '0544 222 22 22'),
+  ('Elif Kaya', NULL), ('Ayşe Şahin', '0555 333 33 33');    -- Elif'in telefonu yok; Ayşe'nin öğrencisi yok
+INSERT INTO students (full_name, parent_id) VALUES
+  ('Ahmet', 1), ('Mehmet', 2), ('Ela', 2), ('Can', NULL), ('Deniz', 3); -- Mehmet ile Ela kardeş
+
+-- Aynı soru, aynı ON; değişen yalnızca JOIN kelimesi
+SELECT s.full_name AS student, p.full_name AS parent, p.phone
+FROM students s JOIN parents p ON p.id = s.parent_id;        -- INNER; LEFT / RIGHT / FULL için kelimeyi değiştir
+```
+
+| Satır (ölçüldü: PostgreSQL 18.4, 2026-09-25) | INNER | LEFT | RIGHT | FULL |
+|---|:--:|:--:|:--:|:--:|
+| Ahmet · Zeynep · 0532… | ✅ | ✅ | ✅ | ✅ |
+| Mehmet · Hasan · 0544… | ✅ | ✅ | ✅ | ✅ |
+| Ela · Hasan · 0544… | ✅ | ✅ | ✅ | ✅ |
+| Deniz · Elif · *(telefon boş)* | ✅ | ✅ | ✅ | ✅ |
+| Can · *(velisi yok — boş)* | — | ✅ | — | ✅ |
+| *(öğrencisi yok — boş)* · Ayşe · 0555… | — | — | ✅ | ✅ |
+| **Satır sayısı** | **4** | **5** | **5** | **6** |
+
+- **INNER** — iki tarafta da karşılığı olanlar. ⚠️ Deniz **kaldı**: telefonun
+  boş olması bir eşleşme sorunu değil, eşleşen satırdaki bir kolonun değeri.
+  **Satır yok** (Can'ın velisi hiç yok) ≠ **satır var, kolonu boş** (Deniz'in
+  velisinin telefonu yok). "Yalnızca telefonu olanlar" ayrı bir süzgeçtir:
+  `WHERE p.phone IS NOT NULL` (ölçüldü: Ahmet · Mehmet · Ela).
+- **LEFT** — soldakinin hepsi; Can velisi boş olarak listede. İş Emri'nde
+  "kimde kaç açık iş var" ekranı: işi olmayan teknisyen LEFT ile 0 olarak
+  görünür, INNER ile **kaybolur** — atama ekranının asıl göstermesi gereken
+  en boş kişi. ⚠️ LEFT JOIN'de sağ tablonun süzgeci `ON`'a yazılır; `WHERE`'e
+  yazılırsa eşleşmeyen satırlar elenir ve LEFT sessizce INNER'a döner.
+- **RIGHT** — sağdakinin hepsi; Ayşe öğrencisi boş olarak. Tabloların yerini
+  değiştirip `parents p LEFT JOIN students s` yazmak aynı sonucu verir; çoğu
+  ekip RIGHT yazmaz, okuyan hep "soldakinin hepsi" diye okur.
+- **FULL** — iki taraftan eşleşmeyenler dahil hepsi (Can da Ayşe de); iki
+  listeyi denkleştirmek için: eski sistemde olup yenide olmayan + yenide olup
+  eskide olmayan, tek sorguda.
+- **CROSS** — her satır her satırla: 5 × 4 = 20 (ölçüldü). Bilerek kullanımı
+  bütün kombinasyonlar: öğrenci × ders = boş not çizelgesi (5 × 3 = 15).
+  ⚠️ PostgreSQL `ON`'suz `JOIN`'i kabul etmez (*syntax error at or near ";"*);
+  kazara çarpım iki yoldan gelir ve ikisi de hata vermez: eski virgüllü
+  yazımda koşulu unutmak (`FROM students s, parents p WHERE …`) ve `ON`'da
+  yanlış takma ad (`ON s.parent_id = s.parent_id`) — ikisi de 16 satır döndü.
+- **Kendine birleştirme (self join)** — aynı tablo iki takma adla. Kardeşler:
+  `students a JOIN students b ON b.parent_id = a.parent_id AND b.id > a.id` →
+  Mehmet · Ela (`b.id > a.id` her çifti bir kez yazdırır). İş Emri'nde: aynı
+  varlıkta son 30 günde açılmış başka iş emirleri — tekrarlayan arıza.
+
+**Hız değil anlam:** *"INNER, LEFT'ten hızlıdır"* doğru değil — ölçüldü: 500
+bin satırlık tabloda aynı sorgu iki türle; varlık adı da istenince plan aynı
+(`Hash Join` ↔ `Hash Left Join`), süre 6,7–8,5 ms ↔ 6,8–9,5 ms. Yalnızca
+`count(*)` sorulunca LEFT **iki kat hızlıydı** (13–16 ms ↔ 30–32 ms): sağ
+tablodan hiçbir kolon kullanılmıyor ve sağdaki anahtar benzersiz olduğu için
+planlayıcı LEFT JOIN'i plandan tümden attı (*join removal*); INNER atılamaz,
+çünkü satır eleyebilir. JOIN türünü "hangi satırları istiyorum" sorusu seçer.
+
+**Satır çoğalması — veli SMS'i:** "Öğrencisi olan, telefonu kayıtlı velilere
+SMS" JOIN'le yazılınca liste üç satır döndü ve **Hasan Demir iki kez** geldi
+(iki çocuğu var): JOIN "çok" tarafa gidince soldaki satırı eşleşme sayısı
+kadar çoğaltır. Hasan'a iki SMS gider; `count(*)` 4 der, gerçek veli 3'tür.
+Çaresi **yarı birleştirme (semi-join)** — `EXISTS`: karşılığı olanı getir ama
+çoğaltma.
+
+```sql
+-- ✅ Her veli BİR kez: "en az bir öğrencisi var mı" evet/hayır sorusudur, satır üretmez
+SELECT p.full_name, p.phone
+FROM parents p
+WHERE p.phone IS NOT NULL
+  AND EXISTS (SELECT 1 FROM students s WHERE s.parent_id = p.id);  -- ölçüldü: Zeynep · Hasan
+```
+
+**Bu projede — Prisma JOIN türü sormaz, niyet sorar** (ölçüldü, Prisma 7.10;
+yükleme satırları önizleme bayrağı kapalıyken):
+
+| SQL'deki niyet | Prisma'da | Prisma'nın ürettiği |
+|---|---|---|
+| LEFT — bütün öğrenciler, velisi varsa | `select: { parent: { select: { phone: true } } }` | 2 sorgu: öğrenciler + `WHERE id IN (…)`; Can'da `parent: null` |
+| INNER — yalnızca velisi olanlar | `where: { parent: { isNot: null } }` | JOIN bile yok: `WHERE NOT (parent_id IS NULL)` |
+| INNER + süzgeç — telefonu olan velinin öğrencisi | `where: { parent: { is: { phone: { not: null } } } }` | `LEFT JOIN … WHERE j1.phone IS NOT NULL AND j1.id IS NOT NULL`; planı `Hash Join` |
+| anti-join — velisi olmayan · öğrencisi olmayan | `where: { parentId: null }` · `where: { students: { none: {} } }` | `WHERE parent_id IS NULL` · `NOT EXISTS (…)` |
+| semi-join — SMS listesi | `where: { phone: { not: null }, students: { some: {} } }` | `EXISTS (…)` — Hasan **bir** kez |
+| RIGHT'ın niyeti — bütün veliler | sorguyu öbür modelden başlat: `prisma.parent.findMany({ select: { students: … } })` | 2 sorgu; Hasan tek kayıt, iki çocuğu **dizide**; Ayşe'de `students: []` — çoğalma yok |
+| FULL · CROSS · self join | karşılığı yok | ham SQL: `prisma.$queryRaw` şablon etiketiyle (parametreli) |
+
+Üçüncü satır öğretici: başka yerde hata olan "LEFT JOIN + sağ tablo
+`WHERE`'de" deseni Prisma'nın elinde **bilerek** kullanılıyor — amaç zaten
+eşleşmeyeni elemek; PostgreSQL de bunu görüp LEFT JOIN'i INNER'a çeviriyor.
+Prisma'nın kazancı: INNER ile LEFT arasındaki tehlikeli seçim (yanlış
+seçilince satır sessizce kaybolur) açık bir kelimeye dönüşür, iç içe getirme
+satır çoğalmasını baştan önler. Bedeli: FULL, CROSS ve self join için ham SQL.
+
+**Kararı veren soru:** *"Eşleşmeyen satırı görmek istiyor muyum, hangi
+taraftakini? Karşı taraf 'çok' mu?"* Soldaki eşleşmeyen de görünsün → LEFT;
+iki taraftakiler → FULL; yalnızca eşleşenler → INNER; karşı taraf çoksa ve
+satır başına **bir** sonuç gerekiyorsa → JOIN değil `EXISTS` ya da iç içe
+getirme.
 
 ### Unique constraint (benzersizlik kuralı)
 
@@ -5359,9 +5512,11 @@ const workOrders = await prisma.workOrder.findMany({
 ⚠️ **"`include` tek sorgu atar" yanlıştır — ölçüldü (Prisma 7.10,
 2026-09-25).** Varsayılan yükleme stratejisi yukarıdaki gibi **iki** sorgu
 atar — tablodaki "1 + 1 = 2"nin ta kendisi. Tek sorgu gerekiyorsa şemada
-`previewFeatures = ["relationJoins"]` açılır ve sorguya
-`relationLoadStrategy: "join"` yazılır (PostgreSQL'de `LEFT JOIN LATERAL`
-üretir); çoğu ekranda gerekmez. Bir ölçüm daha: döngüdeki `findUnique`'ler
+`previewFeatures = ["relationJoins"]` açılır — açıldığı anda **bütün**
+`include`'lar varsayılan olarak tek sorguya geçer (`relationLoadStrategy:
+"join"` yazmak gerekmez; bir sorguyu yine iki adımda tutmak için
+`relationLoadStrategy: "query"` — ölçüldü); PostgreSQL'de `LEFT JOIN
+LATERAL` üretir. Çoğu ekranda gerekmez. Bir ölçüm daha: döngüdeki `findUnique`'ler
 sırayla değil `Promise.all` ile aynı anda verilirse Prisma onları tek bir `IN`
 sorgusuna **birleştiriyor** (23 çağrı → 1 sorgu); aynısı `findFirst` ile
 birleşmiyor (23 sorgu). N+1'i doğuran, döngüde sırayla beklemektir.
@@ -5390,6 +5545,91 @@ ve `@apollo/server` (2.9M/hafta) ikisi de aktif ve ikisi de DataLoader'ı
 ⚠️ **Bu satırın maliyeti:** GraphQL'e geçmek yalnızca "yeni bir kapı açmak"
 değil; yanında **DataLoader kurmayı ve her ilişki için ayrı loader yazmayı** da
 getirir. REST'te bu iş `include` satırıyla bitiyor.
+
+#### N+1'i doğuran bilinen senaryolar — en yaygın sekizi
+
+Yukarıdaki döngü N+1'in ders kitabı hâli; gerçek projede döngü çoğu zaman
+**görünmez** — bir kütüphanenin, bir eşleme fonksiyonunun ya da bir ekranın
+içine saklanır. Teşhis her birinde aynı (log'da aynı SQL metni, satır sayısı
+kadar), çare de aynı cümle ("tek tek sorma, topluca sor"). Dördü ölçüldü
+(Prisma 7.10, PostgreSQL 18.4, 2026-09-25, 30 iş emirlik veri; yazma
+denemesi bir işlemin içinde koşup geri alındı):
+
+| # | Senaryo | Döngü nerede saklanıyor | Sorgu: kötü → iyi | Çaresi |
+|---|---|---|---|---|
+| 1 | Açık döngü | Servisin kendisinde, görünür | 24 → 2 | `include` / `select` |
+| 2 | Tembel yükleme (lazy loading) | ORM'in içinde: ilişkiye dokununca gizlice sorgu | Prisma'da **olamaz** — derleyici durdurdu | — |
+| 3 | İkinci seviye ilişki | Birinci seviye topluca geldi, ikincisi döngüde | 32 → 3 | İç içe `include` |
+| 4 | Satır başına sayım | "Her teknisyenin açık iş sayısı" döngüde `count` | 6 → 1 | `_count` ilişki sayımı ya da `groupBy` |
+| 5 | Yazarken N+1 | Döngüde `update` / `create` | 6 → 1 | `updateMany` / `createMany` |
+| 6 | Eşleme fonksiyonunda sorgu | Cevabı DTO'ya çeviren fonksiyonun içinde `await` | 1'in aynısı | Eşleme saf kalır; veri önceden `include` ile gelir |
+| 7 | GraphQL çözücüleri | Alan başına çözücü, üst satır başına çağrılır | — | DataLoader |
+| 8 | Ağ üzerinden N+1 (konuşkan API) | Liste ekranında her satır kendi isteğini atar | — | Liste ucu ekranın ihtiyacını tek cevapta verir |
+
+**2 — Tembel yükleme:** ilişki sorguda istenmemişken kod
+`wo.assignee.fullName` yazınca ORM'in o an sessizce sorgu atması; N+1'in en
+ünlü kaynağı, çünkü kodda sorgu **görünmez**. JS ailesinde TypeORM'un tembel
+ilişkileri (ilişki `Promise` olarak gelir) ve Sequelize'ın `getAssignee()`
+gibi üretilmiş metotları bu kapıyı açar. Prisma'da kapı yok — ölçüldü:
+
+```ts
+// include YAZILMADI: assignee istenmedi
+const list = await prisma.workOrder.findMany({ take: 1 });
+console.log(list[0].assignee.fullName);
+// tsc: error TS2551: Property 'assignee' does not exist on type '{ … assigneeId: bigint | null; … }'.
+//      Did you mean 'assigneeId'?  → gizli sorgu yerine DERLEME hatası
+// tipi `any` ile atlatınca çalışma anında: undefined, atılan sorgu 1
+```
+
+**3 — İkinci seviye:** `include: { asset: true }` ile varlıklar topluca
+geldi, ama her varlığın lokasyonu döngüde soruldu → 32 sorgu (1 + 1 + 30).
+Doğrusu iç içe `include: { asset: { include: { location: true } } }` → 3
+sorgu: her seviye için tek bir `IN`.
+
+**4 — Satır başına sayım:** teknisyen listesi + her teknisyen için
+`workOrder.count(...)` → 6 sorgu. Doğrusu ilişki sayımı:
+
+```ts
+const OPEN = ['ASSIGNED', 'IN_PROGRESS', 'WAITING_PART']; // açık iş durumları
+const board = await prisma.user.findMany({
+  where: { role: 'TECHNICIAN', isActive: true },
+  select: {
+    fullName: true,
+    // "atandığı açık işleri say" — sayım SQL'e gömülür
+    _count: { select: { assigned: { where: { status: { in: OPEN } } } } },
+  },
+});
+// ölçüldü: 1 sorgu — users LEFT JOIN (SELECT assignee_id, COUNT(*) … GROUP BY assignee_id)
+// işi olmayan teknisyen 0 ile listede (Prisma LEFT JOIN seçmiş)
+```
+
+**5 — Yazarken:** SLA taraması döngüde `update` → 6 ayrı `UPDATE`;
+`updateMany({ where: { id: { in: ids } }, data })` → tek `UPDATE … WHERE id
+IN (…)`. Sınırı: `updateMany` her satıra **aynı** değeri yazar ve yalnızca
+sayıyı döndürür; satır başına farklı değer gerekiyorsa ya bilerek döngü (bir
+işlemin içinde) ya da ham SQL'de tek cümle. Ekleme için `createMany`.
+
+**7 — GraphQL:** istemci "iş emirleri ve her birinin teknisyeni" isteyince
+sunucu `assignee` çözücüsünü her iş emri için ayrı çağırır. DataLoader aynı
+turdaki tekil istekleri tek `IN` sorgusunda toplar — Prisma bunun bir hâlini
+kendisi yapıyor: `Promise.all` içindeki 23 `findUnique` tek sorguya indi;
+aynı deneme `findFirst` ile 23 sorgu attı (ölçüldü). N+1'i doğuran, döngüde
+sırayla beklemektir.
+
+**8 — Ağ üzerinden:** liste ekranı 30 satır çizer, her satır bileşeni kendi
+teknisyenini `GET /users/:id` ile ister → 30 HTTP isteği, her biri de
+veritabanına gider (konuşkan API / chatty API). Çaresi sunucuda: liste ucu
+ekranın ihtiyacını tek cevapta verir. Dış serviste de aynı: satır başına
+sağlayıcıya sormak yerine toplu uç ya da kuyruk.
+
+⚠️ **Yaygın bir abartı (bir yapay zekâ cevabından):** *"51 kez gidip gelmek
+bağlantı açmaktır, 5000 satırda sistem çöker"* — bağlantı her sorguda
+açılmaz, **havuzdan** alınır; bedel gidiş-dönüştür. 5000 satırda sistem
+çökmez, yavaşlar (gidiş-dönüş 1 ms ise o istek 5 sn); asıl tehlike eşzamanlı
+isteklerde havuzun tükenmesi.
+
+**Kararı veren soru:** *"Bu istek, satır sayısı artınca daha çok sorgu atıyor
+mu?"* Atıyorsa N+1'dir; nerede saklandığı fark etmez.
 
 #### GraphQL gerçekten ne zaman kazanır — örnekle
 

@@ -663,3 +663,24 @@ yolları `/`'ya çeviren bir kopyayla da doğrulandı (temiz); betiğin düzeltm
 onayını bekliyor. Model notu: bu sürüm Opus 5.5 + max ile yazıldı (MODEL VE EFORT tablosu
 kit kuralı için Fable + max önerir) — tablonun "ilk gerçek karşılaştırma" satırı için veri
 noktası.
+
+### Ek — 2026-09-25 (3.24.1): JOIN türleri ve N+1'in bilinen kılıkları kartlara — kullanıcının getirdiği örnek ölçülerek
+
+Kullanıcı bir yapay zekâ cevabında N+1'in okul örneğini (öğrenci + veli telefonu, LEFT ↔
+INNER JOIN) buldu ve *"kitteki gerekli yerlere de"* dedi. Örnek gerçek PostgreSQL 18.4 ve
+Prisma 7.10 üzerinde kuruldu: C.5'e **"JOIN türleri — hangi satırlar gelir"** (dört türün
+aynı veride tablosu, CROSS ve self join, satır çoğalması + `EXISTS`, Prisma'nın her niyet
+için ürettiği SQL); E.13'e **"N+1'i doğuran bilinen senaryolar"** (sekiz kılık, dördü
+ölçüldü: ikinci seviye ilişki 32 → 3, satır başına sayım 6 → 1, döngüde yazma 6 → 1,
+tembel yükleme Prisma'da derleme hatası TS2551). Cevaptaki yanlışlar ölçümle çürütüldü:
+INNER JOIN boş kolonu değil **eşleşmeyen satırı** eler; INNER "daha hızlı" değildir (aynı
+plan; sayımda LEFT, *join removal* ile iki kat hızlı); `include` "tek sorgu" değildir. Yaygın bir
+inanç da ölçüldü: *"CROSS JOIN, `ON` unutulunca olur"* PostgreSQL'de doğru değil (`ON`'suz
+`JOIN` sözdizimi hatası; kazara çarpım virgüllü yazımda ya da yanlış takma adlı `ON`'da). Yeni
+ölçüm: `relationJoins` önizleme bayrağı açılınca bütün `include`'ların varsayılanı tek sorgu
+olur — E.13 ve 04 → Performans buna göre; 04'ün N+1 maddesine kılıklar ve çareleri eklendi.
+C.3'teki "`04-database.md`'ye bak" cümlesi yerine iki kod parçası (`prisma.config.ts` ve
+bağdaştırıcı) kartın içine alındı. **Kullanıcı kararı (25 Eyl):** `calisma-dokumanlari/`
+kullanıcının okuma dosyasıdır — kart kendi başına okunur, başka dosyaya göndermez; "aynı
+bilgi iki yerde yazılmaz" kuralı bu dosyalar için şimdilik askıda (*"çoklayabilirsin,
+kuralı boşver şimdilik"*). Yama sürümü: kural değişmedi, anlatım ve ölçüm eklendi.

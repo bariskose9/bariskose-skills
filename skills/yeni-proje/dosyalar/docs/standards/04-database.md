@@ -583,9 +583,17 @@ standardında — *"İsimlendirme"*).
   satırda silme: index'siz 22 ms, index'le 0,5 ms).
 - N+1 sorgu yasak: ilişkili veri `include`/`select` ile **sabit sayıda** sorguda
   çekilir — Prisma'nın varsayılanı liste + `WHERE id IN (…)` = **2** sorgu, satır
-  sayısıyla artmaz; tek sorgu gerekiyorsa `relationLoadStrategy: "join"`
-  (önizleme: `previewFeatures = ["relationJoins"]`). Döngüde sırayla `await`
-  edilen sorgu N+1'in kendisidir.
+  sayısıyla artmaz; tek sorgu gerekiyorsa önizleme bayrağı
+  `previewFeatures = ["relationJoins"]` — açılınca **bütün** `include`'lar tek
+  sorguya geçer (bir sorguyu iki adımda tutmak: `relationLoadStrategy:
+  "query"`). Prisma'da tembel yükleme yoktur: istenmeyen ilişkiye erişen kod
+  derlenmez. N+1'in bilinen kılıkları ve çareleri (ölçüldü, 2026-09-25):
+  döngüde sorgu → `include` · ikinci seviye ilişki → iç içe `include` (32 → 3)
+  · satır başına sayım → `_count` / `groupBy` (6 → 1) · döngüde yazma →
+  `updateMany` / `createMany` (6 → 1) · eşleme fonksiyonunda sorgu → eşleme
+  saf kalır · GraphQL çözücüsü → DataLoader · liste satırı başına HTTP isteği
+  → liste ucu ekranın ihtiyacını tek cevapta verir. Teşhis: log'da aynı SQL,
+  satır sayısı kadar.
 - `select` ile sadece gereken kolonlar çekilir; `SELECT *` alışkanlığı yok.
 - Birden fazla yazma içeren işlemler (sipariş + stok düşme) **transaction** içinde.
 
