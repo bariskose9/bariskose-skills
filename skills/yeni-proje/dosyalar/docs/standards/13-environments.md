@@ -39,6 +39,7 @@ production: merge main  →  Vercel build  →  benimbelediyem.vercel.app  →  
 1. git checkout -b feature/hastane-randevu
 2. docker compose up -d            → local Postgres ayağa kalkar
 3. pnpm prisma migrate dev         → şema değişikliği LOCAL'de uygulanır
+   pnpm prisma generate            → tipler yenilenir (Prisma 7'de migrate dev yapmaz)
 4. pnpm dev                        → localhost:3000'de geliştir
 5. pnpm lint && pnpm test          → local kapı
 6. git push -u origin feature/...  → PR aç

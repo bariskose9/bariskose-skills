@@ -34,12 +34,12 @@ yalnızca veri modeline ait, **yeni** kararlar.
 | # | Karar | Neden | Bölüm |
 |---|---|---|---|
 | ⭐V1 | Birincil anahtar **UUID v7**, okunabilir kimlik ayrı kolonda | Sıra numarası adres çubuğunda toplam kayıt sayısını sızdırır ve komşu kaydı tahmin ettirir. v7 zaman sıralı olduğu için v4'ün index dağınıklığı sorununu da çözer | §1.2 |
-| ⭐V2 | Enum'lar **PostgreSQL yerel enum tipi** olarak, değerler metin | Veritabanı geçersiz değeri **kendisi** reddeder; yeni değer eklemek migration gerektirir — sessizce yeni durum türeyemez | §1.5 |
+| ⭐V2 | Sabit değer kümeleri **PostgreSQL yerel enum tipi** olarak, değerler metin — `04-database.md` → *"SABİT DEĞER KÜMESİ"* kuralının kendi-proje modu (3.24.0'da uyumlandı) | Buradaki listelerin hepsi ya kodun listesi (durum, tür, rol, olay, bildirim; öncelik ve kritiklik — süre ve çarpan kodda, E.4) ya da yönetim ekranı olmayan iş listesi (varlık ve lokasyon türü, PRD ⭐15). Veritabanı geçersiz değeri **kendisi** reddeder; TypeScript tipi aynı satırdan üretilir. ⚠️ ❓1 kurum kuralı ENUM'u yasaklarsa kodun listeleri tanım tablosu + `as const` + eşleşme testine döner | §1.5 |
 | ⭐V3 | Yumuşak silme **yalnızca** `users`, `locations`, `assets` üzerinde | Bunlar başka kayıtların referans verdiği tablolar. İş emri ve geçmiş **hiç silinmez**; bildirim ve jeton silinse zarar yok | §1.6 |
 | ⭐V4 | `is_active` ile `deleted_at` **farklı iki şey** | `is_active` bir **iş kuralıdır** (pasif lokasyonda iş açılamaz), `deleted_at` bir **görünürlük** kararıdır (yanlış açılmış kayıt listeden kalkar). Tek alana sıkıştırmak iki gerçeği çakıştırır | §1.6 |
 | ⭐V5 | Durum + atama + öncelik + SLA olayları **tek `work_order_events` tablosunda** | Hepsi "kim, ne zaman, neyi değiştirdi" kaydı. Ayrı tablolar detay ekranında birleştirme kodu doğurur ve yeni olay türü **tablo açmayı** gerektirir | §3.6 |
 | ⭐V6 | `work_orders` tablosunda **`location_id` de var** (varlıktan türetilebilir olsa da) | Varlık başka binaya taşınırsa geçmiş iş emri **o anki** binayı göstermeye devam etmeli. Ayrıca lokasyon filtresi join'siz çalışır | §3.5 |
-| ⭐V7 | SLA ihlal taraması için **kısmi (partial) index** | Tarama yalnızca "açık ve henüz ihlal işaretlenmemiş" satırları okur; tam index 400 bin satırlık arşivi de taşırdı. ⚠️ Prisma şema dilinde karşılığı yok → migration'a elle SQL yazılacak | §4 |
+| ⭐V7 | SLA ihlal taraması için **kısmi (partial) index** | Tarama yalnızca "açık ve henüz ihlal işaretlenmemiş" satırları okur; tam index 400 bin satırlık arşivi de taşırdı. ⚠️ Prisma 7.10'da yalnızca **önizleme** (`partialIndexes`) → migration'a elle SQL yazılır, özellik kararlı olunca şemaya taşınır | §4 |
 | ⭐V8 | Yenileme jetonu **SHA-256** ile özetlenir, argon2 ile değil | Jeton zaten yüksek entropili rastgele bir değer — sözlük saldırısına açık değil. argon2 her yenilemede boşuna CPU yakar | §3.2 |
 | ⭐V9 | `holidays` tablosunda birincil anahtar **tarihin kendisi** (doğal anahtar) | Tarih zaten benzersiz ve değişmez; burada vekil anahtar hiçbir şey kazandırmaz. ⭐ Kural körlemesine uygulanmaz, gerekçesiyle uygulanır | §3.10 |
 | ⭐V10 | Günlük özetteki personel yükü **`jsonb`** kolonda | Bu veri anlık bir **fotoğraf**: gösterilir, sorgulanmaz. İlişkiselleştirmek tablo başına satır üretir ve hiçbir sorguyu hızlandırmaz. ⚠️ "Son 30 günde X'in yükü" sorusu gelirse tabloya çıkar | §3.9 |
@@ -104,7 +104,9 @@ değişir; servis, controller ve ekran kodunun tek satırı dokunulmaz.
 
 ### 1.3 Tarih ve saat ✅ *(§11 "tarih ve saat saklama yaklaşımı")*
 
-- Tüm zamanlar **`timestamptz`** tipinde ve **UTC** saklanır.
+- Tüm zamanlar **`timestamptz`** tipinde ve **UTC** saklanır. Prisma'da her
+  zaman alanına **`@db.Timestamptz(3)`** yazılır — yalnız `DateTime` saat
+  dilimsiz `TIMESTAMP(3)` üretir (`04-database.md` → *"İsimlendirme"*).
 - Ekranda `Europe/Istanbul`'a çevrilir; çeviri **tek yerde** (arayüz katmanı).
 - ⛔ Sistem saati koddan doğrudan okunmaz — `Clock` servisinden alınır
   (ödev §8), böylece testte sahte saat verilebilir.
@@ -139,7 +141,12 @@ neyi neye çevirdi"* sorusunun cevabı `work_order_events` tablosundadır (§3.6
 
 ### 1.5 Enum'ların saklanma biçimi ⭐V2 ✅ *(§11 açıkça soruyor)*
 
-- Prisma `enum` → PostgreSQL **yerel enum tipi**; değerler **metin** görünür.
+- Hangi listenin enum, hangisinin tanım tablosu olacağını `04-database.md` →
+  *"SABİT DEĞER KÜMESİ"* iki soruyla belirler: *"liste kimin"* ve *"yapıyı kim
+  değiştiriyor"*. Bu proje kendi-proje düzeninde (⭐V1 UUID) ve §2.3'teki
+  listelerin hepsi ya **kodun listesi** ya **yönetim ekranı olmayan iş listesi**
+  (PRD ⭐15) → Prisma `enum` → PostgreSQL **yerel enum tipi**; değerler **metin**
+  görünür.
 - ⭐ Neden sayı değil: veritabanına bakan kişi (DevOps, raporcu, denetçi)
   `3`'ün ne olduğunu bilemez. Ayrıca araya yeni değer eklenince sayılar kayar
   ve **eski kayıtlar yanlış anlam kazanır**.
@@ -147,6 +154,12 @@ neyi neye çevirdi"* sorusunun cevabı `work_order_events` tablosundadır (§3.6
   değeri **kendisi** reddeder ve Prisma buradan TypeScript tipi üretir. Bedeli:
   yeni değer eklemek migration ister — ⭐ bu bir **özellik**: sistemde sessizce
   yeni bir durum türeyemez.
+- ⚠️ Bedeli (ölçüldü, PostgreSQL 18.4): değer **silinemez** (0A000) — emekli
+  değer "kullanılmıyor" diye kalır; yeni değeri ekleyen migration ile onu
+  kullanan satır **ayrı dosyada** olmalı (aynı işlemde 55P04).
+- ⚠️ ❓1'in cevabı *"ENUM yok"* gelirse (kurum standardı): kodun listeleri tanım
+  tablosu (`code` metin kolonu + `sort_order`) + koddaki `as const` + eşleşme
+  testine döner; iş kodu değişmez, yalnızca şema ve bir test eklenir.
 - Enum listesi §2'de.
 
 ### 1.6 Yumuşak silme (soft delete) ⭐V3 ✅ *(§11)*
@@ -278,6 +291,17 @@ gelecekteki başka bir istemci) **son savunma hattıdır**.
 | `priority` | `LOW` · `NORMAL` · `HIGH` · `CRITICAL` | Düşük · Normal · Yüksek · Kritik |
 | `work_order_event_type` | `CREATED` · `CONVERTED` · `STATUS_CHANGED` · `ASSIGNED` · `UNASSIGNED` · `PRIORITY_CHANGED` · `SLA_RECALCULATED` · `SLA_PAUSED` · `SLA_RESUMED` · `SLA_BREACHED` | — |
 | `notification_type` | `WORK_ORDER_ASSIGNED` · `STATUS_CHANGED` · `SLA_REMINDER` · `SLA_ESCALATION` · `SLA_BREACHED` · `COMMENT_ADDED` | — |
+
+⭐ **Kimin listesi (3.24.0, `04-database.md` → *"SABİT DEĞER KÜMESİ"*):**
+`user_role`, `asset_operational_status`, `work_order_type`,
+`work_order_status`, `work_order_event_type`, `notification_type`, `priority`,
+`asset_criticality` **kodun listesi** — kod her değere farklı davranır (yetki,
+kabul kuralı ⭐9, SLA politikası, geçiş tablosu; öncelik ve kritikliğin süre ve
+çarpanı E.4'te kodda). `location_type` ve `asset_type` **iş biriminin listesi**
+ama yönetim ekranı kapsamda yok (PRD ⭐15) → enum. ⚠️ Ters koşul: "Tanımlar"
+ekranı istenirse bu ikisi tanım tablosuna taşınır (`location_types`,
+`asset_types`: `code` · `name` · `sort_order` · `is_active`) — kolon tipi
+değişir, iş kodu değişmez.
 
 ⭐ **Neden `priority` ve `asset_criticality` ayrı enum'lar** — değerleri aynı
 görünse de **anlamları farklı**: biri *işin* aciliyeti, diğeri *varlığın*
@@ -734,10 +758,17 @@ göre konur.
 > Şunda **çalışmaz**: `WHERE status = ?` ⛔ — çünkü index telefon rehberi
 > gibidir: soyada göre sıralı bir rehberde "adı Ahmet olanları" bulamazsınız.
 >
+> ⚠️ **PostgreSQL 18 inceltmesi — skip scan (ölçüldü, 2026-09-25):** ilk kolonun
+> farklı değer sayısı azsa PG 18 rehberi soyadı soyadı atlayarak yine kullanır:
+> 500 bin satırda 50 lokasyonla `WHERE status = ?` → *"Index Searches: 51"*,
+> 5,6 ms (ayrı `status` index'i 4,7 ms). İlk kolon çok değerliyse (5.000 farklı
+> varlık) planlayıcı tam taramaya döner (20,6 ms). Tasarım buna **dayanmaz**;
+> ilke aynı kalır.
+>
 > ⭐ Bu yüzden `status` **ayrıca tek başına** index'lendi: liste ekranında en
 > sık kullanılan tekil filtre o.
 
-> **ℹ️ ⭐V7 kısmi index — neden gerekli ve Prisma'da neden elle yazılıyor**
+> **ℹ️ ⭐V7 kısmi index — neden gerekli ve Prisma'da nasıl yazılıyor**
 >
 > SLA ihlal taraması şu sorguyu 5 dakikada bir koşuyor:
 > *"süresi geçmiş + hâlâ açık + henüz ihlal işaretlenmemiş"*.
@@ -747,16 +778,22 @@ göre konur.
 > satırları tutar: küçük kalır, önbellekte durur, tarama hızlı biter.
 >
 > ```sql
-> -- migration'a ELLE yazılıyor: Prisma şema dilinde "WHERE" karşılığı yok
+> -- migration'a ELLE yazılıyor: Prisma'da "WHERE" yalnızca önizleme özelliğiyle var (aşağıda)
 > CREATE INDEX work_orders_sla_scan_idx
 >   ON work_orders (sla_due_at)
 >   WHERE is_sla_breached = false
 >     AND status NOT IN ('CLOSED', 'CANCELLED');
 > ```
 >
-> ⚠️ **Dürüst not:** Prisma bu index'i şemadan üretemediği için migration
-> dosyasına elle eklenir ve `prisma migrate diff` karşılaştırmasında
-> "şemada yok" uyarısı verebilir. Bu bilinçli bir sapmadır ve ADR'ye yazılır.
+> ⚠️ **Dürüst not (ölçüldü, Prisma 7.10 — 2026-09-25):** Prisma bu index'i
+> artık **önizleme** özelliğiyle şemadan üretebiliyor —
+> `previewFeatures = ["partialIndexes"]` + `@@index([slaDueAt], map:
+> "work_orders_sla_scan_idx", where: raw("is_sla_breached = false AND status
+> NOT IN ('CLOSED', 'CANCELLED')"))` için `migrate diff` yukarıdaki SQL'in
+> aynısını yazdı. Önizleme kararlılık sözü vermediği için bu projede index
+> migration'a elle yazılır; elle yazılan kısmi index'i `migrate diff` **yok
+> sayıyor** (düşürmeyi önermiyor — ölçüldü). Bu bilinçli bir sapmadır ve
+> ADR'ye yazılır; özellik kararlı olunca şemaya taşınır.
 
 ---
 
@@ -782,8 +819,11 @@ göre konur.
 ⚠️ **Pratikte CASCADE'ler neredeyse hiç tetiklenmez** — ana kayıtlar yumuşak
 siliniyor (§1.6), yani gerçek `DELETE` çalışmıyor. Yine de tanımlanıyor:
 (a) niyet beyanıdır, (b) test temizliği ve KVKK imha işleminde gerçek silme
-kullanılır, (c) tanımsız bırakılırsa PostgreSQL varsayılanı `NO ACTION` olur ve
-sürpriz hata verir.
+kullanılır, (c) tanımsız bırakılırsa varsayılan devreye girer: düz SQL'de PostgreSQL'in
+`NO ACTION`'ı (sürpriz hata), Prisma şemasında ise zorunlu ilişkide `RESTRICT`,
+**isteğe bağlı ilişkide `SET NULL`** (ölçüldü, 7.10) — `assignee_id` isteğe
+bağlı olduğu için yazılmazsa personel silinince iş emirleri sessizce sahipsiz
+kalır. Bu yüzden `onDelete` her ilişkide açıkça yazılır (`04-database.md` → *"Bütünlük"*).
 
 ---
 
@@ -853,7 +893,7 @@ Teslimden önce bu tablo tek tek doğrulanır.
 | 1 | Tabloların ve ilişkilerin neden bu şekilde tasarlandığı | Her tablo bir PRD iş kuralından doğdu; §2.2'de eşleme | §2, §3 |
 | 2 | Hangi alanlara index eklendiği | 25 index, her biri bir sorguya bağlı | §4 |
 | 3 | Composite index tercihleri | `(assignee_id,status)`, `(location_id,status)`, `(user_id,is_read,created_at)` — sıra gerekçesiyle | §4 |
-| 4 | Enum'ların nasıl saklandığı | PostgreSQL yerel enum, değer metin ⭐V2 | §1.5 |
+| 4 | Enum'ların nasıl saklandığı | PostgreSQL yerel enum, değer metin ⭐V2 — hangi listenin enum olacağı iki soruyla (liste kimin · yapıyı kim değiştiriyor) | §1.5 |
 | 5 | Soft delete kullanılan yapılar | `users`, `locations`, `assets` — ve **neden diğerlerinde yok** ⭐V3 | §1.6 |
 | 6 | Silme davranışları | RESTRICT/CASCADE ayrımı tek ilkeye bağlı | §5 |
 | 7 | Audit yaklaşımı | Dört alan + merkezî eklenti; audit ≠ geçmiş ayrımı | §1.4 |

@@ -42,7 +42,9 @@ sayfada olduğu bellidir.
 Kolonu oraya yazarsın, `prisma migrate dev` dersin; Prisma eski ile yeni
 şemanın **farkını alır**, SQL'i **kendisi yazar**
 (`prisma/migrations/20260913_add_email/migration.sql`), local'e uygular,
-`_prisma_migrations`'a kaydeder, TypeScript tiplerini yeniler. Canlıda
+`_prisma_migrations`'a kaydeder; TypeScript tiplerini ayrı komut yeniler
+(`prisma generate` — Prisma 7'de `migrate dev` bunu **yapmaz**, bkz.
+*"Prisma 7 düzeni"*). Canlıda
 `prisma migrate deploy` uygulanmamışları uygular. Gerçek hayat: mimar (sen)
 plana bir oda çizer, müteahhit (Prisma) hangi duvarın yıkılacağını kendisi
 çıkarıp deftere yazar. Tek geliştirici, tek dil, yönetilen veritabanı, DBA
@@ -131,7 +133,7 @@ almaktır.
 | Kayma denetimi yok — DB ile dosyaların ayrıştığını kimse söylemez | `migrate dev` kaymada **sıfırlamayı teklif eder** — local'de faydalı, paylaşılan bir DB'ye doğrultulursa felaket. ⛔ `migrate dev` yalnızca local'de |
 | Vercel + Neon akışı (her PR'a önizleme DB dalı, build'de `migrate deploy`) hazır; kendi koşucunu o akışa sen takarsın | Dosya düzeni Prisma'nın — ORM değişirse geçmiş taşınır (SQL dosyaları düz SQL, kaybolmaz) |
 | `db pull` her şeyi geri getirmez: `@map`, ilişki adı, `uuid(7)` korunur; Prisma'nın tanımadığı nesneler (partial index, trigger) şemaya girmez, yalnızca SQL'de yaşar | Büyük tabloda `ALTER` kilidi — her araçta aynı; Prisma seni uyarmaz |
-| 7 adım / 1 adım — her adım bir atlama noktası | — |
+| 7 adım / 1 adım — her adım bir atlama noktası | **Dosya tek işlemde koşmaz** (ölçüldü, 7.10): ikinci satır düşerse birincinin yaptığı kalır, `applied_steps_count` yine 0 der → **P3009**'da önce veritabanının hâline bak, uygulananı elle geri al, sonra `migrate resolve --rolled-back` ve `deploy`. Dosyayı `BEGIN … COMMIT` ile sarmak atomik yapar ama Prisma asıl hatayı değil *"current transaction is aborted"* satırını gösterir |
 
 ⭐ **"Prisma SQL'i gizliyor, SQL öğrenemem" endişesi — yersiz, çünkü Prisma
 SQL'i gizlemez, senin yerine yazıp önüne koyar.** `prisma migrate dev`
@@ -150,6 +152,42 @@ inceliyorsun (review).** Öğrenme için ikincisi daha verimlidir: şemaya bir
 ilişki eklersin, Prisma'nın ürettiği `ADD CONSTRAINT … FOREIGN KEY` satırını
 okursun — söz diziminde takılmadan "FK böyle yazılıyormuş" dersin.
 
+### Prisma 7 düzeni — bağlantı adresi şemada değil
+
+Prisma 7 (ölçüm: 7.10.0, 2026-09-25) bağlantıyı şemadan çıkardı; eski örnekler
+— ve eğitim verisinden yazan ajan — hâlâ Prisma 6 düzenini üretir. Beş fark,
+her biri ölçüldü:
+
+| Ne | Prisma 7 | Eski hâl yazılırsa |
+|---|---|---|
+| Migration komutlarının adresi | `prisma.config.ts` → `datasource.url` | `schema.prisma`'da `url = env(...)` → **P1012** *"The datasource property `url` is no longer supported in schema files"* |
+| Uygulamanın bağlantısı | Çalışma anında sürücü bağdaştırıcısı (driver adapter): `@prisma/adapter-pg` | — |
+| Üretici | `provider = "prisma-client"` + **`output`** — üretilen kod `node_modules`'a değil projeye yazılır | `output` yoksa `prisma generate` durur: *"An output path is required for the `prisma-client` generator"* |
+| Tipler | ⛔ `migrate dev` istemciyi **yeniden üretmez** → her şema değişikliğinden sonra `prisma generate` | Yeni model kodda `undefined`: *"Cannot read properties of undefined (reading 'create')"* |
+| Şema ↔ veritabanı farkı | `migrate diff --from-config-datasource --to-schema prisma/schema.prisma` | `--from-url` → *"`--from-url` was removed"* |
+
+```ts
+// prisma.config.ts — migration komutlarının (migrate dev / deploy / diff) okuduğu ayar
+import "dotenv/config";                            // .env dosyasını process.env'e yükler
+import { defineConfig } from "prisma/config";
+
+export default defineConfig({
+  schema: "prisma/schema.prisma",
+  migrations: { path: "prisma/migrations" },
+  datasource: { url: process.env.DATABASE_URL },   // havuzlu adres veren sağlayıcıda (Neon) burada havuzsuz DIRECT_URL
+});
+```
+
+```ts
+// Uygulamanın bağlantısı — Next'te tek modül (src/lib/db.ts), Nest'te PrismaService'in kurucusu
+import { PrismaClient } from "../generated/prisma/client";  // output'un yazdığı klasör
+import { PrismaPg } from "@prisma/adapter-pg";               // pg sürücüsünün Prisma bağdaştırıcısı
+
+const prisma = new PrismaClient({
+  adapter: new PrismaPg({ connectionString: process.env.DATABASE_URL }), // havuzu pg kurar: varsayılan en çok 10 bağlantı
+});
+```
+
 ### Kurum modunda döngü — Prisma Client + `V__` dosyaları
 
 Prisma'nın iki parçası ayrılır: **Migrate** kapatılır (migration'lar
@@ -166,9 +204,10 @@ yalnızca **kurumun klasörüne, kurumun adıyla** konur.
 
 ```
 1. schema.prisma'ya değişikliği yaz (email String?)
-2. pnpm prisma migrate diff --from-url $DATABASE_URL \
-     --to-schema-datamodel prisma/schema.prisma --script
-   → çıktıyı database/migrations/V12__add_email_to_applications.sql olarak kaydet
+2. pnpm prisma migrate diff --from-config-datasource \
+     --to-schema prisma/schema.prisma --script \
+     -o database/migrations/V12__add_email_to_applications.sql
+   → farkın SQL'i dosyaya yazılır (Prisma 7 bayrakları — "Prisma 7 düzeni")
 3. Dosyaya kurum kurallarını ekle: yeni tabloysa GRANT (uygulama hesabına DML);
    BIGSERIAL çıktıysa IDENTITY yap (yukarıdaki "Birincil anahtar")
 4. U12__add_email_to_applications.sql yaz (geri alma: DROP COLUMN email)
@@ -176,9 +215,10 @@ yalnızca **kurumun klasörüne, kurumun adıyla** konur.
 6. pnpm prisma db pull && pnpm prisma generate   → schema.prisma ve tipler DB ile eşit
 7. git'e: V12 + U12 + schema.prisma birlikte
 8. CI'da KAYMA DENETİMİ:
-   pnpm prisma migrate diff --from-url $DATABASE_URL \
-     --to-schema-datamodel prisma/schema.prisma --exit-code
-   → fark varsa hata koduyla biter, MR birleşemez: 6. adım atlanmışsa sessiz kalmaz
+   pnpm prisma migrate diff --from-config-datasource \
+     --to-schema prisma/schema.prisma --exit-code
+   → çıkış kodu 0 = fark yok · 2 = fark var · 1 = hata; 0 dışı MR'ı durdurur:
+     6. adım atlanmışsa sessiz kalmaz
 ```
 
 ⭐ 8. adım, kurum modunda kaybedilen **kayma denetimini geri alır**: iki
@@ -191,10 +231,15 @@ dosyaları görür, `R__` ile view'lar yönetilir, `U__` hazır, tip güvenliği
 kaybolmaz, şemanın **tek doğru kaynağı veritabanının kendisi** olur — kurumda
 zaten öyle olmak zorunda, tabloyu son tahlilde DB birimi açıyor.
 
-Koşucu (`migrate.mjs`) üç şeyi mutlaka yapar: `schema_history` tablosunu
+Koşucu (`migrate.mjs`) dört şeyi mutlaka yapar: `schema_history` tablosunu
 açar · dosyaları **sayısal** sıralar (alfabetik `V10` `V2`'nin önüne geçer)
 · `pg_advisory_lock` alır (iki kopya aynı anda açılırsa yalnızca biri
-migrate eder — tuvalet kapısındaki kilit).
+migrate eder — tuvalet kapısındaki kilit) · ⭐ **her dosyayı tek işlemde**
+(`BEGIN … COMMIT`) koşar ve `schema_history` satırını aynı işlemde yazar —
+PostgreSQL'de DDL de işlemseldir, yarıda düşen dosya hiç uygulanmamış olur.
+Tek istisna `CREATE INDEX CONCURRENTLY` (işlem içinde koşamaz): kendi
+dosyasında, işlemsiz. Prisma Migrate bunu yapmaz — yukarıdaki handikaplar
+tablosu.
 
 | Mod | Araç | Şemanın kaynağı |
 |---|---|---|
@@ -299,7 +344,7 @@ proje moduna göre"*): köprünün iki yanı aynı dilde olur, `@map` yalnızca
 > yazılır; zaten model başına birkaç satırdır.
 - Yabancı anahtar: `<tekil_tablo>_id` (`user_id`)
 - Boolean: `is_`/`has_` öneki (`is_active`)
-- Tarih: `created_at`, `updated_at`, `deleted_at` — `TIMESTAMPTZ`, UTC; saatsiz gün (`DATE`) ayrımı ve hesaplama kuralları `02-coding-standards.md` → *"Zaman dilimi"*
+- Tarih: `created_at`, `updated_at`, `deleted_at` — `TIMESTAMPTZ`, UTC; Prisma'da **`DateTime @db.Timestamptz(3)`** — yalnız `DateTime` saat dilimsiz `TIMESTAMP(3)` üretir: Prisma iki tipi de doğru okur, ama veritabanına dışarıdan bakan (rapor, `psql`) saat dilimsiz kolonu İstanbul oturumunda 3 saat kaydırır (ölçüldü: "son 1 saat" sorusu yanlış cevap verdi). Saatsiz gün (`DATE`) ayrımı ve hesaplama kuralları `02-coding-standards.md` → *"Zaman dilimi"*
 
 ## ⭐ VERİ MODELİNİ GÖRMEK — tablolar ve ilişkiler gözle izlenir
 
@@ -387,6 +432,7 @@ pnpm prisma migrate dev --create-only --name create_tbl_basvuru
 #   "id" BIGSERIAL NOT NULL            → ⛔ kurum yasak
 #   "id" BIGINT GENERATED ALWAYS AS IDENTITY NOT NULL   → ✅ elle değiştir
 pnpm prisma migrate dev                # sonra uygula
+pnpm prisma generate                   # tipleri yenile — Prisma 7'de migrate dev bunu yapmaz
 ```
 
 Çalışma anında Prisma için fark yoktur; yalnızca DDL değişir.
@@ -402,13 +448,20 @@ rastgele kod) kolonu. Kurumun bu kolona itirazı olup olmadığı
 
 ## Bütünlük
 - İlişkiler veritabanı seviyesinde yabancı anahtarla zorlanır — uygulamaya bırakılmaz.
+- ⭐ **`onDelete` her ilişkide açıkça yazılır.** Yazılmazsa Prisma'nın varsayılanı
+  devreye girer: zorunlu ilişkide `RESTRICT`, **isteğe bağlı ilişkide `SET NULL`**
+  (ölçüldü, 7.10) — inceleyen personel silinince başvuru sessizce sahipsiz kalır,
+  denetim izi kaybolur. Kararı veren soru: *"Bu kayıt tek başına anlam taşıyor
+  mu?"* Taşıyorsa `Restrict`, taşımıyorsa `Cascade`.
 - Benzersizlik kuralları unique index ile zorlanır (örn. aynı doktor + aynı saat).
 - Para **asla** float değil: `Decimal(10,2)` ya da kuruş `INTEGER`; uygulama
   tarafı tam sayı kuruş, yuvarlama kuralı `02-coding-standards.md` → *"Para"*.
-- Sabit değer kümeleri (durum, tür, kategori) için PostgreSQL `ENUM` tipi
-  **hiç** kullanılmaz — kural ve gerekçesi aşağıda, *"Sabit değer kümesi"*.
+- Sabit değer kümeleri (durum, tür, kategori): iş biriminin **yönettiği** liste
+  her modda tanım tablosu; kodun listesi kurumda tanım tablosu + `as const`,
+  kendi projede PostgreSQL `ENUM` (Prisma `enum`) — kural ve gerekçesi aşağıda,
+  *"Sabit değer kümesi"*.
 
-### ⭐ SABİT DEĞER KÜMESİ — enum değil, tanım tablosu (+ gerekirse kodda liste)
+### ⭐ SABİT DEĞER KÜMESİ — önce "liste kimin", sonra "yapıyı kim değiştiriyor"
 
 Bir başvuru sistemi düşün. Her başvurunun bir **durumu** var: *beklemede*,
 *onaylandı*, *reddedildi*. Bu bilgiyi tutan kolona yalnızca bu üç değerden
@@ -436,6 +489,7 @@ anahtarla bağlanır:
 -- Durumlar artık bir tablonun satırları; ekran metni ve sırası da burada
 CREATE TABLE status_types (
   id          BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+  code        TEXT NOT NULL UNIQUE,   -- kodun listesiyse: koddaki kelimenin aynısı ('pending'), değişmez
   name        TEXT NOT NULL,          -- ekranda görünen ad
   description TEXT,                   -- uzun açıklama
   sort_order  SMALLINT,               -- açılır listede sıra
@@ -460,15 +514,37 @@ adı göstermek için bir **JOIN** (iki tabloyu `id` üstünden birleştirme —
 5 satırlık tablo, maliyeti yok) ve **derleyici artık listeyi bilmez**:
 `status_id = 99` derlenir, hata çalışma zamanında döner.
 
-**Kararı veren soru — bu liste kimin?** *"Yarın listeye bir değer eklense
-kod değişir mi?"*
+**Kararı veren iki soru, sırayla.** Birincisi — **bu liste kimin?** *"Yarın
+listeye bir değer eklense kod değişir mi?"* İkincisi, yalnızca kodun listesi
+için — **yapıyı kim değiştiriyor?** Yani DDL'i (`ALTER TYPE`) sen mi
+koşuyorsun, başka bir birim mi?
 
-| Cevap | Liste kimin | Ne yapılır |
+| Liste | Kurum modu | Kendi projem |
 |---|---|---|
-| **Hayır** — kod hepsine aynı davranır (duyuru kategorisi, personel tipi, ilçe) | İş biriminin — **veri** | Tanım tablosu. Kod tarafında liste tutulmaz; panelden yönetilir |
-| **Evet** — kod değerleri tanır, `if` var (başvuru durumu: geçiş kuralı, "onaylanınca SMS") | Kodun — **mantık** | Tanım tablosu **+** kodda sabit liste **+** ikisini eşleştiren test. Tabloya panelden eklenen yeni değer kodun bilmediği bir duruma yol açmasın |
+| **İş biriminin, yönetim ekranıyla** — kod hepsine aynı davranır, değeri iş birimi ekler (duyuru kategorisi, personel unvanı, ilçe) | Tanım tablosu | Tanım tablosu — değer eklemek bir `INSERT`; geliştirici de yayın da gerekmez |
+| **İş biriminin, ekransız** — kod yine aynı davranır ama "Tanımlar" ekranı kapsamda yok, değeri fiilen geliştirici ekler | Tanım tablosu (standart ENUM'u yasaklar) | Prisma `enum` yeterli — ekranı olmayan tablo "gereksiz yapı"dır; ekran gelince tabloya taşınır |
+| **Kodun** — kod değerleri tanır, `if` var (başvuru durumu: geçiş kuralı, "onaylanınca SMS") | Tanım tablosu **+** kodda `as const` liste **+** ikisini eşleştiren test — panelden eklenen değer kodun bilmediği bir duruma yol açmasın | Prisma `enum` — **tek kaynak** |
 
-Kodda sabit liste Prisma enum değil, `as const` ile yazılır:
+Kendi projede kodun listesi neden enum: ölçüt, birbirine uymak zorunda olan
+kaynak sayısı (yukarıda *"Neden kendi projede Flyway biçimi değil"*). Prisma'da
+`enum` yazınca veritabanı tipi de TypeScript tipi de **aynı satırdan** üretilir;
+TypeScript tarafı bir TS `enum`'u değil, `as const` nesnesi + birleşim tipidir
+(ölçüldü, 7.10) — `02-coding-standards.md`'deki "`enum` yerine `as const`"
+kuralıyla çelişmez. Tablo + `as const` yolunda ise iki kaynak ve bir senkron
+testi vardır. Kodun listesine değer eklemek zaten kod değişikliği ve yayındır;
+migration bir dosya daha. Kurumda DDL'i başka birim koşar ve standart ENUM'u
+yasaklar — enum'a değer eklemek dilekçe ve bekleme demektir.
+
+**Enum'un bedeli — kendi projede bilerek ödenir (ölçüldü, PostgreSQL 18.4):**
+listede olmayan değer *22P02 invalid input value for enum*; değer **silinemez**
+(*0A000 dropping an enum value is not implemented* — emekli değer
+"kullanılmıyor" diye kalır); aynı işlemde ekleyip kullanmak *55P04 New enum
+values must be committed before they can be used* verir → değeri ekleyen
+migration ile onu kullanan ayrı dosyada. Tanım tablosunun bedeli de ölçüldü:
+`ORDER BY` metin kodunu **alfabetik** sıralar (CRITICAL, HIGH, LOW, NORMAL) →
+`sort_order` kolonu + JOIN şart.
+
+Kurum modunda kodun listesi Prisma enum değil, `as const` ile yazılır:
 
 ```ts
 // "as const": TypeScript'e "bu dizi değişmez, elemanları tam olarak bu üç kelime" der
@@ -482,20 +558,34 @@ function canTransition(from: Status, to: Status) { /* geçiş kuralı */ }
 ```
 
 Tablo ile kodun ayrışmaması için bir **test** yazılır: `status_types`
-satırlarını okur, `STATUS` ile karşılaştırır, eşleşmiyorsa kırmızı. CI'da
-(kod her gönderildiğinde otomatik koşan kontrol hattı) çalışır; ayrışma canlıya
-değil ekrana düşer.
+satırlarının `code`'larını okur, `STATUS` ile karşılaştırır, eşleşmiyorsa
+kırmızı. Bu yüzden kodun listesini taşıyan tabloda **`code`** kolonu olur
+(benzersiz, değişmez: `'pending'` — koddaki kelimenin aynısı); `name` ekranda
+görünen addır ve değişebilir, karşılaştırmaya giremez. Test CI'da (kod her
+gönderildiğinde otomatik koşan kontrol hattı) çalışır; ayrışma canlıya değil
+ekrana düşer.
 
-⭐ **Her iki modda aynı kural.** Kurum standardı ("ENUM yerine tanım tablosu")
-bizi daha iyi bir kurala itti: enum'un verdiği tek şey (derleyici bilsin)
-`as const` ile alınır, getirdiği dertler (silinemez, etiketi yok, her
-değişiklik DDL) alınmaz. Tanım tablosunda asgari kolonlar `id · name ·
-description`; `sort_order` ve `is_active` eklenir (kurum modunda adlar kurum
+⭐ **İki modda farklı — 3.24.0'da inceltildi.** Önceki kural "her iki modda
+aynı, enum hiç yok" diyordu. Kurum standardından doğru bir sezgi çıkmıştı —
+iş biriminin yönettiği liste tabloda durur — ama kodun listesi için kendi
+projede fazla sertti: enum'un dertleri (silinemez, etiketi kodda, değişiklik
+DDL) orada zaten ödenen bir bedelin (kod değişikliği + yayın) içinde kalır;
+tablo + `as const` yolu ise ikinci bir kaynak ve bir senkron testi açar. Tanım
+tablosunda asgari kolonlar `id · name · description`; `sort_order` ve
+`is_active` eklenir, kodun listesiyse `code` da (kurum modunda adlar kurum
 standardında — *"İsimlendirme"*).
 
 ## Performans
 - Sık filtrelenen ve sıralanan kolonlara index eklenir.
-- N+1 sorgu yasak: ilişkili veri `include`/`select` ile tek sorguda çekilir.
+- ⭐ **Yabancı anahtar kolonuna index kendiliğinden gelmez** — Prisma PostgreSQL'de
+  FK kolonuna index koymaz (ölçüldü, 7.10); `@@index([locationId])` elle yazılır.
+  Yoksa üst kaydı silmek her seferinde alt tabloyu baştan sona tarar (500 bin
+  satırda silme: index'siz 22 ms, index'le 0,5 ms).
+- N+1 sorgu yasak: ilişkili veri `include`/`select` ile **sabit sayıda** sorguda
+  çekilir — Prisma'nın varsayılanı liste + `WHERE id IN (…)` = **2** sorgu, satır
+  sayısıyla artmaz; tek sorgu gerekiyorsa `relationLoadStrategy: "join"`
+  (önizleme: `previewFeatures = ["relationJoins"]`). Döngüde sırayla `await`
+  edilen sorgu N+1'in kendisidir.
 - `select` ile sadece gereken kolonlar çekilir; `SELECT *` alışkanlığı yok.
 - Birden fazla yazma içeren işlemler (sipariş + stok düşme) **transaction** içinde.
 

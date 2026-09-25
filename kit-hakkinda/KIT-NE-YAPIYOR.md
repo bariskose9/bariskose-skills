@@ -1,6 +1,6 @@
 # `proje-kiti` — Kit Ne Yapıyor
 
-**Sürüm:** 3.23.0 · **Tarih:** 2026-09-24
+**Sürüm:** 3.24.0 · **Tarih:** 2026-09-25
 **Depo:** github.com/bariskose9/bariskose-skills
 
 Bu belge, kitin **kurulumdan canlıya çıkışa kadar** ne yaptığını anlatır.
@@ -196,7 +196,7 @@ varsa ADR ile değerlendirilir.
 | 01 | Mimari | Katman sırası: UI → API → Servis → Repository → Veritabanı. **Katman atlanmaz** |
 | 02 | Kod standartları | Adlandırma, yorum, hata yönetimi, ESLint/Prettier çakışması |
 | 03 | API | Sözleşme (contract), sürümleme, hata biçimi, sayfalama (pagination) |
-| 04 | Veritabanı | Tablo, ilişki, index, migration (şema göçü), yumuşak silme · **veri modelini görme: Prisma Studio + ER diyagramı** |
+| 04 | Veritabanı | Tablo, ilişki, index, migration (şema göçü), yumuşak silme · sabit değer kümesi moda göre (tanım tablosu / enum) · Prisma 7 düzeni · **veri modelini görme: Prisma Studio + ER diyagramı** |
 | 05 | Kimlik/Güvenlik | Oturum, token ömürleri, **`tokenVersion` ile iptal**, yetkilendirme |
 | 06 | Test | Piramit: çok unit, orta entegrasyon, az uçtan uca (E2E) · **beş gözle doğrulama, etki alanı, öğretme** |
 | 07 | Arayüz/Tasarım | Token'lar, karanlık tema, responsive, **AI slop yasakları**, hareket (motion), erişilebilirlik (a11y) |

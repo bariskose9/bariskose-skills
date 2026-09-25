@@ -1,6 +1,6 @@
 # Uçtan Uca Yolculuk — bir proje nasıl yazılır, nasıl çalışır
 
-**Sürüm:** 3.23.0 · **Tarih:** 2026-09-24
+**Sürüm:** 3.24.0 · **Tarih:** 2026-09-25
 
 > Bu belge kitin **sırasını** anlatır: hangi karar hangisinden önce, hangi kod
 > hangisinden sonra, uygulama ayağa kalkarken ve bir istek gelirken parçalar
@@ -92,7 +92,7 @@ kurulur** — özellik yazarken "bir de logger ekleyeyim" olmaz.
 | Sıra | Ne | Neden bu sırada | Geç kalınırsa |
 |---|---|---|---|
 | 27 | **İsimlendirme kararı** ve `@map`/`@@map` (`04-database.md`) | ⛔ İlk migration'dan **önce** | Kolon yeniden adlandırma migration'ı + veri taşıma |
-| 28 | **PK tipi** (UUIDv7 / `BIGINT IDENTITY`), **tanım tabloları** (enum yok), ortak kolonlar | Aynı sebep | Aynı |
+| 28 | **PK tipi** (UUIDv7 / `BIGINT IDENTITY`), **sabit değer kümeleri** (iş biriminin listesi tanım tablosu; kodun listesi kurumda tanım tablosu, kendi projede enum), ortak kolonlar | Aynı sebep | Aynı |
 | 29 | **Kişisel veri kolonları**: `*_encrypted BYTEA` + `*_hash` (`14-privacy-and-compliance.md`) | Şifreleme sonradan eklenirse mevcut veri açıkta kalmış olur | Toplu yeniden şifreleme + hukuki risk |
 | 30 | **Migration aracı** (Prisma Migrate / kurum biçimi + koşucu) ve ilk migration | Şemanın kaynağı belirlenir | İki defter |
 | 31 | **Seed** — açıkça sahte veri, idempotent | Ekran yazarken veri olsun | — |

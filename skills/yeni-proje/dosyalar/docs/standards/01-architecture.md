@@ -35,6 +35,16 @@ dosyadır (`appointment.repository.ts`); ORM onun **kullandığı** pakettir. Ş
 *"Repository (Prisma)"* biçiminde birleştirilmesi yaygın bir hatadır ve katman
 sınırını görünmez kılar.
 
+⚠️ **Buradaki repository, genel "Repository deseni" değildir.** Genel desen her
+tabloya aynı arayüzü (`IRepository<T>`: `getById`, `getAll`, `add`…) koyup ORM'i
+saklamayı vaat eder; Prisma zaten o soyutlama olduğu için kit onu kullanmaz.
+Burada istenen modül başına **adlı sorgu dosyası**dır: `findOverdue(now)`,
+`listForAssignee(userId)` gibi, her biri bir ekranın ihtiyacını kendi
+`select`'iyle karşılayan metotlar. Prisma'yı saklamaz; üç iş görür — sorguya ad
+verir (servis 40 satırlık `findMany` yerine niyeti okur), hangi modülün hangi
+tabloya dokunduğunu `dependency-cruiser` ile denetlenebilir kılar, testte
+sahtesi (fake) verilir.
+
 ### Durak durak — randevu oluşturma örneği
 
 | # | Durak | Ne yapar | Ne YAPMAZ |
@@ -138,7 +148,7 @@ index koymak) ve yukarıdaki okun üstünde **hiç yer almaz**:
 
 | Ne zaman | Komut |
 |---|---|
-| Şemayı değiştirdiğinde, kendi bilgisayarında | `prisma migrate dev` |
+| Şemayı değiştirdiğinde, kendi bilgisayarında | `prisma migrate dev`, ardından `prisma generate` (Prisma 7'de ilki ikincisini yapmaz — `04-database.md` → *"Prisma 7 düzeni"*) |
 | Yayına alırken, bir kez | `prisma migrate deploy` |
 
 *Gerekçe:* ani yükte 20.000 isteğin her birinin veritabanı yapısını değiştirmeye
@@ -257,7 +267,7 @@ async transition(id: bigint, to: Status, actor: Actor) {
 | ⛔ Repository'de doğrudan `status` güncelleyen `update` **yok**; tek kapı `transition()` | Kapıyı atlayan bir uç, kuralı atlar |
 | Geçiş tablosu = **test tablosu**: her satır bir test ("rejected → approved fırlatır") | Tablo değişince test kırılır, kural sessizce gevşemez |
 | `application_events` ayrı tablo: iş akışı geçmişi ("3 kez incelemeye döndü") | Audit satırın tamamını tutar, olay tablosu akışı; ikisi ayrı soru cevaplar |
-| Durum değerleri tanım tablosunda **da** durur (`04-database.md` → *"Sabit değer kümesi"*); senkron testi | Tablo ekranın, kod kuralın kaynağı |
+| Durum değerlerinin veritabanı tarafı moda göre (`04-database.md` → *"Sabit değer kümesi"*): kurumda tanım tablosu **da** (`code` kolonu) + senkron testi; kendi projede Prisma `enum` | Kurumda tablo ekranın, kod kuralın kaynağı; kendi projede ikisi aynı satırdan üretilir |
 | BullMQ'nun `waiting/active/completed/failed`'i ile **ilgisi yok** | O kuyruğun kendi makinesi; `sms` işi `failed` olsa başvuru yine onaylıdır |
 
 ⭐ **Kararı veren soru:** *"Bu alanın yeni bir değerinde kod farklı mı
@@ -333,8 +343,15 @@ verisi karışır: *Ali'nin isteği Veli'nin bilgisiyle işlenir.* Bu hata tek
 kullanıcılı testte **hiç görünmez**, yük altında ortaya çıkar ve kurumsal bir
 sistemde yanlış kişinin verisini göstermek — yani KVKK ihlali — demektir.
 
-⛔ **Captive dependency:** scoped bir servis singleton içine enjekte edilmez;
-singleton onu ilk istekteki hâliyle dondurur.
+⛔ **Captive dependency — Nest'te veri donmaz, ömür yayılır.** `REQUEST`
+kapsamlı bir sağlayıcıyı tekil servise verince Nest o servisi (ve onu alan
+controller'ı) da sessizce `REQUEST` yapar: her istekte yeniden kurulur
+(ölçüldü, Nest 12.1). Cevap doğru kalır; bedeli worker'da çıkar — HTTP isteği
+olmayan işte o servis `moduleRef.get()` ile alınamaz (*"is marked as a scoped
+provider … use resolve()"*), `resolve()` ise kullanıcıyı `undefined` getirir.
+Bu yüzden istek bağlamı `REQUEST` kapsamıyla değil `nestjs-cls` ile taşınır
+(aşağıda); servisler tekil kalır. (*"Singleton onu ilk istekteki hâliyle
+dondurur"* .NET'in davranışıdır, Nest'in değil.)
 
 **Aktif kullanıcı ve sistem saati** doğrudan statik yapılardan okunmaz;
 `nestjs-cls` (AsyncLocalStorage) ve `Clock` soyutlaması üzerinden gelir —

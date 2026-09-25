@@ -48,7 +48,7 @@ kural için dosyayı açarsın.
 | Katman, klasör, isteğin yolu, önbellek, durum makinesi, Server Action / Route Handler | `01-architecture.md` |
 | TypeScript, yorum, kod dili, dosya başı özeti, çok dillilik, zaman dilimi | `02-coding-standards.md` |
 | REST, Zod, idempotency, sayfalama, hata biçimi | `03-api-guidelines.md` |
-| Şema, `@map`, PK, tanım tablosu, migration aracı, audit, arama | `04-database.md` |
+| Şema, `@map`, PK, sabit değer kümesi, Prisma 7 düzeni, migration aracı, audit, arama | `04-database.md` |
 | Oturum, jeton, yetki, dosya yükleme/depolama, ödeme | `05-auth-security.md` |
 | Test piramidi, beş göz, etki alanı | `06-testing.md` |
 | Tasarım yönü, token, dört+üç ekran durumu, erişilebilirlik | `07-ui-design-system.md` |

@@ -580,7 +580,8 @@ işlemi yoktur.
 
 ### ⭐ Zaman dilimi — sakla UTC, göster İstanbul, hesapla dikkatle
 
-- Veritabanında **`TIMESTAMPTZ`** (saat dilimli zaman); değer **UTC** olarak
+- Veritabanında **`TIMESTAMPTZ`** (saat dilimli zaman — Prisma'da nasıl
+  yazıldığı `04-database.md` → *"İsimlendirme"*); değer **UTC** olarak
   durur. Ekranda `Europe/Istanbul`. Sunucunun saat dilimine güvenilmez —
   konteynerde `TZ=UTC` sabitlenir ki "hangi makinede koştu" sonucu değiştirmesin.
 - ⛔ **Saatsiz tarih ayrıdır:** doğum tarihi, randevu günü, son başvuru günü

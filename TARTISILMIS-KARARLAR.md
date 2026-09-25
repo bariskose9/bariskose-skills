@@ -331,7 +331,7 @@ Kararlar standart dosyalarına yazıldı, burada yalnızca dizin:
 | 0 | Dört kurgu (yalnızca arayüz / Next / Next+Nest / yalnızca API) — her biri neden, hangi araçlar, isteğin hattı; 4. soru tetikleyici değil; kurum varsayılanı Next+NestJS | `00-stack.md` → *"DÖRT KURGU"* |
 | 1 | İsimlendirme: kurum standardı `@map` ile; kurum modunda iki taraf Türkçe | `04-database.md` → *"İsimlendirme"* |
 | 2 | PK: kendi projede UUIDv7, kurumda `BIGINT IDENTITY` (`BIGSERIAL` düzeltmesi, `public_id`) | `04-database.md` → *"BİRİNCİL ANAHTAR"* |
-| 3 | Enum yok; tanım tablosu (+ mantık taşıyan kümede `as const` liste + senkron testi) | `04-database.md` → *"SABİT DEĞER KÜMESİ"* |
+| 3 | Sabit değer kümesi iki soruyla: iş biriminin yönettiği liste her modda tanım tablosu; kodun listesi kurumda tanım tablosu (`code`) + `as const` + senkron testi, kendi projede enum — **3.24.0'da inceltildi** (önceki: "enum yok, her iki modda") | `04-database.md` → *"SABİT DEĞER KÜMESİ"* |
 | 4 | Migration: kendi projede Prisma Migrate, kurumda Prisma Client + Flyway biçimi SQL + koşucu; CI'da `migrate diff --exit-code` | `04-database.md` → *"MIGRATION ARACI"* |
 | 5 | Audit: before-image JSONB, INSERT-only, tek noktadan otomatik, aynı transaction | `04-database.md` → *"Denetim kaydı"* |
 | 6 | KVKK: `*_encrypted BYTEA` (AES-256-GCM, anahtar sürümü) + `*_hash` (tuzlu HMAC) | `14-privacy-and-compliance.md` |
@@ -607,3 +607,59 @@ API + mantık" deyince düşürme önerildi ve onaylandı. Birleştirme kuralın
 çakışırsa yüksek kalır"* bayat kopyaya karşı bir korumadır; **tarihli ve kullanıcı onaylı
 bir düşürme kite aynen geçer**, yoksa defter "her projede aynı" olmaktan çıkar. "Sürüm
 kontrolü (Git)" satırı kitteki (kurum adı geçmeyen) hâliyle kaldı — defter herkese açık.
+
+### Ek — 2026-09-25 (3.24.0): Öğrenme deposundan dokuz bulgu — sabit değer kümesi moda göre, Prisma 7 düzeni, kart örnekleri ölçümle düzeltildi
+
+Kaynak: özel `backend-ogrenme` deposunun H3–H4 turları; her iddia gerçek Nest 12.1,
+PostgreSQL 18.4 ve Prisma 7.10 üzerinde ölçüldü. Kullanıcı "önerilerini kabul ediyorum,
+yap" dedi (K24 akışı).
+
+1. **Sabit değer kümesi (#3 inceltildi).** "Enum yok, her iki modda" yerine iki soru:
+   *liste kimin* · *yapıyı kim değiştiriyor*. İş biriminin yönettiği liste her modda tanım
+   tablosu; kodun listesi kurumda tanım tablosu + `code` + `as const` + eşleşme testi,
+   kendi projede Prisma `enum` (tek kaynak — 04'ün "kaç kaynak" ölçütü; Prisma'nın TS
+   karşılığı `as const` nesnesi, 02 ile çelişmez). Yayılma sırasında İş Emri PRD ⭐15
+   bulundu ("ekranı olmayan tablo gereksiz yapı") → üçüncü satır: ekransız iş listesi
+   kendi projede enum. Kodun listesini taşıyan tabloda `code` kolonu yoktu (eşleşme testi
+   değişebilen `name`'e dayanamaz) — eklendi. Veri modeli ⭐V2, §1.5, §2.3 kuralın
+   kendi-proje moduna bağlandı; 01'in durum makinesi satırı moda göre.
+2. **Prisma 7 düzeni** — 04'e yeni alt bölüm: adres `prisma.config.ts`'te (şemada `url` →
+   P1012), `prisma-client` + `output` (yoksa generate durur), `@prisma/adapter-pg`;
+   `migrate dev` istemciyi üretmez → `prisma generate` (04'ün "tiplerini yeniler" cümlesi
+   yanlıştı; 13 ve 01 akışlarına, C.3'e adım); `migrate diff --from-url` kalktı →
+   `--from-config-datasource --to-schema`, `--exit-code` 0 / 2 / 1. C.3 şema örneği
+   güncellendi.
+3. **Varsayılanlar açık yazılır:** `onDelete` her ilişkide (Prisma varsayılanı isteğe
+   bağlıda `SET NULL`); FK kolonuna index Prisma koymuyor (silme 22 ms → 0,5 ms);
+   `@db.Timestamptz(3)` (`DateTime` varsayılanı saat dilimsiz — dışarıdan bakan sorgu 3
+   saat kayıyor).
+4. **Yarım migration:** Prisma Migrate dosyayı tek işlemde koşmuyor (`applied_steps_count`
+   0 yanıltıcı) → 04 handikap satırı + P3009 akışı; kurum koşucusuna dördüncü görev: her
+   dosya `BEGIN … COMMIT`, `CREATE INDEX CONCURRENTLY` ayrı dosyada.
+5. **Kısmi index** 7.10'da önizleme (`partialIndexes`; `where: raw(…)` doğru SQL üretti);
+   elle yazılanı `migrate diff` yok sayıyor. Veri modeli V7 ve §4 kutusu.
+6. **PG 18 skip scan:** "birleşik index'in ikinci kolonu tek başına çalışmaz" artık kesin
+   değil (50 değerli ilk kolonda "Index Searches: 51"); ilke değişmedi — E.9 ve §4 kutusu.
+7. **Kart örnekleri kararla çelişiyordu:** E.2 "O" önceliği sınıfa taşıyordu → türe göre
+   dallanma + "öncelik farkı veridir"; E.4 kodu sabit 4 saat ve "1 saat kala" diyordu →
+   `BreakdownPolicy` = `SLA_RULES` × `ASSET_MULTIPLIER` + takvim, başlangıç `slaStartAt`
+   (§6 karar 1), `satisfies` ile süresi unutulan öncelik derlenmez, `calculate` async;
+   örnek `tsc --strict` ile derlendi. E.0 ve §4 tablosundaki sınıf adları (Türkçe adlar
+   3.22.1'den kaçmıştı) aynı üçlüye çekildi. E.13 N+1: `include` 1 değil **2** sorgu,
+   `relationJoins` ile 1, `Promise.all` + `findUnique` birleşiyor; alan adları veri modeline
+   uyduruldu (`assigneeId`, `firstName`/`lastName`); 04 → Performans'taki "tek sorguda" da.
+8. **Captive dependency (01 + C.1):** "singleton ilk istekteki hâliyle dondurur" Nest'te
+   yanlış — kapsam yukarı yayılıyor; asıl bedel worker'da `get()` hatası ve `resolve()` ile
+   `undefined` kullanıcı. C.1'de `TRANSIENT` "her çağrıda yeni" değil, "her isteyene yeni".
+9. **Repository (01 + E.13):** reddedilen genel `IRepository<T>`, istenen modül başına adlı
+   sorgu dosyası — iki yere bağlayan paragraf, E.13 savunma cümlesi buna göre.
+   **dependency-cruiser 18.4** Node `^22 || ^24 || >=26` (Node 25'te açılmıyor) → C.8 notu.
+
+Kural: kitin örnekleri kitin kendi kararlarıyla aynı sayıları ve adları kullanır — örnek
+karar tablosundan sapınca ajan örneği kopyalar, kararı değil. ⚠️ Windows'ta denetim temiz
+depoda bile 12 "kırık bölüm" bulgusu veriyor: `relative()` ters bölü döndürüyor, alan
+karşılaştırması (`/` arıyor) bozuluyor ve alanlar arası atıflar da denetleniyor. Bu sürüm
+yolları `/`'ya çeviren bir kopyayla da doğrulandı (temiz); betiğin düzeltmesi kullanıcı
+onayını bekliyor. Model notu: bu sürüm Opus 5.5 + max ile yazıldı (MODEL VE EFORT tablosu
+kit kuralı için Fable + max önerir) — tablonun "ilk gerçek karşılaştırma" satırı için veri
+noktası.

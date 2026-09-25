@@ -78,7 +78,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 |---|:--:|---|
 | `.claude/rules/00-cekirdek.md` | Ajan | ⭐ **Çekirdek: her oturumda kendiliğinden yüklenen davranış kuralları** — rol, anlatım ölçütü, hangi soru → hangi dosya, sekiz kapı, commit protokolü, asla yapma, oturum hijyeni |
 | `.claude/rules/kod.md` | Ajan | ⭐ Tetikleyici — `src/**/*.{ts,tsx}` açılınca: katman, Server Action/Route Handler, durum makinesi, önbellek, başlık bloğu, aşırı mühendislik → `01`, `02` |
-| `.claude/rules/veritabani.md` | Ajan | Tetikleyici — `prisma/**`, `*repository*.ts`, `database/**`: `@map`, PK, tanım tablosu, migration aracı, audit, şifreli kolon → `04`, `14` |
+| `.claude/rules/veritabani.md` | Ajan | Tetikleyici — `prisma/**`, `*repository*.ts`, `database/**`: `@map`, PK, sabit değer kümesi, Prisma 7 düzeni, migration aracı, audit, şifreli kolon → `04`, `14` |
 | `.claude/rules/api.md` | Ajan | Tetikleyici — `**/api/**`, `*.controller.ts`, `actions.ts`, `contracts/**`: Zod sırası, yetki, hata biçimi, idempotency, kuyruk zamanı → `03` |
 | `.claude/rules/guvenlik.md` | Ajan | Tetikleyici — `**/auth/**`, `*guard*.ts`, `proxy.ts`, `upload*/**`: argon2id, JWT, 2FA, dosya yükleme sekiz kural, KVKK → `05`, `14` |
 | `.claude/rules/arayuz.md` | Ajan | Tetikleyici — `*.tsx`, `*.css`, `components/**`: tasarım yönü ADR, token, dört + üç durum, erişilebilirlik → `07`, `18` |
@@ -102,7 +102,7 @@ yüklersin ya da senin bilmen gereken bir şeyi hiç görmezsin.
 | 01 | `01-architecture.md` | Katmanlar, bir isteğin tam yolu, klasör yapısı, isimlendirme |
 | 02 | `02-coding-standards.md` | TypeScript, hata yönetimi, **yorum kuralları** (kod İngilizce, yorum Türkçe) |
 | 03 | `03-api-guidelines.md` | REST sözleşmesi, sürümleme, sayfalama, OpenAPI |
-| 04 | `04-database.md` | Şema, migration, index, soft delete, arama |
+| 04 | `04-database.md` | Şema, Prisma 7 düzeni, migration, sabit değer kümesi, index, soft delete, arama |
 | 05 | `05-auth-security.md` | Oturum, jeton ömürleri, OWASP, sır yönetimi, ödeme |
 | 06 | `06-testing.md` | Test piramidi, **beş gözle doğrulama**, kararsız testler |
 | 07 | `07-ui-design-system.md` | Tasarım yönü, token'lar, erişilebilirlik, performans bütçesi |

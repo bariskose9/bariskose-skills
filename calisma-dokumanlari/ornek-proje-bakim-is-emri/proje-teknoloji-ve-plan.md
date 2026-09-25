@@ -656,12 +656,27 @@ görmek istiyor. Bunlar bellekteki nesnelerin **ne kadar yaşayacağını** beli
 |---|---|---|
 | `DEFAULT` (singleton) | Uygulama boyunca **tek kopya** | Yapılandırma, `Clock`, SLA politikaları, factory |
 | `REQUEST` (scoped) | **Her istekte yeni**, istek bitince silinir | İsteğe özel bağlam |
-| `TRANSIENT` | Her kullanımda yeni | Kullanılmıyor — gerekçesiz kullanılmaz |
+| `TRANSIENT` | Onu **isteyen her sağlayıcıya** ayrı kopya — tekil bir servisin içine konunca o servis kadar yaşar ("her çağrıda yeni" değil) | Kullanılmıyor — gerekçesiz kullanılmaz |
 
 ⚠️ **Neden hayati:** İstek bazlı veriyi singleton bir serviste tutarsanız iki
 kullanıcının verisi karışır (C.16'daki Ahmet/Mehmet örneği). Bu hata tek
 kullanıcılı testte **hiç görünmez**, yük altında ortaya çıkar ve kurumsal bir
 sistemde yanlış kişinin verisini göstermek demektir.
+
+⚠️ **Ödev §14'ün "captive dependency oluşturulmaması" maddesi — Nest'te nasıl
+görünür (ölçüldü, 2026-09-25, Nest 12.1).** *Captive* (esir) bağımlılık: kısa
+ömürlü bir nesnenin uzun ömürlü birinin içinde kalıp ömründen fazla yaşaması.
+Nest'te `REQUEST` kapsamlı bir sağlayıcıyı tekil bir servise verirsen servis
+onu esir **almaz** — **kapsam yukarı yayılır** (Nest belgesinde *scope
+hierarchy*): o servis ve onu alan controller da her istekte yeniden kurulur (3
+istek → servis 3, controller 3 kurulum; bağımlılığı olmayan fabrika 1). Cevaplar
+doğru kalır; bedel başka yerde çıkar. Arka plan işinde (worker) HTTP isteği
+yoktur: yayılmanın sessizce `REQUEST` yaptığı servisi `moduleRef.get()` ile
+istemek hata verir (*"… is marked as a scoped provider. Request and
+transient-scoped providers can't be used in combination with "get()" method.
+Please, use "resolve()" instead."*), `resolve()` ise kullanıcıyı `undefined`
+getirir — yanlış veri, sessizce. *"Singleton onu ilk istekteki hâliyle
+dondurur"* cümlesi .NET'in davranışıdır; Nest'te olmaz.
 
 Bu projede aktif kullanıcı bilgisi scoped servis yerine `nestjs-cls` ile
 taşınıyor (C.16) — daha güvenli ve daha performanslı.
@@ -782,16 +797,17 @@ topladığınız, okunması kolay bir dosyadır. Üç şeyi tanımlar:
 - **Models:** Tablolar, kolonlar, veri tipleri ve tablolar arası ilişkiler
 
 ```prisma
-// 1) HANGİ VERİTABANI — bağlantı adresi koda yazılmıyor,
-//    ortam değişkeninden okunuyor (local ile canlı farklı olsun diye)
+// 1) HANGİ VERİTABANI — yalnızca türü. Bağlantı adresi Prisma 7'den beri
+//    şemada DEĞİL: migration komutları prisma.config.ts'ten, uygulama çalışma
+//    anında sürücü bağdaştırıcısından okur. Buraya url yazılırsa P1012 hatası.
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 // 2) NE ÜRETİLECEK — Prisma bu şemadan TypeScript kodu üretiyor
 generator client {
-  provider = "prisma-client-js"
+  provider = "prisma-client"            // Prisma 7'nin üreticisi (eskisi "prisma-client-js")
+  output   = "../src/generated/prisma"  // zorunlu: üretilen kod node_modules'a değil projeye yazılır
 }
 
 // 3) TABLOLAR
@@ -806,10 +822,18 @@ model Asset {
   id         Int      @id @default(autoincrement())
   name       String
   locationId Int                                   // hangi lokasyona ait
-  // İki tabloyu bağlayan tanım: locationId, Location tablosundaki id'yi gösteriyor
-  location   Location @relation(fields: [locationId], references: [id])
+  // İki tabloyu bağlayan tanım: locationId, Location tablosundaki id'yi gösteriyor.
+  // onDelete açıkça: varlığı olan lokasyon silinemez (yazılmasa Prisma zorunlu
+  // ilişkide RESTRICT, isteğe bağlı ilişkide SET NULL seçerdi — 04 → Bütünlük)
+  location   Location @relation(fields: [locationId], references: [id], onDelete: Restrict)
+
+  @@index([locationId])  // FK kolonuna index Prisma kendiliğinden koymaz (04 → Performans)
 }
 ```
+
+Bağlantının iki yarısı — `prisma.config.ts` (migration komutları okur) ve
+`@prisma/adapter-pg` ile kurulan istemci (uygulama okur) — kopyalanabilir
+hâliyle `04-database.md` → *"Prisma 7 düzeni"* bölümünde.
 
 ⭐ **Devralınabilirlik açısından belirleyici olan nokta:** Entity Framework
 Core'da veri modelini görmek için 30 sınıf dosyası gezersiniz. Prisma'da tek
@@ -823,6 +847,9 @@ elle SQL çalıştırmazsınız. Akış şu:
 2. `npx prisma migrate dev` komutunu çalıştırırsınız
 3. Prisma otomatik olarak `CREATE TABLE ...` gibi SQL üretir, PostgreSQL'e
    uygular ve bu değişikliği bir **geçmiş dosyası** olarak kaydeder
+4. `npx prisma generate` ile TypeScript istemcisini yenilersiniz — Prisma 7'de
+   `migrate dev` bunu **yapmaz**; atlanırsa yeni model kodda `undefined` çıkar
+   (*"Cannot read properties of undefined (reading 'create')"*)
 
 Bu geçmiş dosyaları git'e girer. Siz, DevOps ve CI **aynı SQL'i** çalıştırır;
 "bende tablo var sende yok" durumu oluşmaz.
@@ -1373,6 +1400,12 @@ içinde çiğnenir; projeye yeni katılan biri dokümanı okumamış olabilir.
 Ödevin §23'te istediği *"katman bağımlılıklarını doğrulayan testler"* maddesi
 tam olarak budur — ve bu, dokümantasyonda anlatılan değil **kod seviyesinde
 zorlanan** bir mimari demektir.
+
+⚠️ **Node sürümü (ölçüldü, 2026-09-25):** dependency-cruiser 18.4 desteklediği
+Node sürümlerini açıkça sınırlar: `^22 || ^24 || >=26`. Aradaki tek numaralı
+Node 25'te *"Your node version (25.6.0) is not supported"* deyip hiç açılmaz —
+kapı sessiz kalmaz, kırmızı düşer. CI'daki ve yereldeki Node sürümü
+`.nvmrc`'den okunur ve LTS'dir (`00-stack.md`'deki sürüm tablosu).
 
 ## C.9 TypeScript
 
@@ -2751,15 +2784,15 @@ zorunda kalmaması için. Böylece yenisi eklendiğinde çağıran kod değişme
 // SÖZLEŞME (arayüz): "SLA hesaplayan her sınıf şu iki işi yapabilmeli."
 // Burada hesap YOK — sadece "ne yapabilmesi gerektiği" yazıyor.
 interface SlaPolicy {
-  supports(ctx: SlaContext): boolean;   // Soru: bu iş emri bana uyuyor mu?
-  calculate(ctx: SlaContext): SlaPlan;  // Soru: süreleri hesapla ve geri ver
+  supports(ctx: SlaContext): boolean;            // Soru: bu iş emri bana uyuyor mu?
+  calculate(ctx: SlaContext): Promise<SlaPlan>;  // Soru: süreleri hesapla ve geri ver (takvim tatilleri okur → async)
 }
 
-// SÖZLEŞMEYİ UYGULAYAN 1 — kritik varlıkta arıza çıktıysa 4 saat verir
-class CriticalAssetBreakdownPolicy implements SlaPolicy { ... }
+// SÖZLEŞMEYİ UYGULAYAN 1 — arıza: "başlangıç + öncelik süresi × varlık çarpanı" (E.4)
+class BreakdownPolicy implements SlaPolicy { ... }
 
-// SÖZLEŞMEYİ UYGULAYAN 2 — düşük öncelikli bakım işine 15 gün verir
-class LowPriorityMaintenancePolicy implements SlaPolicy { ... }
+// SÖZLEŞMEYİ UYGULAYAN 2 — planlı bakım: son tarih = planlanan tarih (E.4)
+class PlannedMaintenancePolicy implements SlaPolicy { ... }
 
 // ⭐ Bu ikisini kullanan kod, hangisinin geldiğini BİLMEK ZORUNDA DEĞİL.
 //    Tek bildiği: "elimde SlaPolicy sözü veren bir şey var, calculate
@@ -3140,18 +3173,32 @@ tesisata dokunmazsınız**, çoklayıcıya bir fiş daha takarsınız.
 **Bu projede — SLA politikaları:**
 
 ```ts
-// ⛔ YANLIŞ: yeni bir kural gelince ÇALIŞAN fonksiyonun içini açmak gerekiyor
-function hesapla(wo) {
-  if (wo.priority === 'CRITICAL') return 4;    // kritik iş → 4 saat
-  if (wo.priority === 'HIGH')     return 24;   // yüksek öncelik → 24 saat
-  // Yeni kural buraya girecek. Her giriş, üstteki iki satırı bozma riski taşır
-  // ve bu fonksiyonun tüm testleri yeniden koşmak zorunda.
+// ⛔ YANLIŞ: iş emri TÜRÜNE göre dallanan tek fonksiyon — farklı davranan yeni
+//    bir tür gelince ÇALIŞAN fonksiyonun içini açmak gerekiyor
+function calculateDueAt(ctx: SlaContext, now: Date, hours: number): Date {
+  if (ctx.type === 'BREAKDOWN')  return addHours(now, hours);        // arıza: şimdiden say
+  if (ctx.type === 'PREVENTIVE') return ctx.plannedAt!;              // planlı bakım: son tarih = planlanan tarih
+  if (ctx.type === 'INSPECTION') return addDays(ctx.plannedAt!, 3);  // periyodik kontrol: pencere sonu (3 gün tolerans)
+  // Farklı davranan yeni tür buraya girecek. Her giriş üstteki satırları bozma
+  // riski taşır ve bu fonksiyonun tüm testleri yeniden koşmak zorunda.
+  throw new Error('unknown type');  // unutulan tür derlemede değil, çalışırken patlar
 }
 
-// ✅ DOĞRU: yeni kural = tamamen yeni bir sınıf. Mevcut hiçbir satır değişmiyor.
-class WeekendMaintenancePolicy implements SlaPolicy { ... }
+// ✅ DOĞRU: tür başına bir sınıf — E.4'teki BreakdownPolicy, PlannedMaintenancePolicy,
+//    PeriodicCheckPolicy. Farklı davranan yeni tür = tamamen yeni bir sınıf:
+class InstallationPolicy implements SlaPolicy { ... }  // ör. "kurulum randevudan 2 saat önce hatırlatılsın" istenirse
 // Modülde kayıt listesine tek satır eklenir; çalışan kod olduğu gibi kalır.
+// (Bugün kurulum planlı bakımla AYNI davranıyor → bu sınıf YOK; E.4 §6 karar 3.)
 ```
+
+⚠️ **Öncelik farkı sınıf değil, VERİDİR.** *"Yüksek öncelik 12 saat olsun"*
+isteği ne bir `if` ne bir sınıftır: E.4'teki süre tablosunda (kodda
+`SLA_RULES`) bir sayıdır. Tablo da genişletmeye açıktır — yeni öncelik = yeni
+satır, hesaplayan kod değişmez; yani OCP **veriyle de** sağlanır. Ölçüt:
+*"Değişen bir sayı mı, bir formül mü?"* Sayıysa veri, formülse (davranış)
+sınıf. Önceliği sınıflara bölmek (`CriticalPriorityPolicy`,
+`HighPriorityPolicy`…) ödev §7'nin yasakladığı *"göstermelik sınıf"* olur:
+hepsi aynı formülü başka bir sayıyla çalıştırır.
 
 **Neden bu kadar önemli:** Çalışan bir kodu her açtığınızda bozma riski
 alırsınız. Eklemek risksizdir, değiştirmek risklidir.
@@ -3581,9 +3628,9 @@ Buradaki tasarım kararı ödevin en çok denetlenecek yeri:
 
 | Tür | SLA nasıl hesaplanıyor | Politika sınıfı |
 |---|---|---|
-| **Arıza** | `şimdi + (öncelik süresi × varlık çarpanı)` | `ArizaSlaPolitikasi` |
-| **Planlı bakım** | Planlanan tarih **son tarihtir**; hatırlatma 1 gün önce | `PlanliBakimSlaPolitikasi` |
-| **Periyodik kontrol** | Planlanan tarih ± tolerans penceresi (varsayılan 3 gün) | `PeriyodikKontrolSlaPolitikasi` |
+| **Arıza** | `şimdi + (öncelik süresi × varlık çarpanı)` | `BreakdownPolicy` (arıza politikası) |
+| **Planlı bakım** | Planlanan tarih **son tarihtir**; hatırlatma 1 gün önce | `PlannedMaintenancePolicy` (planlı bakım politikası) |
+| **Periyodik kontrol** | Planlanan tarih ± tolerans penceresi (varsayılan 3 gün) | `PeriodicCheckPolicy` (periyodik kontrol politikası) |
 
 ⭐ **Ödev §7 diyor ki:** *"Factory yalnızca göstermelik bir sınıf olmamalıdır."*
 Üç politika **gerçekten farklı hesap** yapıyor — biri süre ekliyor, biri sabit
@@ -3670,13 +3717,16 @@ ve **escalation** (yükseltme — süre aşılmadan önce üst amire haber verme
 
 ```ts
 // ⛔ Bu yaklaşım kullanılmadı — neden kullanılmadığı aşağıda
-function hesapla(wo: WorkOrder) {
-  // Kritik öncelikli iş + kritik varlık → 4 saat
-  if (wo.priority === 'CRITICAL' && wo.asset.criticality === 'HIGH') return 4;
-  // Kritik öncelikli ama varlık kritik değil → 8 saat
-  if (wo.priority === 'CRITICAL') return 8;
-  // Yüksek öncelikli arıza → 24 saat
-  if (wo.priority === 'HIGH' && wo.type === 'BREAKDOWN') return 24;
+function calculateSlaHours(wo: WorkOrder) {
+  // Kritik öncelik + kritik varlık → 3 × 0,5 = 1,5 saat
+  if (wo.priority === 'CRITICAL' && wo.asset.criticality === 'CRITICAL') return 1.5;
+  // Kritik öncelik + yüksek kritiklikte varlık → 3 × 0,75 = 2,25 saat
+  if (wo.priority === 'CRITICAL' && wo.asset.criticality === 'HIGH') return 2.25;
+  // Kritik öncelik, varlık normal → 3 saat (düşük kritiklikteki ×1,5 unutuldu bile)
+  if (wo.priority === 'CRITICAL') return 3;
+  // Yüksek öncelikli arıza → 8 saat
+  if (wo.priority === 'HIGH' && wo.type === 'BREAKDOWN') return 8;
+  // 4 öncelik × 4 kritiklik = 16 dal — ve bu yalnızca arıza türü
 
   // ⚠️ Her yeni kural bu bloğun İÇİNE yazılmak zorunda; yani çalışan kodu
   //    her seferinde açıp değiştiriyorsun ve mevcut kuralları bozma riski
@@ -3696,33 +3746,66 @@ Her kural kendi sınıfında, ortak bir **arayüz** (E.0) altında:
 ```ts
 // SÖZLEŞME: SLA hesaplayan her sınıf şu iki soruyu cevaplayabilmeli
 interface SlaPolicy {
-  supports(ctx: SlaContext): boolean;      // "bu iş emri bana uyuyor mu?"
-  calculate(ctx: SlaContext): SlaPlan;     // bitiş + hatırlatma + yükseltme zamanı
+  supports(ctx: SlaContext): boolean;            // "bu iş emri bana uyuyor mu?" — TÜR sorusu
+  calculate(ctx: SlaContext): Promise<SlaPlan>;  // bitiş + hatırlatma + yükseltme zamanı (takvim tatilleri okur → async)
 }
 
-// TEK BİR KURAL, kendi sınıfında. Başka kuralı bilmiyor, etkilemiyor.
-@Injectable()
-export class CriticalAssetBreakdownPolicy implements SlaPolicy {
+// VERİ: §1–§3 tablolarının kod karşılığı — TEK yerde. Öncelik farkı bir sınıf
+// değil, buradaki bir SATIRDIR ("Yüksek 12 saat olsun" = bir sayı değişir).
+// Priority, AssetCriticality: Prisma'nın enum'dan ürettiği tipler (veri modeli ⭐V2).
+type SlaRule = { baseHours: number; calendar: 'ALWAYS' | 'BUSINESS_HOURS' };
+export const SLA_RULES = {
+  CRITICAL: { baseHours: 3,  calendar: 'ALWAYS' },          // 7/24 — §5
+  HIGH:     { baseHours: 8,  calendar: 'BUSINESS_HOURS' },  // mesai: hafta içi 08–17, tatiller hariç
+  NORMAL:   { baseHours: 24, calendar: 'BUSINESS_HOURS' },
+  LOW:      { baseHours: 72, calendar: 'BUSINESS_HOURS' },
+} as const satisfies Record<Priority, SlaRule>;  // satisfies: dört önceliğin HEPSİ burada mı — biri eksikse derlenmez
+export const ASSET_MULTIPLIER = { CRITICAL: 0.5, HIGH: 0.75, NORMAL: 1, LOW: 1.5 } as const satisfies Record<AssetCriticality, number>; // §2
+const REMIND_AT = 0.5;    // §3: sürenin %50'sinde ilk hatırlatma
+const ESCALATE_AT = 0.8;  // §3: sürenin %80'inde yükseltme
 
-  // Bu kural yalnızca "kritik varlıkta arıza" durumunda devreye giriyor
-  supports(ctx: SlaContext) {
-    return ctx.assetCriticality === 'HIGH' && ctx.type === 'BREAKDOWN';
+// DAVRANIŞ: tür başına bir sınıf. Bu sınıf ARIZA türünün formülünü taşır:
+// "başlangıç + öncelik süresi × varlık çarpanı, önceliğin takviminde say."
+@Injectable()
+export class BreakdownPolicy implements SlaPolicy {
+  constructor(private readonly calendar: WorkCalendar) {}  // 7/24 ya da mesai + resmî tatiller (§5, holidays tablosu)
+
+  // Yalnızca TÜRE bakar — öncelik ve kritiklik burada sorulmaz, hesapta kullanılır
+  supports(ctx: SlaContext): boolean {
+    return ctx.type === 'BREAKDOWN';
   }
 
-  // Uyduysa süreleri hesaplıyor
-  calculate(ctx: SlaContext): SlaPlan {
-    // Şu andan itibaren 4 saat. Saati Clock servisinden alıyoruz ki
-    // testte "sen şu an şu andasın" diyebilelim.
-    const due = this.clock.now().plus({ hours: 4 });
-
+  async calculate(ctx: SlaContext): Promise<SlaPlan> {
+    const rule  = SLA_RULES[ctx.priority];                                  // CRITICAL → 3 saat, 7/24
+    const hours = rule.baseHours * ASSET_MULTIPLIER[ctx.assetCriticality];  // kritik varlık: 3 × 0,5 = 1,5 saat
+    // Saat TALEP açıldığı an başlar (§6 karar 1), iş emrine dönüştüğü an değil.
+    // slaStartAt'i talep açılırken servis Clock'tan doldurur (ödev §8) —
+    // politika saati hiç okumaz, bu yüzden testi sahte saat bile istemez.
+    const start = ctx.slaStartAt;
     return {
-      dueAt:      due,                          // bitmesi gereken an
-      remindAt:   due.minus({ hours: 1 }),      // 1 saat kala hatırlat
-      escalateAt: due.minus({ minutes: 30 }),   // 30 dakika kala üst amire bildir
+      dueAt:      await this.calendar.addHours(start, hours, rule.calendar),                // bitmesi gereken an
+      remindAt:   await this.calendar.addHours(start, hours * REMIND_AT, rule.calendar),    // %50 — teknik personele hatırlat
+      escalateAt: await this.calendar.addHours(start, hours * ESCALATE_AT, rule.calendar),  // %80 — amire ve operasyon sorumlusuna bildir
     };
   }
 }
 ```
+
+Örnek: Cuma 16:00'da kritik bir varlıkta açılan kritik arıza → 3 × 0,5 = 1,5
+saat, 7/24 → son tarih 17:30, hatırlatma 16:45, yükseltme 17:12.
+`PlannedMaintenancePolicy` aynı sözleşmeyi uygular ama planlanan tarihi son
+tarih yapar, hatırlatmayı bir gün önceye koyar (`supports`: `PREVENTIVE` ve
+`INSTALLATION` — §6 karar 3); `PeriodicCheckPolicy` tolerans penceresine
+bakar. Üçü **gerçekten farklı formül** — ödevin "göstermelik olmasın" şartı
+budur.
+
+⭐ **Süreler neden kodda, tabloda değil:** ödev §7 süreleri geliştiricinin
+belirleyip belgelemesini istiyor ve `satisfies` her öncelik için satır olduğunu
+**derleyiciye** denetletiyor — yeni öncelik eklenip süresi unutulursa kod
+derlenmez. ⚠️ **Ters koşul:** iş birimi süreleri **yayınsız** değiştirmek
+isterse aynı satırlar bir tabloya taşınır (`sla_policies`: öncelik · temel saat
+· takvim) ve `SLA_RULES[…]` yerine bir repository okur — `BreakdownPolicy`'nin
+formülü değişmez, yalnızca verinin kaynağı değişir.
 
 Factory, politikaları **enjeksiyonla** alır ve ilk uyanı seçer:
 
@@ -3754,9 +3837,11 @@ Kayıt, modülde tek satır:
 // sınıf adı yazmak. Factory'ye ve diğer politikalara DOKUNULMUYOR.
 // ⭐ Open/Closed prensibinin somut karşılığı burası.
 // ⚠️ Sıra önemli: özel kurallar üstte, genel kural altta olmalı. Genel kural
-//    öne geçerse özel olanlara hiç sıra gelmez ve hata sessiz kalır.
+//    öne geçerse özel olanlara hiç sıra gelmez ve hata sessiz kalır. (Bugünkü
+//    üç sınıfın türleri çakışmıyor; sıra, ileride "kritik varlıkta arıza" gibi
+//    özel bir kural eklenince önem kazanır — o, BreakdownPolicy'nin ÖNÜNE girer.)
 { provide: SLA_POLICIES, useFactory: (...p: SlaPolicy[]) => p,
-  inject: [CriticalAssetBreakdownPolicy, HighPriorityPolicy, DefaultPolicy] }
+  inject: [BreakdownPolicy, PlannedMaintenancePolicy, PeriodicCheckPolicy] }
 ```
 
 **Yeni kural eklemek:** yeni sınıf yaz, `inject` listesine ekle. Factory'ye,
@@ -4444,6 +4529,15 @@ kayıtlar yanlış anlam kazanır** — metinde bu risk yok.
 
 **Bedeli:** Birkaç bayt daha fazla yer. Bu ölçekte önemsiz.
 
+⚠️ **"Metin mi sayı mı"dan önce bir soru daha var: enum mı, tanım tablosu mu?**
+Kural `04-database.md` → *"SABİT DEĞER KÜMESİ"* bölümünde (3.24.0): iş
+biriminin yönettiği liste her modda tanım tablosu; kodun listesi kurum modunda
+tanım tablosu + `as const` + eşleşme testi, kendi projede PostgreSQL enum. Bu
+projenin listeleri kodun listesi ya da yönetim ekranı olmayan iş listesi →
+yerel enum (veri modeli ⭐V2). Ölçülen bedeller: enum değeri silinemez, aynı
+işlemde ekleyip kullanılamaz; tanım tablosunda `ORDER BY` alfabetik sıralar
+(`sort_order` gerekir).
+
 ---
 
 ### Tarih ve saat standardı
@@ -4455,6 +4549,12 @@ kullanıcıya gösterilirken yerel saate çevriliyor.
 taşındığında yerel saatle saklanmış veriler **kayar.** SLA hesabı saat farkına
 duyarlı olduğu için bu gerçek bir risk: bir iş emrinin "süresi geçti mi"
 sorusunun cevabı sunucunun saat dilimine göre değişemez.
+
+**Prisma'da nasıl yazılır:** `slaDueAt DateTime @db.Timestamptz(3)`. Yalnız
+`DateTime` yazılırsa Prisma saat dilimsiz `TIMESTAMP(3)` üretir. Prisma iki tipi
+de doğru okur, ama veritabanına dışarıdan bakan (rapor aracı, `psql`) İstanbul
+oturumunda saat dilimsiz kolonu 3 saat kaydırır — ölçüldü: 30 dakika önceki
+kayıt için *"son 1 saatte mi"* sorusu *hayır* döndü.
 
 ---
 
@@ -4478,8 +4578,11 @@ filtrelere** göre konur.
 
 ⭐ **Birleşik (composite) index'te sıra önemlidir.** `(locationId, status)`
 index'i, yalnızca `locationId` ile yapılan aramada da çalışır; ama yalnızca
-`status` ile yapılan aramada **çalışmaz.** Bu yüzden sık kullanılan alan başa
-konur.
+`status` ile yapılan aramada **çalışmaz** — PostgreSQL 18'e kadar. PG 18'in
+*skip scan*'i ilk kolonun farklı değer sayısı azsa index'i atlaya atlaya yine
+kullanır (ölçüldü: 50 lokasyonda *"Index Searches: 51"*, 5,6 ms; ilk kolon
+5.000 farklı değerliyken tam tarama, 20,6 ms). Tasarım buna dayanmaz: sık
+kullanılan alan başa konur ya da ayrı index alır.
 
 ---
 
@@ -5236,24 +5339,36 @@ adını da göster."*
 // ⛔ N+1 — bu kod ÇALIŞIR ve test ortamında HIZLI görünür
 const workOrders = await prisma.workOrder.findMany();   // 1 sorgu: 50 iş emri geldi
 for (const wo of workOrders) {                          // sonra 50 kez döngü
-  wo.assignee = await prisma.user.findUnique({          // ⛔ her tur AYRI sorgu → 50 sorgu
-    where: { id: wo.assignedToId },
+  wo.assignee = await prisma.user.findUnique({          // ⛔ her tur AYRI sorgu, sırayla beklenir → 50 sorgu
+    where: { id: wo.assigneeId },
   });
 }
 // Toplam: 51 veritabanı gidiş-gelişi. 10 kayıtla fark edilmez, 500 kayıtla ekran donar.
 ```
 
 ```ts
-// ✅ Tek sorgu — Prisma ilişkiyi aynı sorguda getiriyor
+// ✅ Sabit sayıda sorgu — ilişkiyi Prisma'ya SÖYLÜYORSUN, o toplu getiriyor
 const workOrders = await prisma.workOrder.findMany({
-  include: { assignedTo: { select: { id: true, fullName: true } } },
-  //         ↑ "personeli de getir"          ↑ sadece bu iki kolonu (E.6)
+  include: { assignee: { select: { id: true, firstName: true, lastName: true } } },
+  //         ↑ "atanan personeli de getir"      ↑ sadece bu kolonlar (E.6)
 });
-// Toplam: 1 veritabanı gidiş-gelişi.
+// Toplam: 2 veritabanı gidiş-gelişi — iş emirleri + "WHERE id IN (…)" ile personeller.
+// 50 kayıtta da 5.000 kayıtta da 2: sayı satırla BÜYÜMÜYOR — N+1'i bitiren bu.
 ```
 
+⚠️ **"`include` tek sorgu atar" yanlıştır — ölçüldü (Prisma 7.10,
+2026-09-25).** Varsayılan yükleme stratejisi yukarıdaki gibi **iki** sorgu
+atar — tablodaki "1 + 1 = 2"nin ta kendisi. Tek sorgu gerekiyorsa şemada
+`previewFeatures = ["relationJoins"]` açılır ve sorguya
+`relationLoadStrategy: "join"` yazılır (PostgreSQL'de `LEFT JOIN LATERAL`
+üretir); çoğu ekranda gerekmez. Bir ölçüm daha: döngüdeki `findUnique`'ler
+sırayla değil `Promise.all` ile aynı anda verilirse Prisma onları tek bir `IN`
+sorgusuna **birleştiriyor** (23 çağrı → 1 sorgu); aynısı `findFirst` ile
+birleşmiyor (23 sorgu). N+1'i doğuran, döngüde sırayla beklemektir.
+
 **REST'te risk neden düşük:** Cevabın şeklini **sen** yazıyorsun. Yukarıdaki
-`include`'u bir kez doğru yazarsın, o uç hep tek sorgu atar.
+`include`'u bir kez doğru yazarsın, o uç hep **sabit sayıda** (burada iki)
+sorgu atar.
 
 **GraphQL'de risk neden yüksek:** Cevabın şeklini **istemci** belirliyor. İstemci
 *"iş emirlerini ver, her birinin personelini ver, her personelin de bağlı olduğu
@@ -5414,10 +5529,10 @@ saklamak. Amacı, iş kodunun veritabanı aracını doğrudan tanımaması.
 1. **Prisma zaten o soyutlamadır.** Prisma Client, SQL'i saklayan ve tip güvenli
    bir arayüz sunan katmanın kendisi. Üstüne ikinci bir katman koymak, aynı işi
    iki kez yapmak olur.
-2. **`select` ve `include` yeteneklerini kısıtlar.** Repository arkasına
-   saklanınca, her ekranın ihtiyaç duyduğu farklı alan kümesi için ya ayrı metot
-   yazılır ya da her şey döndürülür. İkisi de E.6'daki projeksiyon kazancını
-   yok eder.
+2. **`select` ve `include` yeteneklerini kısıtlar.** Genel bir arayüzün
+   arkasına saklanınca her ekranın ihtiyaç duyduğu farklı alan kümesi için ya
+   ayrı metot yazılır — arayüz "genel" olmaktan çıkar — ya da her şey
+   döndürülür ve E.6'daki projeksiyon kazancı gider.
 3. **Ödevin uyardığı tuzağa götürür:** *"Her entity için birbirinin aynısı
    generic CRUD servisleri oluşturulmamalıdır."* Repository katmanı çoğu projede
    tam olarak buna dönüşür.
@@ -5427,11 +5542,24 @@ saklamak. Amacı, iş kodunun veritabanı aracını doğrudan tanımaması.
 duyduğu soruyu kendi arayüzü olarak tanımlıyor; onu Prisma ile cevaplayan sınıf
 altyapı katmanında duruyor.
 
-⭐ **Savunma cümlesi:** *"Repository eklemedim çünkü Prisma'nın kendisi o
-soyutlama. İkinci bir katman `select` yeteneklerini kısıtlar ve ödevin uyardığı
-generic CRUD tuzağına götürür. Domain'in bağımsızlığını Repository ile değil,
-bağımlılığı tersine çevirerek sağladım — ve bunu `dependency-cruiser` testiyle
-zorunlu kıldım."*
+⚠️ **Bu, `01-architecture.md`'deki "her modülde `*.repository.ts`" kuralıyla
+çelişmez — ikisi farklı şeyden söz ediyor.** Burada reddedilen **genel
+Repository deseni**: her tabloya aynı `IRepository<T>` (`getById`, `getAll`,
+`add`, `update`, `delete`) ve "ORM'i saklarım" iddiası. 01'in istediği ise modül
+başına **adlı sorgu dosyası**: `work-order.repository.ts` içinde
+`findOverdue(now)`, `listForAssignee(userId)` gibi, her biri bir ekranın
+ihtiyacını kendi `select`'iyle karşılayan metotlar — 2. maddedeki "ayrı metot"
+bedeli burada bilerek ödenir, karşılığında sorgu bir **ad** kazanır. Prisma'yı
+saklamaz; üç iş görür: servis 40 satırlık `findMany` yerine niyeti okur, hangi
+modülün hangi tabloya dokunduğu `dependency-cruiser` ile denetlenir (C.8),
+testte sahtesi (fake) verilir.
+
+⭐ **Savunma cümlesi:** *"Genel bir Repository katmanı eklemedim çünkü
+Prisma'nın kendisi o soyutlama; ikinci bir katman `select` yeteneklerini
+kısıtlar ve ödevin uyardığı generic CRUD tuzağına götürür. Modül başına adlı
+bir sorgu dosyam var — ORM'i saklamak için değil, sorgulara ad vermek ve tablo
+sahipliğini denetlemek için. Domain'in bağımsızlığını bağımlılığı tersine
+çevirerek sağladım — ve bunu `dependency-cruiser` testiyle zorunlu kıldım."*
 
 ---
 
