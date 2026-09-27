@@ -684,3 +684,30 @@ bağdaştırıcı) kartın içine alındı. **Kullanıcı kararı (25 Eyl):** `c
 kullanıcının okuma dosyasıdır — kart kendi başına okunur, başka dosyaya göndermez; "aynı
 bilgi iki yerde yazılmaz" kuralı bu dosyalar için şimdilik askıda (*"çoklayabilirsin,
 kuralı boşver şimdilik"*). Yama sürümü: kural değişmedi, anlatım ve ölçüm eklendi.
+
+### Ek — 2026-09-27 (3.24.2): API katmanında dört kart düzeltmesi — istek tüneli, hata filtresi, imleçli sayfalama, Zod → OpenAPI köprüsü
+
+Öğrenme deposunun H5 turu (REST API ve OpenAPI) gerçek bir NestJS 12.1 uygulaması, Prisma
+7.10 ve PostgreSQL 18.4 üzerinde koşturuldu; dört kart ölçümle düzeltildi (kartlar ve ikizi
+bayt bayt aynı). **C.1** — istek tüneli çiziminde ara katman yoktu ve önleyici yalnızca
+sondaydı; ölçülen sıra: ara katman → bekçi → önleyici (önce) → boru → işleyici → önleyici
+(sonra); hatada önleyicinin ikinci yarısı çalışmıyor, bekçi reddedince boru ve işleyici hiç
+çalışmıyor — "her cevabı zarfla" işinin önleyiciye değil filtreye ait olmasının sebebi.
+**E.7** — filtre `application/problem+json` içerik türünü koymuyordu; `@Catch()` gövde
+ayrıştırıcısının 413'ünü (http-errors imzası) 500'e çeviriyordu, bozuk JSON'da ayrıştırıcının
+ham mesajı cevaba sızıyordu; filtre yokken Nest dört hatayı üç ayrı gövdeyle döndürüp servis
+hatasını 500 yapıyordu — üç dallı eşleme tablosu ve 415 notu eklendi. **E.10** — Prisma'nın
+`cursor`'u benzersiz olmayan sıralamada `LIMIT`'siz SQL üretip aynı kayıtları iki sayfada
+verdi; kartta "üretilen SQL" diye gösterilen satır karşılaştırması Prisma'nın ürettiği değildi;
+`OR`'lu keyset index'te süzgeç olarak kaldığı için offset kadar yavaş (500 bin satırda ~26 ms ↔
+offset ~25 ms); hızlı biçim tek kolonlu ön koşul + `OR` (0,9–2,7 ms) ya da ham satır
+karşılaştırması (0,7–1,2 ms) — örnek kod eşitlik bozucuyla yeniden yazıldı. **C.18** —
+Zod → Swagger köprüsü gösterilmiyordu; topluluk köprüsü `nestjs-zod` 5.5.0 Nest 12'ye
+kurulmuyor (eş bağımlılık `^10 || ^11`); çalışan yol `z.toJSONSchema(schema, { io: "input" })` +
+elle yol kütüğü + OpenAPI 3.1, ve ilk taslak `redocly lint`'ten 6 hata 6 uyarı aldı (güvenlik
+şeması, `servers`, `operationId`). **Yazılmayan:** `03-api-guidelines.md` kartlarla üç yerde
+çelişiyor — hata gövdesi `{ error: { code, message, details } }` ↔ RFC 9457 (E.7, E.12); `422`
+"doğrulama hatası" ↔ "şema 400, iş kuralı 422" (E.7); liste zarfı `{ data, meta: { page, total } }`
+↔ ödev §17'nin alanları (E.10). Kural değişikliği kullanıcı onayı bekliyor (öğrenme deposundaki kite-taşınacaklar
+listesinde). Yama sürümü: kural değişmedi, kart örnekleri ölçümle düzeltildi.
+Model notu: Opus 5.5 + max.

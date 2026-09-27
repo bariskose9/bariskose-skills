@@ -587,14 +587,31 @@ bir soruya bakar:
 
 ```
 İstek gelir
-  → Guard        "sen kimsin, yetkin var mı?"          → hayırsa 401/403
+  → Middleware   herkese aynı iş: istek kimliği, gövde türü     (Express düzeyinde — Nest'in halkalarından ÖNCE)
+  → Guard        "sen kimsin, yetkin var mı?"          → hayırsa 401/403 (Pipe ve Controller HİÇ çalışmaz)
+  → Interceptor  ÖNCE: süre ölçümü başlar, log            (ilk yarısı Pipe'tan ÖNCE çalışır)
   → Pipe         "gönderdiğin veri geçerli mi?"        → hayırsa 400
-  → Controller   "hangi işi istiyorsun?"
-  → Service      iş kuralları + veritabanı
-  → Interceptor  süreyi ölç, logla, cevabı biçimlendir
+  → Controller   "hangi işi istiyorsun?"  → Service: iş kuralları + veritabanı
+  → Interceptor  SONRA: süreyi bitir, cevabı biçimlendir  (hata olursa bu yarı HİÇ ÇALIŞMAZ)
   → Filter       yolda hata çıktıysa yakala, düzgün cevaba çevir
 Cevap döner
 ```
+
+⚠️ **Sıra ölçüldü (2026-09-27, Nest 12.1.0)** — her halkası çalışınca bir satır
+yazan küçük bir uygulamayla üç istek izlendi:
+
+```
+normal istek:      middleware → guard → interceptor (önce) → pipe → handler → interceptor (sonra) → 200
+handler'da hata:   middleware → guard → interceptor (önce) → pipe → handler → FILTER → 500
+guard reddetti:    middleware → guard → FILTER → 403
+```
+
+Bu kartın eski çiziminde ara katman (middleware) yoktu ve önleyici
+(interceptor) yalnızca sondaydı. İki pratik sonucu var: **süre ölçümü
+önleyicide başlarsa doğrulama süresi de ölçüme girer** (ilk yarı Pipe'tan önce);
+ve **hata olunca önleyicinin ikinci yarısı çalışmadığı için "her cevabı
+zarfla" işi önleyiciye verilirse hata cevapları zarfsız kalır** — hata
+biçiminin yeri Filter'dır (E.7).
 
 Bu projedeki karşılıkları:
 
@@ -2306,6 +2323,22 @@ create(@Body() dto: CreateWorkOrderDto) { ... }
 
 ⭐ Kural değiştiğinde doküman **kendiliğinden** değişir. Eskime ihtimali
 yapısal olarak ortadan kalkıyor — E.3'teki DRY ilkesinin bir uygulaması.
+
+⚠️ **Köprü — Zod şeması Swagger'a nasıl geçer (ölçüldü, 2026-09-27).** Yukarıdaki
+`CreateWorkOrderDto`'nun Zod şemasından doğması için bir köprü gerekir;
+`@nestjs/swagger` (12.0.2) kendiliğinden yalnızca `class-validator`
+süslemelerini okur (eş bağımlılıkları arasında `class-validator` ve
+`class-transformer` var). Topluluğun köprü paketi **`nestjs-zod` 5.5.0 Nest
+12'ye kurulmuyor**: *"ERESOLVE … peer @nestjs/common@\"^10.0.0 \|\| ^11.0.0\"
+from nestjs-zod@5.5.0"*. Nest 12'de çalışan yol: şemalar **Zod 4'ün kendi**
+`z.toJSONSchema(schema, { io: 'input' })`'u ile JSON Schema'ya çevrilir, yol ve
+yöntemler küçük bir kütükte yazılır, belge OpenAPI **3.1** olarak sunulur
+(Zod'un ürettiği JSON Schema 2020-12'yi 3.1 kayıpsız taşır). Üretilen belge
+bağımsız bir denetleyiciden geçirilmeli: ilk taslak `redocly lint`'ten **6 hata,
+6 uyarı** aldı — güvenlik şeması, `servers` ve `operationId` eksikti; üçü
+eklenince geçti. `BIGINT` kimlik kullanılıyorsa alan telde **metindir**
+(`z.string().regex(/^[1-9]\d{0,18}$/)`); `z.number()` 2^53'ten büyük kimliği
+bozar.
 
 ### Sadece okunmaz, denenir
 
@@ -4305,7 +4338,9 @@ export class DomainExceptionFilter implements ExceptionFilter {
     this.logger.error({ err, correlationId, code });
 
     // Kullanıcıya dönen cevap. Biçim her uçta AYNI, arayüz tek yerde ele alıyor.
-    res.status(status).json({
+    // İçerik türü de sözleşmenin parçası: RFC 9457'nin türü application/problem+json
+    // (yalnızca .json() deseydik application/json giderdi — ölçüldü).
+    res.status(status).type('application/problem+json').json({
       type:     `https://api.example/errors/${code}`,   // hatanın dokümanı
       title:    this.title(code),                       // kısa başlık
       status,                                           // HTTP kodu
@@ -4317,6 +4352,23 @@ export class DomainExceptionFilter implements ExceptionFilter {
   }
 }
 ```
+
+⚠️ **Ölçülen iki tuzak — `@Catch()` HER şeyi yakaladığı için (2026-09-27, Nest
+12.1.0, Express 5 adaptörü).** Filtre yokken Nest'in kendi varsayılanı dört hatayı
+**üç ayrı gövde biçimiyle** döndürdü ve servisin fırlattığı "iş emri bulunamadı"
+hatası **500** oldu (Nest bizim hata sınıflarımızı tanımıyor) — tek filtrenin
+neden zorunlu olduğunun ölçülmüş hâli. Filtreyi yazınca da `map` üç dal ister,
+biri eksik kalırsa doğru durum kodu 500'e döner:
+
+| Dal | Ne yakalar | Unutulursa (ölçüldü) |
+|---|---|---|
+| Bizim hata sınıflarımız (`AppError`) | iş kuralı, bulunamadı, çakışma | — |
+| Nest'in `HttpException`'ları | olmayan rota (404), **bozuk JSON** — Nest onu Express adaptöründe `BadRequestException`'a sarıyor ve ayrıştırıcının ham mesajını (*"Unterminated string in JSON at position 16"*) taşıyor; ham mesaj log'a, cevaba Türkçe bir cümle; hız sınırı (429) | ham iç mesaj kullanıcıya gider |
+| Gövde ayrıştırıcısının hataları (`http-errors` imzası: `status` sayısı + `expose: true`) | **gövde çok büyük (413)** | 70 KB'lık gövde **500** döndü; Nest'in varsayılanı 413 veriyordu |
+
+Gövdesi JSON olmayan istek (`Content-Type: text/plain`) filtreye hiç gelmez —
+Nest gövdeyi ayrıştırmaz, Pipe'a `undefined` gider ve 400 döner; HTTP'nin
+doğru cevabı **415**'tir, bunu küçük bir ara katman verir.
 
 ### Hata türleri ve HTTP kodları
 
@@ -4977,28 +5029,61 @@ LIMIT 20 OFFSET 100;
 *"**Şu kayıttan sonrakini** ver."* Atlama yok; veritabanı doğrudan o noktaya
 gidiyor.
 
+Fikir bu, ama **Prisma'da nasıl yazıldığı hızı ve doğruluğu belirliyor** — ölçüldü
+(2026-09-27, Prisma 7.10, PostgreSQL 18.4). İki tuzak var.
+
+**Tuzak 1 — sıralama alanı benzersiz değilse.** Prisma'nın kendi `cursor`'u,
+sıralama yalnızca `createdAt` (ya da `slaDueAt`) gibi **tekrar edebilen** bir
+alanken şu SQL'i üretti:
+
+```sql
+SELECT … WHERE "sla_due_at" >= (SELECT "sla_due_at" FROM "work_orders" WHERE "id" = $1)
+ORDER BY "sla_due_at" ASC OFFSET $2              -- ⛔ LIMIT YOK: imleçten tablonun SONUNA kadar hepsi çekiliyor
+```
+
+Sayfa bellekte kesiliyor ve eşit değerlerin sırası iki sorguda farklı düştüğü
+için **aynı kayıtlar iki sayfada göründü** (sayfa 1: 20,10,15,5,25 · sayfa 2:
+20,5,30,16,6). Çaresi sıralamaya benzersiz bir **eşitlik bozucu** eklemek:
+`orderBy: [{ createdAt: 'desc' }, { id: 'desc' }]` — o zaman SQL'e `LIMIT` iner ve
+sayfalar doğru çıkar.
+
+**Tuzak 2 — "imleç her sayfada aynı hızda" cümlesi SQL'in biçimine bağlı.**
+500 bin satırda, `(sla_due_at, id)` birleşik index'i varken 400.001. satırdan
+başlayan sayfa:
+
+| Yol | Süre (medyan) |
+|---|---|
+| `skip: 400000` (offset) | 24,8 ms |
+| Prisma'nın `cursor`'u (eşitlik bozuculu) — `(a = x AND id >= y) OR a > x` biçiminde alt sorgulu SQL üretiyor | 26,6 ms |
+| Elle `OR`: `slaDueAt > x OR (slaDueAt = x AND id > y)` | 26,1 ms |
+| **`slaDueAt >= x` AND (`slaDueAt > x` OR `id > y`)** | **2,7 ms** |
+| **Ham SQL satır karşılaştırması `(sla_due_at, id) > (x, y)`** | **1,2 ms** (veritabanında 0,11 ms) |
+
+`EXPLAIN`'e göre `OR`'lu koşul index'te **aralık** olarak değil **süzgeç** olarak
+kullanılıyor (*"Rows Removed by Filter: 400000"*) — yani offset kadar okuyor.
+Satır karşılaştırması ise *"Index Cond"*: index'te doğrudan o noktaya iniyor.
+Prisma'nın sorgu diliyle yazılabilen hızlı biçim, önüne tek kolonlu bir koşul
+eklemek:
+
 ```ts
-// Kullanıcı en son K81'i gördü. Sonraki sayfa:
+// Kullanıcının gördüğü son kayıt: { createdAt, id } — istemciye opak bir imleç metni olarak gider
 await prisma.workOrder.findMany({
-  take: 20,
-  cursor: { id: 'K81' },   // ⭐ "Bu kayıttan başla" — atlama yok
-  skip: 1,                 // K81'in kendisini tekrar gönderme
-  orderBy: { createdAt: 'desc' },
+  where: {
+    createdAt: { lte: last.createdAt },                        // ⭐ tek kolonlu ön koşul: index'e "buradan başla" der
+    OR: [{ createdAt: { lt: last.createdAt } },                // ya daha eskiler…
+         { id: { lt: last.id } }],                             // …ya da AYNI anda açılmış, kimliği daha küçük olanlar
+  },
+  orderBy: [{ createdAt: 'desc' }, { id: 'desc' }],            // eşitlik bozucu: sıra her sorguda AYNI
+  take: 20,                                                    // SQL'e LIMIT 20 olarak iner
 });
 ```
 
-```sql
--- Üretilen SQL'in özü: eşitlik değil, KARŞILAŞTIRMA
-SELECT * FROM "WorkOrder"
-WHERE ("createdAt", "id") < ('2026-08-24 10:00', 'K81')
---     └─ index bu noktaya DOĞRUDAN atlıyor, önündekileri saymıyor
-ORDER BY "createdAt" DESC, "id" DESC
-LIMIT 20;
-```
+Azalan sırada (en yeni önce) aynı 400.001. sayfa ölçüldü: offset 23,6 ms · bu biçim
+**0,88 ms** · ham satır karşılaştırması 0,70 ms.
 
-⭐ **Kazanç:** 1. sayfa ile 5.000. sayfa **aynı hızda** çalışır — çünkü ikisi de
-"şu noktadan sonraki 20 kayıt" sorusudur. Araya yeni kayıt girse de kayma
-olmaz; imleç bir kaydı işaret ediyor, bir sayı değil.
+⭐ **Kazanç (doğru yazıldığında):** 1. sayfa ile 5.000. sayfa **neredeyse aynı
+hızda** — ikisi de index'te "şu noktadan sonraki 20 kayıt" sorusudur. Araya yeni
+kayıt girse de kayma olmaz; imleç bir kaydı işaret ediyor, bir sayı değil.
 
 ⛔ **Bedeli:** *"7. sayfaya git"* diyemezsin. Cursor yalnızca **ileri/geri**
 gider, sayfa numarası kavramı yoktur. Toplam sayfa sayısı da gösteremezsin.
