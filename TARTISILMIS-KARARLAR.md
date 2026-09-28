@@ -711,3 +711,32 @@ elle yol kütüğü + OpenAPI 3.1, ve ilk taslak `redocly lint`'ten 6 hata 6 uya
 ↔ ödev §17'nin alanları (E.10). Kural değişikliği kullanıcı onayı bekliyor (öğrenme deposundaki kite-taşınacaklar
 listesinde). Yama sürümü: kural değişmedi, kart örnekleri ölçümle düzeltildi.
 Model notu: Opus 5.5 + max.
+
+### Ek — 2026-09-28 (3.24.3): C.13 yenileme kodundaki iki kusur ve kimlik doğrulama ölçümleri; C.15 log maskelemesi kendiliğinden değil
+
+Öğrenme deposunun H6 turu (kimlik doğrulama ve güvenlik) gerçek bir NestJS 12.1 uygulaması,
+Prisma 7.10, PostgreSQL 18.4 ve Chrome 151 üzerinde koşturuldu (Windows, Node 24.19); iki kart
+ölçümle düzeltildi (kartlar ve ikizi bayt bayt aynı). **C.13** — yenileme jetonu döndürme kodunda
+iki kusur: (1) yeniden kullanım tespitinde bütün oturumları kapatıp **aynı işlemin içinde**
+fırlatıyordu — fırlatma işlemi geri aldığı için kapatma da geri alındı (10/10 denemede "tespit
+edildi" ama saldırganın jetonu açık kaldı); (2) iptal koşulsuzdu — okuma ile iptal arasına 50 ms
+iş girince aynı jetonla aynı anda iki yenileme 10'da 7 kez **iki geçerli oturum** üretti. Kod
+koşullu iptal (`updateMany({ where: { id, revokedAt: null } })` + `count`) ve cezayı işlem
+bittikten sonra yazmakla yeniden yazıldı; bedeli (iki sekmede eşzamanlı yenileme kullanıcıyı
+dışarı atar → istemcide tek yenileme) ve "koşulu silmek tespitin tamamını götürür" notu kartta.
+Ayrıca ölçülerek eklendi: MD5 / SHA / PBKDF2 / scrypt / bcrypt / argon2id hız tablosu, tuz ve
+`needsRehash`, bcrypt'in 72 bayt sınırı (Türkçe karakterle 40 karakterde), `bcryptjs`'in olay
+döngüsünü kilitlemesi, OWASP sırası; JWT tuzakları (`decode` ≠ `verify`, `alg: none`,
+`clockTolerance`, zayıf anahtarın çevrimdışı tahmini); `tokenVersion` kontrolünün bedeli (p50
+0,9 ms) ve "her istekte DB'ye bakan JWT" dürüst notu; giriş ucu (tek mesaj, sahte özetle aynı
+süre: 29 ↔ 6,5 ms → 31 ↔ 30 ms, IP + e-posta hız sınırı, `trust proxy: true` ile atlatma,
+varsayılan kapalı bekçi); web giriş ucunun jetonu gövdede döndürmemesi, çerez öznitelikleri
+tablosu ve dört senaryolu CSRF ölçümü (`SameSite=Lax` ve "yalnızca JSON" ayrı ayrı yetiyor;
+Next'in `request.json()`'u `text/plain`'i de ayrıştırıyor). **C.15** — "`nestjs-pino` içinde
+merkezî bir süzgeç vardır … otomatik sansürlenir" cümlesi yanlıştı: pino-http'nin varsayılanı
+`Authorization` başlığını ve çerezi açıkça yazdı; `redact` ayarı ve iki savunma (alan adı +
+değer biçimi) eklendi. **Yazılmayan:** `05-auth-security.md`'ye kural düzeyinde karşılıkları
+(koşullu iptal + ceza işlem dışında, sahte özet, web ucunda gövdede jeton yok, `trust proxy`
+yalnızca bilinen vekil, HTTP log'unda `redact` zorunlu, global bekçi) kullanıcı onayı bekliyor
+(öğrenme deposundaki kite-taşınacaklar listesinde). Yama sürümü: kural değişmedi, kart örnekleri
+ölçümle düzeltildi. Model notu: Opus 5.5 (efort ayarı ajanda görünmüyor).

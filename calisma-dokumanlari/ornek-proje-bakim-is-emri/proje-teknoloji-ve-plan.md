@@ -1924,43 +1924,83 @@ Bu yüzden ikinci bir **yenileme jetonu (token) (refresh token)** verilir: süre
 uzundur, tek işi yeni bir erişim jetonu (token) almaktır.
 
 **Rotasyon (döndürme):** Yenileme jetonu (token) her kullanıldığında **değişir**.
-Eskisi geçersiz olur.
+Eskisi geçersiz olur. Yenileme jetonu JWT **değildir** — 32 baytlık rastgele bir
+metindir; veritabanında yalnızca **SHA-256 özeti** durur (tablo sızarsa oturum
+çalınamasın — parolanın aynı kuralı).
 
 ```ts
-// Kullanıcı "oturumumu yenile" dedi. Tüm adımlar tek işlemde.
-await prisma.$transaction(async (tx) => {
+// Kullanıcı "oturumumu yenile" dedi. İptal ve yeni çift TEK işlemde;
+// yeniden kullanımın CEZASI işlemin DIŞINDA — aşağıdaki "iki kusur" kutusuna bak.
+const now = clock.now();
+const outcome = await prisma.$transaction(async (tx) => {
 
-  // 1) Gelen yenileme jetonunu veritabanında ara.
-  //    Jetonun kendisi değil, karıştırılmış hâli (hash) saklanıyor.
-  const stored = await tx.refreshToken.findUnique({ where: { hash } });
+  // 1) Gelen yenileme jetonunu veritabanında ara — jetonun kendisi değil özeti saklanıyor.
+  const stored = await tx.refreshToken.findUnique({ where: { tokenHash: sha256(raw) }, include: { user: true } });
 
-  // 2) Böyle bir jeton hiç yoksa istek reddedilir
-  if (!stored)          throw new UnauthorizedException();
+  // 2) Böyle bir jeton yoksa ya da süresi dolmuşsa: geçersiz.
+  if (!stored || stored.expiresAt <= now) return { kind: "invalid" as const };
 
-  // 3) Jeton var AMA daha önce kullanılıp iptal edilmiş.
-  //    Bir kez kullanılmış jetonun tekrar gelmesi = kopyalanmış demektir.
-  if (stored.revokedAt) {
-    // ⭐ Güvenlik önlemi: o kullanıcının AÇIK TÜM oturumlarını kapat.
-    //    Saldırgan da meşru kullanıcı da yeniden giriş yapmak zorunda kalır.
-    //    Jetonun çalındığını anlamanın tek güvenilir yolu bu.
-    await tx.refreshToken.updateMany({
-      where: { userId: stored.userId, revokedAt: null },
-      data:  { revokedAt: clock.now() },
-    });
-    throw new UnauthorizedException('Token reuse detected');
-  }
+  // 3) ⭐ KOŞULLU iptal: "yalnızca HÂLÂ açıksa kapat" — ve kaç satırın değiştiğine bak.
+  //    Kullanılmış jetonun satırı zaten dolu → 0 satır. Aynı anda gelen ikinci istek → 0 satır.
+  //    Yani bu TEK satır hem sıradan yeniden kullanımı hem yarışı yakalar.
+  const { count } = await tx.refreshToken.updateMany({
+    where: { id: stored.id, revokedAt: null },
+    data:  { revokedAt: now },
+  });
+  if (count === 0) return { kind: "reused" as const, userId: stored.userId }; // ⛔ burada FIRLATMA — sonucu döndür
 
-  // 4) Jeton geçerli: kullanıldığı için hemen iptal et (bir daha kullanılamaz)
-  await tx.refreshToken.update({ where: { hash }, data: { revokedAt: clock.now() } });
+  // 4) Pasif kullanıcı yenileyemez.
+  if (!stored.user.isActive) return { kind: "inactive" as const };
 
-  // 5) Yeni bir jeton çifti üret ve kullanıcıya ver
-  return issueNewPair(stored.userId);
-});
+  // 5) Yeni çift — AYNI işlemde.
+  return { kind: "ok" as const, pair: await issueNewPair(stored.user, tx) };
+});                                             // ← işlem burada biter; iptal KALICI
+
+if (outcome.kind === "ok") return outcome.pair;
+if (outcome.kind === "reused") {
+  // ⭐ Güvenlik önlemi: o kullanıcının AÇIK TÜM oturumlarını kapat + tokenVersion'ı artır.
+  //    Saldırgan da meşru kullanıcı da yeniden giriş yapmak zorunda kalır.
+  //    AYRI yazılıyor: işlemin içinde yapıp fırlatsaydık, fırlatma kapatmayı da GERİ ALIRDI.
+  await revokeEverything(outcome.userId);
+  throw new UnauthorizedException('Token reuse detected');
+}
+if (outcome.kind === "inactive") throw new ForbiddenException('User inactive');
+throw new UnauthorizedException('Refresh token invalid');
 ```
 
 ⭐ **Yeniden kullanım tespiti** bu kodun kalbi: iptal edilmiş bir jeton (token) tekrar
 gelirse, jetonun kopyalandığı anlaşılır ve o kullanıcının **tüm oturumları**
 kapatılır. Ödev bunu doğrudan istemiyor ama gerçek sistemlerde standarttır.
+
+> **⚠️ Bu kartın önceki sürümündeki iki kusur — ölçüldü (28 Eyl 2026: NestJS 12.1,
+> Prisma 7.10, PostgreSQL 18.4, her satır 10 deneme)**
+>
+> Önceki kod iptali `update({ where: { hash } })` ile koşulsuz yapıyor, yeniden
+> kullanımda bütün oturumları kapatıp **aynı işlemin içinde** fırlatıyordu.
+>
+> | Kod | Aynı jetonla aynı anda iki yenileme | Açık kalan oturum |
+> |---|---|---|
+> | eski kod | 200 + 401 (10/10) | **1** — "tespit edildi" ama saldırganın jetonu açık kaldı |
+> | eski kod, okuma ile iptal arasında 50 ms iş | **200 + 200** (7/10) | **2** — tek jetondan iki oturum |
+> | yukarıdaki kod | 200 + 401 (10/10) | **0** |
+>
+> **Kusur 1 — geri alınan ceza.** İşlemin içinde fırlatılan hata **bütün işlemi
+> geri alır** ("ya hepsi ya hiçbiri"): kapatma da geri alındı. **Kusur 2 — yarış.**
+> İki istek de "henüz iptal edilmemiş" okudu, ikisi de iptal etti, ikisi de yeni
+> çift aldı — iyimser kilidin kayıp güncelleme sorunu (E.8). Çare iki tanıdık
+> kalıp: **koşullu güncelleme + etkilenen satır sayısı** ve **cezayı işlem
+> bittikten sonra yazmak**.
+>
+> **Bedeli:** kullanıcı uygulamayı **iki sekmede** açmışsa ve iki sekme aynı anda
+> yenilerse, biri "yeniden kullanım" sayılır ve kullanıcı dışarı atılır (ölçüldü:
+> 0 açık). Çaresi istemcide: sekmeler arasında **tek yenileme** — biri yeniler,
+> öbürleri bekler (`BroadcastChannel` ya da Web Locks API).
+>
+> ⚠️ Koşulu (`revokedAt: null`) silmek bu kodda yalnızca yarışı değil **tespitin
+> tamamını** götürür — ölçüldü: eski jeton sırayla gelse bile 200 aldı. Bu satırın
+> bir testi olmalı: "kullanılmış jeton tekrar gelince 401 VE veritabanında 0 açık
+> oturum" — cevabın 401 olması yetmez, iptalin **kalıcı** olduğu veritabanına
+> sorulur.
 
 İşlemin tamamı **tek transaction** içinde — ödev §20 bunu ayrıca sayıyor:
 *"Refresh token yenileme ve eski token'ın geçersiz hâle getirilmesi."*
@@ -1974,6 +2014,45 @@ kapatılır. Ödev bunu doğrudan istemiyor ama gerçek sistemlerde standarttır
 
 Aynı doğrulama katmanı ikisini de kabul ediyor; API istemci tanımıyor (E.10'daki
 "tek API, çok istemci" ilkesi).
+
+⛔ **Web'in giriş ucu jetonu GÖVDEDE döndürmez.** Gövdede de dönseydi sayfaya
+sokulmuş bir betik (XSS) o ucu çağırıp jetonu okuyabilirdi — `httpOnly`'nin bütün
+kazancı giderdi. İki uç, aynı servis: `POST /auth/login` jetonları **yalnızca
+çereze** koyar; `POST /auth/token` (mobil, Swagger, Bruno) **gövdede** döndürür.
+
+**Çerez öznitelikleri — her biri bir soru** (ölçüldü, Chrome 151):
+
+| Öznitelik | Soru | Erişim jetonu | Yenileme jetonu |
+|---|---|---|---|
+| `HttpOnly` | JavaScript okuyabilir mi? | hayır (`document.cookie` boş çıktı) | hayır |
+| `Secure` | şifresiz HTTP'de gider mi? | hayır | hayır |
+| `SameSite` | başka SİTEDEN gelen isteğe eklenir mi? | `Lax` | `Strict` |
+| `Path` | hangi adreslere gider? | `/api` | **yalnızca** `/api/v1/auth` — iş emri isteklerinde gönderilmedi (`NotOnPath`) |
+| `Max-Age` | ne zaman silinir? | 15 dk | 7 gün |
+
+⚠️ Chrome `http://localhost`'u güvenli sayıyor: `Secure` çerez yerelde de kabul
+edildi ve gönderildi (ölçüldü). Yerel ağdan telefonla (`http://192.168.x.x`)
+denerken istisna yok — o gün yerelde `Secure` kapatılır.
+
+**CSRF — dört ayar, gerçek Chrome'da (ölçüldü).** Arayüz `localhost:5173`, API
+`localhost:3000` (aynı site, farklı köken), saldırganın sayfası `127.0.0.1:5174`
+(farklı site) — kullanıcı giriş yapmışken sayfa kendiliğinden bir HTML formu gönderdi:
+
+| Ayar | Çerez gitti mi | Sunucu | Sonuç |
+|---|---|---|---|
+| `SameSite=None` + API form gövdesi kabul ediyor | ✅ | 200 | ⛔ **iş emri kullanıcının adına değişti** |
+| `SameSite=Lax` + form gövdesi kabul | ⛔ `SameSiteLax` | 401 | korundu |
+| `SameSite=None` + API yalnızca JSON (415) | ✅ | 415 | korundu |
+| `Lax` + yalnızca JSON (önerilen) | ⛔ | 415 | korundu |
+
+İki bağımsız savunma, her biri tek başına yetiyor: **`SameSite=Lax`** ve **API'nin
+yalnızca `application/json` kabul etmesi** (HTML formu JSON gönderemez; JSON
+gönderen `fetch` başka kökende önce ön uçuş sorar). ⚠️ Next'in route
+handler'larındaki `request.json()` içerik türüne bakmaz — `text/plain` formun
+gövdesini de ayrıştırdı (ölçüldü); orada `Origin` başlığı kontrolü gerekir.
+CORS **okumayı** yönetir, göndermeyi değil — CSRF'e karşı koruma değildir.
+`origin: '*'` + `credentials: true`'yu tarayıcı zaten reddetti: *"must not be the
+wildcard '*' when the request's credentials mode is 'include'"*.
 
 ### argon2 gerçekte hangi sorunu çözüyor
 
@@ -2000,6 +2079,80 @@ const ok = await argon2.verify(user.passwordHash, password);
 değil, tasarım tercihidir: saldırgan çalınmış bir veritabanında saniyede
 milyonlarca şifre deneyememeli. Hızlı algoritmalar (MD5, SHA-1) tam da bu
 yüzden şifre için **yanlıştır** — hızlı olmaları saldırganın işine yarar.
+
+### Ölçülen: hızlı özet ile parola özeti (28 Eyl 2026, Intel i7-1165G7, tek çekirdek, Node 24)
+
+| Özet | Hız | Ne demek |
+|---|---|---|
+| MD5 | 783.590 / sn | saldırgan tek çekirdekte saniyede 783 bin tahmin dener |
+| SHA-256 | 717.713 / sn | "daha güvenli" özet — ama parola için aynı derecede HIZLI |
+| PBKDF2-SHA256, 600.000 tur | 119 ms | |
+| scrypt (N=2¹⁷, r=8, p=1) | 299 ms | 128 MiB bellek |
+| bcrypt maliyet 12 | 276 ms | maliyet +1 = süre ×2 |
+| **argon2id 19 MiB · t=2 · p=1** | **38 ms** | OWASP'ın asgari ayarı |
+| argon2id paketin varsayılanı (64 MiB · t=3 · p=4) | 93 ms | |
+
+Küçük harf + rakamlı 8 karakterlik bütün parolalar (36⁸ ≈ 2,8 trilyon) MD5'le tek
+çekirdekte 42 günde biter — ekran kartında dakikalar; argon2id ile tek çekirdekte
+~3.300 yıl, ve her tahmin 19 MiB bellek istediği için ekran kartı da tıkanır.
+
+**Tuz (salt):** aynı parola iki kez MD5'ten geçince **aynı** çıktıyı verdi; argon2id
+her seferinde yeni tuz üretti ve iki çıktı bambaşka (ikisi de doğruluyor). Çıktı
+okunur bir kayıttır: `$argon2id$v=19$m=19456,p=1,t=2$<tuz>$<özet>` — ayar kayıtta
+durduğu için yükseltilebilir: girişte parola elindeyken
+`argon2.needsRehash(hash, AYAR)` true ise yeniden özetle (ölçüldü: 4 MiB'lık özet
+girişte 19 MiB'a yükseldi).
+
+**bcrypt'in iki tuzağı (ölçüldü):**
+- **72 bayt sınırı** — bcrypt ilk 72 bayttan sonrasını görmez. `ş`, `ğ`, `ı`
+  UTF-8'de ikişer bayt: `"ş"×36 + "AAAA"` ile `"ş"×36 + "BBBB"` (40 karakter) bcrypt
+  için AYNI parola sayıldı; argon2id ayırdı.
+- **`bcryptjs` (saf JS, en çok indirilen bcrypt paketi) olay döngüsünü kilitler** —
+  maliyet 12'de `hashSync` döngüyü 300 ms tamamen durdurdu, async sürümü 100 ms'lik
+  dilimlerle; yerel `bcrypt` ve `argon2` işi iş parçacığı havuzunda yapar.
+
+OWASP Parola Saklama Kılavuzu'nun sırası (28 Eyl'de okundu): **argon2id** (asgari
+19 MiB · t=2 · p=1) → yoksa **scrypt** (N=2¹⁷ · r=8 · p=1) → eski sistemde **bcrypt**
+(maliyet ≥ 10) → FIPS gerekiyorsa **PBKDF2** (600.000 tur).
+
+### JWT'nin tuzakları ve iptal (ölçüldü, jose 6.2 / jsonwebtoken 9.0)
+
+| Deneme | Sonuç |
+|---|---|
+| yükte `role` → `ADMIN`, imza aynı | reddedildi — imza tutmadı |
+| `alg: none` (imzasız jeton) | reddedildi (`jwtVerify` + `algorithms: ["HS256"]`) |
+| süresi 1 dk önce dolmuş | reddedildi — ama `clockTolerance: 120` ile **kabul** edildi: pay büyükse jetonun ömrü gizlice uzar |
+| `decodeJwt` / `jsonwebtoken.decode` ile okumak | ⛔ sahte ve imzasız jetonu **sorunsuz okudu** — `decode` imzaya bakmaz |
+| zayıf anahtar (`belediye2026`) | çevrimdışı tahmin 332.724 deneme/sn — sözlükte ilk dakikada; kütüphane 3 baytlık anahtara bile itiraz etmedi |
+
+Kural: sunucuda yalnızca **verify**; algoritma listesini kod verir; anahtar ≥ 32
+rastgele karakter ve **açılışta** denetlenir (kısaysa uygulama kalkmaz).
+
+**İptal kendiliğinden yok — `tokenVersion`.** Kullanıcı satırında sayaç, jetonda
+kopyası (`tv`); çıkışta, parola ve **rol değişiminde**, yeniden kullanım
+tespitinde artar (ölçüldü: çıkıştan sonra eski erişim jetonu → 401; rolü değişen
+kullanıcının eski jetonu → 401). Kontrolün bedeli birincil anahtar okuması:
+**p50 0,9 ms** (Prisma → PostgreSQL, 2.000 okuma). ⚠️ Her istekte bu okumayı yapan
+bir JWT, "tabloya bakmadan doğrulama" getirisini harcamıştır — tek bir web
+istemcisi için **veritabanında tutulan oturum** en az onun kadar iyidir; JWT'yi
+öne çıkaran mobil / çok servis ya da ödevin şartıdır.
+
+### Giriş ucu: sayım, zamanlama, hız sınırı (ölçüldü)
+
+- **Tek mesaj:** "e-posta yok" ile "parola yanlış" aynı `401`, aynı kod, aynı cümle.
+- **Aynı süre:** kullanıcı yokken argon2'ye hiç uğramadan dönmek cevabı ele verdi —
+  var olan e-posta 29,1 ms ↔ olmayan 6,5 ms (20'şer deneme, ortanca). Kullanıcı
+  yoksa da **sahte bir özete** karşı doğrulama yapınca 31,4 ↔ 30,0 ms. Sahte özetin
+  ayarı gerçeğinkiyle aynı olmalı (ayar yükselince süreler yeniden ayrışır).
+- **Hız sınırı:** sayaç IP + e-posta; altıncı denemede 429 + `Retry-After` (doğru
+  parola da 429 alır — doğrudur). E-posta başına sayaç **parola püskürtmeyi**
+  (tek parola, çok hesap) yakalamaz → IP başına ikinci sayaç.
+- ⛔ **`trust proxy: true`** hız sınırını başlıkla atlattırır — her denemede farklı
+  `X-Forwarded-For` ile 8 deneme, hiç 429 yok (ölçüldü). Güven yalnızca bilinen
+  vekile: `app.set("trust proxy", "<vekilin IP'si>")` ya da `1`.
+- **Varsayılan kapalı:** bekçi global (`APP_GUARD`), açık uçlar `@Public()` —
+  ölçüldü: bekçi controller süslemesine bırakılınca süslemesi unutulan yeni uç
+  kimliksiz 200 döndü, `POST /users` kimliksiz isteği doğrulamaya kadar aldı.
 
 ### Ödevin diğer şartları
 
@@ -2104,9 +2257,27 @@ yüzlerce satır log. Paralel akan yüzlerce isteğin logları birbirine karış
 ### ⛔ Log güvenliği (maskeleme / redaction)
 
 Loglara **asla** şifre, kredi kartı, TCKN veya token gibi kişisel veriler
-yazılmaz. `nestjs-pino` içinde merkezî bir süzgeç (maskeleme listesi) vardır.
-İstek gövdesinde bu veriler geçse bile, loga yazılmadan önce otomatik olarak
-sansürlenir.
+yazılmaz. ⚠️ **Süzgeç kendiliğinden kurulu gelmez** — pino'nun `redact` ayarıyla
+**sen** kurarsın. Ölçüldü (28 Eyl 2026, pino-http 11 — `nestjs-pino`'nun altındaki
+HTTP log'u): varsayılan ayar isteğin **bütün başlıklarını** yazdı —
+`"authorization":"Bearer eyJhbGciOi…"` ve `"cookie":"access_token=…"`, log
+dosyasına açıkça. `redact` ile:
+
+```ts
+// app.module.ts — LoggerModule.forRoot({ pinoHttp: { … } }) içinde
+redact: {
+  paths: ["req.headers.authorization", "req.headers.cookie", 'res.headers["set-cookie"]'], // jeton ve çerez taşıyan üç yer
+  censor: "[GİZLİ]",                                                                       // değer yerine yazılan metin
+},
+```
+
+Sonuç: `{"authorization":"[GİZLİ]","cookie":"[GİZLİ]"}`. İstek **gövdesi** varsayılanda
+log'a hiç girmiyor (ölçüldü — girişteki parola bu yüzden görünmedi); gövdeyi log'a
+eklemek bu kuralı bilerek bozmaktır. Alan adına bakan süzgeç tek başına yetmez:
+bazı kütüphaneler (Prisma'nın doğrulama hatası gibi) argümanları hata **metninin
+içine** yazar — ikinci bir süzgeç değerin **biçimine** (e-posta, kart, TCKN, `Bearer`
+deseni) bakmalıdır. Maskelemenin bir **testi** olmalı: bir satır silinirse kimse fark
+etmez.
 
 ### Kritik ayrım: uygulama logu vs. denetim kaydı (audit trail)
 
